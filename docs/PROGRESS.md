@@ -87,7 +87,8 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 ### 2026-11-24 — PWA & git
 - Repo git lokal dibuat di folder ini (commit pertama = Tahap 0–5).
 - PWA: `manifest.webmanifest`, ikon `icons/`, `sw.js` (cache `mq-v1`), pendaftaran di `js/main.js`. Diuji: setelah server dimatikan, game tetap terbuka dari cache.
-- Butuh hosting HTTPS agar bisa diinstal di HP (belum dipilih).
+- Hosting: GitHub Pages dari repo publik `danapeta/math-quest` (branch `main`, root) → https://danapeta.github.io/math-quest/ . Push ke `main` = situs ikut berubah (ingat naikkan `VERSION` di `sw.js`).
+- Email commit repo ini memakai noreply GitHub (bukan email pribadi).
 
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
