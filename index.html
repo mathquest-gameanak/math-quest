@@ -95,10 +95,46 @@
           <label class="sBtn fileBtn">Pulihkan dari file<input id="restoreFile" type="file" accept=".json,.txt,application/json,text/plain" hidden></label>
         </div>
         <button id="btnRespec" class="sBtn">Atur ulang poin status</button>
+        <button class="sBtn tunOpen" data-go="tuner">🧪 Atur Angka (eksperimen)<small id="tunBadge"></small></button>
         <button id="btnReset" class="sBtn danger">Hapus semua progress</button>
         <small id="dataMsg" class="dataMsg"></small>
       </div>
       <p class="note">Semua data hanya tersimpan di HP ini dan tidak dikirim ke mana pun.</p>
+    </div>
+  </section>
+
+  <!-- ===== ATUR ANGKA (eksperimen orang tua) ===== -->
+  <section id="scr-tuner" class="screen">
+    <header class="panel topbar"><button class="back" data-go="parent">◀</button><h2>🧪 Atur Angka</h2></header>
+    <p class="note">Ubah angka lalu coba main. Langsung berlaku dan tersimpan di HP ini. Progress anak tidak berubah.</p>
+    <div class="panel box"><h3>Pratinjau per area</h3>
+      <div class="tunInputs">
+        <label>Level pemain<input id="tunLv" type="number" inputmode="numeric" min="1" max="99"></label>
+        <label>Detik per jawaban<input id="tunSecs" type="number" inputmode="decimal" step="0.5" value="3"></label>
+        <label>Poin status<select id="tunSplit"><option value="now">Seperti karakter sekarang</option><option value="rata">Rata</option><option value="atk">Semua ATK</option><option value="hp">Semua HP</option></select></label>
+        <label class="chk"><input id="tunFast" type="checkbox"> Selalu KILAT</label>
+        <label class="chk"><input id="tunEquip" type="checkbox" checked> Pakai equipment sekarang</label>
+      </div>
+      <div id="tunPlayer" class="sumGrid"></div>
+      <div class="tunTableWrap"><table class="tunTable">
+        <thead><tr><th>Musuh</th><th>HP</th><th>Pukul</th><th>Dmg/KO</th><th>Jeda</th><th>Serang</th><th>XP</th></tr></thead>
+        <tbody id="tunTable"></tbody></table></div>
+      <p class="note left">Pukul = jawaban benar untuk mengalahkan musuh. Dmg/KO = damage musuh ke pemain / berapa pukulan musuh sampai pemain pingsan. Jeda = rata-rata detik antar serangan musuh. Serang = berapa kali musuh sempat menyerang sebelum kalah (merah = 0, musuh tidak sempat menyerang).</p>
+    </div>
+    <div class="panel box"><h3>Alat karakter</h3>
+      <small id="tunCurLv" class="note left"></small>
+      <div class="dataBtns"><input id="tunNewLv" type="number" inputmode="numeric" min="1" max="99" placeholder="Level" aria-label="Level baru"><button id="tunSetLv" class="sBtn">Jadikan level ini</button></div>
+      <button id="tunHeal" class="sBtn">Isi HP penuh</button>
+      <h3>Level monster di area</h3>
+      <p class="note left">− / + mengubah jumlah monster yang sudah dikalahkan, sehingga level monster area turun/naik 1.</p>
+      <div id="tunAreas"></div>
+    </div>
+    <div id="tunGroups"></div>
+    <div class="panel box"><h3>Simpan hasil eksperimen</h3>
+      <div class="dataBtns"><button id="tunCopy" class="sBtn">Salin angka yang diubah</button><button id="tunPaste" class="sBtn">Pasang dari kotak</button></div>
+      <textarea id="tunText" rows="3" placeholder="Angka yang diubah muncul di sini" aria-label="Angka yang diubah"></textarea>
+      <button id="tunReset" class="sBtn danger">Kembalikan semua angka ke awal</button>
+      <small id="tunMsg" class="dataMsg"></small>
     </div>
   </section>
 
@@ -233,6 +269,7 @@
 <script src="js/shop.js"></script>
 <script src="js/quests.js"></script>
 <script src="js/parent.js"></script>
+<script src="js/tuner.js"></script>
 <script src="js/create.js"></script>
 <script src="js/story.js"></script>
 <script src="js/cutscene.js"></script>

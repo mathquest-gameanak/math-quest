@@ -2,12 +2,12 @@
    Strategi: ambil dari simpanan dulu (cepat & offline), sambil diam-diam mengambil versi terbaru dari internet
    untuk dipakai saat game dibuka berikutnya.
    PENTING: naikkan VERSION setiap kali file game diubah, supaya HP mengganti simpanan lama. */
-const VERSION = 'mq-v8';
+const VERSION = 'mq-v9';
 const FILES = [
   './', './index.html', './manifest.webmanifest', './css/style.css',
   './js/questions.js', './js/save.js', './js/audio.js', './js/sprites.js', './js/visuals.js', './js/data.js',
   './js/balance.js', './js/hero.js', './js/state.js', './js/screens.js', './js/battle.js', './js/shop.js',
-  './js/quests.js', './js/parent.js', './js/create.js', './js/story.js', './js/cutscene.js', './js/collection.js', './js/map.js', './js/main.js',
+  './js/quests.js', './js/parent.js', './js/tuner.js', './js/create.js', './js/story.js', './js/cutscene.js', './js/collection.js', './js/map.js', './js/main.js',
   './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'
 ];
 

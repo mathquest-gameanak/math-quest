@@ -82,13 +82,11 @@ MQ.Battle = (() => {
   /** Jeda serangan berikutnya (detik): acak dalam rentang monster × pace tempat; bos sedikit lebih lambat. */
   function newInterval() {
     const [a, b] = style().spd;
-    return (a + Math.random() * (b - a)) * (B.field.pace || 1) * (B.isBoss ? BAL.monster.bossSlowMul : 1);
+    return (a + Math.random() * (b - a)) * MQ.Calc.intervalMul(B.field.pace, B.isBoss);
   }
   /** Damage serangan musuh: tergantung level tempat & kekuatan monster, dikurangi pertahanan pemain (min 1). */
   function enemyDamage() {
-    const M = BAL.monster;
-    const raw = Math.round((M.dmgBase + M.dmgPerLevel * B.mLv) * style().power * (B.isBoss ? M.bossDmgMul : 1));
-    return Math.max(1, raw - State.def());
+    return Math.max(1, MQ.Calc.monsterDmg(B.mLv, style().power, B.isBoss) - State.def());
   }
   /** Level monster yang akan muncul (lihat rumus di balance.js):
       area  → naik 1 level tiap levelUpEvery monster dikalahkan di area itu, maks level tertinggi area
@@ -110,7 +108,8 @@ MQ.Battle = (() => {
   }
   /** Waktu musuh berjalan hanya saat anak sedang menjawab. */
   const timerActive = () => els['scr-battle'].classList.contains('on') && els.overlay.hidden && !B.locked &&
-    B.mode !== 'exam' && !S.settings.santai && !document.hidden && !MQ.Cutscene.isOpen() && !(window.speechSynthesis && window.speechSynthesis.speaking);
+    B.mode !== 'exam' && !S.settings.santai && !document.hidden && !MQ.Cutscene.isOpen() &&
+    !(BAL.monster.pauseWhileReading && window.speechSynthesis && window.speechSynthesis.speaking);
 
   /** Musuh menyerang. Mengembalikan true jika HP pemain habis. */
   function enemyAttack() {
@@ -205,13 +204,13 @@ MQ.Battle = (() => {
     if (B.mode === 'exam') { // HP ujian = jumlah soal × 10; tiap jawaban benar -10
       B.maxHp = B.exam.qs.length * 10;
     } else {
-      const M = BAL.monster;
       B.mLv = monsterLevel();
-      B.maxHp = Math.round((M.hpBase + B.mLv * M.hpPerLevel) * (B.isBoss ? M.bossHpMul : B.isKey ? 1.5 : 1));
+      B.maxHp = MQ.Calc.monsterHp(B.mLv, B.isBoss ? 'boss' : B.isKey ? 'key' : '');
     }
     B.hp = B.maxHp;
-    B.charge = 0; B.interval = newInterval();
-    els.atkFill.style.width = '0%';
+    B.interval = newInterval();
+    B.charge = Math.min(0.9, Math.max(0, BAL.monster.startCharge)) * B.interval; // bisa dibuat langsung "siap menyerang"
+    els.atkFill.style.width = B.charge / B.interval * 100 + '%';
     els.mName.textContent = (B.mode === 'exam' ? '📝 UJIAN: ' : B.isBoss ? '👑 BOS: ' : B.isKey ? '⭐ KUNCI: ' : '') + m.name + (B.mode === 'exam' ? '' : ` · Lv ${B.mLv}`);
     els.mImg.src = Sprites.url(m.sprite, m.pal);
     els.mWrap.className = B.isBoss ? 'boss' : '';

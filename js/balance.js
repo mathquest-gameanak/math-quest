@@ -9,10 +9,15 @@
      Level monster   = level awal area + 1 setiap monster.levelUpEvery monster dikalahkan di area itu
                        (maksimal level tertinggi area; bos = +monster.bossLevelBonus). Arena: = level pemain.
                        Level area ada di data.js ("lv: [min, maks]").
-     HP monster      = monster.hpBase + monster.hpPerLevel × levelMonster          (bos × monster.bossHpMul)
+     HP monster      = (monster.hpBase + monster.hpPerLevel × levelMonster) × (1 + hpGrowthPct/100)^(level−1)
+                       (bos × monster.bossHpMul, monster kunci × monster.keyHpMul)
      Kritikal        = pasti jika menjawab ≤ combat.fastCritSec detik; jika tidak, acak combat.critChance % + equipment.
                        Damage kritikal = damage × (combat.critMul + critDmg equipment / 100)
-     Damage monster  = (monster.dmgBase + monster.dmgPerLevel × levelMonster) × kekuatan monster − Pertahanan pemain
+     Damage monster  = (monster.dmgBase + monster.dmgPerLevel × levelMonster) × (1 + dmgGrowthPct/100)^(level−1)
+                       × kekuatan monster (bos × bossDmgMul) − Pertahanan pemain (minimal 1)
+     Jeda serangan   = acak spd jenis monster (data.js styles) × pace tempat × monster.speedMul (bos × bossSlowMul)
+
+   Semua angka di sini juga bisa diubah sementara dari HP: Orang Tua → 🧪 Atur Angka.
      XP              = (xp.monsterBase + xp.perMonsterLevel × levelMonster)          (bos × xp.bossMul)
                        Jika level pemain ≥ level monster + xp.penaltyFrom: XP dikurangi xp.penaltyStep per level selisih
                        (paling kecil xp.minFactor). Tidak berlaku di Arena Latihan.
@@ -40,8 +45,13 @@ MQ.Balance = {
     penaltyStep: 0.25, minFactor: 0.1     // tiap level selisih berikutnya −25%, minimal 10%
   },
   monster: {
-    hpBase: 24, hpPerLevel: 9, bossHpMul: 2,
+    hpBase: 24, hpPerLevel: 9, bossHpMul: 2, keyHpMul: 1.5,
+    hpGrowthPct: 0,              // HP tambahan berlipat: × (1 + %/100) per level di atas 1 (0 = garis lurus)
     dmgBase: 3, dmgPerLevel: 1.5, bossDmgMul: 1.4,
+    dmgGrowthPct: 0,             // damage tambahan berlipat per level (0 = garis lurus)
+    speedMul: 1,                 // pengali jeda serangan SEMUA musuh (0.5 = dua kali lebih cepat)
+    startCharge: 0,              // bar serangan musuh sudah terisi sekian (0–0.9) saat muncul
+    pauseWhileReading: 1,        // 1 = waktu musuh berhenti saat soal dibacakan, 0 = tetap berjalan
     levelUpEvery: 5,             // monster di area naik 1 level setiap 5 monster dikalahkan
     bossLevelBonus: 1,           // bos 1 level di atas monster biasa saat itu
     bossSlowMul: 1.2             // bos menyerang sedikit lebih lambat
@@ -57,5 +67,24 @@ MQ.Balance = {
     coinsNormal: [1, 2], coinsBoss: 8,  // koin dari monster
     dropChance: 0.7,                    // peluang monster biasa menjatuhkan 1 bahan
     bossDrops: 3                        // jumlah bahan dari bos (+1 Mahkota Kecil)
+  }
+};
+
+/** Rumus bersama (dipakai pertarungan & pratinjau Atur Angka), supaya keduanya selalu sama. */
+MQ.Calc = {
+  monsterHp(lv, kind) {
+    const M = MQ.Balance.monster;
+    const mul = kind === 'boss' ? M.bossHpMul : kind === 'key' ? M.keyHpMul : 1;
+    return Math.round((M.hpBase + M.hpPerLevel * lv) * Math.pow(1 + M.hpGrowthPct / 100, lv - 1) * mul);
+  },
+  /** Damage sebelum dikurangi pertahanan. */
+  monsterDmg(lv, power, isBoss) {
+    const M = MQ.Balance.monster;
+    return Math.round((M.dmgBase + M.dmgPerLevel * lv) * Math.pow(1 + M.dmgGrowthPct / 100, lv - 1) * power * (isBoss ? M.bossDmgMul : 1));
+  },
+  /** Pengali jeda serangan (tanpa acak). */
+  intervalMul(pace, isBoss) {
+    const M = MQ.Balance.monster;
+    return (pace || 1) * M.speedMul * (isBoss ? M.bossSlowMul : 1);
   }
 };

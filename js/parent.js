@@ -7,10 +7,11 @@ MQ.Parent = (() => {
   const {rand, Data, State, UI, Questions} = MQ;
   const S = State.S;
   const $ = id => document.getElementById(id);
-  let gateAns = 0;
+  let gateAns = 0, openUntil = 0; // setelah lolos gerbang, tetap terbuka 10 menit (mis. kembali dari Atur Angka)
 
   /* ===== Gerbang orang tua ===== */
   UI.renderers.parent = () => {
+    if (Date.now() < openUntil) { $('parentGate').hidden = true; $('parentBody').hidden = false; renderReport(); return; }
     const a = rand(12, 19), b = rand(3, 9);
     gateAns = a * b;
     $('gateQ').textContent = `Berapa ${a} × ${b}?`;
@@ -19,7 +20,7 @@ MQ.Parent = (() => {
   };
   $('parentGate').addEventListener('submit', e => { // #parentGate adalah <form>
     e.preventDefault();
-    if (Number($('gateIn').value) === gateAns) { $('parentGate').hidden = true; $('parentBody').hidden = false; renderReport(); }
+    if (Number($('gateIn').value) === gateAns) { openUntil = Date.now() + 10 * 60000; $('parentGate').hidden = true; $('parentBody').hidden = false; renderReport(); }
     else $('gateMsg').textContent = 'Jawaban kurang tepat. Coba lagi.';
   });
 
@@ -71,6 +72,8 @@ MQ.Parent = (() => {
       : skills.length ? 'Bagus! Semua jenis soal yang sudah cukup sering dikerjakan berada di atas 70% benar.' : 'Belum ada saran.';
 
     renderSettings();
+    const n = MQ.Tuner ? MQ.Tuner.changedCount() : 0;
+    $('tunBadge').textContent = n ? `${n} angka sedang diubah` : '';
   }
 
   /* ===== Pengaturan ===== */

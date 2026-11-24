@@ -138,5 +138,11 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - **Kostum kepala** (7, dari medali): telinga kucing, pita besar, mahkota bunga, mahkota emas, topi bajak laut, topi penyihir, kacamata. Dipilih di Buat Karakter (Ubah penampilan); tampil di semua gambar pahlawan.
 - Simpanan v9: `bestiary`, `medals`, `costumes`, `kilat`, `crafted`, `hero.costume`. SW `mq-v7`.
 
+### 2026-11-25 — 🧪 Atur Angka (eksperimen keseimbangan)
+- KILAT jadi ≤ 2 detik (`combat.fastCritSec`).
+- Rumus HP/damage/jeda musuh disatukan di `MQ.Calc` (balance.js), dipakai pertarungan & pratinjau. Angka baru: `hpGrowthPct`, `dmgGrowthPct` (naik berlipat), `speedMul`, `startCharge`, `pauseWhileReading`, `keyHpMul`.
+- Layar **Atur Angka** (`js/tuner.js`, dari Orang Tua): ±99 angka (karakter, musuh, kecepatan per jenis & monster khusus, pace & level area, XP/hadiah), tersimpan di `localStorage['mathQuest.tuning']` terpisah dari progress. Pratinjau per area: HP musuh, jumlah pukulan, damage/KO, jeda, berapa kali musuh sempat menyerang, XP. Alat: set level pemain, isi HP, naik/turunkan level monster area. Salin/tempel angka, kembalikan ke awal. Gerbang orang tua terbuka 10 menit setelah lolos. SW `mq-v9`.
+- Temuan: dengan angka awal musuh kalah dalam 2–3 pukulan di semua area dan sering tidak sempat menyerang.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
