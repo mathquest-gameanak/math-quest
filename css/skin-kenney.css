@@ -79,3 +79,5 @@ body.skinK .coinPill, body.skinK .parentBtn { padding: 0 4px; }
 body.skinK .topbar small, body.skinK .hud small, body.skinK #mTop small, body.skinK #question small { color: #ffe9c4; }
 body.skinK #charName { color: #8e3f38; text-shadow: none; }
 body.skinK .panel .tag { color: #fff; }
+body.skinK .sChip { background: #f6e3bd; color: var(--tinta); border-color: #c58747; }
+body.skinK .sChip.on { background: #38b764; color: #fff; border-color: #2f6b3a; }

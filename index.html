@@ -96,6 +96,7 @@
           <label class="sBtn fileBtn">Pulihkan dari file<input id="restoreFile" type="file" accept=".json,.txt,application/json,text/plain" hidden></label>
         </div>
         <button id="btnRespec" class="sBtn">Atur ulang poin status</button>
+        <button class="sBtn tunOpen soundOpen" data-go="sound">🎧 Coba Suara</button>
         <button class="sBtn tunOpen" data-go="tuner">🧪 Atur Angka (eksperimen)<small id="tunBadge"></small></button>
         <button id="btnReset" class="sBtn danger">Hapus semua progress</button>
         <small id="dataMsg" class="dataMsg"></small>
@@ -136,6 +137,17 @@
       <textarea id="tunText" rows="3" placeholder="Angka yang diubah muncul di sini" aria-label="Angka yang diubah"></textarea>
       <button id="tunReset" class="sBtn danger">Kembalikan semua angka ke awal</button>
       <small id="tunMsg" class="dataMsg"></small>
+    </div>
+  </section>
+
+  <!-- ===== COBA SUARA (orang tua) ===== -->
+  <section id="scr-sound" class="screen">
+    <header class="panel topbar"><button class="back" data-go="parent">◀</button><h2>🎧 Coba Suara</h2></header>
+    <p class="note">Ketuk untuk mendengar. Yang terakhir diketuk langsung dipakai di game. Suara dari Kenney (CC0).</p>
+    <div id="soundList" class="list"></div>
+    <div class="panel box">
+      <div class="dataBtns"><button id="soundCopy" class="sBtn">Salin pilihan</button><button id="soundReset" class="sBtn danger">Kembali ke bawaan</button></div>
+      <small id="soundMsg" class="dataMsg"></small>
     </div>
   </section>
 
@@ -271,6 +283,7 @@
 <script src="js/quests.js"></script>
 <script src="js/parent.js"></script>
 <script src="js/tuner.js"></script>
+<script src="js/soundlab.js"></script>
 <script src="js/create.js"></script>
 <script src="js/story.js"></script>
 <script src="js/cutscene.js"></script>

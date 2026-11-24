@@ -2,3 +2,4 @@ Efek suara di folder ini berasal dari Kenney (www.kenney.nl), lisensi CC0 1.0 (d
 - Interface Sounds: click1-2, back1, toggle1-2, confirm1-2
 - RPG Audio: slash, coin, loot, equip, craft, chest, book, bookOpen, door
 Dikonversi ke MP3 mono 64 kbps.
+- Coba Suara (audio/pilihan): Music Jingles (8-bit, Pizzicato, Steel, Hit, Sax), Digital Audio, Impact Sounds, UI Audio.

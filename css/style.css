@@ -460,3 +460,9 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 .tunRow.changed b { color: var(--kuning); }
 .tunRow.changed input { border-color: var(--kuning); }
 #tunAreas .setRow .sBtn.small { align-self: center; min-width: 40px; }
+
+/* ===== Coba Suara ===== */
+.soundOpen { background: var(--biru); }
+.sChips { display: flex; flex-wrap: wrap; gap: 6px; }
+.sChip { padding: 8px 10px; font-size: 14px; font-weight: 700; background: var(--hitam); border: 2px solid #566c86; min-height: 40px; }
+.sChip.on { background: var(--hijau); border-color: var(--panel-tepi); }

@@ -23,6 +23,7 @@ MQ.Audio = (() => {
         const d = noiseBuf.getChannelData(0);
         for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
         loadSamples();
+        Object.values(picks).forEach(loadPick);
         if (wanted) music.play(wanted);
       }
       if (ac.state === 'suspended') ac.resume();
@@ -232,5 +233,44 @@ MQ.Audio = (() => {
     } catch (e) { /* suara tidak tersedia */ }
   }
 
-  return {unlock, sfx, music, speak, setVolumes, SONGS, loaded: () => Object.fromEntries(Object.entries(buffers).map(([k, v]) => [k, v.length]))};
+  /* ===== Pilihan suara dari orang tua (Orang Tua → 🎧 Coba Suara) =====
+     picks = {namaEfek: idFile}; file di audio/pilihan/<id>.mp3. Tanpa pilihan = suara bawaan (di atas). */
+  const PICK_KEY = 'mathQuest.sfxPick';
+  let picks = {};
+  try { picks = JSON.parse(localStorage.getItem(PICK_KEY) || '{}') || {}; } catch (e) { picks = {}; }
+  const pickBuf = {}, pickLoading = {};
+  function loadPick(id) {
+    if (!ac || !id || pickLoading[id]) return pickLoading[id];
+    return (pickLoading[id] = fetch(`audio/pilihan/${id}.mp3`).then(r => (r.ok ? r.arrayBuffer() : Promise.reject()))
+      .then(b => new Promise((ok, no) => ac.decodeAudioData(b, ok, no)))
+      .then(buf => (pickBuf[id] = buf)).catch(() => { delete pickLoading[id]; return null; }));
+  }
+  function playBuf(buf) {
+    try { const src = ac.createBufferSource(); src.buffer = buf; src.connect(sfxBus); src.start(); return true; } catch (e) { return false; }
+  }
+  // Bungkus semua efek: bila ada pilihan yang sudah termuat → putar itu; selain itu → suara bawaan
+  const base = {};
+  for (const k of Object.keys(sfx)) {
+    base[k] = sfx[k];
+    sfx[k] = (...a) => { const id = picks[k]; if (id && ac && pickBuf[id] && playBuf(pickBuf[id])) return; return base[k](...a); };
+  }
+  const choose = {
+    get: () => Object.assign({}, picks),
+    set(slot, id) {
+      if (id) picks[slot] = id; else delete picks[slot];
+      try { localStorage.setItem(PICK_KEY, JSON.stringify(picks)); } catch (e) { /* abaikan */ }
+      loadPick(id);
+    },
+    reset() { picks = {}; try { localStorage.removeItem(PICK_KEY); } catch (e) { /* abaikan */ } },
+    /** Dengarkan contoh: id file, atau kosong = suara bawaan efek itu. */
+    preview(slot, id) {
+      unlock();
+      if (!id) return base[slot] && base[slot]();
+      if (pickBuf[id]) return playBuf(pickBuf[id]);
+      const p = loadPick(id);
+      if (p) p.then(buf => buf && playBuf(buf));
+    }
+  };
+
+  return {unlock, sfx, music, speak, setVolumes, SONGS, choose, loaded: () => Object.fromEntries(Object.entries(buffers).map(([k, v]) => [k, v.length]))};
 })();

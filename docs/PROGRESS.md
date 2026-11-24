@@ -156,5 +156,10 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Perkamen untuk isi (tulisan cokelat), kayu untuk bilah atas/HUD/soal/tab, tombol jawaban 4 warna berbingkai, judul pesan di atas pita merah. SW `mq-v11`.
 - Belum: ikon/bar HP khusus, slot item, peta & cutscene belum disesuaikan.
 
+### 2026-11-25 — 🎧 Coba Suara + 7 paket Kenney diunduh
+- Diunduh ke `C:\proyek\math-quest-aset\kenney` (di luar repo): Music Jingles, Impact Sounds, Emotes Pack, Pixel UI Pack, Minimap Pack, UI Audio, Digital Audio. Seluruh katalog Kenney (219 paket) CC0.
+- 50 kandidat efek (396 KB) di `audio/pilihan/`, untuk 12 efek: benar, salah, serang, kritikal, terkena, monster kalah, naik level, medali, peti, koin, tombol, ramuan.
+- Layar **Coba Suara** (`js/soundlab.js`, dari Orang Tua): ketuk untuk mendengar & memilih; disimpan di `localStorage['mathQuest.sfxPick']`. `audio.js` membungkus semua `sfx.*`: pilihan yang termuat diputar, selain itu suara bawaan. "Salin pilihan" untuk dijadikan bawaan. SW `mq-v12`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
