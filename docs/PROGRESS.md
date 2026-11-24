@@ -132,5 +132,11 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Monster kunci: HP ×1,5, XP ×2, label "⭐ KUNCI". Sprite baru: momo, kapten, crab, ghost; latar cutscene gua/kapal/perpus; bunyi serangan kepiting & hantu.
 - Naskah suara kini 68 baris. SW `mq-v6`.
 
+### 2026-11-24 — Koleksi: Buku Monster, Medali, Kostum
+- **Buku Monster** (`js/collection.js`, tombol di Halaman Utama): 27 kartu; belum ditemukan = bayangan + petunjuk lokasi. Detail: cerita (`lore` di data.js), drop (+Mahkota untuk bos), lokasi (area/dungeon/arena), gaya bertarung (dari kecepatan & kekuatan), jumlah dikalahkan dengan bintang 1/10/25.
+- **Medali** (22): monster, bos, kristal, lulus, 3 dungeon, kombo, KILAT, ahli per jenis soal, Buku Monster, level, Pandai Besi, hari bermain. Diperiksa setelah tiap monster kalah, peti dungeon, ujian, dan di Halaman Utama; hadiah koin atau kostum.
+- **Kostum kepala** (7, dari medali): telinga kucing, pita besar, mahkota bunga, mahkota emas, topi bajak laut, topi penyihir, kacamata. Dipilih di Buat Karakter (Ubah penampilan); tampil di semua gambar pahlawan.
+- Simpanan v9: `bestiary`, `medals`, `costumes`, `kilat`, `crafted`, `hero.costume`. SW `mq-v7`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

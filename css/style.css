@@ -407,3 +407,30 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 .fastBar span { font-size: 12px; }
 .fastTrack { flex: 1; height: 6px; background: var(--hitam); }
 #fastFill { height: 100%; width: 100%; background: linear-gradient(90deg, #ffcd75, #73eff7); }
+
+/* ===== Koleksi: Halaman Utama, Buku Monster, Medali ===== */
+.homeBtns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 12px; }
+.homeBtns .sBtn { background: var(--panel); font-size: 15px; padding: 10px 6px; }
+.bookDetail { padding: 10px 12px; }
+.bookHead { display: flex; gap: 12px; align-items: center; margin-bottom: 6px; }
+#bookImg { width: 88px; height: 88px; background: linear-gradient(#73eff7, #a7f070); border: 3px solid var(--panel-tepi); flex: none; }
+#bookName { display: block; font-size: 22px; color: var(--kuning); }
+#bookRole { color: #94b0c2; font-weight: 700; }
+.bookRow { display: grid; grid-template-columns: 120px 1fr; gap: 8px; padding: 5px 0; border-bottom: 2px dashed #566c86; font-size: 15px; line-height: 1.35; }
+.bookRow:last-child { border-bottom: 0; }
+.bookRow b { color: #94b0c2; font-size: 13px; }
+.bookGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.bookCard { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px 2px; background: var(--panel); border: 3px solid #566c86; }
+.bookCard img { width: 100%; max-width: 64px; aspect-ratio: 1; }
+.bookCard small { font-size: 10px; line-height: 1.1; text-align: center; }
+.bookCard i { position: absolute; top: 0; right: 2px; font-size: 9px; font-style: normal; }
+.bookCard.unseen small { color: #566c86; }
+.bookCard.on { border-color: var(--kuning); }
+.medal { display: flex; gap: 10px; align-items: center; padding: 8px 10px; background: var(--panel); border: 3px solid #566c86; opacity: .85; }
+.medal.got { border-color: var(--kuning); opacity: 1; }
+.mIcon { font-size: 30px; width: 48px; height: 48px; display: grid; place-items: center; background: var(--hitam); border: 2px solid #566c86; flex: none; filter: grayscale(.8); }
+.medal.got .mIcon { filter: none; border-color: var(--kuning); }
+.mBody { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.mBody small { font-size: 13px; color: #94b0c2; }
+.mBody .bar > div { background: var(--kuning); }
+.mReward { color: var(--kuning) !important; }

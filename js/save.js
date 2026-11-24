@@ -6,7 +6,7 @@ window.MQ = window.MQ || {};
 
 MQ.Save = (() => {
   const KEY = 'mathQuest.v1'; // nama kunci tetap; versi format ada di dalam data (field v)
-  const VERSION = 8;          // v1: level/xp/monsters/mode. v2: + area selesai, kill per field, statistik. v3: + koin, tas, equipment. v4: + kelas, ujian, misi harian. v5: + poin status (HP/ATK/DEF). v6: + catatan harian, pengaturan. v7: + penampilan pahlawan. v8: + cerita (adegan yang sudah ditonton)
+  const VERSION = 9;          // v1: level/xp/monsters/mode. v2: + area selesai, kill per field, statistik. v3: + koin, tas, equipment. v4: + kelas, ujian, misi harian. v5: + poin status (HP/ATK/DEF). v6: + catatan harian, pengaturan. v7: + penampilan pahlawan. v8: + cerita (adegan yang sudah ditonton). v9: + Buku Monster, medali, kostum
   const MODES = ['campur', 'tambah', 'kurang', 'kali'];
   const OPS = ['tambah', 'kurang', 'kali'];
   const num = (v, def, min) => (Number.isFinite(v) && v >= min ? Math.floor(v) : def);
@@ -45,7 +45,14 @@ MQ.Save = (() => {
     const st = obj(d.settings);
     const seen = {}; // adegan cerita yang sudah ditonton
     for (const [k, v] of Object.entries(obj(obj(d.story).seen))) if (v === true) seen[k] = true;
+    const bestiary = {}; // Buku Monster: id monster → jumlah dikalahkan
+    for (const [k, v] of Object.entries(obj(d.bestiary))) if (num(v, 0, 1) > 0) bestiary[k] = num(v, 0, 1);
+    const medals = {};
+    for (const [k, v] of Object.entries(obj(d.medals))) if (v === true) medals[k] = true;
     return {
+      bestiary, medals,
+      costumes: Array.isArray(d.costumes) ? d.costumes.filter(x => typeof x === 'string') : [],
+      kilat: num(d.kilat, 0, 0), crafted: num(d.crafted, 0, 0),
       story: {seen},
       hero: MQ.Hero ? MQ.Hero.sanitize(d.hero) : null, // penampilan pahlawan; null = belum dibuat → layar Buat Karakter
       days,
@@ -82,7 +89,8 @@ MQ.Save = (() => {
         v: VERSION, level: s.level, xp: s.xp, monsters: s.monsters, mode: s.mode,
         cleared: s.cleared, fieldKills: s.fieldKills, bestCombo: s.bestCombo, stats: s.stats,
         coins: s.coins, inv: s.inv, equip: s.equip, grade: s.grade, examBest: s.examBest, daily: s.daily,
-        alloc: s.alloc, points: s.points, settings: s.settings, days: pruneDays(s.days), hero: s.hero, story: s.story
+        alloc: s.alloc, points: s.points, settings: s.settings, days: pruneDays(s.days), hero: s.hero, story: s.story,
+        bestiary: s.bestiary, medals: s.medals, costumes: s.costumes, kilat: s.kilat, crafted: s.crafted
       }));
     } catch (e) { /* penyimpanan tidak tersedia: game tetap jalan */ }
   }

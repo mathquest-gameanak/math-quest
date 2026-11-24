@@ -272,6 +272,7 @@ MQ.Battle = (() => {
       quest('correct', q.kind); quest('combo', B.combo);
       // Kritikal: pasti jika menjawab cepat (KILAT), selain itu peluang acak dari status & equipment
       const fast = !exam && B.answerTime <= BAL.combat.fastCritSec;
+      if (fast) S.kilat++; // untuk medali "Secepat Kilat"
       const crit = !exam && (fast || Math.random() * 100 < State.critChance()), [lo, hi] = State.atk();
       const extra = exam ? 0 : State.bonusFor(q.kind); // senjata bertopik: damage tambahan untuk jenis soal ini
       const dmg = exam ? 10 : Math.round((rand(lo, hi) + extra) * (crit ? State.critMul() : 1));
@@ -308,6 +309,7 @@ MQ.Battle = (() => {
     anim(els.mWrap, 'defeat');
     sfx.defeat();
     S.monsters++;
+    MQ.Collection.recordKill(B.monId); // Buku Monster
     if (!dungeon) S.fieldKills[f.id] = kills() + 1;
     quest('kill'); if (wasBoss) quest('boss');
     // Di luar dungeon, HP pulih 20% setiap mengalahkan monster
@@ -357,6 +359,7 @@ MQ.Battle = (() => {
       UI.overlay({icon: '🏆', title: 'Area Selesai!', btn: 'Lanjut di sini', cb: done, btn2: 'Ke Peta', cb2: exit,
         text: `Kamu mengalahkan ${Data.monsters[f.boss].name}! ` + (nxt ? `Tempat baru terbuka: ${nxt.name}.` : '')});
     });
+    steps.push(done => MQ.Collection.check(done)); // medali baru (jika ada)
     const run = () => {
       const s = steps.shift();
       if (s) return s(run);
@@ -382,7 +385,7 @@ MQ.Battle = (() => {
     sfx.chest();
     const list = Object.entries(r.items).map(([id, n]) => `${n} ${Data.items[id].name}`).join(', ');
     // cerita penutup dungeon (sekali), lalu peti harta
-    MQ.Cutscene.playOnce(`${f.id}-end`, () => UI.overlay({icon: '🎁', title: 'Peti Harta!', btn: 'Ke Peta', cb: exit,
+    MQ.Cutscene.playOnce(`${f.id}-end`, () => UI.overlay({icon: '🎁', title: 'Peti Harta!', btn: 'Ke Peta', cb: () => MQ.Collection.check(exit),
       text: `Kamu menaklukkan ${f.name}! Isi peti: ${r.coins} koin, ${list}.`}));
   }
 
@@ -407,7 +410,7 @@ MQ.Battle = (() => {
     State.save();
     sfx.fanfare();
     const stars = '⭐'.repeat(ok === N ? 3 : ok >= N - 2 ? 2 : 1);
-    const result = () => UI.overlay({icon: '🎓', title: 'Lulus Kelas 1!', btn: 'Ke Peta', cb: exit,
+    const result = () => UI.overlay({icon: '🎓', title: 'Lulus Kelas 1!', btn: 'Ke Peta', cb: () => MQ.Collection.check(exit),
       text: `${stars} Benar ${ok} dari ${N}. ` + (first ? 'Hadiah: 30 koin & 2 Mahkota Kecil. Dunia Kelas 2 segera hadir!' : 'Kamu tetap juara!')});
     later(() => (first ? MQ.Cutscene.play('ending', result) : result()), 900); // lulus pertama kali → cerita penutup
   }

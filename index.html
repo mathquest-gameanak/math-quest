@@ -31,7 +31,24 @@
       <h1 class="logo">MATH<br>QUEST</h1>
       <div class="heroStage"><img id="homeHero" class="homeHero" alt="Pahlawan"></div>
     </div>
+    <div class="homeBtns"><button id="homeBook" class="sBtn" data-go="book">📖 Buku Monster</button><button id="homeMedal" class="sBtn" data-go="medals">🏅 Medali</button></div>
     <button class="adventure" data-go="map">⚔️ PETUALANGAN</button>
+  </section>
+
+  <!-- ===== BUKU MONSTER ===== -->
+  <section id="scr-book" class="screen">
+    <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Buku Monster</h2><span id="bookProgress" class="coins"></span></header>
+    <div id="bookDetail" class="panel bookDetail">
+      <div class="bookHead"><img id="bookImg" alt=""><div><b id="bookName"></b><small id="bookRole"></small></div></div>
+      <div id="bookInfo"></div>
+    </div>
+    <div id="bookGrid" class="bookGrid"></div>
+  </section>
+
+  <!-- ===== MEDALI ===== -->
+  <section id="scr-medals" class="screen">
+    <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Medali</h2><span id="medalProgress" class="coins"></span></header>
+    <div id="medalList" class="list"></div>
   </section>
 
   <!-- ===== BUAT KARAKTER ===== -->
@@ -46,6 +63,7 @@
       <b class="optLabel">Warna kulit</b><div id="optSkin" class="swatches"></div>
       <b class="optLabel">Pakaian</b><div id="optOutfit" class="picks"></div>
       <b class="optLabel">Warna pakaian</b><div id="optOutfitColor" class="swatches"></div>
+      <div id="optCostumeWrap" hidden><b class="optLabel">Kostum (hadiah medali)</b><div id="optCostume" class="picks"></div></div>
     </div>
     <button id="createDone" class="adventure">Mulai Petualangan!</button>
   </section>
@@ -218,6 +236,7 @@
 <script src="js/create.js"></script>
 <script src="js/story.js"></script>
 <script src="js/cutscene.js"></script>
+<script src="js/collection.js"></script>
 <script src="js/map.js"></script>
 <script src="js/main.js"></script>
 </body>

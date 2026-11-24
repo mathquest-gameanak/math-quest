@@ -30,6 +30,11 @@ MQ.Create = (() => {
     $('optHairColor').innerHTML = sw('hairColor');
     $('optSkin').innerHTML = sw('skin');
     $('optOutfitColor').innerHTML = sw('outfitColor');
+    // Kostum: hanya yang sudah didapat dari medali
+    const owned = S.costumes.filter(c => Hero.COSTUMES[c]);
+    $('optCostumeWrap').hidden = !owned.length;
+    $('optCostume').innerHTML = ['', ...owned].map(c => pickBtn('costume', c,
+      preview({costume: c}) + `<small>${c ? Hero.COSTUMES[c].name : 'Tanpa'}</small>`)).join('');
   };
 
   $('scr-create').addEventListener('click', e => {

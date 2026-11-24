@@ -82,6 +82,9 @@ MQ.UI = (() => {
     $('homeInfo').textContent = `LV ${S.level} · 💎 ${State.shards()}/6 kepingan`;
     $('homeCoins').textContent = `🪙 ${S.coins}`;
     $('btnMusic').textContent = S.settings.music > 0 ? '🎵' : '🔇';
+    $('homeBook').textContent = `📖 Buku Monster ${MQ.Collection.found()}/${MQ.Collection.MONSTER_IDS.length}`;
+    $('homeMedal').textContent = `🏅 Medali ${Object.keys(S.medals).length}/${MQ.Collection.MEDALS.length}`;
+    if (!MQ.Cutscene.isOpen()) MQ.Collection.check(); // medali yang terpenuhi di luar pertarungan (mis. Pandai Besi)
   };
 
   /* Peta petualangan: lihat js/map.js */

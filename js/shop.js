@@ -77,7 +77,7 @@ MQ.Shop = (() => {
     const text = `Kamu punya ${h} ${nameOf(k)}. Dipakai ${n}. Sisa berapa?`;
     UI.quiz({img, title: `Buat ${it.name}`, text, speak: text, ans: h - n, onCorrect: () => {
       recipe.forEach(([key, num]) => { if (key === 'koin') S.coins -= num; else State.removeItem(key, num); });
-      State.addItem(id); State.save();
+      State.addItem(id); S.crafted++; State.save();
       UI.renderers.smith();
       MQ.Audio.sfx.craft();
       UI.overlay({img, title: 'Berhasil dibuat!', text: `${it.name} siap. ${it.desc}`, btn: 'Pakai sekarang', btn2: 'Nanti',

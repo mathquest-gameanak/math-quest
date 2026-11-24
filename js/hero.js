@@ -33,7 +33,8 @@ MQ.Hero = (() => {
       hairColor: pickOpt(h.hairColor, OPTIONS.hairColor, DEFAULT.hairColor),
       skin: pickOpt(h.skin, OPTIONS.skin, DEFAULT.skin),
       outfit: pickOpt(h.outfit, OPTIONS.outfit, DEFAULT.outfit),
-      outfitColor: pickOpt(h.outfitColor, OPTIONS.outfitColor, DEFAULT.outfitColor)
+      outfitColor: pickOpt(h.outfitColor, OPTIONS.outfitColor, DEFAULT.outfitColor),
+      costume: COSTUMES[h.costume] ? h.costume : '' // kepemilikan dicek di layar Buat Karakter
     };
   }
 
@@ -60,6 +61,16 @@ MQ.Hero = (() => {
              7: '.............kbk', 8: '.............kbk', 9: '.............kbk', 10: '.............kb.'},
     hammer: {3: '............kkkk', 4: '............kgGk', 5: '............kgdk', 6: '............kkbk', 7: '.............kbk',
              8: '.............kbk', 9: '.............kbk', 10: '.............kb.'}
+  };
+  // Kostum kepala (hadiah medali). Separuh kiri, dicerminkan. Digambar di atas rambut.
+  const COSTUMES = {
+    telingaKucing: {name: 'Telinga Kucing', rows: {0: '..kk....', 1: '..kpk...', 2: '..kcck..'}, pal: {p: '#f4a3c8', c: '#ffcd75'}},
+    pitaBesar:     {name: 'Pita Besar', rows: {0: '....kk..', 1: '...krrkk', 2: '....kkrr'}, pal: {r: '#e43b44'}},
+    mahkotaBunga:  {name: 'Mahkota Bunga', rows: {1: '...rgygr', 2: '..g.....'}, pal: {r: '#f4a3c8', y: '#ffcd75', g: '#38b764'}},
+    mahkotaEmas:   {name: 'Mahkota Emas', rows: {0: '....y.y.', 1: '....yyyr'}, pal: {y: '#ffcd75', r: '#e43b44'}},
+    topiBajakLaut: {name: 'Topi Bajak Laut', rows: {0: '....kkkk', 1: '..khhhhw', 2: '.kkkkkkk'}, pal: {h: '#333c57', w: '#f4f4f4'}},
+    topiPenyihir:  {name: 'Topi Penyihir', rows: {0: '......kk', 1: '.....kpp', 2: '..kkkkky'}, pal: {p: '#b06fd0', y: '#ffcd75'}},
+    kacamata:      {name: 'Kacamata Pintar', rows: {4: '....kkk.', 5: '....k.kk', 6: '....kkk.'}, pal: {}}
   };
   const WEAPON_PAL = {w: '#f4f4f4', y: '#ffcd75', b: '#ab5236', g: '#94b0c2', G: '#f4f4f4', d: '#566c86'};
   // Perisai di tangan kiri
@@ -93,6 +104,8 @@ MQ.Hero = (() => {
     const body = Object.assign({}, BODY, look.outfit === 'gaun' ? DRESS : {});
     paint(body, bodyPal, true);
     paint(HAIR[look.hair] || {}, {k: K, h: look.hairColor, H: tint(look.hairColor, 0.35), r: '#e43b44'}, true);
+    const cos = COSTUMES[look.costume];
+    if (cos) paint(cos.rows, Object.assign({k: K}, cos.pal), true);
     const items = MQ.Data.items;
     const acc = ACC[equip.aksesori];
     if (acc) paint(acc.rows, Object.assign({k: K}, acc.pal), false);
@@ -107,7 +120,7 @@ MQ.Hero = (() => {
   /** Gambar pahlawan sebagai data-URL PNG. */
   function url(look, equip = {}) {
     look = look || DEFAULT;
-    const key = JSON.stringify([look.hair, look.hairColor, look.skin, look.outfit, look.outfitColor, equip.senjata, equip.pelindung, equip.aksesori]);
+    const key = JSON.stringify([look.hair, look.hairColor, look.skin, look.outfit, look.outfitColor, look.costume, equip.senjata, equip.pelindung, equip.aksesori]);
     if (cache[key]) return cache[key];
     const grid = compose(look, equip);
     const c = document.createElement('canvas');
@@ -120,5 +133,5 @@ MQ.Hero = (() => {
   /** Pahlawan pemain saat ini (penampilan + equipment yang dipakai). */
   const current = () => url(MQ.State.S.hero, MQ.State.S.equip);
 
-  return {OPTIONS, DEFAULT, sanitize, url, current, BODY, HAIR, WEAPON, SHIELD, DRESS, ACC};
+  return {OPTIONS, DEFAULT, COSTUMES, sanitize, url, current, BODY, HAIR, WEAPON, SHIELD, DRESS, ACC};
 })();
