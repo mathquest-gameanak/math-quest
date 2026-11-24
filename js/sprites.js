@@ -168,6 +168,9 @@ MQ.Sprites = (() => {
     ring: {mirror: true, pal: {k: K, r: '#e43b44', y: '#ffcd75'}, rows: [
       '...k', '..kr', '.kyk', 'ky..', 'ky..', 'ky..', '.kyy', '..kk']},
 
+    bag: {mirror: true, pal: {k: K, b: '#ab5236', y: '#ffcd75'}, rows: [
+      '..kk', '.k..', 'kkkk', 'kbbb', 'kbyb', 'kbbb', 'kbbb', 'kkkk']},
+
     /* Hati untuk HUD (7×6). Hati kosong = palet diganti abu-abu. */
     heart: {pal: {k: K, r: '#e43b44', w: '#f4f4f4'}, rows: [
       '.kk.kk.',

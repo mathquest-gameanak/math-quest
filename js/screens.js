@@ -10,10 +10,23 @@ MQ.UI = (() => {
 
   /* ===== Pindah layar: tiap <section class="screen" id="scr-NAMA"> ===== */
   const renderers = {};
+  const TABS = ['home', 'char', 'bag', 'shop', 'smith', 'quests']; // layar yang memakai bilah tombol bawah
   function show(name) {
     document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === 'scr-' + name));
     if (renderers[name]) renderers[name]();
+    const tabbed = TABS.includes(name);
+    $('tabbar').hidden = !tabbed;
+    document.body.classList.toggle('hasTabs', tabbed);
+    if (tabbed) updateTabs(name);
     window.scrollTo(0, 0);
+  }
+  /** Bilah tombol bawah: tombol aktif, gambar pahlawan, dan tanda angka (misi & poin status). */
+  function updateTabs(active) {
+    document.querySelectorAll('#tabbar [data-tab]').forEach(b => b.classList.toggle('on', b.dataset.tab === active));
+    $('tabHero').src = MQ.Hero.current();
+    const n = MQ.Quests.claimable();
+    $('questBadge').hidden = !n; $('questBadge').textContent = n;
+    $('charBadge').hidden = !S.points; $('charBadge').textContent = S.points;
   }
 
   /** Gambar ikon item sebagai <img> (data dari data.js). */
@@ -62,10 +75,11 @@ MQ.UI = (() => {
 
   /* ===== Layar Utama ===== */
   renderers.home = () => {
-    $('homeInfo').textContent = `Kelas ${S.grade > 1 ? '1 ✓ Lulus' : '1'} · LV ${S.level} · 🪙 ${S.coins}`;
-    const n = MQ.Quests.claimable(); // tanda misi yang hadiahnya bisa diambil
-    $('questBadge').hidden = !n; $('questBadge').textContent = n;
-    $('charBadge').hidden = !S.points; $('charBadge').textContent = S.points; // poin status belum dibagi
+    const hero = MQ.Hero.current();
+    $('homeHero').src = hero; $('homeAvatar').src = hero;
+    $('homeName').textContent = (S.hero && S.hero.name) || 'Pahlawan'; // nama dari pemain → textContent
+    $('homeInfo').textContent = `LV ${S.level} · ${S.grade > 1 ? 'Lulus Kelas 1' : 'Kelas 1'}`;
+    $('homeCoins').textContent = `🪙 ${S.coins}`;
   };
 
   /* ===== Peta ===== */
@@ -117,6 +131,8 @@ MQ.UI = (() => {
   const OP_NAMES = MQ.Questions.NAMES;
   renderers.char = () => {
     $('charLv').textContent = `Level ${S.level}`;
+    $('charName').textContent = (S.hero && S.hero.name) || 'Pahlawan';
+    $('charHero').src = MQ.Hero.current(); // ikut berubah sesuai equipment
     fillXp($('charXpFill'), $('charXpText'));
     const tot = Object.values(S.stats).reduce((a, s) => ({b: a.b + s.b, s: a.s + s.s}), {b: 0, s: 0});
     const pct = s => (s.b + s.s ? Math.round(s.b / (s.b + s.s) * 100) : 0);
@@ -195,8 +211,8 @@ MQ.UI = (() => {
   /* ===== Mulai ===== */
   function init() {
     Sprites.drawField($('homeScene'));
-    $('homeHero').src = Sprites.url('hero');
-    $('charHero').src = Sprites.url('hero');
+    document.querySelectorAll('#tabbar [data-icon]').forEach(img => (img.src = Sprites.url(img.dataset.icon)));
+    $('btnEditLook').addEventListener('click', () => MQ.Create.open('char'));
     document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) show(b.dataset.go); });
     document.addEventListener('pointerdown', MQ.Audio.unlock, {passive: true}); // suara butuh interaksi pertama
   }

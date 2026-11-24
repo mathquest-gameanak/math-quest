@@ -21,19 +21,32 @@
   <section id="scr-home" class="screen">
     <div class="homeArt">
       <canvas id="homeScene"></canvas>
+      <!-- Bilah atas: profil pahlawan, koin, tombol kecil orang tua -->
+      <div class="homeTop">
+        <button class="who" data-go="char"><img id="homeAvatar" alt=""><span><b id="homeName"></b><small id="homeInfo"></small></span></button>
+        <span id="homeCoins" class="coinPill"></span>
+        <button class="parentBtn" data-go="parent" aria-label="Untuk Orang Tua">👪</button>
+      </div>
       <h1 class="logo">MATH<br>QUEST</h1>
-      <img id="homeHero" class="homeHero" alt="Pahlawan">
+      <div class="heroStage"><img id="homeHero" class="homeHero" alt="Pahlawan"></div>
     </div>
-    <div id="homeInfo" class="panel homeInfo"></div>
-    <div class="menu">
-      <button class="big go wide" data-go="map">⚔️ Petualangan</button>
-      <button class="big quest-ish" data-go="char">🧑 Karakter <b id="charBadge" class="badge" hidden></b></button>
-      <button class="big" data-go="bag">🎒 Tas</button>
-      <button class="big" data-go="shop">🏪 Toko</button>
-      <button class="big" data-go="smith">🔨 Pandai Besi</button>
-      <button class="big wide quest" data-go="quests">📜 Misi Harian <b id="questBadge" class="badge" hidden></b></button>
+    <button class="adventure" data-go="map">⚔️ PETUALANGAN</button>
+  </section>
+
+  <!-- ===== BUAT KARAKTER ===== -->
+  <section id="scr-create" class="screen">
+    <header class="panel topbar"><h2>Buat Pahlawanmu</h2><button id="createCancel" class="back" hidden>Batal</button></header>
+    <div class="createTop"><img id="createPreview" alt="Pratinjau pahlawan"></div>
+    <div class="panel box createBox">
+      <label class="optLabel" for="heroName">Nama</label>
+      <input id="heroName" maxlength="12" autocomplete="off" placeholder="Nama pahlawan">
+      <b class="optLabel">Rambut</b><div id="optHair" class="picks"></div>
+      <b class="optLabel">Warna rambut</b><div id="optHairColor" class="swatches"></div>
+      <b class="optLabel">Warna kulit</b><div id="optSkin" class="swatches"></div>
+      <b class="optLabel">Pakaian</b><div id="optOutfit" class="picks"></div>
+      <b class="optLabel">Warna pakaian</b><div id="optOutfitColor" class="swatches"></div>
     </div>
-    <button class="parentBtn" data-go="parent">👪 Untuk Orang Tua</button>
+    <button id="createDone" class="adventure">Mulai Petualangan!</button>
   </section>
 
   <!-- ===== ORANG TUA ===== -->
@@ -51,6 +64,20 @@
       <div class="panel box"><h3>Kemampuan per Jenis Soal</h3><div id="repSkills"></div></div>
       <div class="panel box"><h3>Saran</h3><p id="repAdvice" class="advice"></p></div>
       <div class="panel box"><h3>Pengaturan</h3><div id="repSettings"></div></div>
+      <div class="panel box"><h3>Data Permainan</h3>
+        <p class="note left">Untuk eksperimen: simpan progress sekarang, lalu kembalikan kapan saja (juga untuk pindah HP).</p>
+        <div class="dataBtns">
+          <button id="btnBackupCopy" class="sBtn">Salin kode cadangan</button>
+          <button id="btnBackupFile" class="sBtn">Unduh file cadangan</button>
+        </div>
+        <textarea id="backupText" rows="3" placeholder="Tempel kode cadangan di sini untuk memulihkan" aria-label="Kode cadangan"></textarea>
+        <div class="dataBtns">
+          <button id="btnRestore" class="sBtn">Pulihkan dari kode</button>
+          <label class="sBtn fileBtn">Pulihkan dari file<input id="restoreFile" type="file" accept=".json,.txt,application/json,text/plain" hidden></label>
+        </div>
+        <button id="btnReset" class="sBtn danger">Hapus semua progress</button>
+        <small id="dataMsg" class="dataMsg"></small>
+      </div>
       <p class="note">Semua data hanya tersimpan di HP ini dan tidak dikirim ke mana pun.</p>
     </div>
   </section>
@@ -87,7 +114,7 @@
     <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Karakter</h2></header>
     <div class="panel charTop">
       <img id="charHero" alt="Pahlawan">
-      <div class="charLv"><b id="charLv"></b><div class="bar"><div id="charXpFill" class="xpFill"></div><span id="charXpText"></span></div></div>
+      <div class="charLv"><b id="charName" class="charName"></b><b id="charLv"></b><button id="btnEditLook" class="sBtn small">✏️ Ubah penampilan</button><div class="bar"><div id="charXpFill" class="xpFill"></div><span id="charXpText"></span></div></div>
     </div>
     <div class="panel box"><h3>Bagi Poin Status <small id="charPoints" class="pts"></small></h3><div id="charAlloc"></div></div>
     <div class="panel box"><h3>Statistik</h3><div id="charStats"></div></div>
@@ -144,6 +171,16 @@
   </section>
 </main>
 
+<!-- Bilah tombol bawah (tampil di layar utama & menu) -->
+<nav id="tabbar" class="tabbar" hidden>
+  <button data-go="home" data-tab="home"><img data-icon="crown" alt=""><span>Beranda</span></button>
+  <button data-go="char" data-tab="char"><img id="tabHero" alt=""><span>Karakter</span><b id="charBadge" class="badge" hidden></b></button>
+  <button data-go="bag" data-tab="bag"><img data-icon="bag" alt=""><span>Tas</span></button>
+  <button data-go="shop" data-tab="shop"><img data-icon="coin" alt=""><span>Toko</span></button>
+  <button data-go="smith" data-tab="smith"><img data-icon="hammer" alt=""><span>Pandai Besi</span></button>
+  <button data-go="quests" data-tab="quests"><img data-icon="star" alt=""><span>Misi</span><b id="questBadge" class="badge" hidden></b></button>
+</nav>
+
 <!-- Jendela pesan -->
 <div id="overlay" hidden><div class="card panel">
   <div id="ovIcon"></div><h2 id="ovTitle"></h2><p id="ovText"></p>
@@ -158,12 +195,15 @@
 <script src="js/sprites.js"></script>
 <script src="js/visuals.js"></script>
 <script src="js/data.js"></script>
+<script src="js/balance.js"></script>
+<script src="js/hero.js"></script>
 <script src="js/state.js"></script>
 <script src="js/screens.js"></script>
 <script src="js/battle.js"></script>
 <script src="js/shop.js"></script>
 <script src="js/quests.js"></script>
 <script src="js/parent.js"></script>
+<script src="js/create.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

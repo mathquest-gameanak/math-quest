@@ -14,7 +14,7 @@ window.MQ = window.MQ || {};
 
 MQ.Battle = (() => {
   const {rand, Questions, Audio, Sprites, Data, State, UI} = MQ;
-  const sfx = Audio.sfx, S = State.S;
+  const sfx = Audio.sfx, S = State.S, BAL = MQ.Balance;
   const $ = id => document.getElementById(id);
   const els = {};
   ['scr-battle', 'overlay', 'btnExit', 'btnPotion', 'potionCount', 'fieldName', 'lvl', 'heroHpFill', 'heroHpText', 'xpFill', 'xpText',
@@ -45,7 +45,7 @@ MQ.Battle = (() => {
     els.btnPotion.hidden = pots === 0 || B.mode === 'exam';
     els.potionCount.textContent = '×' + pots;
     els.btnPotion.disabled = S.hp >= max;
-    els.combo.textContent = B.combo >= 3 ? `🔥 KOMBO x${B.combo}!` : B.combo > 0 ? `Beruntun ${B.combo}` : '';
+    els.combo.textContent = B.combo >= BAL.combat.comboForCrit ? `🔥 KOMBO x${B.combo}!` : B.combo > 0 ? `Beruntun ${B.combo}` : '';
     if (B.mode === 'exam') {
       els.count.textContent = `📝 Soal ${Math.min(B.exam.i + 1, B.exam.qs.length)} dari ${B.exam.qs.length} · Benar ${B.exam.ok}`;
     } else if (B.mode === 'dungeon') {
@@ -82,13 +82,19 @@ MQ.Battle = (() => {
   /** Jeda serangan berikutnya (detik): acak dalam rentang monster × pace tempat; bos sedikit lebih lambat. */
   function newInterval() {
     const [a, b] = style().spd;
-    return (a + Math.random() * (b - a)) * (B.field.pace || 1) * (B.isBoss ? 1.2 : 1);
+    return (a + Math.random() * (b - a)) * (B.field.pace || 1) * (B.isBoss ? BAL.monster.bossSlowMul : 1);
   }
   /** Damage serangan musuh: tergantung level tempat & kekuatan monster, dikurangi pertahanan pemain (min 1). */
   function enemyDamage() {
-    const lv = B.mode === 'arena' ? S.level : B.field.lv[0];
-    const raw = Math.round((3 + lv) * style().power * (B.isBoss ? 1.5 : 1));
+    const M = BAL.monster;
+    const raw = Math.round((M.dmgBase + M.dmgPerLevel * areaLevel()) * style().power * (B.isBoss ? M.bossDmgMul : 1));
     return Math.max(1, raw - State.def());
+  }
+  /** Level kekuatan monster di tempat ini (Arena: level pemain). Pilihan min/mid/max di balance.js. */
+  function areaLevel() {
+    if (B.mode === 'arena') return S.level;
+    const [lo, hi] = B.field.lv, how = BAL.monster.areaLevel;
+    return how === 'max' ? hi : how === 'mid' ? Math.round((lo + hi) / 2) : lo;
   }
   /** Waktu musuh berjalan hanya saat anak sedang menjawab. */
   const timerActive = () => els['scr-battle'].classList.contains('on') && els.overlay.hidden && !B.locked &&
@@ -149,6 +155,7 @@ MQ.Battle = (() => {
     els.atkBar.hidden = B.mode === 'exam' || S.settings.santai; // ujian & Mode Santai: musuh tidak menyerang berwaktu
     els.fx.innerHTML = ''; els.slash.className = '';
     renderModes();
+    els.hero.src = MQ.Hero.current(); // penampilan + equipment terbaru
     UI.show('battle');
     spawnMonster(); nextQuestion(); updateHud();
   }
@@ -178,8 +185,8 @@ MQ.Battle = (() => {
     if (B.mode === 'exam') { // HP ujian = jumlah soal × 10; tiap jawaban benar -10
       B.maxHp = B.exam.qs.length * 10;
     } else {
-      const fLv = B.mode === 'arena' ? S.level : f.lv[0]; // kekuatan monster: level tempat (Arena: level pemain)
-      B.maxHp = (30 + fLv * 6) * (B.isBoss ? 2 : 1);
+      const M = BAL.monster;
+      B.maxHp = (M.hpBase + areaLevel() * M.hpPerLevel) * (B.isBoss ? M.bossHpMul : 1);
     }
     B.hp = B.maxHp;
     B.charge = 0; B.interval = newInterval();
@@ -239,9 +246,9 @@ MQ.Battle = (() => {
       btn.classList.add('benar');
       B.combo++; S.bestCombo = Math.max(S.bestCombo, B.combo);
       quest('correct', q.kind); quest('combo', B.combo);
-      const crit = !exam && B.combo >= 3, [lo, hi] = State.atk();
+      const crit = !exam && B.combo >= BAL.combat.comboForCrit, [lo, hi] = State.atk();
       const extra = exam ? 0 : State.bonusFor(q.kind); // senjata bertopik: damage tambahan untuk jenis soal ini
-      const dmg = exam ? 10 : (rand(lo, hi) + extra) * (crit ? 2 : 1);
+      const dmg = exam ? 10 : (rand(lo, hi) + extra) * (crit ? BAL.combat.critMul : 1);
       if (extra) showFloat('⚔️ Bonus senjata!', 'xp', 0.15);
       if (exam) B.exam.ok++;
       B.hp = Math.max(0, B.hp - dmg);
@@ -278,11 +285,11 @@ MQ.Battle = (() => {
     quest('kill'); if (wasBoss) quest('boss');
     // Di luar dungeon, HP pulih 20% setiap mengalahkan monster
     if (!dungeon) {
-      const heal = Math.min(State.maxHp() - S.hp, Math.round(State.maxHp() * 0.2));
+      const heal = Math.min(State.maxHp() - S.hp, Math.round(State.maxHp() * BAL.combat.healOnKillPct / 100));
       if (heal > 0) { S.hp += heal; showFloat(`+${heal} HP`, 'heal', 0.1, 'hero'); }
     }
     // XP berkurang jika pemain sudah jauh di atas level tempat (Arena: selalu penuh)
-    let gain = wasBoss ? 30 : 10;
+    let gain = wasBoss ? BAL.xp.boss : BAL.xp.normal;
     const over = B.mode === 'arena' ? 0 : S.level - f.lv[1];
     if (over > 0) gain = Math.max(1, Math.round(gain / (1 + over)));
     gain = Math.round(gain * (1 + State.effect('xp') / 100)); // aksesori XP
@@ -291,10 +298,11 @@ MQ.Battle = (() => {
 
     // Hadiah: koin + bahan. Bos: lebih banyak koin, 3 bahan, dan 1 Mahkota Kecil.
     const mon = Data.monsters[B.monId];
-    const coins = (wasBoss ? 8 : rand(1, 2)) + State.effect('coins');
+    const R = BAL.rewards;
+    const coins = (wasBoss ? R.coinsBoss : rand(R.coinsNormal[0], R.coinsNormal[1])) + State.effect('coins');
     S.coins += coins;
     showFloat(`+${coins} koin`, 'coin', 0.25);
-    const loot = wasBoss ? [[mon.drop, 3], ['mahkota', 1]] : Math.random() < 0.7 ? [[mon.drop, 1]] : [];
+    const loot = wasBoss ? [[mon.drop, R.bossDrops], ['mahkota', 1]] : Math.random() < R.dropChance ? [[mon.drop, 1]] : [];
     loot.forEach(([id, n], i) => { State.addItem(id, n); showFloat(`+${n} ${Data.items[id].name}`, 'loot', 0.5 + i * 0.25); });
     const firstClear = wasBoss && B.mode === 'field' && !S.cleared.includes(f.id);
     if (firstClear) S.cleared.push(f.id);
@@ -387,7 +395,6 @@ MQ.Battle = (() => {
 
   /* Gambar latar & pahlawan sekali saja */
   Sprites.drawField(els.scene);
-  els.hero.src = Sprites.url('hero');
   els.btnPotion.querySelector('img').src = Sprites.url('potion');
 
   // currentQuestion & state: untuk pengujian otomatis

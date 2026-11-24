@@ -91,5 +91,14 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - **Jangan** hosting di danapeta.github.io: service worker DanaPeta (Workbox NavigationRoute) mengambil alih semua halaman di origin itu, dan origin yang sama berarti berbagi penyimpanan dengan aplikasi keuangan.
 - Email commit repo ini memakai noreply GitHub (bukan email pribadi).
 
+### 2026-11-24 — Tahap 6 putaran 1 (masukan tampilan dari user)
+- **Buat Karakter** (`js/create.js`, `js/hero.js`): nama, rambut (kuncir/panjang/pendek), warna rambut, kulit, gaun/baju, warna pakaian. Muncul saat pertama main (`S.hero` kosong); bisa diubah dari Karakter → "Ubah penampilan".
+- **Pahlawan berlapis** 16×16: badan → pakaian → rambut → aksesori → perisai → senjata. Equipment terlihat (pedang/kapak/tongkat/palu sesuai ikon item, perisai, kalung, bintang).
+- **Halaman Utama modern**: profil + koin + tombol 👪 kecil di kanan atas, logo besar, pahlawan di tengah, tombol PETUALANGAN, dan **bilah tombol bawah** (Beranda, Karakter, Tas, Toko, Pandai Besi, Misi) di layar menu.
+- **Orang Tua → Data Permainan**: salin/unduh kode cadangan (`MQ1:` + base64 JSON), pulihkan dari kode/file, hapus semua progress (dengan konfirmasi).
+- **`js/balance.js`**: semua angka keseimbangan (HP/serangan pemain, poin per level, HP & damage monster, XP, hadiah) + penjelasan cara mengatur. Nilai belum diubah.
+- Simpanan v7: `hero`. SW `mq-v2`.
+- Berikutnya (putaran 2): peta petualangan sungguhan, efek suara bervariasi, musik tema chiptune + pengaturan volume.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

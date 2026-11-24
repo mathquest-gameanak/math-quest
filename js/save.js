@@ -6,7 +6,7 @@ window.MQ = window.MQ || {};
 
 MQ.Save = (() => {
   const KEY = 'mathQuest.v1'; // nama kunci tetap; versi format ada di dalam data (field v)
-  const VERSION = 6;          // v1: level/xp/monsters/mode. v2: + area selesai, kill per field, statistik. v3: + koin, tas, equipment. v4: + kelas, ujian, misi harian. v5: + poin status (HP/ATK/DEF). v6: + catatan harian, pengaturan
+  const VERSION = 7;          // v1: level/xp/monsters/mode. v2: + area selesai, kill per field, statistik. v3: + koin, tas, equipment. v4: + kelas, ujian, misi harian. v5: + poin status (HP/ATK/DEF). v6: + catatan harian, pengaturan. v7: + penampilan pahlawan
   const MODES = ['campur', 'tambah', 'kurang', 'kali'];
   const OPS = ['tambah', 'kurang', 'kali'];
   const num = (v, def, min) => (Number.isFinite(v) && v >= min ? Math.floor(v) : def);
@@ -43,6 +43,7 @@ MQ.Save = (() => {
     });
     const st = obj(d.settings);
     return {
+      hero: MQ.Hero ? MQ.Hero.sanitize(d.hero) : null, // penampilan pahlawan; null = belum dibuat → layar Buat Karakter
       days,
       settings: {santai: st.santai === true, autoSpeak: st.autoSpeak === true}, // diatur di layar Orang Tua
       alloc, points,
@@ -76,10 +77,38 @@ MQ.Save = (() => {
         v: VERSION, level: s.level, xp: s.xp, monsters: s.monsters, mode: s.mode,
         cleared: s.cleared, fieldKills: s.fieldKills, bestCombo: s.bestCombo, stats: s.stats,
         coins: s.coins, inv: s.inv, equip: s.equip, grade: s.grade, examBest: s.examBest, daily: s.daily,
-        alloc: s.alloc, points: s.points, settings: s.settings, days: pruneDays(s.days)
+        alloc: s.alloc, points: s.points, settings: s.settings, days: pruneDays(s.days), hero: s.hero
       }));
     } catch (e) { /* penyimpanan tidak tersedia: game tetap jalan */ }
   }
 
-  return {load, save, MODES};
+  /* ===== Cadangan (untuk orang tua): kode teks berisi seluruh simpanan ===== */
+  /** Kode cadangan = JSON simpanan, di-base64 (aman untuk huruf non-ASCII seperti nama). */
+  function exportCode() {
+    let raw = '';
+    try { raw = localStorage.getItem(KEY) || ''; } catch (e) { raw = ''; }
+    const bytes = new TextEncoder().encode(raw);
+    let bin = '';
+    bytes.forEach(b => (bin += String.fromCharCode(b)));
+    return 'MQ1:' + btoa(bin);
+  }
+  /** Pulihkan dari kode atau isi file cadangan. Kembalikan true jika berhasil (lalu halaman perlu dimuat ulang). */
+  function importCode(text) {
+    try {
+      const t = String(text).trim();
+      let json = t;
+      if (t.startsWith('MQ1:')) {
+        const bin = atob(t.slice(4));
+        json = new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)));
+      }
+      const d = JSON.parse(json);
+      if (!d || typeof d !== 'object' || Array.isArray(d) || !('level' in d)) return false;
+      localStorage.setItem(KEY, JSON.stringify(d)); // dibersihkan oleh load() saat game dimuat ulang
+      return true;
+    } catch (e) { return false; }
+  }
+  /** Hapus semua progress. */
+  function reset() { try { localStorage.removeItem(KEY); } catch (e) {} }
+
+  return {load, save, MODES, exportCode, importCode, reset};
 })();

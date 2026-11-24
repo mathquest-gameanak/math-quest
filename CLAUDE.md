@@ -11,6 +11,7 @@ Game RPG matematika pixel art 2D untuk anak SD (mulai kelas 1). Kelak mungkin di
 - Script klasik dengan namespace global `MQ` (bukan ES module) agar bisa dibuka langsung. Urutan `<script>` di `index.html` penting; `game.js` terakhir.
 - Semua teks UI dalam **Bahasa Indonesia**, singkat, untuk anak 6–7 tahun. Angka & teks pakai font tebal yang mudah dibaca, bukan font pixel.
 - Sprite ditulis sebagai baris karakter di `js/sprites.js` (format dijelaskan di atas file). Palet tiap sprite memakai warna yang sudah ada.
+- Angka keseimbangan (HP, damage, XP, hadiah) hanya diubah di `js/balance.js`.
 - Prinsip: tidak ada game over, salah = belajar (tunjukkan jawaban benar).
 - `localStorage` selalu dalam try/catch; naikkan `VERSION` di `js/save.js` jika format simpanan berubah dan tambahkan migrasi.
 

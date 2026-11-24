@@ -1,16 +1,13 @@
 /* Math Quest — status pemain bersama (dipakai semua layar) + aturan level, status, item & equipment.
 
-   Status pemain:
-     HP maks    = 40 + 5×level + 10×poin HP   + bonus equipment (hp)
-     Serangan   = 8..12 + level + 2×poin ATK  + bonus equipment (atk)
-     Pertahanan = poin DEF                    + bonus equipment (def)   → mengurangi damage musuh
-   Setiap naik level: +3 poin status yang dibagi sendiri oleh pemain di layar Karakter. */
+   Status pemain (HP, Serangan, Pertahanan) & poin status per level: rumus dan angkanya di js/balance.js. */
 'use strict';
 window.MQ = window.MQ || {};
 
 MQ.State = (() => {
   const items = MQ.Data.items;
-  const POINTS_PER_LEVEL = 3;
+  const P = MQ.Balance.player, X = MQ.Balance.xp;
+  const POINTS_PER_LEVEL = P.pointsPerLevel;
   const S = MQ.Save.load();
 
   /** Item yang sedang dipakai di slot tertentu (atau null). */
@@ -18,10 +15,11 @@ MQ.State = (() => {
   /** Jumlah efek dari semua equipment yang dipakai, mis. effect('hp'). */
   const effect = key => ['senjata', 'pelindung', 'aksesori'].reduce((n, s) => n + ((gear(s) || {})[key] || 0), 0);
 
-  const maxHp = () => 40 + 5 * S.level + 10 * S.alloc.hp + effect('hp');
-  const atk = () => { const b = 8 + S.level + 2 * S.alloc.atk + effect('atk'); return [b, b + 4]; }; // rentang damage
-  const def = () => S.alloc.def + effect('def');
-  const xpNeed = lv => 30 + (lv - 1) * 15; // XP untuk naik dari level lv
+  // Rumus & angka: lihat js/balance.js
+  const maxHp = () => P.baseHp + P.hpPerLevel * S.level + P.hpPerPoint * S.alloc.hp + effect('hp');
+  const atk = () => { const b = P.baseAtk + P.atkPerLevel * S.level + P.atkPerPoint * S.alloc.atk + effect('atk'); return [b, b + P.atkSpread]; };
+  const def = () => P.defPerPoint * S.alloc.def + effect('def');
+  const xpNeed = lv => X.base + (lv - 1) * X.perLevel; // XP untuk naik dari level lv
   /** Damage tambahan senjata untuk jenis soal tertentu. */
   const bonusFor = kind => { const w = gear('senjata'); return w && w.bonus && w.bonus.kinds.includes(kind) ? w.bonus.dmg : 0; };
 
@@ -38,7 +36,7 @@ MQ.State = (() => {
   function spendPoint(stat) {
     if (S.points <= 0 || !(stat in S.alloc)) return false;
     S.points--; S.alloc[stat]++;
-    if (stat === 'hp') S.hp += 10;
+    if (stat === 'hp') S.hp += P.hpPerPoint;
     return true;
   }
 

@@ -90,5 +90,51 @@ MQ.Parent = (() => {
     State.save(); renderSettings();
   });
 
+  /* ===== Data permainan: cadangkan, pulihkan, hapus ===== */
+  const msg = t => ($('dataMsg').textContent = t);
+  $('btnBackupCopy').addEventListener('click', async () => {
+    State.save();
+    const code = MQ.Save.exportCode();
+    $('backupText').value = code;
+    try { await navigator.clipboard.writeText(code); msg('Kode cadangan disalin. Simpan di catatan/WhatsApp.'); }
+    catch (e) { $('backupText').select(); msg('Kode ada di kotak di atas. Tekan lama untuk menyalin.'); }
+  });
+  $('btnBackupFile').addEventListener('click', () => {
+    State.save();
+    try {
+      const blob = new Blob([MQ.Save.exportCode()], {type: 'text/plain'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `math-quest-cadangan-${State.today()}.txt`;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+      msg('File cadangan diunduh.');
+    } catch (e) { msg('Tidak bisa mengunduh di sini. Pakai "Salin kode cadangan".'); }
+  });
+  /** Pulihkan lalu muat ulang game agar semua layar memakai data baru. */
+  function restore(text) {
+    if (!MQ.Save.importCode(text)) return msg('Kode/file cadangan tidak dikenali.');
+    msg('Berhasil dipulihkan. Memuat ulang...');
+    setTimeout(() => location.reload(), 600);
+  }
+  $('btnRestore').addEventListener('click', () => {
+    const t = $('backupText').value.trim();
+    if (!t) return msg('Tempel kode cadangan dulu di kotak di atas.');
+    UI.overlay({icon: '♻️', title: 'Pulihkan progress?', btn: 'Ya, pulihkan', btn2: 'Batal', cb: () => restore(t),
+      text: 'Progress yang sekarang akan diganti dengan isi cadangan.'});
+  });
+  $('restoreFile').addEventListener('change', e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    f.text().then(t => UI.overlay({icon: '♻️', title: 'Pulihkan progress?', btn: 'Ya, pulihkan', btn2: 'Batal', cb: () => restore(t),
+      text: `Progress yang sekarang akan diganti dengan isi file "${f.name}".`}));
+    e.target.value = '';
+  });
+  $('btnReset').addEventListener('click', () => {
+    UI.overlay({icon: '⚠️', title: 'Hapus semua progress?', btn: 'Batal', btn2: 'Ya, hapus semua',
+      text: 'Level, item, koin, dan karakter akan hilang dan game mulai dari awal. Tidak bisa dibatalkan, kecuali kamu sudah menyimpan cadangan.',
+      cb2: () => { MQ.Save.reset(); msg('Semua progress dihapus. Memuat ulang...'); setTimeout(() => location.reload(), 600); }});
+  });
+
   return {};
 })();
