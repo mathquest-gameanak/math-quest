@@ -87,14 +87,20 @@ MQ.Battle = (() => {
   /** Damage serangan musuh: tergantung level tempat & kekuatan monster, dikurangi pertahanan pemain (min 1). */
   function enemyDamage() {
     const M = BAL.monster;
-    const raw = Math.round((M.dmgBase + M.dmgPerLevel * areaLevel()) * style().power * (B.isBoss ? M.bossDmgMul : 1));
+    const raw = Math.round((M.dmgBase + M.dmgPerLevel * B.mLv) * style().power * (B.isBoss ? M.bossDmgMul : 1));
     return Math.max(1, raw - State.def());
   }
-  /** Level kekuatan monster di tempat ini (Arena: level pemain). Pilihan min/mid/max di balance.js. */
-  function areaLevel() {
-    if (B.mode === 'arena') return S.level;
-    const [lo, hi] = B.field.lv, how = BAL.monster.areaLevel;
-    return how === 'max' ? hi : how === 'mid' ? Math.round((lo + hi) / 2) : lo;
+  /** Level monster yang akan muncul (lihat rumus di balance.js):
+      area  → naik 1 level tiap levelUpEvery monster dikalahkan di area itu, maks level tertinggi area
+      gua   → naik 1 level tiap ruang
+      arena → sama dengan level pemain.  Bos mendapat bonus level. */
+  function monsterLevel() {
+    const M = BAL.monster;
+    if (B.mode === 'arena') return S.level + (B.isBoss ? M.bossLevelBonus : 0);
+    const [lo, hi] = B.field.lv;
+    const steps = B.mode === 'dungeon' ? B.room - 1 : Math.floor(kills() / M.levelUpEvery);
+    const lv = Math.min(hi, lo + steps);
+    return B.isBoss ? Math.min(hi + M.bossLevelBonus, lv + M.bossLevelBonus) : lv;
   }
   /** Jenis bunyi serangan: monster kuat & lambat (batu) berdentum, selain itu mengikuti jenis tubuh. */
   function soundKind() { const m = Data.monsters[B.monId]; return style().power >= 1.4 && m.sprite !== 'dragon' ? 'rock' : m.sprite; }
@@ -192,12 +198,13 @@ MQ.Battle = (() => {
       B.maxHp = B.exam.qs.length * 10;
     } else {
       const M = BAL.monster;
-      B.maxHp = (M.hpBase + areaLevel() * M.hpPerLevel) * (B.isBoss ? M.bossHpMul : 1);
+      B.mLv = monsterLevel();
+      B.maxHp = (M.hpBase + B.mLv * M.hpPerLevel) * (B.isBoss ? M.bossHpMul : 1);
     }
     B.hp = B.maxHp;
     B.charge = 0; B.interval = newInterval();
     els.atkFill.style.width = '0%';
-    els.mName.textContent = (B.mode === 'exam' ? '📝 UJIAN: ' : B.isBoss ? '👑 BOS: ' : '') + m.name;
+    els.mName.textContent = (B.mode === 'exam' ? '📝 UJIAN: ' : B.isBoss ? '👑 BOS: ' : '') + m.name + (B.mode === 'exam' ? '' : ` · Lv ${B.mLv}`);
     els.mImg.src = Sprites.url(m.sprite, m.pal);
     els.mWrap.className = B.isBoss ? 'boss' : '';
     anim(els.mWrap, 'pop');
@@ -297,10 +304,13 @@ MQ.Battle = (() => {
       if (heal > 0) { S.hp += heal; showFloat(`+${heal} HP`, 'heal', 0.1, 'hero'); }
     }
     // XP berkurang jika pemain sudah jauh di atas level tempat (Arena: selalu penuh)
-    let gain = wasBoss ? BAL.xp.boss : BAL.xp.normal;
-    const over = B.mode === 'arena' ? 0 : S.level - f.lv[1];
-    if (over > 0) gain = Math.max(1, Math.round(gain / (1 + over)));
-    gain = Math.round(gain * (1 + State.effect('xp') / 100)); // aksesori XP
+    // XP sesuai level monster; dikurangi jika pemain jauh lebih kuat (kecuali Arena). Rumus di balance.js.
+    const X = BAL.xp;
+    let gain = (X.monsterBase + X.perMonsterLevel * B.mLv) * (wasBoss ? X.bossMul : 1);
+    const gap = S.level - B.mLv;
+    const factor = B.mode === 'arena' || gap < X.penaltyFrom ? 1 : Math.max(X.minFactor, 1 - X.penaltyStep * (gap - X.penaltyFrom + 1));
+    gain = Math.max(1, Math.round(gain * factor * (1 + State.effect('xp') / 100))); // + aksesori XP
+    if (factor < 1) showFloat('XP kecil: musuh terlalu lemah', 'loot', 0.8);
     showFloat(`+${gain} XP`, 'xp');
     const leveled = State.addXp(gain);
 

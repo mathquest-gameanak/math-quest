@@ -143,6 +143,14 @@ MQ.Parent = (() => {
       text: `Progress yang sekarang akan diganti dengan isi file "${f.name}".`}));
     e.target.value = '';
   });
+  /* Kembalikan semua poin status yang sudah dibagi, supaya bisa dibagi ulang */
+  $('btnRespec').addEventListener('click', () => {
+    const used = S.alloc.hp + S.alloc.atk + S.alloc.def;
+    if (!used) return msg('Belum ada poin status yang dibagi.');
+    UI.overlay({icon: '🔄', title: 'Atur ulang poin status?', btn: 'Ya, atur ulang', btn2: 'Batal',
+      text: `${used} poin dikembalikan dan bisa dibagi lagi di halaman Karakter.`,
+      cb: () => { S.points += used; S.alloc = {hp: 0, atk: 0, def: 0}; S.hp = Math.min(S.hp, State.maxHp()); State.save(); msg(`${used} poin dikembalikan.`); }});
+  });
   $('btnReset').addEventListener('click', () => {
     UI.overlay({icon: '⚠️', title: 'Hapus semua progress?', btn: 'Batal', btn2: 'Ya, hapus semua',
       text: 'Level, item, koin, dan karakter akan hilang dan game mulai dari awal. Tidak bisa dibatalkan, kecuali kamu sudah menyimpan cadangan.',

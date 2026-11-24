@@ -18,7 +18,7 @@ MQ.State = (() => {
   // Rumus & angka: lihat js/balance.js
   const maxHp = () => P.baseHp + P.hpPerLevel * S.level + P.hpPerPoint * S.alloc.hp + effect('hp');
   const atk = () => { const b = P.baseAtk + P.atkPerLevel * S.level + P.atkPerPoint * S.alloc.atk + effect('atk'); return [b, b + P.atkSpread]; };
-  const def = () => P.defPerPoint * S.alloc.def + effect('def');
+  const def = () => Math.floor(P.defPerPoint * S.alloc.def) + effect('def');
   const xpNeed = lv => X.base + (lv - 1) * X.perLevel; // XP untuk naik dari level lv
   /** Damage tambahan senjata untuk jenis soal tertentu. */
   const bonusFor = kind => { const w = gear('senjata'); return w && w.bonus && w.bonus.kinds.includes(kind) ? w.bonus.dmg : 0; };

@@ -106,5 +106,13 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - **Volume**: penggeser Musik & Efek di Orang Tua → Pengaturan; tombol 🎵/🔇 di Halaman Utama. Tersimpan di `settings.music` / `settings.sfx`.
 - SW `mq-v3`. Diuji di browser: peta & gulir, mulai area dari peta, musik berganti (home → field), semua efek tanpa error, volume tersimpan.
 
+### 2026-11-24 — Penyeimbangan (masukan: kenaikan musuh kurang terasa, area awal terlalu gampang)
+- **Level monster naik bertahap**: level awal area +1 setiap 5 monster dikalahkan (maks level tertinggi area), bos +1. Gua: naik tiap ruang. Arena: = level pemain. Ditampilkan di nama ("Jamur Ungu · Lv 6").
+- **XP dari level monster**: 8 + 2×level (bos ×3). Pemain ≥3 level di atas monster → XP −25% per level selisih, minimal 10% (kecuali Arena). Muncul tulisan "XP kecil: musuh terlalu lemah".
+- **Angka baru** (`balance.js`): Serangan +1/poin (sebelumnya 2), HP +8/poin, HP +6/level, Pertahanan 0,5/poin; monster HP 24 + 9×level, damage (3 + 1,5×level)×kekuatan, bos damage ×1,4.
+- Simulasi (15 monster per area): pemain mencapai ~Lv5 di akhir Padang, 8 Hutan, 11 Bukit, 14 Danau, 17 Lembah, 20 Menara (sesuai rentang area). Semua poin ke Serangan = cepat membunuh tapi mudah KO di bos; seimbang = aman tapi lebih lama.
+- Orang Tua → **Atur ulang poin status** (kembalikan semua poin untuk dibagi ulang).
+- SW `mq-v4`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
