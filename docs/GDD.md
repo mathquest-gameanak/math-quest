@@ -132,6 +132,7 @@ Slot equipment: **senjata, pelindung, aksesori**.
 ## 9. Seni & suara
 
 - **Pixel art 2D**, palet terbatas 16 warna, garis tepi gelap.
+  Keputusan 2026-11-24: tetap pixel art (sampel gaya kartun HD/SVG di `prototype/desain-hd.html` tidak dipakai).
 - Sprite ditulis langsung di kode sebagai baris karakter, tanpa file gambar. Musuh biasa 16×16, bos 24×24, pahlawan 16×16.
 - Latar digambar di kanvas resolusi rendah lalu diperbesar tanpa blur.
 - **Teks dan angka tetap pakai font tebal yang mudah dibaca**, bukan font pixel kecil (pembacanya anak 6 tahun).
