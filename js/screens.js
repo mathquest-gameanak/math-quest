@@ -79,7 +79,7 @@ MQ.UI = (() => {
     const hero = MQ.Hero.current();
     $('homeHero').src = hero; $('homeAvatar').src = hero;
     $('homeName').textContent = (S.hero && S.hero.name) || 'Pahlawan'; // nama dari pemain → textContent
-    $('homeInfo').textContent = `LV ${S.level} · ${S.grade > 1 ? 'Lulus Kelas 1' : 'Kelas 1'}`;
+    $('homeInfo').textContent = `LV ${S.level} · 💎 ${State.shards()}/6 kepingan`;
     $('homeCoins').textContent = `🪙 ${S.coins}`;
     $('btnMusic').textContent = S.settings.music > 0 ? '🎵' : '🔇';
   };

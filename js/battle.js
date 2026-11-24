@@ -110,7 +110,7 @@ MQ.Battle = (() => {
   }
   /** Waktu musuh berjalan hanya saat anak sedang menjawab. */
   const timerActive = () => els['scr-battle'].classList.contains('on') && els.overlay.hidden && !B.locked &&
-    B.mode !== 'exam' && !S.settings.santai && !document.hidden && !(window.speechSynthesis && window.speechSynthesis.speaking);
+    B.mode !== 'exam' && !S.settings.santai && !document.hidden && !MQ.Cutscene.isOpen() && !(window.speechSynthesis && window.speechSynthesis.speaking);
 
   /** Musuh menyerang. Mengembalikan true jika HP pemain habis. */
   function enemyAttack() {
@@ -337,6 +337,7 @@ MQ.Battle = (() => {
         text: (dungeon ? 'Hebat sekali! ' : 'Hebat sekali! HP penuh lagi. ') +
               `Kamu punya ${S.points} poin status. Atur di halaman Karakter untuk menambah HP, Serangan, atau Pertahanan!`});
     });
+    if (firstClear) steps.push(done => MQ.Cutscene.play(`${f.id}-shard`, done)); // cerita: kepingan kristal
     if (firstClear) steps.push(done => {
       const nxt = Data.fields.find(x => x.req === f.id) || Data.dungeons.find(x => x.req === f.id);
       sfx.fanfare();
@@ -392,8 +393,9 @@ MQ.Battle = (() => {
     State.save();
     sfx.fanfare();
     const stars = '⭐'.repeat(ok === N ? 3 : ok >= N - 2 ? 2 : 1);
-    later(() => UI.overlay({icon: '🎓', title: 'Lulus Kelas 1!', btn: 'Ke Peta', cb: exit,
-      text: `${stars} Benar ${ok} dari ${N}. ` + (first ? 'Hadiah: 30 koin & 2 Mahkota Kecil. Dunia Kelas 2 segera hadir!' : 'Kamu tetap juara!')}), 900);
+    const result = () => UI.overlay({icon: '🎓', title: 'Lulus Kelas 1!', btn: 'Ke Peta', cb: exit,
+      text: `${stars} Benar ${ok} dari ${N}. ` + (first ? 'Hadiah: 30 koin & 2 Mahkota Kecil. Dunia Kelas 2 segera hadir!' : 'Kamu tetap juara!')});
+    later(() => (first ? MQ.Cutscene.play('ending', result) : result()), 900); // lulus pertama kali → cerita penutup
   }
 
   /* ===== Ramuan Penyembuh: HP penuh ===== */

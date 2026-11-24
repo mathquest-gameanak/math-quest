@@ -168,6 +168,22 @@ MQ.Sprites = (() => {
     ring: {mirror: true, pal: {k: K, r: '#e43b44', y: '#ffcd75'}, rows: [
       '...k', '..kr', '.kyk', 'ky..', 'ky..', 'ky..', '.kyy', '..kk']},
 
+    /* ===== Tokoh cerita (16×16, dicerminkan) ===== */
+    kakek: {mirror: true, pal: {k: K, s: '#ffcd75', w: '#f4f4f4', e: K, g: '#38b764', b: '#5d275d'}, rows: [
+      '........', '....kkkk', '...kssss', '..kwssss', '..kwsess', '...kssss', '...kwwww', '...kwwww',
+      '..kgkwww', '..kggkww', '..kgggkw', '..kggggg', '..kggggg', '..kggggg', '..kkkkkk', '...kbk..']},
+    penyihir: {mirror: true, pal: {k: K, p: '#b06fd0', y: '#ffcd75', c: '#a7f070', e: K, m: '#e43b44', b: K}, rows: [
+      '.......k', '......kp', '.....kpp', '....kppp', '...kpppp', '..kyyyyy', '.kkkkkkk', '...kcccc',
+      '...kcecc', '...kcccm', '..kpkkkk', '.kpppppp', '.kpppppy', 'kppppppp', 'kkkkkkkk', '..kbk...']},
+    kiki: {mirror: true, pal: {k: K, b: '#ab5236', B: '#ffe4c4', w: '#f4f4f4', e: K, y: '#ffcd75', d: '#5d275d'}, rows: [
+      '........', '..k.....', '..kkkkkk', '.kbbbbbb', '.kbbwwbb', '.kbbwebb', '.kbbbbby', '.kbbBBBB',
+      'kdbBBBBB', 'kdbBBBBB', '.kbBBBBB', '..kbbbbb', '...kkkkk', '...kyk..', '........', '........']},
+    crystal: {mirror: true, pal: {k: K, c: '#73eff7', C: '#f4f4f4'}, rows: [
+      '.......k', '......kc', '.....kcC', '....kccC', '...kcccC', '..kccccC', '.kcccccC', 'kccccccC',
+      'kccccccc', '.kcccccc', '..kccccc', '...kcccc', '....kccc', '.....kcc', '......kc', '.......k']},
+    shard: {mirror: true, pal: {k: K, c: '#73eff7', C: '#f4f4f4'}, rows: [
+      '...k', '..kc', '.kcC', 'kccC', 'kccc', '.kcc', '..kc', '...k']},
+
     bag: {mirror: true, pal: {k: K, b: '#ab5236', y: '#ffcd75'}, rows: [
       '..kk', '.k..', 'kkkk', 'kbbb', 'kbyb', 'kbbb', 'kbbb', 'kkkk']},
 

@@ -69,11 +69,14 @@ MQ.State = (() => {
   const mainFields = () => MQ.Data.fields.filter(f => f.spec);
   /** Field/dungeon/ujian bisa dimasuki? reqAll = semua area biasa harus selesai. */
   const unlocked = place => !place.soon && (!place.req || S.cleared.includes(place.req)) &&
-                            (!place.reqAll || mainFields().every(f => S.cleared.includes(f.id)));
+                            (!place.reqAll || mainFields().every(f => S.cleared.includes(f.id))) &&
+                            (!place.minLevel || S.level >= place.minLevel);
+  /** Jumlah kepingan kristal = area utama yang bosnya sudah dikalahkan (cerita). */
+  const shards = () => mainFields().filter(f => S.cleared.includes(f.id)).length;
 
   const save = () => MQ.Save.save(S);
 
   return {S, POINTS_PER_LEVEL, maxHp, atk, def, xpNeed, bonusFor, effect, gear, addXp, spendPoint,
-          count, addItem, removeItem, equip, unequip, isEquipped, unlocked, mainFields, save,
+          count, addItem, removeItem, equip, unequip, isEquipped, unlocked, mainFields, shards, save,
           today, dateKey, logDay};
 })();

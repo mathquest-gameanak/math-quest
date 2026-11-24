@@ -158,3 +158,25 @@ Slot equipment: **senjata, pelindung, aksesori**.
 - [ ] Pahlawan: satu karakter tetap, atau anak bisa memilih (laki-laki/perempuan, warna)?
 - [ ] Cocokkan tabel materi (bagian 3) dengan buku sekolah anak.
 - [ ] Musik latar: perlu atau cukup efek suara?
+
+## 13. Cerita
+
+### Dunia & tokoh (orisinal)
+- **Desa Bilangan** di Lembah Hijau. Di tengah desa ada **Kristal Angka** yang membuat semua angka rapi.
+- **Kakek Bilang**: kepala desa, pemberi tugas.
+- **Kiki**: burung hantu kecil, teman & pemandu pahlawan (kelak bisa jadi hewan peliharaan).
+- **Penyihir Kusut**: penjahat lucu (tidak menakutkan) yang benci angka rapi. Ia memecah Kristal Angka menjadi **6 kepingan** dan menitipkannya pada para bos.
+
+### Alur utama (Kelas 1)
+1. **Prolog**: desa damai → malam, Penyihir Kusut memecah kristal → monster jadi nakal → Kakek meminta pahlawan mengumpulkan 6 kepingan; Kiki menemani.
+2. **Tiap area**: cutscene pendek saat pertama masuk; setelah bos pertama kali kalah → dapat **kepingan kristal**.
+3. **Menara Seratus** (kepingan ke-6): Penyihir Kusut muncul dan menantang ke Kastil Ujian.
+4. **Kastil Ujian**: terbuka jika 6 area selesai **dan Level 20**. Sebelum ujian: Penyihir memerintah Raja Naga Api.
+5. **Ending** (lulus): kristal utuh, Penyihir kabur, jalan ke Kelas 2 terbuka ("Bersambung…").
+
+### Dungeon bercerita (putaran berikutnya)
+Setiap dungeon punya cerita sendiri dengan cutscene di awal, setelah monster kunci, dan di akhir; bisa diulang untuk latihan & XP selagi menuju Level 20.
+
+### Cutscene
+- Latar pixel, tokoh masuk/berjalan, getar layar, kilatan, kilau; teks muncul huruf demi huruf; ketuk untuk lanjut; tombol "Lewati".
+- Naskah di `js/story.js`. Suara opsional per baris: file `audio/vo/<id>.mp3` (daftar id di `docs/naskah-suara.md`), didaftarkan di `MQ.Story.VO`.

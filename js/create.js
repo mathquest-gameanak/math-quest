@@ -47,6 +47,7 @@ MQ.Create = (() => {
     State.save();
     MQ.Audio.sfx.levelUp();
     UI.show(back);
+    MQ.Cutscene.playOnce('prolog'); // pemain baru: cerita pembuka
   });
   $('createCancel').addEventListener('click', () => UI.show(back));
 

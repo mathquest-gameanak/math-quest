@@ -114,5 +114,14 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Orang Tua → **Atur ulang poin status** (kembalikan semua poin untuk dibagi ulang).
 - SW `mq-v4`.
 
+### 2026-11-24 — Cerita utama & cutscene (Koleksi & Cerita putaran 1)
+- Naskah: GDD bagian 13. Tokoh orisinal: Kakek Bilang, Kiki (burung hantu), Penyihir Kusut; 6 kepingan Kristal Angka.
+- **Mesin cutscene** (`js/cutscene.js`): latar pixel tegak, tokoh masuk/jalan/keluar, efek shake/flash/sparkle/shards/dark, teks mengetik, ketuk lanjut, Lewati. Suara: rekaman `audio/vo/<id>.mp3` jika terdaftar di `MQ.Story.VO`, atau suara HP jika "Bacakan otomatis" nyala.
+- **Adegan** (`js/story.js`, 45 baris): prolog (sekali, juga untuk pemain lama), intro tiap area (sekali, sebelum bertarung), kepingan setelah bos pertama kali, Penyihir menantang di Menara, intro Kastil, ending saat lulus pertama kali.
+- Kastil Ujian butuh 6 area selesai **dan Level 20** (`minLevel`). Halaman Utama menampilkan 💎 kepingan x/6.
+- Sprite baru: kakek, penyihir, kiki, crystal, shard. Simpanan v8: `story.seen`. SW `mq-v5`.
+- `tools/naskah-suara.js` → `docs/naskah-suara.md` (daftar baris bernomor untuk direkam).
+- Berikutnya: dungeon bercerita (Gua Pola + 2 baru), lalu Buku Monster, medali, kostum.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

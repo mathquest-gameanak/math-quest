@@ -175,6 +175,13 @@
   </section>
 </main>
 
+<!-- Cutscene (adegan cerita) -->
+<div id="cutscene" class="cutscene" hidden>
+  <div id="csStage" class="csStage"><canvas id="csBg"></canvas><div id="csActors"></div><div id="csFx"></div></div>
+  <button id="csSkip" class="csSkip">Lewati ⏭</button>
+  <div class="csBox"><img id="csPortrait" alt=""><div class="csWords"><b id="csName"></b><p id="csText"></p></div><span class="csNext">▼</span></div>
+</div>
+
 <!-- Bilah tombol bawah (tampil di layar utama & menu) -->
 <nav id="tabbar" class="tabbar" hidden>
   <button data-go="home" data-tab="home"><img data-icon="crown" alt=""><span>Beranda</span></button>
@@ -208,6 +215,8 @@
 <script src="js/quests.js"></script>
 <script src="js/parent.js"></script>
 <script src="js/create.js"></script>
+<script src="js/story.js"></script>
+<script src="js/cutscene.js"></script>
 <script src="js/map.js"></script>
 <script src="js/main.js"></script>
 </body>

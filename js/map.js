@@ -148,14 +148,18 @@ MQ.WorldMap = (() => {
     const p = places().find(x => x.id === b.dataset.place);
     if (p.soon) return UI.overlay({icon: '🚧', title: p.name, text: 'Tempat ini sedang dibangun. Segera hadir!'});
     if (!State.unlocked(p)) {
-      if (p.reqAll) {
+      if (p.reqAll && !State.mainFields().every(f => S.cleared.includes(f.id))) {
         const all = State.mainFields(), done = all.filter(f => S.cleared.includes(f.id)).length;
         return UI.overlay({icon: '🔒', title: 'Masih Terkunci', text: `Selesaikan semua area Kelas 1 dulu (${done} dari ${all.length} selesai), lalu ikuti Ujian Naik Kelas!`});
+      }
+      if (p.minLevel && S.level < p.minLevel) {
+        return UI.overlay({icon: '💪', title: 'Belum Cukup Kuat', text: `Kastil Ujian butuh Level ${p.minLevel} (sekarang Level ${S.level}). Latihan di area dan dungeon untuk naik level!`});
       }
       const req = Data.fields.find(x => x.id === p.req);
       return UI.overlay({icon: '🔒', title: 'Masih Terkunci', text: `Kalahkan bos di ${req.name} dulu untuk membuka ${p.name}.`});
     }
-    const go = () => MQ.Battle.start(p);
+    // Cerita pembuka tempat ini (sekali saja), lalu bertarung
+    const go = () => MQ.Cutscene.playOnce(`${p.id}-intro`, () => MQ.Battle.start(p));
     if (p.exam) {
       return UI.overlay({icon: '📝', title: 'Ujian Naik Kelas', btn: 'Mulai Ujian', btn2: 'Nanti', cb: go,
         text: `12 soal dari semua area. Musuh tidak menyerang, jawab dengan tenang. Lulus jika benar minimal 9. Nilai terbaikmu: ${S.examBest}.`});
