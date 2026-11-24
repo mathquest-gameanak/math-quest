@@ -25,6 +25,7 @@
       <div class="homeTop">
         <button class="who" data-go="char"><img id="homeAvatar" alt=""><span><b id="homeName"></b><small id="homeInfo"></small></span></button>
         <span id="homeCoins" class="coinPill"></span>
+        <button id="btnMusic" class="parentBtn musicBtn" aria-label="Musik nyala/mati">🎵</button>
         <button class="parentBtn" data-go="parent" aria-label="Untuk Orang Tua">👪</button>
       </div>
       <h1 class="logo">MATH<br>QUEST</h1>
@@ -63,7 +64,7 @@
       <div class="panel box"><h3>7 Hari Terakhir</h3><div id="repDays"></div></div>
       <div class="panel box"><h3>Kemampuan per Jenis Soal</h3><div id="repSkills"></div></div>
       <div class="panel box"><h3>Saran</h3><p id="repAdvice" class="advice"></p></div>
-      <div class="panel box"><h3>Pengaturan</h3><div id="repSettings"></div></div>
+      <div class="panel box"><h3>Pengaturan</h3><div id="repVolumes"></div><div id="repSettings"></div></div>
       <div class="panel box"><h3>Data Permainan</h3>
         <p class="note left">Untuk eksperimen: simpan progress sekarang, lalu kembalikan kapan saja (juga untuk pindah HP).</p>
         <div class="dataBtns">
@@ -106,7 +107,9 @@
   <!-- ===== PETA ===== -->
   <section id="scr-map" class="screen">
     <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Peta Petualangan</h2></header>
-    <div id="mapList" class="map"></div>
+    <div id="mapScroll" class="mapScroll">
+      <div class="mapWrap"><canvas id="mapCanvas"></canvas><div id="mapNodes"></div><img id="mapHero" class="mapHero" alt="Posisimu"></div>
+    </div>
   </section>
 
   <!-- ===== KARAKTER ===== -->
@@ -204,6 +207,7 @@
 <script src="js/quests.js"></script>
 <script src="js/parent.js"></script>
 <script src="js/create.js"></script>
+<script src="js/map.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

@@ -78,11 +78,24 @@ MQ.Parent = (() => {
     ['santai', 'Mode Santai', 'Musuh tidak menyerang berwaktu. Cocok saat anak lelah atau belajar materi baru.'],
     ['autoSpeak', 'Bacakan soal otomatis', 'Setiap soal langsung dibacakan (untuk anak yang belum lancar membaca).']
   ];
+  const VOLUMES = [['music', '🎵 Musik'], ['sfx', '🔔 Efek suara']];
   function renderSettings() {
+    $('repVolumes').innerHTML = VOLUMES.map(([k, label]) =>
+      `<label class="volRow"><span>${label}</span><input type="range" min="0" max="100" step="10" value="${Math.round(S.settings[k] * 100)}" data-vol="${k}">` +
+      `<b>${Math.round(S.settings[k] * 100)}</b></label>`).join('');
     $('repSettings').innerHTML = SETTINGS.map(([k, label, desc]) =>
       `<div class="setRow"><span><b>${label}</b><small>${desc}</small></span>` +
       `<button class="toggle ${S.settings[k] ? 'on' : ''}" data-set="${k}" aria-pressed="${S.settings[k]}">${S.settings[k] ? 'Nyala' : 'Mati'}</button></div>`).join('');
   }
+  $('repVolumes').addEventListener('input', e => {
+    const r = e.target.closest('[data-vol]');
+    if (!r) return;
+    S.settings[r.dataset.vol] = Number(r.value) / 100;
+    r.nextElementSibling.textContent = r.value;
+    MQ.Audio.setVolumes(S.settings.music, S.settings.sfx);
+    State.save();
+  });
+  $('repVolumes').addEventListener('change', () => MQ.Audio.sfx.coin()); // contoh bunyi setelah menggeser
   $('repSettings').addEventListener('click', e => {
     const b = e.target.closest('[data-set]');
     if (!b) return;

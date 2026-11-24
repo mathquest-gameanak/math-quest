@@ -80,7 +80,7 @@ MQ.Quests = (() => {
     S.coins += m.reward.coins;
     if (m.reward.item) State.addItem(m.reward.item);
     State.save();
-    MQ.Audio.sfx.levelUp();
+    MQ.Audio.sfx.chest();
     UI.renderers.quests();
     UI.overlay({icon: '🎉', title: 'Misi Selesai!', text: `Hadiah: ${rewardText(m.reward)}. Misi baru muncul besok!`});
   });

@@ -98,7 +98,13 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - **Orang Tua → Data Permainan**: salin/unduh kode cadangan (`MQ1:` + base64 JSON), pulihkan dari kode/file, hapus semua progress (dengan konfirmasi).
 - **`js/balance.js`**: semua angka keseimbangan (HP/serangan pemain, poin per level, HP & damage monster, XP, hadiah) + penjelasan cara mengatur. Nilai belum diubah.
 - Simpanan v7: `hero`. SW `mq-v2`.
-- Berikutnya (putaran 2): peta petualangan sungguhan, efek suara bervariasi, musik tema chiptune + pengaturan volume.
+
+### 2026-11-24 — Tahap 6 putaran 2
+- **Peta Petualangan bergambar** (`js/map.js`): kanvas 160×560 piksel digulir; wilayah padang → hutan → bukit → danau (pulau) → lembah → menara (malam) → kastil; Gua Pola di samping bukit, Arena di samping padang. Jalur titik emas (terbuka) / abu (terkunci). Pahlawan berdiri di atas tujuan berikutnya, peta langsung digulir ke sana. Ketuk tempat → kartu keterangan + tombol Main.
+- **Efek suara baru** (`js/audio.js`): tebasan, serangan khas monster (kelelawar mencicit, lendir "plop", jamur "puff", batu berdentum, naga menggeram), koin, bahan, ramuan, beli, palu Pandai Besi, pasang equipment, peti, fanfare area selesai/lulus ujian, klik menu.
+- **Musik chiptune orisinal** 5 lagu: `home` (menu & peta), `field`, `boss`, `dungeon`, `exam` (tanpa drum). Penjadwal not via Web Audio; musik berhenti saat aplikasi tidak terlihat.
+- **Volume**: penggeser Musik & Efek di Orang Tua → Pengaturan; tombol 🎵/🔇 di Halaman Utama. Tersimpan di `settings.music` / `settings.sfx`.
+- SW `mq-v3`. Diuji di browser: peta & gulir, mulai area dari peta, musik berganti (home → field), semua efek tanpa error, volume tersimpan.
 
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

@@ -10,6 +10,7 @@ MQ.Save = (() => {
   const MODES = ['campur', 'tambah', 'kurang', 'kali'];
   const OPS = ['tambah', 'kurang', 'kali'];
   const num = (v, def, min) => (Number.isFinite(v) && v >= min ? Math.floor(v) : def);
+  const vol01 = (v, def) => (Number.isFinite(v) && v >= 0 && v <= 1 ? v : def);
   const obj = v => (v && typeof v === 'object' && !Array.isArray(v) ? v : {});
 
   function load() {
@@ -45,7 +46,8 @@ MQ.Save = (() => {
     return {
       hero: MQ.Hero ? MQ.Hero.sanitize(d.hero) : null, // penampilan pahlawan; null = belum dibuat → layar Buat Karakter
       days,
-      settings: {santai: st.santai === true, autoSpeak: st.autoSpeak === true}, // diatur di layar Orang Tua
+      settings: {santai: st.santai === true, autoSpeak: st.autoSpeak === true, // diatur di layar Orang Tua
+                 music: vol01(st.music, 0.6), sfx: vol01(st.sfx, 0.8)},      // volume 0..1
       alloc, points,
       grade: num(d.grade, 1, 1),         // kelas saat ini (2 = lulus Kelas 1)
       examBest: num(d.examBest, 0, 0),   // jawaban benar terbanyak di ujian

@@ -96,6 +96,12 @@ MQ.Battle = (() => {
     const [lo, hi] = B.field.lv, how = BAL.monster.areaLevel;
     return how === 'max' ? hi : how === 'mid' ? Math.round((lo + hi) / 2) : lo;
   }
+  /** Jenis bunyi serangan: monster kuat & lambat (batu) berdentum, selain itu mengikuti jenis tubuh. */
+  function soundKind() { const m = Data.monsters[B.monId]; return style().power >= 1.4 && m.sprite !== 'dragon' ? 'rock' : m.sprite; }
+  /** Musik sesuai situasi: ujian, bos, dungeon, atau area biasa. */
+  function battleMusic() {
+    Audio.music.play(B.mode === 'exam' ? 'exam' : B.isBoss ? 'boss' : B.mode === 'dungeon' ? 'dungeon' : 'field');
+  }
   /** Waktu musuh berjalan hanya saat anak sedang menjawab. */
   const timerActive = () => els['scr-battle'].classList.contains('on') && els.overlay.hidden && !B.locked &&
     B.mode !== 'exam' && !S.settings.santai && !document.hidden && !(window.speechSynthesis && window.speechSynthesis.speaking);
@@ -106,7 +112,7 @@ MQ.Battle = (() => {
     const dmg = enemyDamage();
     S.hp = Math.max(0, S.hp - dmg);
     anim(els.mWrap, 'attack'); anim(els.hero, 'hurt');
-    sfx.hurt();
+    sfx.enemy(soundKind()); setTimeout(sfx.hurt, 120); // bunyi serangan khas monster, lalu pahlawan terkena
     showFloat('-' + dmg, 'hurt', 0, 'hero');
     updateHud();
     if (S.hp > 0) return false;
@@ -196,6 +202,7 @@ MQ.Battle = (() => {
     els.mWrap.className = B.isBoss ? 'boss' : '';
     anim(els.mWrap, 'pop');
     updateHP();
+    battleMusic();
   }
 
   /* ===== Soal ===== */
@@ -253,6 +260,7 @@ MQ.Battle = (() => {
       if (exam) B.exam.ok++;
       B.hp = Math.max(0, B.hp - dmg);
       crit ? sfx.crit() : sfx.correct();
+      sfx.slash();
       anim(els.hero, 'lunge');
       els.slash.className = ''; void els.slash.offsetWidth; els.slash.className = crit ? 'go crit' : 'go';
       anim(els.mWrap, 'hit');
@@ -302,8 +310,10 @@ MQ.Battle = (() => {
     const coins = (wasBoss ? R.coinsBoss : rand(R.coinsNormal[0], R.coinsNormal[1])) + State.effect('coins');
     S.coins += coins;
     showFloat(`+${coins} koin`, 'coin', 0.25);
+    later(sfx.coin, 300);
     const loot = wasBoss ? [[mon.drop, R.bossDrops], ['mahkota', 1]] : Math.random() < R.dropChance ? [[mon.drop, 1]] : [];
     loot.forEach(([id, n], i) => { State.addItem(id, n); showFloat(`+${n} ${Data.items[id].name}`, 'loot', 0.5 + i * 0.25); });
+    if (loot.length) later(sfx.loot, 550);
     const firstClear = wasBoss && B.mode === 'field' && !S.cleared.includes(f.id);
     if (firstClear) S.cleared.push(f.id);
     State.save(); updateHud();
@@ -319,6 +329,7 @@ MQ.Battle = (() => {
     });
     if (firstClear) steps.push(done => {
       const nxt = Data.fields.find(x => x.req === f.id) || Data.dungeons.find(x => x.req === f.id);
+      sfx.fanfare();
       UI.overlay({icon: '🏆', title: 'Area Selesai!', btn: 'Lanjut di sini', cb: done, btn2: 'Ke Peta', cb2: exit,
         text: `Kamu mengalahkan ${Data.monsters[f.boss].name}! ` + (nxt ? `Tempat baru terbuka: ${nxt.name}.` : '')});
     });
@@ -344,7 +355,7 @@ MQ.Battle = (() => {
     Object.entries(r.items).forEach(([id, n]) => State.addItem(id, n));
     quest('dungeon');
     State.save();
-    sfx.levelUp();
+    sfx.chest();
     const list = Object.entries(r.items).map(([id, n]) => `${n} ${Data.items[id].name}`).join(', ');
     UI.overlay({icon: '🎁', title: 'Peti Harta!', btn: 'Ke Peta', cb: exit,
       text: `Kamu menaklukkan ${f.name}! Isi peti: ${r.coins} koin, ${list}.`});
@@ -369,7 +380,7 @@ MQ.Battle = (() => {
     if (!S.cleared.includes(B.field.id)) S.cleared.push(B.field.id);
     if (first) { S.coins += 30; State.addItem('mahkota', 2); }
     State.save();
-    sfx.levelUp();
+    sfx.fanfare();
     const stars = '⭐'.repeat(ok === N ? 3 : ok >= N - 2 ? 2 : 1);
     later(() => UI.overlay({icon: '🎓', title: 'Lulus Kelas 1!', btn: 'Ke Peta', cb: exit,
       text: `${stars} Benar ${ok} dari ${N}. ` + (first ? 'Hadiah: 30 koin & 2 Mahkota Kecil. Dunia Kelas 2 segera hadir!' : 'Kamu tetap juara!')}), 900);
@@ -381,7 +392,7 @@ MQ.Battle = (() => {
     State.removeItem('ramuan');
     const heal = State.maxHp() - S.hp;
     S.hp = State.maxHp();
-    sfx.levelUp(); showFloat(`+${heal} HP`, 'heal', 0, 'hero');
+    sfx.potion(); showFloat(`+${heal} HP`, 'heal', 0, 'hero');
     State.save(); updateHud();
   });
 

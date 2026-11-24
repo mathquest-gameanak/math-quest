@@ -14,6 +14,7 @@ MQ.UI = (() => {
   function show(name) {
     document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === 'scr-' + name));
     if (renderers[name]) renderers[name]();
+    if (name !== 'battle') MQ.Audio.music.play('home'); // menu & peta: lagu ceria; pertarungan diatur battle.js
     const tabbed = TABS.includes(name);
     $('tabbar').hidden = !tabbed;
     document.body.classList.toggle('hasTabs', tabbed);
@@ -80,52 +81,10 @@ MQ.UI = (() => {
     $('homeName').textContent = (S.hero && S.hero.name) || 'Pahlawan'; // nama dari pemain → textContent
     $('homeInfo').textContent = `LV ${S.level} · ${S.grade > 1 ? 'Lulus Kelas 1' : 'Kelas 1'}`;
     $('homeCoins').textContent = `🪙 ${S.coins}`;
+    $('btnMusic').textContent = S.settings.music > 0 ? '🎵' : '🔇';
   };
 
-  /* ===== Peta ===== */
-  const places = () => [...Data.fields, ...Data.dungeons, Data.arena];
-  function status(p) {
-    if (p.soon) return ['soon', 'Segera'];
-    if (!State.unlocked(p)) return ['lock', '🔒'];
-    if (S.cleared.includes(p.id)) return ['done', 'Selesai ✓'];
-    return ['open', 'Main!'];
-  }
-  renderers.map = () => {
-    // Data berasal dari data.js (teks milik sendiri, bukan masukan pengguna) → aman dirangkai jadi HTML
-    const node = p => {
-      const [cls, label] = status(p);
-      const lv = p.lv ? ` · Lv ${p.lv[0]}–${p.lv[1]}` : '';
-      return `<button class="node ${cls}" data-place="${p.id}"><span class="nIcon">${p.icon}</span>` +
-             `<span class="nBody"><b>${p.name}</b><small>${p.desc}${lv}</small></span><span class="chip">${label}</span></button>`;
-    };
-    $('mapList').innerHTML =
-      '<h3 class="sec">Kelas 1 · Lembah Hijau</h3><div class="path">' + Data.fields.map(node).join('') + '</div>' +
-      '<h3 class="sec">Dungeon</h3>' + Data.dungeons.map(node).join('') +
-      '<h3 class="sec">Latihan</h3>' + node(Data.arena);
-  };
-  $('mapList').addEventListener('click', e => {
-    const b = e.target.closest('.node');
-    if (!b) return;
-    const p = places().find(x => x.id === b.dataset.place);
-    if (p.soon) return overlay({icon: '🚧', title: p.name, text: 'Tempat ini sedang dibangun. Segera hadir!'});
-    if (!State.unlocked(p)) {
-      if (p.reqAll) {
-        const all = State.mainFields(), done = all.filter(f => S.cleared.includes(f.id)).length;
-        return overlay({icon: '🔒', title: 'Masih Terkunci', text: `Selesaikan semua area Kelas 1 dulu (${done} dari ${all.length} selesai), lalu ikuti Ujian Naik Kelas!`});
-      }
-      const req = Data.fields.find(x => x.id === p.req);
-      return overlay({icon: '🔒', title: 'Masih Terkunci', text: `Kalahkan bos di ${req.name} dulu untuk membuka ${p.name}.`});
-    }
-    if (p.exam) {
-      return overlay({icon: '📝', title: 'Ujian Naik Kelas', btn: 'Mulai Ujian', btn2: 'Nanti', cb: () => MQ.Battle.start(p),
-        text: `12 soal dari semua area. Musuh tidak menyerang, jawab dengan tenang. Lulus jika benar minimal 9. Nilai terbaikmu: ${S.examBest}.`});
-    }
-    if (p.dungeon) {
-      return overlay({icon: '🕳️', title: p.name, btn: 'Masuk', btn2: 'Nanti', cb: () => MQ.Battle.start(p),
-        text: `${p.rooms} ruang beruntun. HP TIDAK pulih di dalam gua, bawa Ramuan Penyembuh! Kalahkan bos di ruang terakhir untuk membuka peti harta.`});
-    }
-    MQ.Battle.start(p);
-  });
+  /* Peta petualangan: lihat js/map.js */
 
   /* ===== Karakter ===== */
   const OP_NAMES = MQ.Questions.NAMES;
@@ -204,7 +163,7 @@ MQ.UI = (() => {
     const on = State.isEquipped(id);
     overlay(Object.assign(base, {
       btn: on ? 'Lepas' : 'Pakai', btn2: 'Tutup',
-      cb: () => { on ? State.unequip(it.type) : State.equip(id); State.save(); MQ.Audio.sfx.correct(); after(); }
+      cb: () => { on ? State.unequip(it.type) : State.equip(id); State.save(); MQ.Audio.sfx.equip(); after(); }
     }));
   }
 
@@ -213,8 +172,19 @@ MQ.UI = (() => {
     Sprites.drawField($('homeScene'));
     document.querySelectorAll('#tabbar [data-icon]').forEach(img => (img.src = Sprites.url(img.dataset.icon)));
     $('btnEditLook').addEventListener('click', () => MQ.Create.open('char'));
+    // Tombol 🎵 di Halaman Utama: musik nyala/mati cepat (volume terakhir diingat)
+    let lastMusic = S.settings.music || 0.6;
+    $('btnMusic').addEventListener('click', () => {
+      if (S.settings.music > 0) { lastMusic = S.settings.music; S.settings.music = 0; } else S.settings.music = lastMusic;
+      MQ.Audio.setVolumes(S.settings.music, S.settings.sfx);
+      State.save(); renderers.home();
+    });
     document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) show(b.dataset.go); });
     document.addEventListener('pointerdown', MQ.Audio.unlock, {passive: true}); // suara butuh interaksi pertama
+    // Bunyi "klik" pendek untuk tombol menu (tombol jawaban & beli punya bunyinya sendiri)
+    document.addEventListener('click', e => {
+      if (e.target.closest('.tabbar button, .back, .adventure, .sBtn, .pick, .mapNode, #ovBtn2, .who, .parentBtn, .musicBtn')) MQ.Audio.sfx.click();
+    });
   }
 
   return {show, overlay, quiz, fillXp, init, itemImg, itemDetail, renderers};

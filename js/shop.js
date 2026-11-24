@@ -46,6 +46,7 @@ MQ.Shop = (() => {
       : {ans: S.coins - p, text: `Harga ${p} koin. Koinmu ${S.coins}. Sisa koinmu berapa?`};
     UI.quiz({img, title: `Beli ${it.name}`, text: q.text, speak: q.text, ans: q.ans, onCorrect: () => {
       S.coins -= p; State.addItem(id); State.save();
+      MQ.Audio.sfx.buy();
       UI.renderers.shop();
       UI.overlay({img, title: 'Berhasil dibeli!', text: `${it.name} masuk ke Tas.` + (isGear(it) ? ' Ketuk di Tas untuk memakainya.' : '')});
     }});
@@ -78,9 +79,9 @@ MQ.Shop = (() => {
       recipe.forEach(([key, num]) => { if (key === 'koin') S.coins -= num; else State.removeItem(key, num); });
       State.addItem(id); State.save();
       UI.renderers.smith();
-      MQ.Audio.sfx.levelUp();
+      MQ.Audio.sfx.craft();
       UI.overlay({img, title: 'Berhasil dibuat!', text: `${it.name} siap. ${it.desc}`, btn: 'Pakai sekarang', btn2: 'Nanti',
-        cb: () => { State.equip(id); State.save(); }});
+        cb: () => { State.equip(id); State.save(); MQ.Audio.sfx.equip(); }});
     }});
   });
 
