@@ -401,3 +401,9 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 #csName { display: block; color: var(--kuning); font-size: 17px; margin-bottom: 2px; }
 #csText { margin: 0; font-size: 19px; line-height: 1.45; font-weight: 700; min-height: 56px; }
 .csNext { position: absolute; right: 14px; bottom: 6px; color: var(--kuning); animation: bob .8s steps(1) infinite; }
+
+/* Bar waktu KILAT: jawab sebelum habis = pasti kritikal */
+.fastBar { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
+.fastBar span { font-size: 12px; }
+.fastTrack { flex: 1; height: 6px; background: var(--hitam); }
+#fastFill { height: 100%; width: 100%; background: linear-gradient(90deg, #ffcd75, #73eff7); }

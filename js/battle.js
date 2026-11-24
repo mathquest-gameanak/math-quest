@@ -17,7 +17,7 @@ MQ.Battle = (() => {
   const sfx = Audio.sfx, S = State.S, BAL = MQ.Balance;
   const $ = id => document.getElementById(id);
   const els = {};
-  ['scr-battle', 'overlay', 'btnExit', 'btnPotion', 'potionCount', 'fieldName', 'lvl', 'heroHpFill', 'heroHpText', 'xpFill', 'xpText',
+  ['scr-battle', 'overlay', 'fastBar', 'fastFill', 'btnExit', 'btnPotion', 'potionCount', 'fieldName', 'lvl', 'heroHpFill', 'heroHpText', 'xpFill', 'xpText',
    'count', 'combo', 'modes', 'scene', 'mName', 'hpFill', 'hpText', 'atkBar', 'atkFill', 'hero', 'mWrap', 'mImg', 'slash', 'fx',
    'qText', 'qView', 'btnSpeak', 'answers'].forEach(id => (els[id] = $(id)));
 
@@ -45,7 +45,7 @@ MQ.Battle = (() => {
     els.btnPotion.hidden = pots === 0 || B.mode === 'exam';
     els.potionCount.textContent = '×' + pots;
     els.btnPotion.disabled = S.hp >= max;
-    els.combo.textContent = B.combo >= BAL.combat.comboForCrit ? `🔥 KOMBO x${B.combo}!` : B.combo > 0 ? `Beruntun ${B.combo}` : '';
+    els.combo.textContent = B.combo >= BAL.combat.comboLabel ? `🔥 KOMBO x${B.combo}!` : B.combo > 0 ? `Beruntun ${B.combo}` : '';
     if (B.mode === 'exam') {
       els.count.textContent = `📝 Soal ${Math.min(B.exam.i + 1, B.exam.qs.length)} dari ${B.exam.qs.length} · Benar ${B.exam.ok}`;
     } else if (B.mode === 'dungeon') {
@@ -136,6 +136,13 @@ MQ.Battle = (() => {
       playSecs += dt;
       if (playSecs >= 10) { State.logDay('t', Math.round(playSecs)); playSecs = 0; State.save(); }
     }
+    // Waktu menjawab (untuk kritikal KILAT): berjalan selama soal bisa dijawab, berhenti saat soal dibacakan/pesan
+    const answering = els['scr-battle'].classList.contains('on') && els.overlay.hidden && !B.locked && !document.hidden &&
+      !MQ.Cutscene.isOpen() && !(window.speechSynthesis && window.speechSynthesis.speaking);
+    if (answering && B.mode !== 'exam') {
+      B.answerTime += dt;
+      els.fastFill.style.width = Math.max(0, 1 - B.answerTime / BAL.combat.fastCritSec) * 100 + '%';
+    }
     if (!timerActive()) return;
     B.charge += dt;
     els.atkFill.style.width = Math.min(100, B.charge / B.interval * 100) + '%';
@@ -186,8 +193,9 @@ MQ.Battle = (() => {
     if (B.mode === 'dungeon') { B.room++; B.isBoss = B.room === f.rooms; }
     else if (B.mode === 'exam') B.isBoss = true;
     else B.isBoss = (kills() + 1) % 5 === 0;
-    let id = f.boss;
-    if (!B.isBoss) { // monster biasa: acak, jangan sama berturut-turut
+    B.isKey = B.mode === 'dungeon' && !B.isBoss && !!f.key && B.room === f.keyRoom; // monster kunci di tengah dungeon
+    let id = B.isKey ? f.key : f.boss;
+    if (!B.isBoss && !B.isKey) { // monster biasa: acak, jangan sama berturut-turut
       const pool = f.mobs.filter(m => m !== B.last);
       id = pool.length ? pool[rand(0, pool.length - 1)] : f.mobs[0];
       B.last = id;
@@ -199,12 +207,12 @@ MQ.Battle = (() => {
     } else {
       const M = BAL.monster;
       B.mLv = monsterLevel();
-      B.maxHp = (M.hpBase + B.mLv * M.hpPerLevel) * (B.isBoss ? M.bossHpMul : 1);
+      B.maxHp = Math.round((M.hpBase + B.mLv * M.hpPerLevel) * (B.isBoss ? M.bossHpMul : B.isKey ? 1.5 : 1));
     }
     B.hp = B.maxHp;
     B.charge = 0; B.interval = newInterval();
     els.atkFill.style.width = '0%';
-    els.mName.textContent = (B.mode === 'exam' ? '📝 UJIAN: ' : B.isBoss ? '👑 BOS: ' : '') + m.name + (B.mode === 'exam' ? '' : ` · Lv ${B.mLv}`);
+    els.mName.textContent = (B.mode === 'exam' ? '📝 UJIAN: ' : B.isBoss ? '👑 BOS: ' : B.isKey ? '⭐ KUNCI: ' : '') + m.name + (B.mode === 'exam' ? '' : ` · Lv ${B.mLv}`);
     els.mImg.src = Sprites.url(m.sprite, m.pal);
     els.mWrap.className = B.isBoss ? 'boss' : '';
     anim(els.mWrap, 'pop');
@@ -228,6 +236,8 @@ MQ.Battle = (() => {
       do { q = Questions.make(spec); } while (B.q && key(q) === key(B.q) && ++tries < 5); // hindari soal kembar
     }
     B.q = q;
+    B.answerTime = 0; els.fastFill.style.width = '100%';
+    els.fastBar.hidden = B.mode === 'exam'; // ujian: tanpa kritikal
     els.qText.textContent = q.text;
     els.qText.classList.toggle('long', q.text.length > 12); // kalimat panjang → huruf sedikit lebih kecil
     els.qView.innerHTML = q.view || '';  // gambar buatan visuals.js (bukan masukan pengguna)
@@ -260,9 +270,11 @@ MQ.Battle = (() => {
       btn.classList.add('benar');
       B.combo++; S.bestCombo = Math.max(S.bestCombo, B.combo);
       quest('correct', q.kind); quest('combo', B.combo);
-      const crit = !exam && B.combo >= BAL.combat.comboForCrit, [lo, hi] = State.atk();
+      // Kritikal: pasti jika menjawab cepat (KILAT), selain itu peluang acak dari status & equipment
+      const fast = !exam && B.answerTime <= BAL.combat.fastCritSec;
+      const crit = !exam && (fast || Math.random() * 100 < State.critChance()), [lo, hi] = State.atk();
       const extra = exam ? 0 : State.bonusFor(q.kind); // senjata bertopik: damage tambahan untuk jenis soal ini
-      const dmg = exam ? 10 : (rand(lo, hi) + extra) * (crit ? BAL.combat.critMul : 1);
+      const dmg = exam ? 10 : Math.round((rand(lo, hi) + extra) * (crit ? State.critMul() : 1));
       if (extra) showFloat('⚔️ Bonus senjata!', 'xp', 0.15);
       if (exam) B.exam.ok++;
       B.hp = Math.max(0, B.hp - dmg);
@@ -271,7 +283,7 @@ MQ.Battle = (() => {
       anim(els.hero, 'lunge');
       els.slash.className = ''; void els.slash.offsetWidth; els.slash.className = crit ? 'go crit' : 'go';
       anim(els.mWrap, 'hit');
-      showFloat(exam ? '✔ Benar!' : (crit ? 'KRITIS! ' : '') + '-' + dmg, crit ? 'crit' : '');
+      showFloat(exam ? '✔ Benar!' : (fast ? '⚡KILAT! ' : crit ? 'KRITIS! ' : '') + '-' + dmg, crit ? 'crit' : '');
       updateHP(); updateHud();
       later(exam ? examNext : B.hp <= 0 ? defeatMonster : nextQuestion, 750);
     } else {
@@ -292,7 +304,7 @@ MQ.Battle = (() => {
 
   /* ===== Monster kalah: XP, hadiah, pesan ===== */
   function defeatMonster() {
-    const f = B.field, wasBoss = B.isBoss, dungeon = B.mode === 'dungeon';
+    const f = B.field, wasBoss = B.isBoss, wasKey = B.isKey, dungeon = B.mode === 'dungeon';
     anim(els.mWrap, 'defeat');
     sfx.defeat();
     S.monsters++;
@@ -306,7 +318,7 @@ MQ.Battle = (() => {
     // XP berkurang jika pemain sudah jauh di atas level tempat (Arena: selalu penuh)
     // XP sesuai level monster; dikurangi jika pemain jauh lebih kuat (kecuali Arena). Rumus di balance.js.
     const X = BAL.xp;
-    let gain = (X.monsterBase + X.perMonsterLevel * B.mLv) * (wasBoss ? X.bossMul : 1);
+    let gain = (X.monsterBase + X.perMonsterLevel * B.mLv) * (wasBoss ? X.bossMul : wasKey ? 2 : 1);
     const gap = S.level - B.mLv;
     const factor = B.mode === 'arena' || gap < X.penaltyFrom ? 1 : Math.max(X.minFactor, 1 - X.penaltyStep * (gap - X.penaltyFrom + 1));
     gain = Math.max(1, Math.round(gain * factor * (1 + State.effect('xp') / 100))); // + aksesori XP
@@ -338,6 +350,7 @@ MQ.Battle = (() => {
               `Kamu punya ${S.points} poin status. Atur di halaman Karakter untuk menambah HP, Serangan, atau Pertahanan!`});
     });
     if (firstClear) steps.push(done => MQ.Cutscene.play(`${f.id}-shard`, done)); // cerita: kepingan kristal
+    if (wasKey) steps.push(done => MQ.Cutscene.playOnce(`${f.id}-key`, done));   // cerita dungeon: setelah monster kunci
     if (firstClear) steps.push(done => {
       const nxt = Data.fields.find(x => x.req === f.id) || Data.dungeons.find(x => x.req === f.id);
       sfx.fanfare();
@@ -357,7 +370,7 @@ MQ.Battle = (() => {
   function dungeonEnd(won) {
     const f = B.field;
     if (!won) {
-      return UI.overlay({icon: '🏃', title: 'Keluar dari Gua', btn: 'Ke Peta', cb: exit,
+      return UI.overlay({icon: '🏃', title: `Keluar dari ${f.name}`, btn: 'Ke Peta', cb: exit,
         text: `HP-mu habis di ruang ${B.room}. Koin & bahan yang sudah didapat tetap milikmu. Coba lagi kapan saja!`});
     }
     if (!S.cleared.includes(f.id)) S.cleared.push(f.id);
@@ -368,8 +381,9 @@ MQ.Battle = (() => {
     State.save();
     sfx.chest();
     const list = Object.entries(r.items).map(([id, n]) => `${n} ${Data.items[id].name}`).join(', ');
-    UI.overlay({icon: '🎁', title: 'Peti Harta!', btn: 'Ke Peta', cb: exit,
-      text: `Kamu menaklukkan ${f.name}! Isi peti: ${r.coins} koin, ${list}.`});
+    // cerita penutup dungeon (sekali), lalu peti harta
+    MQ.Cutscene.playOnce(`${f.id}-end`, () => UI.overlay({icon: '🎁', title: 'Peti Harta!', btn: 'Ke Peta', cb: exit,
+      text: `Kamu menaklukkan ${f.name}! Isi peti: ${r.coins} koin, ${list}.`}));
   }
 
   /* ===== Ujian ===== */

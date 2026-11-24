@@ -81,6 +81,8 @@ MQ.Audio = (() => {
       else if (kind === 'mushroom') noise(.2, {type: 'lowpass', freq: 1400, freqEnd: 300, v: .35});
       else if (kind === 'rock') { tone(95, .3, 'sine', 0, .4, 45); noise(.22, {type: 'lowpass', freq: 500, v: .3}); }
       else if (kind === 'dragon') { tone(120, .45, 'sawtooth', 0, .12, 65); tone(127, .45, 'sawtooth', 0, .08, 70); noise(.4, {type: 'lowpass', freq: 600, v: .2}); }
+      else if (kind === 'crab') { [0, .08].forEach(d => noise(.05, {type: 'highpass', freq: 2500, v: .3, delay: d})); tone(200, .1, 'square', 0, .08); }
+      else if (kind === 'ghost') { tone(500, .45, 'sine', 0, .18, 260); tone(520, .45, 'sine', .05, .1, 250); }
       else tone(300, .15, 'square', 0, .1, 150);
     },
     coin:    () => { tone(988, .07, 'square', 0, .07); tone(1319, .16, 'square', .07, .07); },

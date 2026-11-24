@@ -18,6 +18,9 @@ MQ.State = (() => {
   // Rumus & angka: lihat js/balance.js
   const maxHp = () => P.baseHp + P.hpPerLevel * S.level + P.hpPerPoint * S.alloc.hp + effect('hp');
   const atk = () => { const b = P.baseAtk + P.atkPerLevel * S.level + P.atkPerPoint * S.alloc.atk + effect('atk'); return [b, b + P.atkSpread]; };
+  /** Kritikal: peluang (%) & pengali damage — dasar di balance.js, tambahan hanya dari equipment. */
+  const critChance = () => MQ.Balance.combat.critChance + effect('crit');
+  const critMul = () => MQ.Balance.combat.critMul + effect('critDmg') / 100;
   const def = () => Math.floor(P.defPerPoint * S.alloc.def) + effect('def');
   const xpNeed = lv => X.base + (lv - 1) * X.perLevel; // XP untuk naik dari level lv
   /** Damage tambahan senjata untuk jenis soal tertentu. */
@@ -76,7 +79,7 @@ MQ.State = (() => {
 
   const save = () => MQ.Save.save(S);
 
-  return {S, POINTS_PER_LEVEL, maxHp, atk, def, xpNeed, bonusFor, effect, gear, addXp, spendPoint,
+  return {S, POINTS_PER_LEVEL, maxHp, atk, def, critChance, critMul, xpNeed, bonusFor, effect, gear, addXp, spendPoint,
           count, addItem, removeItem, equip, unequip, isEquipped, unlocked, mainFields, shards, save,
           today, dateKey, logDay};
 })();

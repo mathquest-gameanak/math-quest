@@ -17,6 +17,7 @@ MQ.Cutscene = (() => {
   /** Gambar tokoh: pahlawan (sesuai penampilan & equipment), tokoh cerita, item, atau monster. */
   function actorSrc(name) {
     if (name === 'hero') return MQ.Hero.current();
+    if (Story.ACTORS[name]) return Sprites.url(Story.ACTORS[name].sprite, Story.ACTORS[name].pal);
     if (Sprites.DATA[name]) return Sprites.url(name);
     const m = Data.monsters[name];
     return m ? Sprites.url(m.sprite, m.pal) : '';

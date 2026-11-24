@@ -13,7 +13,8 @@ MQ.WorldMap = (() => {
 
   /* Posisi tiap tempat di peta (x, y dalam piksel peta) */
   const POS = {padang: [44, 515], hutan: [112, 432], bukit: [44, 350], danau: [108, 268], lembah: [46, 188],
-               menara: [106, 112], kastil: [80, 40], guaPola: [134, 350], arena: [128, 532]};
+               menara: [106, 112], kastil: [80, 40], guaPola: [134, 350], arena: [128, 532],
+               kapalKaram: [36, 262], perpustakaan: [30, 120]};
   /* Wilayah warna dari atas ke bawah: [batas bawah y, nama] */
   const BANDS = [[78, 'kastil'], [156, 'menara'], [236, 'lembah'], [314, 'danau'], [392, 'bukit'], [472, 'hutan'], [H, 'padang']];
 
@@ -77,6 +78,15 @@ MQ.WorldMap = (() => {
     // Gua Pola: mulut gua di tebing batu
     const [gx, gy] = POS.guaPola;
     circle(gx, gy - 2, 14, '#566c86'); circle(gx, gy - 4, 11, '#94b0c2'); circle(gx, gy + 1, 7, '#1a1c2c'); rect('#8fbf6a', gx - 16, gy + 8, 32, 6);
+    // Kapal karam di danau (miring, separuh tenggelam)
+    const [sx, sy] = POS.kapalKaram;
+    rect('#1a1c2c', sx - 16, sy - 2, 32, 9); rect('#ab5236', sx - 15, sy - 1, 30, 7); rect('#5d275d', sx - 15, sy + 4, 30, 2);
+    rect('#1a1c2c', sx + 2, sy - 22, 2, 20); rect('#f4f4f4', sx + 4, sy - 20, 10, 9);
+    // Perpustakaan tua: rumah batu dengan papan buku
+    const [px, py] = POS.perpustakaan;
+    rect('#1a1c2c', px - 15, py - 22, 30, 24); rect('#d4a373', px - 14, py - 21, 28, 22);
+    for (let i = 0; i < 8; i++) rect('#1a1c2c', px - 17 + i, py - 22 - i, 34 - i * 2, 1), rect('#5d275d', px - 16 + i, py - 22 - i, 32 - i * 2, 1);
+    rect('#5d275d', px - 3, py - 10, 6, 10); rect('#e43b44', px - 12, py - 18, 4, 6); rect('#41a6f6', px + 8, py - 18, 4, 6);
     // Arena: lingkaran pasir
     const [ax, ay] = POS.arena;
     circle(ax, ay, 11, '#ab5236'); circle(ax, ay, 9, '#ffcd75');

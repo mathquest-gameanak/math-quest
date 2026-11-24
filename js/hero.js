@@ -67,6 +67,7 @@ MQ.Hero = (() => {
   // Aksesori per item
   const ACC = {
     kalungKoin:    {rows: {8: '......yyyy......'}, pal: {y: '#ffcd75'}},
+    jimatKilat:    {rows: {8: '......yyyy......', 9: '.......yy.......'}, pal: {y: '#73eff7'}},
     cincinBintang: {rows: {0: '.............y..', 1: '............yyy.', 2: '.............y..'}, pal: {y: '#73eff7'}}
   };
 

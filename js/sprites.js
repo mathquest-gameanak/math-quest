@@ -184,6 +184,20 @@ MQ.Sprites = (() => {
     shard: {mirror: true, pal: {k: K, c: '#73eff7', C: '#f4f4f4'}, rows: [
       '...k', '..kc', '.kcC', 'kccC', 'kccc', '.kcc', '..kc', '...k']},
 
+    /* Tokoh & monster dungeon */
+    momo: {mirror: true, pal: {k: K, y: '#ffcd75', b: '#8a5a3c', B: '#d4a373', e: K, p: '#f4a3c8', c: '#ffe4c4'}, rows: [
+      '....kkkk', '...kyyyy', '..kyyyyy', '.kkkkkkk', '..kbbbbb', '..kbbebb', '..kbbbbp', '..kbBBBB',
+      '.kbbBBBB', 'kcbbBBBB', '.kbbBBBB', '..kbbbbb', '...kkkkk', '...kck..', '........', '........']},
+    kapten: {mirror: true, pal: {k: K, h: '#333c57', w: '#f4f4f4', o: '#ef7d57', e: K, p: '#f4a3c8', r: '#b13e53', y: '#ffcd75', b: '#5d275d'}, rows: [
+      '...kkkkk', '..khhhhh', '.khhhhhw', 'kkkkkkkk', '..kooooo', '..kooeoo', 'wwkoooop', '..kooooo',
+      '...kkkkk', '..krrrrr', '.krrrrry', '.krrrrrr', '.krrrrry', '..kkkkkk', '...kbk..', '........']},
+    crab: {mirror: true, pal: {k: K, r: '#e43b44', w: '#f4f4f4'}, rows: [
+      '........', '.kk.....', 'krrk....', 'kr.k..k.', 'krrk..kw', '.kk...kk', '..k.kkkk', '...krrrr',
+      '..krrrrr', '.krrrrrr', '.krrrrrr', '..krrrrr', '..kkkkkk', '.k.k.k..', 'k.k.k...', '........']},
+    ghost: {mirror: true, pal: {k: K, w: '#c7f0ff'}, rows: [
+      '........', '....kkkk', '...kwwww', '..kwwwww', '..kwwkww', '..kwwkww', '..kwwwww', '..kwwwwk',
+      '.kwwwwww', '.kwwwwww', 'kwwwwwww', 'kwwwwwww', 'kwwkwwkw', 'k.k.k.kk', '........', '........']},
+
     bag: {mirror: true, pal: {k: K, b: '#ab5236', y: '#ffcd75'}, rows: [
       '..kk', '.k..', 'kkkk', 'kbbb', 'kbyb', 'kbbb', 'kbbb', 'kkkk']},
 

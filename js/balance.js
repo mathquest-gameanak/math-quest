@@ -10,6 +10,8 @@
                        (maksimal level tertinggi area; bos = +monster.bossLevelBonus). Arena: = level pemain.
                        Level area ada di data.js ("lv: [min, maks]").
      HP monster      = monster.hpBase + monster.hpPerLevel × levelMonster          (bos × monster.bossHpMul)
+     Kritikal        = pasti jika menjawab ≤ combat.fastCritSec detik; jika tidak, acak combat.critChance % + equipment.
+                       Damage kritikal = damage × (combat.critMul + critDmg equipment / 100)
      Damage monster  = (monster.dmgBase + monster.dmgPerLevel × levelMonster) × kekuatan monster − Pertahanan pemain
      XP              = (xp.monsterBase + xp.perMonsterLevel × levelMonster)          (bos × xp.bossMul)
                        Jika level pemain ≥ level monster + xp.penaltyFrom: XP dikurangi xp.penaltyStep per level selisih
@@ -45,7 +47,10 @@ MQ.Balance = {
     bossSlowMul: 1.2             // bos menyerang sedikit lebih lambat
   },
   combat: {
-    comboForCrit: 3, critMul: 2, // benar beruntun untuk serangan kritis & pengalinya
+    critChance: 10,              // peluang kritikal dasar (%) — tambahan hanya dari equipment ("crit")
+    critMul: 1.5,                // damage kritikal dasar (×) — tambahan hanya dari equipment ("critDmg", dalam %)
+    fastCritSec: 3,              // jawab benar dalam ≤ 3 detik = pasti kritikal ("KILAT!")
+    comboLabel: 3,               // kombo beruntun mulai ditampilkan dengan 🔥 (hanya hiasan & misi)
     healOnKillPct: 20            // HP pulih (%) setiap mengalahkan monster (bukan di dungeon)
   },
   rewards: {

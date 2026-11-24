@@ -121,7 +121,16 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Kastil Ujian butuh 6 area selesai **dan Level 20** (`minLevel`). Halaman Utama menampilkan 💎 kepingan x/6.
 - Sprite baru: kakek, penyihir, kiki, crystal, shard. Simpanan v8: `story.seen`. SW `mq-v5`.
 - `tools/naskah-suara.js` → `docs/naskah-suara.md` (daftar baris bernomor untuk direkam).
-- Berikutnya: dungeon bercerita (Gua Pola + 2 baru), lalu Buku Monster, medali, kostum.
+
+### 2026-11-24 — Kritikal baru & dungeon bercerita
+- **Kritikal**: jawab benar ≤3 detik (waktu menjawab aktif, berhenti saat dibacakan/pesan) = pasti kritikal "⚡KILAT!"; selain itu peluang 10% dasar. Damage kritikal dasar ×1,5. Tambahan peluang (`crit`) & damage (`critDmg`) hanya dari equipment. Bar waktu KILAT di atas soal (tidak di ujian). Kombo tidak lagi memicu kritikal (tetap untuk misi). Angka di `balance.js` → `combat`.
+- Senjata diberi status kritikal; aksesori baru **Jimat Kilat** (Pandai Besi). Karakter menampilkan peluang & damage kritikal.
+- **3 dungeon bercerita** (cutscene intro → monster kunci → akhir, tampil sekali; bisa diulang untuk XP):
+  - Gua Pola (Momo si tikus tanah, kunci: Penjaga Pola, 5 ruang)
+  - Kapal Karam (Kapten Kumis, kunci: Kepiting Besar, bos Raja Kepiting, 6 ruang, setelah Danau)
+  - Perpustakaan Tua (Hantu Buku, kunci: Hantu Tinta, bos Raja Tinta, 7 ruang, setelah Lembah)
+- Monster kunci: HP ×1,5, XP ×2, label "⭐ KUNCI". Sprite baru: momo, kapten, crab, ghost; latar cutscene gua/kapal/perpus; bunyi serangan kepiting & hantu.
+- Naskah suara kini 68 baris. SW `mq-v6`.
 
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

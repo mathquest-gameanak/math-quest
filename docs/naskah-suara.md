@@ -114,6 +114,74 @@ Rekam setiap baris sebagai file **MP3** bernama sesuai kolom *File*, simpan di f
 | kastil-intro-2.mp3 | Penyihir Kusut | Raja Naga Api, uji anak itu dengan 12 soal sulit! |
 | kastil-intro-3.mp3 | Kiki | Jawab dengan tenang. Di ujian, musuh tidak menyerang. Kamu pasti bisa! |
 
+## guaPola-intro
+
+| File | Tokoh | Kalimat |
+|---|---|---|
+| guaPola-intro-1.mp3 | Momo | Tolong! Aku Momo si tikus tanah. Keluargaku terkunci di dalam Gua Pola! |
+| guaPola-intro-2.mp3 | Momo | Pintu-pintunya hanya terbuka kalau polanya benar. |
+| guaPola-intro-3.mp3 | Kiki | Ayo bantu Momo! Ingat, HP tidak pulih di dalam gua. Bawa ramuan! |
+
+## guaPola-key
+
+| File | Tokoh | Kalimat |
+|---|---|---|
+| guaPola-key-1.mp3 | Penjaga Pola | Grrr... Kamu memecahkan pola pintuku! |
+| guaPola-key-2.mp3 | Momo | Pintunya terbuka! Aku mendengar suara keluargaku di dalam! |
+
+## guaPola-end
+
+| File | Tokoh | Kalimat |
+|---|---|---|
+| guaPola-end-1.mp3 | Momo | Ayah! Ibu! Kalian selamat! |
+| guaPola-end-2.mp3 | Momo | Terima kasih, (nama pahlawan)! Ini harta keluarga kami untukmu. |
+| guaPola-end-3.mp3 | Kiki | Kuk-kuk! Kamu pahlawan Gua Pola! |
+
+## kapalKaram-intro
+
+| File | Tokoh | Kalimat |
+|---|---|---|
+| kapalKaram-intro-1.mp3 | Kapten Kumis | Arrr! Aku Kapten Kumis. Kapalku karam dan hartaku tercecer! |
+| kapalKaram-intro-2.mp3 | Kapten Kumis | Para kepiting mengambil koin-koinku. Bantu aku menghitungnya kembali! |
+| kapalKaram-intro-3.mp3 | Kiki | Hitung dengan teliti sampai dua puluh, ya! |
+
+## kapalKaram-key
+
+| File | Tokoh | Kalimat |
+|---|---|---|
+| kapalKaram-key-1.mp3 | Kepiting Besar | Capit-capit! Baiklah, ini peta hartanya. |
+| kapalKaram-key-2.mp3 | Kapten Kumis | Peta harta! Peti kita ada di dek paling bawah! |
+
+## kapalKaram-end
+
+| File | Tokoh | Kalimat |
+|---|---|---|
+| kapalKaram-end-1.mp3 | Kapten Kumis | Arrr, peti hartaku kembali! |
+| kapalKaram-end-2.mp3 | Kapten Kumis | Kamu pelaut yang cerdas, (nama pahlawan). Ambil bagianmu! |
+
+## perpustakaan-intro
+
+| File | Tokoh | Kalimat |
+|---|---|---|
+| perpustakaan-intro-1.mp3 | Hantu Buku | Sssst... Selamat datang di Perpustakaan Tua. |
+| perpustakaan-intro-2.mp3 | Hantu Buku | Hantu-hantu nakal mengacak nomor halaman semua bukuku! |
+| perpustakaan-intro-3.mp3 | Kiki | Urutkan bilangannya sampai seratus. Ayo, ini latihan bagus sebelum ujian! |
+
+## perpustakaan-key
+
+| File | Tokoh | Kalimat |
+|---|---|---|
+| perpustakaan-key-1.mp3 | Hantu Tinta | Blop! Tintaku tumpah... nomornya kembali rapi. |
+| perpustakaan-key-2.mp3 | Hantu Buku | Rak pertama sudah rapi! Raja Tinta bersembunyi di rak paling atas. |
+
+## perpustakaan-end
+
+| File | Tokoh | Kalimat |
+|---|---|---|
+| perpustakaan-end-1.mp3 | Raja Tinta | Baiklah, baiklah! Aku berhenti mengacak buku. |
+| perpustakaan-end-2.mp3 | Hantu Buku | Terima kasih, (nama pahlawan)! Buku-buku ini bisa dibaca semua anak lagi. |
+| perpustakaan-end-3.mp3 | Kiki | Kamu makin siap untuk Kastil Ujian! |
+
 ## ending
 
 | File | Tokoh | Kalimat |

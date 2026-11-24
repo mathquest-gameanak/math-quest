@@ -14,7 +14,9 @@
 window.MQ = window.MQ || {};
 
 MQ.Story = (() => {
-  const NAMES = {kakek: 'Kakek Bilang', kiki: 'Kiki', penyihir: 'Penyihir Kusut', narator: ''};
+  const NAMES = {kakek: 'Kakek Bilang', kiki: 'Kiki', penyihir: 'Penyihir Kusut', momo: 'Momo', kapten: 'Kapten Kumis', hantuBuku: 'Hantu Buku', narator: ''};
+  /** Tokoh cerita yang memakai sprite lain dengan warna berbeda. */
+  const ACTORS = {hantuBuku: {sprite: 'ghost', pal: {w: '#f4f4f4'}}};
 
   /** Id baris yang sudah punya rekaman suara (isi setelah file audio/vo/*.mp3 ditambahkan). */
   const VO = new Set([]);
@@ -94,6 +96,49 @@ MQ.Story = (() => {
       {actors: {naga: 70, penyihir: 90}, fx: 'shake', who: 'penyihir', text: 'Raja Naga Api, uji anak itu dengan 12 soal sulit!'},
       {who: 'kiki', text: 'Jawab dengan tenang. Di ujian, musuh tidak menyerang. Kamu pasti bisa!'}
     ],
+    /* ===== Dungeon bercerita ===== */
+    'guaPola-intro': [
+      {bg: 'gua', actors: {hero: 25, kiki: 45, momo: 75}, who: 'momo', text: 'Tolong! Aku Momo si tikus tanah. Keluargaku terkunci di dalam Gua Pola!'},
+      {who: 'momo', text: 'Pintu-pintunya hanya terbuka kalau polanya benar.'},
+      {who: 'kiki', text: 'Ayo bantu Momo! Ingat, HP tidak pulih di dalam gua. Bawa ramuan!'}
+    ],
+    'guaPola-key': [
+      {bg: 'gua', actors: {hero: 25, penjagaPola: 72}, fx: 'shake', who: 'penjagaPola', text: 'Grrr... Kamu memecahkan pola pintuku!'},
+      {actors: {penjagaPola: null, momo: 72}, who: 'momo', text: 'Pintunya terbuka! Aku mendengar suara keluargaku di dalam!'}
+    ],
+    'guaPola-end': [
+      {bg: 'gua', actors: {hero: 25, momo: 60, rajaBatu: null}, fx: 'sparkle', who: 'momo', text: 'Ayah! Ibu! Kalian selamat!'},
+      {who: 'momo', text: 'Terima kasih, {nama}! Ini harta keluarga kami untukmu.'},
+      {actors: {kiki: 42}, who: 'kiki', text: 'Kuk-kuk! Kamu pahlawan Gua Pola!'}
+    ],
+    'kapalKaram-intro': [
+      {bg: 'kapal', actors: {hero: 25, kiki: 45, kapten: 75}, who: 'kapten', text: 'Arrr! Aku Kapten Kumis. Kapalku karam dan hartaku tercecer!'},
+      {who: 'kapten', text: 'Para kepiting mengambil koin-koinku. Bantu aku menghitungnya kembali!'},
+      {who: 'kiki', text: 'Hitung dengan teliti sampai dua puluh, ya!'}
+    ],
+    'kapalKaram-key': [
+      {bg: 'kapal', actors: {hero: 25, kepitingBesar: 72}, fx: 'shake', who: 'kepitingBesar', text: 'Capit-capit! Baiklah, ini peta hartanya.'},
+      {actors: {kepitingBesar: null, kapten: 72}, who: 'kapten', text: 'Peta harta! Peti kita ada di dek paling bawah!'}
+    ],
+    'kapalKaram-end': [
+      {bg: 'kapal', actors: {hero: 25, kapten: 70}, fx: 'sparkle', who: 'kapten', text: 'Arrr, peti hartaku kembali!'},
+      {who: 'kapten', text: 'Kamu pelaut yang cerdas, {nama}. Ambil bagianmu!'}
+    ],
+    'perpustakaan-intro': [
+      {bg: 'perpus', actors: {hero: 25, kiki: 45, hantuBuku: 75}, who: 'hantuBuku', text: 'Sssst... Selamat datang di Perpustakaan Tua.'},
+      {who: 'hantuBuku', text: 'Hantu-hantu nakal mengacak nomor halaman semua bukuku!'},
+      {who: 'kiki', text: 'Urutkan bilangannya sampai seratus. Ayo, ini latihan bagus sebelum ujian!'}
+    ],
+    'perpustakaan-key': [
+      {bg: 'perpus', actors: {hero: 25, hantuTinta: 72}, fx: 'flash', who: 'hantuTinta', text: 'Blop! Tintaku tumpah... nomornya kembali rapi.'},
+      {actors: {hantuTinta: null, hantuBuku: 72}, who: 'hantuBuku', text: 'Rak pertama sudah rapi! Raja Tinta bersembunyi di rak paling atas.'}
+    ],
+    'perpustakaan-end': [
+      {bg: 'perpus', actors: {hero: 25, rajaTinta: 72}, who: 'rajaTinta', text: 'Baiklah, baiklah! Aku berhenti mengacak buku.'},
+      {actors: {rajaTinta: null, hantuBuku: 70}, fx: 'sparkle', who: 'hantuBuku', text: 'Terima kasih, {nama}! Buku-buku ini bisa dibaca semua anak lagi.'},
+      {actors: {kiki: 45}, who: 'kiki', text: 'Kamu makin siap untuk Kastil Ujian!'}
+    ],
+
     ending: [
       {bg: 'kastil', actors: {hero: 25, kiki: 45, naga: 70, penyihir: 90}, fx: 'shake', who: 'penyihir', text: 'Tidaaak! Semua jawabanmu benar!'},
       {actors: {naga: null, penyihir: null}, fx: 'flash', who: 'narator', text: 'Penyihir Kusut kabur terbirit-birit. Keenam kepingan bersinar terang...'},
@@ -114,7 +159,10 @@ MQ.Story = (() => {
     danau:  {sky: ['#41a6f6', '#73eff7', '#a6f4f9'], ground: '#41a6f6', deco: 'water'},
     lembah: {sky: ['#ef7d57', '#ffcd75', '#fff3b0'], ground: '#d4a373', deco: 'cliffs'},
     menara: {sky: ['#1a1c2c', '#29366f', '#5d275d'], ground: '#333c57', deco: 'tower', stars: true},
-    kastil: {sky: ['#1a1c2c', '#5d275d', '#b13e53'], ground: '#566c86', deco: 'castle'}
+    kastil: {sky: ['#1a1c2c', '#5d275d', '#b13e53'], ground: '#566c86', deco: 'castle'},
+    gua:    {sky: ['#1a1c2c', '#333c57', '#566c86'], ground: '#566c86', deco: 'rocks', stars: true},
+    kapal:  {sky: ['#41a6f6', '#73eff7', '#a6f4f9'], ground: '#41a6f6', deco: 'ship'},
+    perpus: {sky: ['#5d275d', '#b13e53', '#ab5236'], ground: '#ab5236', deco: 'shelves', stars: true}
   };
   function drawBg(canvas, kind) {
     // Kanvas tegak (160×230) agar pas di layar HP; pemandangan digambar di 96 baris bawah (OFF = geser ke bawah)
@@ -155,6 +203,16 @@ MQ.Story = (() => {
       rect('#1a1c2c', 69, 14, 22, 57); rect('#94b0c2', 70, 15, 20, 55); rect('#566c86', 82, 15, 8, 55);
       for (let y = 22; y < 64; y += 10) rect('#ffcd75', 77, y, 4, 5);
       rect('#e43b44', 66, 8, 28, 7);
+    } else if (b.deco === 'ship') {
+      for (let i = 0; i < 16; i++) rect('#73eff7', Math.floor(rnd() * W), 76 + Math.floor(rnd() * 18), 5, 1);
+      rect('#1a1c2c', 20, 54, 122, 18); rect('#ab5236', 22, 56, 118, 14); rect('#5d275d', 22, 66, 118, 4);   // lambung kapal
+      rect('#1a1c2c', 78, 14, 4, 42); rect('#f4f4f4', 82, 18, 26, 22); rect('#1a1c2c', 82, 18, 26, 1);      // tiang & layar
+      rect('#1a1c2c', 92, 24, 6, 6);                                                                        // gambar tengkorak kecil
+    } else if (b.deco === 'shelves') {
+      for (let sx = 6; sx < W; sx += 38) {
+        rect('#1a1c2c', sx - 1, 14, 32, 57); rect('#5d275d', sx, 15, 30, 55);
+        for (let sy = 18; sy < 66; sy += 12) for (let bx = sx + 2; bx < sx + 28; bx += 4) rect(['#e43b44', '#41a6f6', '#ffcd75', '#38b764'][(bx + sy) % 4], bx, sy, 3, 9);
+      }
     } else if (b.deco === 'castle') {
       rect('#1a1c2c', 30, 34, 100, 37); rect('#94b0c2', 31, 35, 98, 35);
       for (let i = 31; i < 128; i += 8) rect('#94b0c2', i, 30, 5, 5);
@@ -166,5 +224,5 @@ MQ.Story = (() => {
   /** Nama tampilan pembicara. */
   const speakerName = (who, heroName) => (who === 'hero' ? heroName : NAMES[who] !== undefined ? NAMES[who] : (MQ.Data.monsters[who] || {}).name || '');
 
-  return {SCENES, NAMES, VO, BG, drawBg, speakerName};
+  return {SCENES, NAMES, ACTORS, VO, BG, drawBg, speakerName};
 })();
