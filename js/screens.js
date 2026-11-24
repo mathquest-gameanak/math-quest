@@ -107,7 +107,7 @@ MQ.UI = (() => {
       ['🛡️ Pertahanan', State.def()],
       ['🎯 Peluang kritikal', `${State.critChance()}%`],
       ['💥 Damage kritikal', `${Math.round(State.critMul() * 100)}%`],
-      ['⚡ Jawab ≤3 detik', 'pasti kritikal'],
+      [`⚡ Jawab ≤${MQ.Balance.combat.fastCritSec} detik`, 'pasti kritikal'],
       ['👾 Monster dikalahkan', S.monsters],
       ['🏆 Area selesai', `${State.mainFields().filter(f => S.cleared.includes(f.id)).length} / ${State.mainFields().length}`],
       ['🔥 Kombo terbaik', S.bestCombo],

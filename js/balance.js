@@ -49,7 +49,7 @@ MQ.Balance = {
   combat: {
     critChance: 10,              // peluang kritikal dasar (%) — tambahan hanya dari equipment ("crit")
     critMul: 1.5,                // damage kritikal dasar (×) — tambahan hanya dari equipment ("critDmg", dalam %)
-    fastCritSec: 3,              // jawab benar dalam ≤ 3 detik = pasti kritikal ("KILAT!")
+    fastCritSec: 2,              // jawab benar dalam ≤ 2 detik = pasti kritikal ("KILAT!")
     comboLabel: 3,               // kombo beruntun mulai ditampilkan dengan 🔥 (hanya hiasan & misi)
     healOnKillPct: 20            // HP pulih (%) setiap mengalahkan monster (bukan di dungeon)
   },
