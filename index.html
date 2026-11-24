@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#1a1c2c">
+<title>Math Quest</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main id="app">
+
+  <!-- ===== HALAMAN UTAMA ===== -->
+  <section id="scr-home" class="screen">
+    <div class="homeArt">
+      <canvas id="homeScene"></canvas>
+      <h1 class="logo">MATH<br>QUEST</h1>
+      <img id="homeHero" class="homeHero" alt="Pahlawan">
+    </div>
+    <div id="homeInfo" class="panel homeInfo"></div>
+    <div class="menu">
+      <button class="big go wide" data-go="map">⚔️ Petualangan</button>
+      <button class="big quest-ish" data-go="char">🧑 Karakter <b id="charBadge" class="badge" hidden></b></button>
+      <button class="big" data-go="bag">🎒 Tas</button>
+      <button class="big" data-go="shop">🏪 Toko</button>
+      <button class="big" data-go="smith">🔨 Pandai Besi</button>
+      <button class="big wide quest" data-go="quests">📜 Misi Harian <b id="questBadge" class="badge" hidden></b></button>
+    </div>
+    <button class="parentBtn" data-go="parent">👪 Untuk Orang Tua</button>
+  </section>
+
+  <!-- ===== ORANG TUA ===== -->
+  <section id="scr-parent" class="screen">
+    <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Untuk Orang Tua</h2></header>
+    <form id="parentGate" class="panel box gate">
+      <p>Bagian ini untuk orang tua. Jawab dulu:</p>
+      <b id="gateQ"></b>
+      <div class="gateRow"><input id="gateIn" type="number" inputmode="numeric" autocomplete="off" aria-label="Jawaban"><button type="submit" class="sBtn">Masuk</button></div>
+      <small id="gateMsg"></small>
+    </form>
+    <div id="parentBody" hidden>
+      <div class="panel box"><h3>Ringkasan</h3><div id="repSummary" class="sumGrid"></div></div>
+      <div class="panel box"><h3>7 Hari Terakhir</h3><div id="repDays"></div></div>
+      <div class="panel box"><h3>Kemampuan per Jenis Soal</h3><div id="repSkills"></div></div>
+      <div class="panel box"><h3>Saran</h3><p id="repAdvice" class="advice"></p></div>
+      <div class="panel box"><h3>Pengaturan</h3><div id="repSettings"></div></div>
+      <p class="note">Semua data hanya tersimpan di HP ini dan tidak dikirim ke mana pun.</p>
+    </div>
+  </section>
+
+  <!-- ===== MISI HARIAN ===== -->
+  <section id="scr-quests" class="screen">
+    <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Misi Harian</h2></header>
+    <p class="note">Selesaikan misi untuk dapat hadiah. Misi baru setiap hari!</p>
+    <div id="questList" class="list"></div>
+  </section>
+
+  <!-- ===== TOKO ===== -->
+  <section id="scr-shop" class="screen">
+    <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Toko</h2><span id="shopCoins" class="coins"></span></header>
+    <p class="note">Bayar dengan menjawab soal uang kembalian!</p>
+    <div id="shopList" class="list"></div>
+  </section>
+
+  <!-- ===== PANDAI BESI ===== -->
+  <section id="scr-smith" class="screen">
+    <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Pandai Besi</h2><span id="smithCoins" class="coins"></span></header>
+    <p class="note">Kumpulkan bahan dari monster, lalu buat senjata hebat!</p>
+    <div id="smithList" class="list"></div>
+  </section>
+
+  <!-- ===== PETA ===== -->
+  <section id="scr-map" class="screen">
+    <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Peta Petualangan</h2></header>
+    <div id="mapList" class="map"></div>
+  </section>
+
+  <!-- ===== KARAKTER ===== -->
+  <section id="scr-char" class="screen">
+    <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Karakter</h2></header>
+    <div class="panel charTop">
+      <img id="charHero" alt="Pahlawan">
+      <div class="charLv"><b id="charLv"></b><div class="bar"><div id="charXpFill" class="xpFill"></div><span id="charXpText"></span></div></div>
+    </div>
+    <div class="panel box"><h3>Bagi Poin Status <small id="charPoints" class="pts"></small></h3><div id="charAlloc"></div></div>
+    <div class="panel box"><h3>Statistik</h3><div id="charStats"></div></div>
+    <div class="panel box"><h3>Kemampuan</h3><div id="charSkills"></div></div>
+    <div class="panel box"><h3>Perlengkapan</h3>
+      <div id="charEquip" class="equip"></div>
+    </div>
+  </section>
+
+  <!-- ===== TAS ===== -->
+  <section id="scr-bag" class="screen">
+    <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Tas</h2><span id="bagCoins" class="coins"></span></header>
+    <div class="panel box">
+      <div id="bagGrid" class="bag"></div>
+      <p id="bagNote" class="note"></p>
+    </div>
+  </section>
+
+  <!-- ===== PERTARUNGAN ===== -->
+  <section id="scr-battle" class="screen">
+    <header class="panel hud">
+      <div class="row"><button id="btnExit" class="back">◀ Peta</button><b id="fieldName" class="fieldName"></b><span id="lvl"></span></div>
+      <div class="row"><span class="hpIcon">❤️</span><div class="bar heroHp"><div id="heroHpFill"></div><span id="heroHpText"></span></div>
+        <button id="btnPotion" class="potion" hidden aria-label="Minum Ramuan Penyembuh"><img alt=""><span id="potionCount"></span></button></div>
+      <div class="bar"><div id="xpFill" class="xpFill"></div><span id="xpText"></span></div>
+      <div class="row small"><span id="count"></span><span id="combo"></span></div>
+    </header>
+
+    <!-- Pilihan jenis soal: hanya tampil di Arena Latihan -->
+    <nav id="modes">
+      <button class="mode" data-mode="campur">Campur</button>
+      <button class="mode" data-mode="tambah">Tambah +</button>
+      <button class="mode" data-mode="kurang">Kurang −</button>
+      <button class="mode" data-mode="kali">Kali ×</button>
+    </nav>
+
+    <section id="arena">
+      <canvas id="scene"></canvas>
+      <div id="mTop" class="panel"><div id="mName"></div><div class="bar"><div id="hpFill"></div><span id="hpText"></span></div>
+        <div id="atkBar" class="atkBar" title="Serangan musuh"><span>⚡</span><div class="atkTrack"><div id="atkFill"></div></div></div></div>
+      <div id="stage">
+        <img id="hero" alt="Pahlawan">
+        <div id="mWrap"><img id="mImg" alt="Monster"></div>
+      </div>
+      <div id="slash"></div>
+      <div id="fx"></div>
+    </section>
+
+    <div id="question" class="panel">
+      <div id="qView" hidden></div>
+      <div class="qLine"><span id="qText">?</span><button id="btnSpeak" class="speak" aria-label="Bacakan soal">🔊</button></div>
+    </div>
+    <div id="answers"></div>
+  </section>
+</main>
+
+<!-- Jendela pesan -->
+<div id="overlay" hidden><div class="card panel">
+  <div id="ovIcon"></div><h2 id="ovTitle"></h2><p id="ovText"></p>
+  <div id="ovChoices" hidden></div>
+  <div class="ovBtns"><button id="ovBtn">Oke</button><button id="ovBtn2" class="alt" hidden></button></div>
+</div></div>
+
+<!-- Urutan penting: utilitas & data dulu, layar, lalu main.js -->
+<script src="js/questions.js"></script>
+<script src="js/save.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/sprites.js"></script>
+<script src="js/visuals.js"></script>
+<script src="js/data.js"></script>
+<script src="js/state.js"></script>
+<script src="js/screens.js"></script>
+<script src="js/battle.js"></script>
+<script src="js/shop.js"></script>
+<script src="js/quests.js"></script>
+<script src="js/parent.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

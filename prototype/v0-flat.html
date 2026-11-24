@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#6cc45a">
+<title>Math Quest</title>
+<style>
+/* ===== Dasar & tata letak (mobile-first, portrait) ===== */
+:root{--gelap:#2e3b2f;--merah:#ef5350;--hijau:#43a047;--kuning:#ffca28}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:"Trebuchet MS","Comic Sans MS",system-ui,sans-serif;background:#6cc45a;color:var(--gelap);
+  display:flex;justify-content:center;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+#game{width:100%;max-width:480px;min-height:100%;display:flex;flex-direction:column;gap:8px;padding:10px 12px 14px;
+  background:linear-gradient(#9be07f,#6cc45a)}
+button{font:inherit;cursor:pointer;border:none}
+
+/* ===== HUD: level, hati, XP ===== */
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pill{background:#fff;border-radius:999px;padding:4px 14px;font-weight:900;font-size:20px;box-shadow:0 3px 0 #0002}
+#hearts{font-size:24px;letter-spacing:1px}
+.bar{position:relative;height:20px;background:#fff;border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 0 #0002}
+.bar>div{height:100%;width:0;border-radius:999px;transition:width .4s ease}
+.bar>span{position:absolute;inset:0;text-align:center;font-size:13px;font-weight:900;line-height:20px}
+#xpFill{background:linear-gradient(90deg,#29b6f6,#7c4dff)}
+.small{font-size:15px;font-weight:700}
+#combo{color:#e65100;font-weight:900}
+
+/* ===== Pilihan mode ===== */
+#modes{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.mode{background:#fff;border-radius:14px;padding:8px 0;font-weight:900;font-size:14px;box-shadow:0 4px 0 #0003;color:var(--gelap)}
+.mode.on{background:var(--kuning);box-shadow:0 4px 0 #f57f17}
+
+/* ===== Arena hutan & monster ===== */
+#arena{position:relative;flex:1;min-height:220px;border-radius:22px;overflow:hidden;border:4px solid #fff;box-shadow:0 5px 0 #0002}
+.forest{position:absolute;inset:0;width:100%;height:100%}
+#mTop{position:absolute;top:8px;left:12px;right:12px;text-align:center;font-weight:900;font-size:17px;z-index:2}
+#mTop .bar{margin-top:4px;height:16px;border:2px solid #fff}
+#mTop .bar>span{line-height:12px;font-size:11px}
+#hpFill{background:#66bb6a}
+#stage{position:absolute;inset:62px 0 6px;display:flex;justify-content:center;align-items:flex-end}
+#mWrap{height:100%;max-height:170px;aspect-ratio:1;transform-origin:50% 100%}
+#mWrap.boss{max-height:205px}
+#mBody{width:100%;height:100%;animation:bob 1.6s ease-in-out infinite}
+#mBody svg{width:100%;height:100%;overflow:visible}
+#mWrap.pop{animation:pop .5s cubic-bezier(.3,1.6,.5,1)}
+#mWrap.hit{animation:shake .4s}
+#mWrap.defeat{animation:defeat .8s ease-in forwards}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes pop{0%{transform:scale(0)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0);filter:none}20%{transform:translateX(-12px) rotate(-6deg);filter:brightness(1.8)}
+  40%{transform:translateX(10px) rotate(5deg)}60%{transform:translateX(-7px)}80%{transform:translateX(5px)}}
+@keyframes defeat{0%{transform:scale(1);opacity:1}35%{transform:scale(1.15) rotate(12deg);opacity:1}100%{transform:scale(0) rotate(-220deg);opacity:0}}
+
+/* Efek tebasan & angka melayang */
+#slash{position:absolute;left:50%;top:58%;width:220px;height:9px;margin:-4px 0 0 -110px;border-radius:5px;opacity:0;pointer-events:none;
+  background:linear-gradient(90deg,transparent,#fff 30%,#fff 70%,transparent);box-shadow:0 0 14px #fff;z-index:3}
+#slash.crit{height:15px;background:linear-gradient(90deg,transparent,#ffeb3b 30%,#ff9800 70%,transparent);box-shadow:0 0 18px #ffb300}
+#slash.go{animation:slash .35s ease-out}
+@keyframes slash{0%{transform:rotate(-35deg) scaleX(0);opacity:1}60%{transform:rotate(-35deg) scaleX(1);opacity:1}100%{transform:rotate(-35deg) scaleX(1);opacity:0}}
+.float{position:absolute;top:38%;font-size:32px;font-weight:900;color:#fff;-webkit-text-stroke:2px #c62828;white-space:nowrap;
+  pointer-events:none;z-index:4;animation:float 1.1s ease-out forwards}
+.float.crit{font-size:38px;color:#ffeb3b;-webkit-text-stroke:2px #e65100}
+.float.xp{color:#b3e5fc;-webkit-text-stroke:2px #01579b}
+@keyframes float{0%{opacity:0;transform:translate(-50%,10px) scale(.6)}20%{opacity:1;transform:translate(-50%,0) scale(1.2)}
+  100%{opacity:0;transform:translate(-50%,-70px) scale(1)}}
+
+/* ===== Soal & tombol jawaban ===== */
+#question{background:#fff;border-radius:20px;text-align:center;font-size:44px;font-weight:900;padding:8px;box-shadow:0 5px 0 #0002}
+#answers{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ans{font-size:40px;font-weight:900;padding:16px 0;border-radius:20px;color:var(--gelap);transition:transform .08s}
+.ans:nth-child(1){background:#fff59d;box-shadow:0 6px 0 #f9a825}
+.ans:nth-child(2){background:#90caf9;box-shadow:0 6px 0 #1e88e5}
+.ans:nth-child(3){background:#f8bbd0;box-shadow:0 6px 0 #d81b60}
+.ans:nth-child(4){background:#ffcc80;box-shadow:0 6px 0 #ef6c00}
+.ans:active{transform:translateY(4px)}
+.ans.benar{background:#66bb6a;color:#fff;box-shadow:0 6px 0 #2e7d32;transform:scale(1.05)}
+.ans.salah{background:var(--merah);color:#fff;box-shadow:0 6px 0 #b71c1c;animation:shake .4s}
+
+/* ===== Jendela pesan (istirahat / naik level / mulai) ===== */
+#overlay{position:fixed;inset:0;background:#0007;display:flex;align-items:center;justify-content:center;padding:24px;z-index:10}
+#overlay[hidden]{display:none}
+.card{background:#fff;border-radius:26px;padding:24px 20px;text-align:center;max-width:340px;width:100%;animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+#ovIcon{font-size:64px}
+.card h2{font-size:28px;margin:6px 0}
+.card p{font-size:18px;line-height:1.4;margin-bottom:16px}
+#ovBtn{background:var(--hijau);color:#fff;font-size:26px;font-weight:900;padding:12px 40px;border-radius:18px;box-shadow:0 6px 0 #1b5e20}
+</style>
+</head>
+<body>
+<main id="game">
+  <header>
+    <div class="row"><span id="lvl" class="pill">Level 1</span><span id="hearts"></span></div>
+    <div class="bar" style="margin-top:6px"><div id="xpFill"></div><span id="xpText"></span></div>
+    <div class="row small" style="margin-top:4px"><span id="count"></span><span id="combo"></span></div>
+  </header>
+
+  <nav id="modes">
+    <button class="mode" data-mode="campur">🎲 Campur</button>
+    <button class="mode" data-mode="tambah">➕ Tambah</button>
+    <button class="mode" data-mode="kurang">➖ Kurang</button>
+    <button class="mode" data-mode="kali">✖️ Kali</button>
+  </nav>
+
+  <section id="arena">
+    <!-- Latar hutan cerah (SVG inline) -->
+    <svg class="forest" viewBox="0 0 400 260" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <rect width="400" height="260" fill="#aee6ff"/>
+      <circle cx="345" cy="45" r="26" fill="#ffe66d"/>
+      <g fill="#fff"><ellipse cx="80" cy="40" rx="34" ry="12"/><ellipse cx="105" cy="32" rx="22" ry="12"/><ellipse cx="250" cy="60" rx="28" ry="10"/></g>
+      <g fill="#8d6e63"><rect x="26" y="160" width="12" height="45"/><rect x="92" y="150" width="14" height="55"/><rect x="296" y="150" width="14" height="55"/><rect x="364" y="160" width="12" height="45"/></g>
+      <g fill="#5dbb63"><circle cx="32" cy="148" r="40"/><circle cx="99" cy="132" r="46"/><circle cx="303" cy="132" r="46"/><circle cx="370" cy="148" r="40"/></g>
+      <g fill="#3e9b48"><path d="M140 205 L168 115 L196 205Z"/><path d="M206 205 L234 125 L262 205Z"/></g>
+      <rect y="198" width="400" height="62" fill="#7ccf5a"/>
+      <ellipse cx="200" cy="200" rx="230" ry="16" fill="#8bd96a"/>
+      <g fill="#ff8a80"><circle cx="60" cy="230" r="5"/><circle cx="330" cy="236" r="5"/></g>
+      <g fill="#fff59d"><circle cx="120" cy="244" r="4"/><circle cx="280" cy="226" r="4"/></g>
+    </svg>
+    <div id="mTop"><div id="mName"></div><div class="bar"><div id="hpFill"></div><span id="hpText"></span></div></div>
+    <div id="stage"><div id="mWrap"><div id="mBody"></div></div></div>
+    <div id="slash"></div>
+    <div id="fx"></div>
+  </section>
+
+  <div id="question">?</div>
+  <div id="answers"></div>
+</main>
+
+<div id="overlay" hidden><div class="card"><div id="ovIcon"></div><h2 id="ovTitle"></h2><p id="ovText"></p><button id="ovBtn">Lanjut!</button></div></div>
+
+<script>
+'use strict';
+/* ===== Referensi elemen ===== */
+const $ = id => document.getElementById(id);
+const els = {lvl:$('lvl'),hearts:$('hearts'),xpFill:$('xpFill'),xpText:$('xpText'),count:$('count'),combo:$('combo'),
+  mName:$('mName'),hpFill:$('hpFill'),hpText:$('hpText'),mWrap:$('mWrap'),mBody:$('mBody'),slash:$('slash'),fx:$('fx'),
+  question:$('question'),answers:$('answers'),overlay:$('overlay'),ovIcon:$('ovIcon'),ovTitle:$('ovTitle'),ovText:$('ovText'),ovBtn:$('ovBtn')};
+
+/* ===== Utilitas ===== */
+const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1)); // bilangan bulat a..b (inklusif)
+function shuffle(arr) { // Fisher-Yates
+  for (let i = arr.length - 1; i > 0; i--) { const j = rand(0, i); [arr[i], arr[j]] = [arr[j], arr[i]]; }
+  return arr;
+}
+function restartAnim(el, cls) { // putar ulang animasi CSS pada elemen monster
+  el.classList.remove('pop', 'hit', 'defeat');
+  void el.offsetWidth; // paksa reflow agar animasi bisa diulang
+  el.classList.add(cls);
+}
+
+/* ===== Simpan / muat (localStorage) ===== */
+const SAVE_KEY = 'mathQuest.v1';
+const MODES = ['campur', 'tambah', 'kurang', 'kali'];
+const num = (v, d, min) => (Number.isFinite(v) && v >= min ? Math.floor(v) : d);
+function load() {
+  try { return JSON.parse(localStorage.getItem(SAVE_KEY)) || {}; } catch (e) { return {}; }
+}
+function save() {
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({level: S.level, xp: S.xp, monsters: S.monsters, mode: S.mode})); } catch (e) {}
+}
+
+/* ===== Status permainan ===== */
+const saved = load();
+const S = {
+  level: num(saved.level, 1, 1), xp: num(saved.xp, 0, 0), monsters: num(saved.monsters, 0, 0),
+  mode: MODES.includes(saved.mode) ? saved.mode : 'campur',
+  hearts: 5, combo: 0, hp: 0, maxHp: 1, isBoss: false, lastMonster: -1, q: null, locked: true
+};
+const MAX_HEARTS = 5;
+const xpNeed = lv => 30 + (lv - 1) * 15; // XP yang dibutuhkan untuk naik dari level lv
+
+/* ===== Suara (Web Audio API) ===== */
+let AC = null;
+function audio() { // dibuat saat ketukan pertama (aturan autoplay browser)
+  try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); } catch (e) { AC = null; }
+}
+function tone(freq, dur, type = 'square', delay = 0, vol = 0.12) {
+  if (!AC) return;
+  const t = AC.currentTime + delay, o = AC.createOscillator(), g = AC.createGain();
+  o.type = type; o.frequency.setValueAtTime(freq, t);
+  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + dur + 0.02);
+}
+const sfx = {
+  correct: () => { tone(660, .12); tone(990, .18, 'square', .1); },
+  crit:    () => { tone(660, .1); tone(990, .1, 'square', .08); tone(1320, .25, 'square', .16); },
+  wrong:   () => { tone(330, .2, 'sawtooth', 0, .1); tone(220, .35, 'sawtooth', .15, .1); },
+  defeat:  () => [784, 523, 392, 262].forEach((f, i) => tone(f, .14, 'triangle', i * .07, .2)),
+  levelUp: () => [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, .22, 'square', i * .12))
+};
+
+/* ===== Monster (SVG inline) ===== */
+const SHADOW = '<ellipse cx="100" cy="193" rx="58" ry="8" fill="#0002"/>';
+const EYES = (x1, x2, y, r) => [x1, x2].map(x =>
+  `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" stroke="#222" stroke-width="4"/>` +
+  `<circle cx="${x + 3}" cy="${y + 2}" r="${r * .5}" fill="#222"/><circle cx="${x + 6}" cy="${y - 3}" r="${r * .18}" fill="#fff"/>`).join('');
+const svg = inner => `<svg viewBox="0 0 200 200">${SHADOW}${inner}</svg>`;
+const MONSTERS = [
+  {name: 'Lendir Hijau', svg: svg(`
+    <path d="M28 186 C18 120 55 56 100 56 C145 56 182 120 172 186 Z" fill="#7ed957" stroke="#2e7d32" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M100 56 C96 38 110 32 113 42" fill="none" stroke="#2e7d32" stroke-width="6" stroke-linecap="round"/>
+    <ellipse cx="62" cy="98" rx="14" ry="8" fill="#fff" opacity=".6" transform="rotate(-35 62 98)"/>
+    ${EYES(76, 124, 120, 15)}
+    <path d="M82 152 Q100 168 118 152" fill="none" stroke="#222" stroke-width="5" stroke-linecap="round"/>`)},
+  {name: 'Kelelawar Ungu', svg: svg(`
+    <path d="M60 100 L5 70 L20 105 L0 130 L35 128 L60 140Z" fill="#9575cd" stroke="#4527a0" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M140 100 L195 70 L180 105 L200 130 L165 128 L140 140Z" fill="#9575cd" stroke="#4527a0" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M62 72 L70 30 L92 60Z M138 72 L130 30 L108 60Z" fill="#7e57c2" stroke="#4527a0" stroke-width="5" stroke-linejoin="round"/>
+    <circle cx="100" cy="110" r="52" fill="#7e57c2" stroke="#4527a0" stroke-width="6"/>
+    <ellipse cx="100" cy="134" rx="30" ry="20" fill="#b39ddb"/>
+    ${EYES(80, 120, 100, 14)}
+    <path d="M86 134 Q100 144 114 134" fill="none" stroke="#222" stroke-width="5" stroke-linecap="round"/>
+    <path d="M90 138 L94 149 L98 140Z M102 140 L106 149 L110 138Z" fill="#fff"/>`)},
+  {name: 'Jamur Nakal', svg: svg(`
+    <rect x="62" y="100" width="76" height="88" rx="30" fill="#fff3e0" stroke="#8d6e63" stroke-width="6"/>
+    <path d="M20 110 C20 38 180 38 180 110 Q100 126 20 110Z" fill="#ef5350" stroke="#b71c1c" stroke-width="6" stroke-linejoin="round"/>
+    <circle cx="60" cy="82" r="11" fill="#fff"/><circle cx="105" cy="60" r="14" fill="#fff"/><circle cx="148" cy="86" r="10" fill="#fff"/>
+    ${EYES(85, 118, 142, 12)}
+    <path d="M72 124 L96 132 M130 124 L106 132" stroke="#222" stroke-width="5" stroke-linecap="round"/>
+    <path d="M90 170 Q101 162 112 170" fill="none" stroke="#222" stroke-width="5" stroke-linecap="round"/>`)}
+];
+const BOSS = {name: 'Raja Naga Api', svg: svg(`
+  <path d="M42 74 Q18 28 55 18 Q50 46 72 64Z M158 74 Q182 28 145 18 Q150 46 128 64Z" fill="#fff8e1" stroke="#5d4037" stroke-width="5" stroke-linejoin="round"/>
+  <ellipse cx="100" cy="122" rx="80" ry="70" fill="#ff7043" stroke="#bf360c" stroke-width="6"/>
+  <ellipse cx="100" cy="155" rx="48" ry="32" fill="#ffccbc"/>
+  <path d="M68 62 L72 28 L86 46 L100 22 L114 46 L128 28 L132 62Z" fill="#ffd54f" stroke="#f57f17" stroke-width="5" stroke-linejoin="round"/>
+  <circle cx="100" cy="50" r="6" fill="#e53935"/><circle cx="80" cy="54" r="4" fill="#1e88e5"/><circle cx="120" cy="54" r="4" fill="#1e88e5"/>
+  <ellipse cx="72" cy="106" rx="16" ry="14" fill="#ffeb3b" stroke="#222" stroke-width="4"/><rect x="69" y="95" width="6" height="22" rx="3" fill="#222"/>
+  <ellipse cx="128" cy="106" rx="16" ry="14" fill="#ffeb3b" stroke="#222" stroke-width="4"/><rect x="125" y="95" width="6" height="22" rx="3" fill="#222"/>
+  <path d="M50 84 L88 96 M150 84 L112 96" stroke="#222" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="90" cy="132" r="4" fill="#bf360c"/><circle cx="110" cy="132" r="4" fill="#bf360c"/>
+  <path d="M64 150 Q100 178 136 150 Z" fill="#5d1a0a" stroke="#222" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M74 153 L82 165 L89 157Z M111 157 L118 165 L126 153Z" fill="#fff"/>`)};
+
+/* ===== Pembuat soal ===== */
+function makeQuestion() {
+  const L = S.level;
+  let op = S.mode;
+  if (op === 'campur') { const ops = L >= 3 ? ['tambah', 'kurang', 'kali'] : ['tambah', 'kurang']; op = ops[rand(0, ops.length - 1)]; }
+  // Batas angka naik bertahap: Lv1 ≤10, Lv2 ≤15, Lv3 ≤20, lalu +10 per level (maks 100)
+  const max = L <= 1 ? 10 : L === 2 ? 15 : L === 3 ? 20 : Math.min(100, 20 + (L - 3) * 10);
+  let a, b, ans, sym;
+  if (op === 'tambah') { ans = rand(2, max); a = rand(1, ans - 1); b = ans - a; sym = '+'; }
+  else if (op === 'kurang') { a = rand(2, max); b = rand(1, a); ans = a - b; sym = '−'; } // b ≤ a → tidak pernah negatif
+  else { a = rand(1, Math.min(10, L + 1)); b = rand(1, L < 3 ? 5 : 10); ans = a * b; sym = '×'; } // tabel perkalian bertahap
+  return {text: `${a} ${sym} ${b} = ?`, ans, choices: makeChoices(ans, op, a, b)};
+}
+
+// Pilihan salah: dekat dengan jawaban, tidak negatif, unik, lalu diacak
+function makeChoices(ans, op, a, b) {
+  const pool = [1, -1, 2, -2, 3, -3].map(d => ans + d);
+  if (op === 'kali') pool.push(ans + a, ans - a, ans + b, ans - b); // salah satu baris tabel
+  else if (ans >= 10) pool.push(ans + 10, ans - 10);                 // salah puluhan
+  const wrong = [];
+  for (const v of shuffle(pool)) {
+    if (v >= 0 && v !== ans && !wrong.includes(v)) wrong.push(v);
+    if (wrong.length === 3) break;
+  }
+  for (let v = ans + 4; wrong.length < 3; v++) if (!wrong.includes(v)) wrong.push(v); // cadangan (jarang terpakai)
+  return shuffle([ans, ...wrong]);
+}
+
+/* ===== Tampilan ===== */
+function updateHud() {
+  const need = xpNeed(S.level);
+  els.lvl.textContent = `⭐ Level ${S.level}`;
+  els.hearts.textContent = '❤️'.repeat(Math.max(0, S.hearts)) + '🤍'.repeat(MAX_HEARTS - Math.max(0, S.hearts));
+  els.xpFill.style.width = Math.min(100, S.xp / need * 100) + '%';
+  els.xpText.textContent = `XP ${S.xp} / ${need}`;
+  els.count.textContent = `🏆 Monster: ${S.monsters}`;
+  els.combo.textContent = S.combo >= 3 ? `🔥 KOMBO x${S.combo}!` : S.combo > 0 ? `Beruntun: ${S.combo}` : '';
+}
+function updateHP() {
+  const p = S.hp / S.maxHp * 100;
+  els.hpFill.style.width = p + '%';
+  els.hpFill.style.background = p > 50 ? '#66bb6a' : p > 25 ? '#ffca28' : '#ef5350';
+  els.hpText.textContent = `HP ${S.hp} / ${S.maxHp}`;
+}
+function showFloat(text, cls) { // angka/teks melayang di atas monster
+  const s = document.createElement('span');
+  s.className = 'float ' + cls; s.textContent = text; s.style.left = rand(38, 62) + '%';
+  s.addEventListener('animationend', () => s.remove());
+  els.fx.appendChild(s);
+}
+function showOverlay(icon, title, text, btn, cb) {
+  els.ovIcon.textContent = icon; els.ovTitle.textContent = title; els.ovText.textContent = text; els.ovBtn.textContent = btn;
+  ovCallback = cb; els.overlay.hidden = false;
+}
+let ovCallback = null;
+els.ovBtn.addEventListener('click', () => {
+  audio();
+  els.overlay.hidden = true;
+  const cb = ovCallback; ovCallback = null;
+  if (cb) cb();
+});
+
+/* ===== Alur permainan ===== */
+function spawnMonster() {
+  const n = S.monsters + 1;
+  S.isBoss = n % 5 === 0; // setiap monster ke-5 adalah bos
+  let idx; do { idx = rand(0, MONSTERS.length - 1); } while (idx === S.lastMonster); // jangan sama berturut-turut
+  S.lastMonster = idx;
+  const m = S.isBoss ? BOSS : MONSTERS[idx];
+  S.maxHp = (30 + S.level * 6) * (S.isBoss ? 2 : 1);
+  S.hp = S.maxHp;
+  els.mName.textContent = (S.isBoss ? '👑 BOS: ' : '') + m.name + ` #${n}`;
+  els.mBody.innerHTML = m.svg;
+  els.mWrap.className = S.isBoss ? 'boss' : '';
+  restartAnim(els.mWrap, 'pop');
+  updateHP();
+}
+
+function nextQuestion() {
+  let q, tries = 0;
+  do { q = makeQuestion(); } while (S.q && q.text === S.q.text && ++tries < 5); // hindari soal yang sama berturut-turut
+  S.q = q;
+  els.question.textContent = q.text;
+  els.answers.innerHTML = '';
+  q.choices.forEach(v => {
+    const b = document.createElement('button');
+    b.className = 'ans'; b.textContent = v; b.dataset.v = v;
+    b.addEventListener('click', () => answer(b, v));
+    els.answers.appendChild(b);
+  });
+  S.locked = false;
+}
+
+function answer(btn, val) {
+  if (S.locked) return;
+  S.locked = true;
+  audio();
+  if (val === S.q.ans) {
+    // BENAR → serang monster; 3+ beruntun = kritis (2x)
+    btn.classList.add('benar');
+    S.combo++;
+    const crit = S.combo >= 3;
+    const dmg = (rand(8, 12) + S.level) * (crit ? 2 : 1);
+    S.hp = Math.max(0, S.hp - dmg);
+    crit ? sfx.crit() : sfx.correct();
+    els.slash.className = ''; void els.slash.offsetWidth; els.slash.className = crit ? 'go crit' : 'go';
+    restartAnim(els.mWrap, 'hit');
+    showFloat((crit ? 'KRITIS! ' : '') + '-' + dmg, crit ? 'crit' : '');
+    updateHP(); updateHud();
+    setTimeout(S.hp <= 0 ? defeatMonster : nextQuestion, 750);
+  } else {
+    // SALAH → kehilangan 1 hati, tunjukkan jawaban benar, kombo hilang
+    btn.classList.add('salah');
+    [...els.answers.children].find(b => Number(b.dataset.v) === S.q.ans).classList.add('benar');
+    S.hearts--; S.combo = 0;
+    sfx.wrong(); updateHud();
+    setTimeout(() => {
+      if (S.hearts > 0) return nextQuestion();
+      // Tidak ada game over: pahlawan istirahat lalu hati terisi lagi
+      showOverlay('😴', 'Pahlawan Istirahat', 'Pahlawan tidur sebentar untuk mengisi tenaga... Hati sudah penuh lagi. Ayo semangat!', 'Ayo Lanjut!', () => {
+        S.hearts = MAX_HEARTS; updateHud(); nextQuestion();
+      });
+    }, 1400);
+  }
+}
+
+function defeatMonster() {
+  restartAnim(els.mWrap, 'defeat');
+  sfx.defeat();
+  const gain = S.isBoss ? 30 : 10;
+  S.monsters++; S.xp += gain;
+  showFloat(`+${gain} XP`, 'xp');
+  let leveled = false;
+  while (S.xp >= xpNeed(S.level)) { S.xp -= xpNeed(S.level); S.level++; leveled = true; }
+  save(); updateHud();
+  const next = () => { spawnMonster(); nextQuestion(); };
+  setTimeout(() => {
+    if (!leveled) return next();
+    S.hearts = MAX_HEARTS; updateHud(); sfx.levelUp();
+    showOverlay('🎉', `Naik ke Level ${S.level}!`, 'Hebat sekali! Hati penuh lagi, dan soalnya sekarang jadi lebih seru!', 'Siap!', next);
+  }, 900);
+}
+
+/* ===== Pilihan mode ===== */
+function renderModes() {
+  document.querySelectorAll('.mode').forEach(b => b.classList.toggle('on', b.dataset.mode === S.mode));
+}
+document.querySelectorAll('.mode').forEach(b => b.addEventListener('click', () => {
+  audio();
+  S.mode = b.dataset.mode; renderModes(); save();
+  if (!S.locked) nextQuestion(); // ganti soal langsung; kalau sedang animasi, soal berikutnya ikut mode baru
+}));
+
+/* ===== Mulai ===== */
+renderModes(); updateHud();
+showOverlay('⚔️', 'Math Quest', 'Jawab soal matematika untuk menyerang monster! Benar 3 kali berturut-turut = serangan KRITIS!', 'Mulai!', () => {
+  spawnMonster(); nextQuestion();
+});
+</script>
+</body>
+</html>
