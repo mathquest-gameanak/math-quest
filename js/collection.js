@@ -36,6 +36,7 @@ MQ.Collection = (() => {
 
   let selected = null;
   UI.renderers.book = () => {
+    MQ.Audio.sfx.bookOpen();
     $('bookProgress').textContent = `Ditemukan ${found()} dari ${MONSTER_IDS.length}`;
     $('bookGrid').innerHTML = MONSTER_IDS.map(id => {
       const m = Data.monsters[id], seen = count(id) > 0;
@@ -77,6 +78,7 @@ MQ.Collection = (() => {
   $('bookGrid').addEventListener('click', e => {
     const b = e.target.closest('[data-mon]');
     if (!b) return;
+    MQ.Audio.sfx.book();
     showDetail(b.dataset.mon);
     $('bookDetail').scrollIntoView({block: 'nearest', behavior: 'smooth'});
   });

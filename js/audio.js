@@ -22,6 +22,7 @@ MQ.Audio = (() => {
         noiseBuf = ac.createBuffer(1, ac.sampleRate, ac.sampleRate);
         const d = noiseBuf.getChannelData(0);
         for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+        loadSamples();
         if (wanted) music.play(wanted);
       }
       if (ac.state === 'suspended') ac.resume();
@@ -66,10 +67,39 @@ MQ.Audio = (() => {
   const arp = (notes, step, type = 'square', v = 0.1, len = step * 1.5) => notes.forEach((f, i) => tone(f, len, type, i * step, v));
 
   /* ===== Efek suara ===== */
+  /* ===== Suara rekaman (Kenney, CC0) di audio/sfx/<nama><n>.mp3 =====
+     Jumlah varian per nama; dipilih acak supaya tidak monoton. Bila belum termuat / gagal → suara buatan kode. */
+  const SAMPLES = {click: 2, back: 1, toggle: 2, confirm: 2, slash: 2, coin: 2, loot: 1, equip: 3, craft: 3,
+                   chest: 1, book: 3, bookOpen: 1, door: 2};
+  const buffers = {};
+  function loadSamples() {
+    for (const [name, n] of Object.entries(SAMPLES)) {
+      buffers[name] = [];
+      for (let i = 1; i <= n; i++) {
+        fetch(`audio/sfx/${name}${i}.mp3`).then(r => (r.ok ? r.arrayBuffer() : Promise.reject()))
+          .then(b => new Promise((ok, no) => ac.decodeAudioData(b, ok, no)))
+          .then(buf => buffers[name].push(buf)).catch(() => {});
+      }
+    }
+  }
+  /** Putar rekaman; kembalikan false bila tidak ada (pemanggil memakai suara buatan kode). */
+  function sample(name, v = 1, delay = 0) {
+    const list = buffers[name];
+    if (!ac || !list || !list.length) return false;
+    try {
+      const src = ac.createBufferSource(), g = ac.createGain();
+      src.buffer = list[Math.floor(Math.random() * list.length)];
+      g.gain.value = v;
+      src.connect(g); g.connect(sfxBus);
+      src.start(ac.currentTime + delay);
+      return true;
+    } catch (e) { return false; }
+  }
+
   const sfx = {
     correct: () => { tone(660, .12); tone(990, .18, 'square', .1); },
     crit:    () => { tone(660, .1); tone(990, .1, 'square', .08); tone(1320, .25, 'square', .16); },
-    slash:   () => noise(.16, {freq: 3200, freqEnd: 700, v: .25}),
+    slash:   () => sample('slash', .9) || noise(.16, {freq: 3200, freqEnd: 700, v: .25}),
     wrong:   () => { tone(330, .2, 'sawtooth', 0, .1); tone(220, .35, 'sawtooth', .15, .1); },
     hurt:    () => { tone(180, .12, 'square', 0, .12); tone(120, .15, 'square', .06, .12); },
     defeat:  () => [784, 523, 392, 262].forEach((f, i) => tone(f, .14, 'triangle', i * .07, .2)),
@@ -85,14 +115,20 @@ MQ.Audio = (() => {
       else if (kind === 'ghost') { tone(500, .45, 'sine', 0, .18, 260); tone(520, .45, 'sine', .05, .1, 250); }
       else tone(300, .15, 'square', 0, .1, 150);
     },
-    coin:    () => { tone(988, .07, 'square', 0, .07); tone(1319, .16, 'square', .07, .07); },
-    loot:    () => { tone(784, .08, 'triangle', 0, .18); tone(1175, .14, 'triangle', .08, .18); },
+    coin:    () => { if (!sample('coin', .8)) { tone(988, .07, 'square', 0, .07); tone(1319, .16, 'square', .07, .07); } },
+    loot:    () => { sample('loot', .8); tone(784, .08, 'triangle', .05, .14); tone(1175, .14, 'triangle', .13, .14); },
     potion:  () => [0, .12, .24].forEach(d => tone(380, .12, 'sine', d, .22, 760)),
     buy:     () => { sfx.coin(); tone(2093, .35, 'triangle', .16, .12); },
-    craft:   () => [0, .2, .4].forEach(d => { tone(1800, .14, 'triangle', d, .14, 1500); noise(.05, {type: 'highpass', freq: 3000, v: .2, delay: d}); }),
-    equip:   () => { tone(300, .06, 'square', 0, .1); tone(450, .1, 'square', .05, .1); },
-    click:   () => tone(700, .03, 'square', 0, .035),
-    chest:   () => arp([523, 659, 784, 1047, 1319, 1568], .07, 'triangle', .18, .2),
+    craft:   () => [0, .25, .5].forEach(d => { if (!sample('craft', .7, d)) { tone(1800, .14, 'triangle', d, .14, 1500); noise(.05, {type: 'highpass', freq: 3000, v: .2, delay: d}); } }),
+    equip:   () => { if (!sample('equip', .9)) { tone(300, .06, 'square', 0, .1); tone(450, .1, 'square', .05, .1); } },
+    click:   () => sample('click', .7) || tone(700, .03, 'square', 0, .035),
+    back:    () => sample('back', .8) || tone(500, .04, 'square', 0, .035),
+    toggle:  () => sample('toggle', .8) || tone(900, .04, 'square', 0, .05),
+    confirm: () => sample('confirm', .8) || tone(880, .08, 'triangle', 0, .15),
+    book:    () => sample('book', .9) || noise(.08, {freq: 2000, v: .1}),
+    bookOpen: () => sample('bookOpen', .9) || noise(.08, {freq: 1500, v: .1}),
+    door:    () => sample('door', .8) || tone(110, .4, 'sawtooth', 0, .06, 80),
+    chest:   () => { sample('chest', .9); arp([523, 659, 784, 1047, 1319, 1568], .07, 'triangle', .18, .2); },
     fanfare: () => { [523, 523, 523, 659].forEach((f, i) => tone(f, .12, 'square', i * .13, .11)); tone(784, .2, 'square', .52, .11); tone(1047, .6, 'square', .72, .12); }
   };
 
@@ -196,5 +232,5 @@ MQ.Audio = (() => {
     } catch (e) { /* suara tidak tersedia */ }
   }
 
-  return {unlock, sfx, music, speak, setVolumes, SONGS};
+  return {unlock, sfx, music, speak, setVolumes, SONGS, loaded: () => Object.fromEntries(Object.entries(buffers).map(([k, v]) => [k, v.length]))};
 })();

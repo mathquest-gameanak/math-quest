@@ -144,5 +144,11 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Layar **Atur Angka** (`js/tuner.js`, dari Orang Tua): ±99 angka (karakter, musuh, kecepatan per jenis & monster khusus, pace & level area, XP/hadiah), tersimpan di `localStorage['mathQuest.tuning']` terpisah dari progress. Pratinjau per area: HP musuh, jumlah pukulan, damage/KO, jeda, berapa kali musuh sempat menyerang, XP. Alat: set level pemain, isi HP, naik/turunkan level monster area. Salin/tempel angka, kembalikan ke awal. Gerbang orang tua terbuka 10 menit setelah lolos. SW `mq-v9`.
 - Temuan: dengan angka awal musuh kalah dalam 2–3 pukulan di semua area dan sering tidak sempat menyerang.
 
+### 2026-11-25 — Efek suara rekaman (Kenney, CC0)
+- 25 MP3 (154 KB) di `audio/sfx/` dari Kenney Interface Sounds & RPG Audio (asli di `C:\proyek\math-quest-aset\kenney`, di luar repo). Kredit: `audio/sfx/CREDITS.txt`.
+- `audio.js`: `SAMPLES` + `sample()`; dimuat saat suara dibuka, varian acak, lewat bus efek (ikut volume). Gagal/belum termuat → suara buatan kode.
+- Dipakai: klik, kembali, toggle, bagi poin (confirm), tebasan, koin, loot, equip, pandai besi, peti, Buku Monster (buka & balik halaman), pintu dungeon. Jawaban benar/salah, serangan monster, level up, fanfare & musik tetap buatan kode.
+- Keterangan poin status di Karakter kini mengikuti balance.js. SW `mq-v10`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

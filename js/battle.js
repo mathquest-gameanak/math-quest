@@ -167,6 +167,7 @@ MQ.Battle = (() => {
     B.field = place; B.combo = 0; B.q = null; B.last = ''; B.room = 0;
     B.mode = place.exam ? 'exam' : place.dungeon ? 'dungeon' : place.id === 'arena' ? 'arena' : 'field';
     if (B.mode === 'exam') B.exam = {i: 0, ok: 0, wrong: {}, qs: makeExam()};
+    if (B.mode === 'dungeon') sfx.door(); // pintu dungeon berderit terbuka
     S.hp = State.maxHp();
     els.fieldName.textContent = place.name;
     els.modes.hidden = B.mode !== 'arena'; // pilihan jenis soal hanya di Arena Latihan

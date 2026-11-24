@@ -118,7 +118,7 @@ MQ.UI = (() => {
     // Bagi poin status: tiap baris punya tombol "+"
     $('charPoints').textContent = S.points ? `Poin tersisa: ${S.points}` : 'Naik level untuk dapat poin';
     $('charAlloc').innerHTML = ALLOC.map(([k, label, effect]) =>
-      `<div class="alloc"><span><b>${label}</b><small>${effect} · sudah ${S.alloc[k]} poin</small></span>` +
+      `<div class="alloc"><span><b>${label}</b><small>${effect()} · sudah ${S.alloc[k]} poin</small></span>` +
       `<button class="plus" data-stat="${k}" ${S.points ? '' : 'disabled'} aria-label="Tambah ${label}">+</button></div>`).join('');
     const skills = Object.entries(S.stats).filter(([, s]) => s.b + s.s > 0);
     $('charSkills').innerHTML = skills.length
@@ -131,10 +131,13 @@ MQ.UI = (() => {
     }).join('');
   };
   const SLOTS = [['senjata', 'Senjata'], ['pelindung', 'Pelindung'], ['aksesori', 'Aksesori']];
-  const ALLOC = [['hp', '❤️ HP', '+10 HP maks'], ['atk', '⚔️ Serangan', '+2 damage'], ['def', '🛡️ Pertahanan', '-1 damage musuh']];
+  // Keterangan efek tiap poin mengikuti balance.js (juga bila diubah di Atur Angka)
+  const P = () => MQ.Balance.player;
+  const ALLOC = [['hp', '❤️ HP', () => `+${P().hpPerPoint} HP maks`], ['atk', '⚔️ Serangan', () => `+${P().atkPerPoint} damage`],
+                 ['def', '🛡️ Pertahanan', () => (P().defPerPoint >= 1 ? `-${P().defPerPoint} damage musuh` : `-1 damage musuh tiap ${Math.round(1 / P().defPerPoint)} poin`)]];
   $('charAlloc').addEventListener('click', e => {
     const b = e.target.closest('.plus');
-    if (b && State.spendPoint(b.dataset.stat)) { State.save(); MQ.Audio.sfx.correct(); renderers.char(); }
+    if (b && State.spendPoint(b.dataset.stat)) { State.save(); MQ.Audio.sfx.confirm(); renderers.char(); }
   });
   $('charEquip').addEventListener('click', e => {
     const b = e.target.closest('.slot');
@@ -189,7 +192,9 @@ MQ.UI = (() => {
     document.addEventListener('pointerdown', MQ.Audio.unlock, {passive: true}); // suara butuh interaksi pertama
     // Bunyi "klik" pendek untuk tombol menu (tombol jawaban & beli punya bunyinya sendiri)
     document.addEventListener('click', e => {
-      if (e.target.closest('.tabbar button, .back, .adventure, .sBtn, .pick, .mapNode, #ovBtn2, .who, .parentBtn, .musicBtn')) MQ.Audio.sfx.click();
+      if (e.target.closest('.back')) return MQ.Audio.sfx.back();
+      if (e.target.closest('[data-go="book"]')) return; // Buku Monster punya bunyi buka buku sendiri
+      if (e.target.closest('.tabbar button, .adventure, .sBtn, .pick, .mapNode, #ovBtn2, .who, .parentBtn, .musicBtn')) MQ.Audio.sfx.click();
     });
   }
 

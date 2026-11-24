@@ -103,7 +103,7 @@ MQ.Parent = (() => {
     const b = e.target.closest('[data-set]');
     if (!b) return;
     S.settings[b.dataset.set] = !S.settings[b.dataset.set];
-    State.save(); renderSettings();
+    MQ.Audio.sfx.toggle(); State.save(); renderSettings();
   });
 
   /* ===== Data permainan: cadangkan, pulihkan, hapus ===== */
