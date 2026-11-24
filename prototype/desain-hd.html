@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sampel Gaya Baru</title>
+<style>
+/* VOICE: ceria, untuk orang tua yang menilai gaya gambar game anak
+   IDEA: lembar "kartu monster" seperti album koleksi, lama vs baru berdampingan
+   PICTURE: setiap karakter digambar besar sebagai SVG kartun dan bergerak pelan
+   COLOUR and TYPE: malam biru tua game (#1a1c2c) + kuning emas; Baloo 2 untuk judul, Nunito untuk teks
+   LAYOUT: judul, lalu kartu bergrid; di HP satu kolom */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@400;700;800&display=swap');
+:root { color-scheme: dark; --bg: #1a1c2c; --panel: #29366f; --ink: #f4f4f4; --mute: #94b0c2; --gold: #ffcd75; --line: #3c4a8a; }
+* { box-sizing: border-box; min-width: 0; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 Nunito, system-ui, sans-serif; overflow-x: clip; }
+header { padding: clamp(24px, 4vw, 48px) max(5vw, 16px) 8px; max-width: 1240px; margin: 0 auto; }
+h1 { font: 800 clamp(32px, 6vw, 48px)/1.05 'Baloo 2', sans-serif; margin: 0 0 8px; color: var(--gold); text-wrap: balance; }
+.lead { max-width: 68ch; color: var(--mute); margin: 0; }
+.grid { max-width: 1240px; margin: 0 auto; padding: 16px max(5vw, 16px) 32px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.card { background: var(--panel); border: 3px solid var(--ink); box-shadow: 0 0 0 3px #000, 0 6px 0 3px #000; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.card h2 { font: 800 22px/1.1 'Baloo 2', sans-serif; margin: 0; }
+.card p { margin: 0; color: var(--mute); font-size: 14px; }
+.stage { position: relative; height: 230px; border-radius: 10px; background: radial-gradient(ellipse at 50% 85%, #7fdc6a 0 30%, transparent 31%), linear-gradient(#73c9f7, #c2efff 60%, #8bd96a 60%); overflow: hidden; }
+.stage.night { background: radial-gradient(ellipse at 50% 85%, #566c86 0 30%, transparent 31%), linear-gradient(#29366f, #5d275d 60%, #333c57 60%); }
+.stage svg.hd { position: absolute; left: 50%; bottom: 10px; width: 190px; height: 190px; margin-left: -95px; animation: bob 2.2s ease-in-out infinite; }
+.stage svg.hd.big { width: 220px; height: 210px; margin-left: -110px; }
+.old { position: absolute; left: 10px; top: 10px; display: flex; flex-direction: column; align-items: center; gap: 2px; background: #1a1c2cd0; border: 2px solid var(--ink); padding: 4px 6px; }
+.old img { width: 56px; height: 56px; image-rendering: pixelated; }
+.old small, .new-tag { font-size: 11px; font-weight: 800; }
+.new-tag { position: absolute; right: 10px; top: 10px; background: var(--gold); color: #1a1c2c; padding: 2px 8px; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+button { font: 800 14px Nunito, sans-serif; background: var(--gold); color: #1a1c2c; border: 3px solid #000; box-shadow: 0 4px 0 #000; padding: 8px 12px; min-height: 44px; cursor: pointer; }
+button:active { transform: translateY(3px); box-shadow: 0 1px 0 #000; }
+button:focus-visible { outline: 3px solid #73eff7; outline-offset: 2px; }
+.size { font-size: 12px; color: var(--mute); }
+.hit { animation: hit .45s ease-out !important; }
+@keyframes bob { 50% { transform: translateY(-8px) scaleY(1.02); } }
+@keyframes hit { 0% { transform: translateX(0); filter: brightness(2.2); } 25% { transform: translateX(-14px) rotate(-6deg); } 50% { transform: translateX(10px) rotate(4deg); filter: none; } 100% { transform: none; } }
+.notes { max-width: 1240px; margin: 0 auto; padding: 0 max(5vw, 16px) 48px; }
+.notes h2 { font: 800 26px/1.1 'Baloo 2', sans-serif; color: var(--gold); margin: 0 0 8px; }
+.notes ul { margin: 0; padding-left: 20px; max-width: 70ch; }
+.notes li { margin: 4px 0; }
+@media (prefers-reduced-motion: reduce) { .stage svg.hd { animation: none; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Math Quest: sampel gaya kartun HD</h1>
+  <p class="lead">Kotak kecil di kiri atas = gambar pixel yang dipakai sekarang. Gambar besar = usulan gaya baru, digambar sebagai SVG (vektor) sehingga tajam di layar HP mana pun. Ketuk "Serang!" untuk melihat animasi kena pukul.</p>
+</header>
+
+<main class="grid">
+
+  <!-- ===== Pahlawan (versi cewek, sesuai pilihan anak) ===== -->
+  <section class="card">
+    <h2>Pahlawan</h2>
+    <div class="stage">
+      <div class="old"><img data-old="hero" alt="Pahlawan pixel"><small>Sekarang</small></div><span class="new-tag">Usulan</span>
+      <svg class="hd" viewBox="0 0 200 220" role="img" aria-label="Pahlawan cewek kartun HD">
+        <defs>
+          <linearGradient id="hDress" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cf96ea"/><stop offset="1" stop-color="#9a5cc4"/></linearGradient>
+          <radialGradient id="hSkin" cx=".45" cy=".4" r=".75"><stop offset="0" stop-color="#ffe6c6"/><stop offset="1" stop-color="#f4bf8a"/></radialGradient>
+          <linearGradient id="hHair" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a7633a"/><stop offset="1" stop-color="#6c381d"/></linearGradient>
+          <linearGradient id="hBlade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#9fd6ff"/></linearGradient>
+        </defs>
+        <ellipse cx="100" cy="210" rx="54" ry="8" fill="#0003"/>
+        <g stroke="#2b2240" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+          <!-- rambut belakang & kuncir -->
+          <ellipse cx="40" cy="98" rx="15" ry="24" fill="url(#hHair)"/>
+          <ellipse cx="160" cy="98" rx="15" ry="24" fill="url(#hHair)"/>
+          <path d="M52 80 Q50 24 100 22 Q150 24 148 80 L146 106 Q100 98 54 106 Z" fill="url(#hHair)"/>
+          <!-- kaki & sepatu -->
+          <rect x="78" y="166" width="17" height="30" rx="8" fill="url(#hSkin)"/>
+          <rect x="105" y="166" width="17" height="30" rx="8" fill="url(#hSkin)"/>
+          <rect x="72" y="188" width="27" height="15" rx="7" fill="#5d275d"/>
+          <rect x="101" y="188" width="27" height="15" rx="7" fill="#5d275d"/>
+          <!-- gaun -->
+          <path d="M72 116 Q100 106 128 116 L148 174 Q100 190 52 174 Z" fill="url(#hDress)"/>
+          <path d="M56 170 Q66 180 76 172 Q88 182 100 173 Q112 182 124 172 Q134 180 144 170" fill="none" stroke="#fff" stroke-width="3"/>
+          <path d="M86 112 L100 128 L114 112" fill="#fff"/>
+          <!-- lengan kiri + perisai -->
+          <path d="M74 124 Q58 138 56 156" fill="none" stroke-width="16"/>
+          <path d="M74 124 Q58 138 56 156" fill="none" stroke="#ffd9ad" stroke-width="9"/>
+          <circle cx="44" cy="152" r="24" fill="#c27a43"/>
+          <circle cx="44" cy="152" r="16" fill="#e8a25e" stroke-width="3"/>
+          <path d="M44 140 l4 8 9 1 -7 6 2 9 -8 -5 -8 5 2 -9 -7 -6 9 -1 z" fill="#ffe08a" stroke-width="2"/>
+          <!-- lengan kanan + pedang -->
+          <path d="M126 124 Q142 134 150 146" fill="none" stroke-width="16"/>
+          <path d="M126 124 Q142 134 150 146" fill="none" stroke="#ffd9ad" stroke-width="9"/>
+          <path d="M147 142 L170 72 L179 75 L157 146 Z" fill="url(#hBlade)"/>
+          <path d="M140 140 L166 149" stroke-width="7"/>
+          <path d="M140 140 L166 149" stroke="#ffcd75" stroke-width="3"/>
+          <path d="M152 150 L148 162" stroke-width="7"/>
+          <path d="M152 150 L148 162" stroke="#ab5236" stroke-width="3"/>
+          <!-- kepala -->
+          <ellipse cx="100" cy="74" rx="46" ry="43" fill="url(#hSkin)"/>
+          <path d="M54 72 Q58 28 100 28 Q142 28 146 72 Q132 54 118 60 Q106 44 94 58 Q78 48 66 66 Z" fill="url(#hHair)"/>
+          <!-- pita -->
+          <path d="M46 60 L34 50 L36 72 Z M46 60 L58 50 L56 72 Z" fill="#e43b44"/>
+          <path d="M154 60 L142 50 L144 72 Z M154 60 L166 50 L164 72 Z" fill="#e43b44"/>
+          <circle cx="46" cy="61" r="4" fill="#ff7b84"/><circle cx="154" cy="61" r="4" fill="#ff7b84"/>
+        </g>
+        <!-- wajah -->
+        <ellipse cx="82" cy="80" rx="7" ry="10" fill="#2b2240"/><ellipse cx="118" cy="80" rx="7" ry="10" fill="#2b2240"/>
+        <circle cx="85" cy="76" r="3" fill="#fff"/><circle cx="121" cy="76" r="3" fill="#fff"/>
+        <ellipse cx="70" cy="94" rx="8" ry="5" fill="#ff8fa8" opacity=".6"/><ellipse cx="130" cy="94" rx="8" ry="5" fill="#ff8fa8" opacity=".6"/>
+        <path d="M92 96 Q100 104 108 96" fill="none" stroke="#2b2240" stroke-width="4" stroke-linecap="round"/>
+        <path d="M70 40 Q82 32 96 34" fill="none" stroke="#d99a6a" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+      </svg>
+    </div>
+    <p>Kepala besar & mata berkilau ala kartun anak. Rambut, warna, dan equipment tetap bisa diganti seperti sekarang.</p>
+    <div class="row"><button data-hit>Serang!</button><span class="size"></span></div>
+  </section>
+
+  <!-- ===== Lendir Hijau ===== -->
+  <section class="card">
+    <h2>Lendir Hijau</h2>
+    <div class="stage">
+      <div class="old"><img data-old="slime" alt="Lendir pixel"><small>Sekarang</small></div><span class="new-tag">Usulan</span>
+      <svg class="hd" viewBox="0 0 200 200" role="img" aria-label="Lendir hijau kartun HD">
+        <defs>
+          <radialGradient id="sBody" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="#c6ff8a"/><stop offset=".55" stop-color="#5fd35a"/><stop offset="1" stop-color="#2a8f4a"/></radialGradient>
+        </defs>
+        <ellipse cx="100" cy="186" rx="70" ry="9" fill="#0003"/>
+        <path d="M28 172 C18 120 48 58 100 56 C152 58 182 120 172 172 C150 186 50 186 28 172 Z" fill="url(#sBody)" stroke="#1f5a3a" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M100 56 C96 38 112 30 116 42" fill="none" stroke="#1f5a3a" stroke-width="5" stroke-linecap="round"/>
+        <ellipse cx="66" cy="92" rx="16" ry="9" fill="#fff" opacity=".7" transform="rotate(-35 66 92)"/>
+        <circle cx="84" cy="80" r="4" fill="#fff" opacity=".7"/>
+        <ellipse cx="78" cy="118" rx="15" ry="18" fill="#fff" stroke="#1f5a3a" stroke-width="4"/>
+        <ellipse cx="124" cy="118" rx="15" ry="18" fill="#fff" stroke="#1f5a3a" stroke-width="4"/>
+        <circle cx="82" cy="122" r="8" fill="#1d2a28"/><circle cx="128" cy="122" r="8" fill="#1d2a28"/>
+        <circle cx="85" cy="118" r="3" fill="#fff"/><circle cx="131" cy="118" r="3" fill="#fff"/>
+        <path d="M88 148 Q101 162 114 148 Q101 154 88 148 Z" fill="#7a2a3a" stroke="#1f5a3a" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="146" cy="150" r="5" fill="#c6ff8a" opacity=".8"/><circle cx="56" cy="156" r="3.5" fill="#c6ff8a" opacity=".8"/>
+      </svg>
+    </div>
+    <p>Lendir mengkilap dengan bayangan lembut. Bisa diberi warna lain (biru, emas, batu) seperti sekarang.</p>
+    <div class="row"><button data-hit>Serang!</button><span class="size"></span></div>
+  </section>
+
+  <!-- ===== Kelelawar Ungu ===== -->
+  <section class="card">
+    <h2>Kelelawar Ungu</h2>
+    <div class="stage night">
+      <div class="old"><img data-old="bat" alt="Kelelawar pixel"><small>Sekarang</small></div><span class="new-tag">Usulan</span>
+      <svg class="hd" viewBox="0 0 200 200" role="img" aria-label="Kelelawar ungu kartun HD">
+        <defs>
+          <radialGradient id="bBody" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#c79be6"/><stop offset="1" stop-color="#6b3a8f"/></radialGradient>
+          <linearGradient id="bWing" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7d4aa3"/><stop offset="1" stop-color="#4a2466"/></linearGradient>
+        </defs>
+        <ellipse cx="100" cy="186" rx="40" ry="7" fill="#0004"/>
+        <g stroke="#24173a" stroke-width="4" stroke-linejoin="round">
+          <path id="wingL" d="M62 96 C40 60 8 62 6 92 C16 86 24 96 20 110 C30 102 40 112 38 126 C48 116 58 118 64 124 Z" fill="url(#bWing)"/>
+          <path d="M138 96 C160 60 192 62 194 92 C184 86 176 96 180 110 C170 102 160 112 162 126 C152 116 142 118 136 124 Z" fill="url(#bWing)"/>
+          <path d="M66 70 L70 30 L90 58 Z M134 70 L130 30 L110 58 Z" fill="url(#bBody)"/>
+          <path d="M72 62 L74 42 L84 56 Z M128 62 L126 42 L116 56 Z" fill="#f4a3c8" stroke="none"/>
+          <circle cx="100" cy="102" r="48" fill="url(#bBody)"/>
+          <ellipse cx="100" cy="128" rx="28" ry="18" fill="#e3c6f5" stroke="none" opacity=".8"/>
+          <ellipse cx="82" cy="96" rx="12" ry="14" fill="#fff"/><ellipse cx="118" cy="96" rx="12" ry="14" fill="#fff"/>
+        </g>
+        <circle cx="86" cy="99" r="6.5" fill="#24173a"/><circle cx="114" cy="99" r="6.5" fill="#24173a"/>
+        <circle cx="88" cy="96" r="2.5" fill="#fff"/><circle cx="116" cy="96" r="2.5" fill="#fff"/>
+        <path d="M90 124 Q100 132 110 124" fill="none" stroke="#24173a" stroke-width="4" stroke-linecap="round"/>
+        <path d="M93 126 L96 135 L99 127 Z M101 127 L104 135 L107 126 Z" fill="#fff" stroke="#24173a" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <p>Sayap bergerigi dan taring kecil. Cocok untuk monster cepat yang sering menyerang.</p>
+    <div class="row"><button data-hit>Serang!</button><span class="size"></span></div>
+  </section>
+
+  <!-- ===== Jamur Nakal ===== -->
+  <section class="card">
+    <h2>Jamur Nakal</h2>
+    <div class="stage">
+      <div class="old"><img data-old="mushroom" alt="Jamur pixel"><small>Sekarang</small></div><span class="new-tag">Usulan</span>
+      <svg class="hd" viewBox="0 0 200 200" role="img" aria-label="Jamur nakal kartun HD">
+        <defs>
+          <radialGradient id="mCap" cx=".4" cy=".25" r=".8"><stop offset="0" stop-color="#ff8a7a"/><stop offset=".6" stop-color="#e43b44"/><stop offset="1" stop-color="#a51f35"/></radialGradient>
+          <linearGradient id="mStem" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff4e0"/><stop offset="1" stop-color="#e8c9a0"/></linearGradient>
+        </defs>
+        <ellipse cx="100" cy="188" rx="58" ry="8" fill="#0003"/>
+        <g stroke="#3b1d2a" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round">
+          <ellipse cx="78" cy="182" rx="14" ry="8" fill="#ab5236"/><ellipse cx="122" cy="182" rx="14" ry="8" fill="#ab5236"/>
+          <path d="M62 118 Q36 132 40 148" fill="none"/><path d="M138 118 Q164 132 160 148" fill="none"/>
+          <rect x="60" y="100" width="80" height="82" rx="30" fill="url(#mStem)"/>
+          <path d="M18 108 C16 36 184 36 182 108 C150 122 50 122 18 108 Z" fill="url(#mCap)"/>
+        </g>
+        <ellipse cx="60" cy="78" rx="12" ry="9" fill="#fff"/><ellipse cx="104" cy="58" rx="15" ry="11" fill="#fff"/>
+        <ellipse cx="148" cy="82" rx="11" ry="8" fill="#fff"/><ellipse cx="128" cy="100" rx="7" ry="5" fill="#fff"/>
+        <ellipse cx="46" cy="66" rx="10" ry="5" fill="#fff" opacity=".35" transform="rotate(-30 46 66)"/>
+        <ellipse cx="86" cy="142" rx="9" ry="11" fill="#3b1d2a"/><ellipse cx="116" cy="142" rx="9" ry="11" fill="#3b1d2a"/>
+        <circle cx="89" cy="138" r="3" fill="#fff"/><circle cx="119" cy="138" r="3" fill="#fff"/>
+        <path d="M74 126 L96 134 M128 126 L106 134" stroke="#3b1d2a" stroke-width="5" stroke-linecap="round"/>
+        <path d="M92 164 Q101 157 110 164" fill="none" stroke="#3b1d2a" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <p>Jamur pemarah dengan tangan & kaki kecil. Alisnya membuat anak tahu: ini musuh!</p>
+    <div class="row"><button data-hit>Serang!</button><span class="size"></span></div>
+  </section>
+
+  <!-- ===== Golem Batu (usulan monster baru Bukit Bentuk) ===== -->
+  <section class="card">
+    <h2>Golem Batu <small style="font-size:13px;color:var(--mute)">monster baru</small></h2>
+    <div class="stage">
+      <div class="old"><img data-old="slime" data-pal="rock" alt="Lendir Batu pixel"><small>Sekarang</small></div><span class="new-tag">Usulan</span>
+      <svg class="hd" viewBox="0 0 200 200" role="img" aria-label="Golem batu kartun HD">
+        <defs>
+          <linearGradient id="gRock" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c9d6e2"/><stop offset="1" stop-color="#6d8299"/></linearGradient>
+          <radialGradient id="gEye" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#73eff7"/><stop offset="1" stop-color="#41a6f6"/></radialGradient>
+        </defs>
+        <ellipse cx="100" cy="188" rx="66" ry="8" fill="#0003"/>
+        <g stroke="#2b3245" stroke-width="5" stroke-linejoin="round">
+          <rect x="68" y="150" width="26" height="34" rx="8" fill="url(#gRock)"/><rect x="106" y="150" width="26" height="34" rx="8" fill="url(#gRock)"/>
+          <rect x="18" y="96" width="38" height="58" rx="16" fill="url(#gRock)"/><rect x="144" y="96" width="38" height="58" rx="16" fill="url(#gRock)"/>
+          <path d="M50 90 Q52 54 100 50 Q148 54 150 90 L146 158 Q100 170 54 158 Z" fill="url(#gRock)"/>
+          <path d="M70 40 Q100 22 130 40 L126 62 Q100 56 74 62 Z" fill="url(#gRock)"/>
+        </g>
+        <path d="M60 120 L76 112 M132 132 L120 142 M88 152 L98 146" stroke="#556378" stroke-width="3" stroke-linecap="round"/>
+        <path d="M54 92 Q70 80 84 90 Q76 98 60 98 Z" fill="#5fd35a" stroke="#2b3245" stroke-width="3"/>
+        <path d="M140 64 Q150 70 146 80 Q136 76 134 68 Z" fill="#5fd35a" stroke="#2b3245" stroke-width="3"/>
+        <rect x="74" y="84" width="20" height="14" rx="5" fill="url(#gEye)" stroke="#2b3245" stroke-width="3"/>
+        <rect x="106" y="84" width="20" height="14" rx="5" fill="url(#gEye)" stroke="#2b3245" stroke-width="3"/>
+        <path d="M84 120 h32" stroke="#2b3245" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <p>Usulan monster baru untuk Bukit Bentuk: badan dari balok, kubus & silinder. Lambat tapi kuat.</p>
+    <div class="row"><button data-hit>Serang!</button><span class="size"></span></div>
+  </section>
+
+  <!-- ===== Bos: Raja Naga Api ===== -->
+  <section class="card">
+    <h2>Bos: Raja Naga Api</h2>
+    <div class="stage night">
+      <div class="old"><img data-old="dragon" alt="Naga pixel"><small>Sekarang</small></div><span class="new-tag">Usulan</span>
+      <svg class="hd big" viewBox="0 0 240 220" role="img" aria-label="Raja naga api kartun HD">
+        <defs>
+          <radialGradient id="dBody" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#ffb07a"/><stop offset=".6" stop-color="#ef7d57"/><stop offset="1" stop-color="#b13e53"/></radialGradient>
+          <linearGradient id="dWing" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b13e53"/><stop offset="1" stop-color="#6b1f3a"/></linearGradient>
+          <linearGradient id="dGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0a0"/><stop offset="1" stop-color="#f2a93b"/></linearGradient>
+          <radialGradient id="dFire" cx=".5" cy=".7" r=".6"><stop offset="0" stop-color="#fff3b0"/><stop offset=".5" stop-color="#ffcd75"/><stop offset="1" stop-color="#ef7d57"/></radialGradient>
+        </defs>
+        <ellipse cx="120" cy="210" rx="78" ry="9" fill="#0005"/>
+        <g stroke="#3a1420" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+          <!-- sayap -->
+          <path d="M70 110 C30 70 6 90 10 130 C24 120 30 134 26 146 C40 136 48 150 46 160 C58 148 70 150 78 152 Z" fill="url(#dWing)"/>
+          <path d="M170 110 C210 70 234 90 230 130 C216 120 210 134 214 146 C200 136 192 150 194 160 C182 148 170 150 162 152 Z" fill="url(#dWing)"/>
+          <!-- ekor -->
+          <path d="M168 186 Q214 190 210 160 Q222 170 214 196 Q190 210 160 200 Z" fill="url(#dBody)"/>
+          <!-- badan -->
+          <path d="M72 118 Q70 210 120 206 Q170 210 168 118 Q120 96 72 118 Z" fill="url(#dBody)"/>
+          <path d="M96 140 Q120 132 144 140 L140 196 Q120 202 100 196 Z" fill="#ffe4c4"/>
+          <path d="M100 156 h40 M101 172 h38 M103 188 h34" stroke-width="3"/>
+          <!-- kaki -->
+          <ellipse cx="90" cy="204" rx="18" ry="10" fill="url(#dBody)"/><ellipse cx="150" cy="204" rx="18" ry="10" fill="url(#dBody)"/>
+          <!-- tanduk -->
+          <path d="M80 54 Q60 20 74 10 Q78 34 96 44 Z M160 54 Q180 20 166 10 Q162 34 144 44 Z" fill="#fff4dd"/>
+          <!-- kepala -->
+          <ellipse cx="120" cy="80" rx="54" ry="46" fill="url(#dBody)"/>
+          <path d="M84 96 Q120 128 156 96 Q150 118 120 122 Q90 118 84 96 Z" fill="#ffe4c4"/>
+          <!-- mahkota -->
+          <path d="M92 44 L94 14 L108 32 L120 8 L132 32 L146 14 L148 44 Q120 36 92 44 Z" fill="url(#dGold)"/>
+        </g>
+        <circle cx="120" cy="24" r="6" fill="#e43b44" stroke="#3a1420" stroke-width="3"/>
+        <circle cx="100" cy="36" r="3.5" fill="#41a6f6"/><circle cx="140" cy="36" r="3.5" fill="#41a6f6"/>
+        <!-- mata -->
+        <ellipse cx="98" cy="76" rx="14" ry="12" fill="#ffe14d" stroke="#3a1420" stroke-width="4"/>
+        <ellipse cx="142" cy="76" rx="14" ry="12" fill="#ffe14d" stroke="#3a1420" stroke-width="4"/>
+        <rect x="95" y="66" width="6" height="20" rx="3" fill="#3a1420"/><rect x="139" y="66" width="6" height="20" rx="3" fill="#3a1420"/>
+        <path d="M80 58 L112 68 M160 58 L128 68" stroke="#3a1420" stroke-width="7" stroke-linecap="round"/>
+        <!-- mulut & gigi -->
+        <path d="M100 104 Q120 116 140 104" fill="none" stroke="#3a1420" stroke-width="4" stroke-linecap="round"/>
+        <path d="M106 106 l4 8 4 -6 Z M126 108 l4 6 4 -8 Z" fill="#fff" stroke="#3a1420" stroke-width="2"/>
+        <circle cx="112" cy="94" r="3" fill="#7a2a3a"/><circle cx="128" cy="94" r="3" fill="#7a2a3a"/>
+        <!-- api kecil dari hidung -->
+        <path d="M160 92 Q176 84 172 70 Q186 80 180 96 Q176 104 162 100 Z" fill="url(#dFire)" stroke="#b13e53" stroke-width="2"/>
+      </svg>
+    </div>
+    <p>Bos besar dengan mahkota, sayap & napas api kecil. Bos lain bisa dibuat dengan gaya yang sama.</p>
+    <div class="row"><button data-hit>Serang!</button><span class="size"></span></div>
+  </section>
+</main>
+
+<section class="notes">
+  <h2>Apakah ini memberatkan game?</h2>
+  <ul>
+    <li>Satu gambar kartun HD hanya sekitar 2–4 KB teks (ukuran tiap gambar tertulis di kartunya), jauh lebih kecil dari satu foto. Semua monster sekaligus tetap di bawah 100 KB.</li>
+    <li>Gambar diubah menjadi gambar biasa sekali saat game dibuka, lalu disimpan, sehingga pertarungan tetap ringan di HP murah.</li>
+    <li>Gerakan memakai animasi CSS sederhana (geser, putar, terang) yang ringan. Yang dihindari: efek blur/bayangan berlapis yang berat di HP lama.</li>
+  </ul>
+</section>
+
+<script>
+{
+  /* Gambar pixel lama diambil langsung dari kode game (sprites.js & hero.js) agar perbandingannya jujur */
+  const load = src => new Promise((ok, no) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); });
+  const loadAll = async base => { for (const f of ['sprites.js', 'data.js', 'hero.js']) await load(base + f); };
+  loadAll('js/').catch(() => loadAll('../js/')).then(() => {
+    const rock = {g: '#94b0c2', G: '#f4f4f4', d: '#566c86'};
+    document.querySelectorAll('[data-old]').forEach(img => {
+      const n = img.dataset.old;
+      img.src = n === 'hero' ? MQ.Hero.url(MQ.Hero.DEFAULT, {senjata: 'pedangKayu', pelindung: 'perisaiKayu'}) : MQ.Sprites.url(n, img.dataset.pal === 'rock' ? rock : null);
+    });
+  }).catch(() => document.querySelectorAll('.old').forEach(o => (o.hidden = true)));
+
+  /* Ukuran tiap gambar & tombol "Serang!" */
+  document.querySelectorAll('.card').forEach(card => {
+    const svg = card.querySelector('svg.hd');
+    card.querySelector('.size').textContent = `≈ ${(new Blob([svg.outerHTML]).size / 1024).toFixed(1)} KB`;
+    card.querySelector('[data-hit]').addEventListener('click', () => {
+      svg.classList.remove('hit'); void svg.getBoundingClientRect(); svg.classList.add('hit');
+    });
+  });
+}
+</script>
+</body>
+</html>
