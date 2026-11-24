@@ -14,5 +14,9 @@ Game RPG matematika pixel art 2D untuk anak SD (mulai kelas 1). Kelak mungkin di
 - Prinsip: tidak ada game over, salah = belajar (tunjukkan jawaban benar).
 - `localStorage` selalu dalam try/catch; naikkan `VERSION` di `js/save.js` jika format simpanan berubah dan tambahkan migrasi.
 
+## PWA / offline
+- `sw.js` menyimpan semua file game. **Setiap kali file game berubah, naikkan `VERSION` di `sw.js`**, dan tambahkan file JS/CSS baru ke daftar `FILES`; kalau tidak, HP yang sudah menginstal tetap memakai versi lama.
+- Service worker hanya jalan di HTTPS/localhost (tidak di artifact claude.ai).
+
 ## Menjalankan
 Server lokal: `python -m http.server 8123` di folder ini, lalu buka http://localhost:8123 (konfigurasi preview: `C:\proyek\.claude\launch.json`, nama `math-quest`). Uji di ukuran HP (375×812).
