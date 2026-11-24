@@ -1,0 +1,81 @@
+/* Math Quest — kulit tampilan "Petualangan" (percobaan), memakai ubin UI Pack Pixel Adventure dari Kenney (CC0).
+   Hanya aktif bila <body> punya kelas .skinK (dinyalakan di Orang Tua → Pengaturan, atau ?skin=k di alamat).
+   Ubin 32×32 dipotong 9 bagian (border-image) lalu diperbesar 2× tanpa dihaluskan. Gambar ada di folder ui/. */
+
+body.skinK, body.skinK * { image-rendering: pixelated; }
+body.skinK { --kertas: #fff1d2; --tinta: #4a3218; --tinta2: #7a5a3a; --kayu: #a3703a; }
+
+/* ===== Panel: perkamen (isi) & kayu (bilah) ===== */
+body.skinK .panel {
+  background: none; box-shadow: none; color: var(--tinta);
+  border: 12px solid transparent; border-image: url(../ui/panel.png) 6 fill / 12px stretch;
+}
+body.skinK .box { padding: 2px 4px; }
+body.skinK .panel h3, body.skinK .card h2 { color: #8e3f38; text-shadow: none; }
+body.skinK .panel small, body.skinK .panel .note, body.skinK .note.left { color: var(--tinta2); }
+body.skinK .panel b { color: var(--tinta); }
+
+/* Bilah atas, HUD, kotak soal, nama monster: kayu dengan tulisan terang */
+body.skinK .topbar, body.skinK .hud, body.skinK #mTop, body.skinK #question {
+  border-image: url(../ui/wood.png) 6 fill / 12px stretch; color: var(--kertas); padding: 0 2px;
+}
+body.skinK .topbar h2 { color: var(--kertas); text-shadow: 2px 2px 0 #6d4b27; }
+body.skinK .topbar .coins, body.skinK .hud b, body.skinK #mTop b, body.skinK #question b { color: #ffe08a; }
+body.skinK #qText { color: var(--kertas); text-shadow: 2px 2px 0 #6d4b27; }
+body.skinK #mName { color: var(--kertas); }
+
+/* ===== Tombol ===== */
+body.skinK .sBtn, body.skinK #ovBtn, body.skinK .adventure, body.skinK .back, body.skinK .ans, body.skinK #ovBtn2.alt,
+body.skinK .toggle, body.skinK .plus {
+  background: none; box-shadow: none; border: 10px solid transparent; border-image: url(../ui/btn-green.png) 6 fill / 10px stretch;
+  color: #fff; text-shadow: 2px 2px 0 #0006;
+}
+body.skinK .sBtn:active, body.skinK #ovBtn:active, body.skinK .adventure:active, body.skinK .ans:active, body.skinK .back:active { transform: translateY(3px); }
+body.skinK .sBtn:disabled, body.skinK .plus:disabled { border-image-source: url(../ui/steel.png); color: #c7d3de; }
+body.skinK .sBtn.danger { border-image-source: url(../ui/btn-red.png); }
+body.skinK .back, body.skinK #ovBtn2.alt { border-image-source: url(../ui/steel-light.png); color: #1f2a35; text-shadow: none; padding: 0 6px; min-height: 0; }
+body.skinK .toggle { border-image-source: url(../ui/steel.png); color: #dfe8f0; }
+body.skinK .toggle.on { border-image-source: url(../ui/btn-green.png); color: #fff; }
+
+/* Tombol Petualangan: emas besar */
+body.skinK .adventure { border-width: 14px; border-image: url(../ui/btn-yellow.png) 6 fill / 14px stretch; color: #6d4b27; text-shadow: 1px 1px 0 #fff8; padding: 4px; }
+
+/* Tombol jawaban: empat warna berbingkai kayu */
+body.skinK .ans { border-width: 12px; border-image-width: 12px; color: var(--tinta); text-shadow: none; padding: 4px 0; }
+body.skinK .ans:nth-child(1) { border-image-source: url(../ui/btn-yellow.png); }
+body.skinK .ans:nth-child(2) { border-image-source: url(../ui/btn-cyan.png); }
+body.skinK .ans:nth-child(3) { border-image-source: url(../ui/btn-pink.png); }
+body.skinK .ans:nth-child(4) { border-image-source: url(../ui/btn-lime.png); }
+body.skinK .ans.benar { border-image-source: url(../ui/btn-green.png); color: #fff; }
+body.skinK .ans.salah { border-image-source: url(../ui/btn-red.png); color: #fff; }
+
+/* ===== Pesan (overlay): judul di atas pita merah ===== */
+body.skinK .card h2 {
+  display: inline-block; min-height: 60px; line-height: 30px; padding: 12px 6px 18px; margin: 4px 0 8px;
+  border: solid transparent; border-width: 0 40px; border-image: url(../ui/ribbon.png) 0 28 fill / 0 40px stretch;
+  color: var(--kertas); text-shadow: 2px 2px 0 #8e3f38; font-size: 24px;
+}
+body.skinK .card p { color: var(--tinta); }
+
+/* ===== Halaman utama ===== */
+body.skinK .homeBtns .sBtn { border-image-source: url(../ui/btn-blue.png); }
+body.skinK .who, body.skinK .coinPill, body.skinK .parentBtn {
+  background: none; border: 8px solid transparent; border-image: url(../ui/wood.png) 6 fill / 8px stretch; box-shadow: none; color: var(--kertas);
+}
+
+/* ===== Bilah tombol bawah: kayu ===== */
+body.skinK .tabbar { background: none; border: 0; border-top: 12px solid transparent; border-image: url(../ui/wood.png) 6 6 0 fill / 12px 12px 0 stretch; box-shadow: none; }
+body.skinK .tabbar button { color: #ffe9c4; }
+body.skinK .tabbar button.on { background: #6d4b27aa; color: #ffe08a; box-shadow: inset 0 3px 0 #ffe08a; }
+
+/* ===== Isian & bar ===== */
+body.skinK .panel input, body.skinK .panel select, body.skinK .panel textarea { background: #fffaf0; color: var(--tinta); border-color: #a3703a; }
+body.skinK .bar { border-color: #6d4b27; background: #3b2a17; }
+body.skinK .sumBox { background: #f6e3bd; border-color: #c58747; }
+body.skinK .sumBox b { color: var(--tinta); }
+body.skinK .who { padding: 0 2px; }
+body.skinK .who small { color: #ffe9c4; }
+body.skinK .coinPill, body.skinK .parentBtn { padding: 0 4px; }
+body.skinK .topbar small, body.skinK .hud small, body.skinK #mTop small, body.skinK #question small { color: #ffe9c4; }
+body.skinK #charName { color: #8e3f38; text-shadow: none; }
+body.skinK .panel .tag { color: #fff; }

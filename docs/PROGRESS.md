@@ -150,5 +150,11 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Dipakai: klik, kembali, toggle, bagi poin (confirm), tebasan, koin, loot, equip, pandai besi, peti, Buku Monster (buka & balik halaman), pintu dungeon. Jawaban benar/salah, serangan monster, level up, fanfare & musik tetap buatan kode.
 - Keterangan poin status di Karakter kini mengikuti balance.js. SW `mq-v10`.
 
+### 2026-11-25 — Contoh tampilan "Petualangan" (Kenney UI Pack Pixel Adventure, CC0)
+- `css/skin-kenney.css` aktif hanya dengan `body.skinK` (Orang Tua → Pengaturan → Tampilan Petualangan, atau `?skin=k` / `?skin=0`; disimpan di `localStorage['mathQuest.skin']`, bawaan mati).
+- Ubin 32px di `ui/` (16 KB): panel perkamen, kayu, baja, pita merah, tombol kayu diwarnai ulang (hijau/merah/kuning/cyan/pink/lime/biru). border-image 9-slice ×2, pixelated.
+- Perkamen untuk isi (tulisan cokelat), kayu untuk bilah atas/HUD/soal/tab, tombol jawaban 4 warna berbingkai, judul pesan di atas pita merah. SW `mq-v11`.
+- Belum: ikon/bar HP khusus, slot item, peta & cutscene belum disesuaikan.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

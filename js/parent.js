@@ -79,8 +79,11 @@ MQ.Parent = (() => {
   /* ===== Pengaturan ===== */
   const SETTINGS = [
     ['santai', 'Mode Santai', 'Musuh tidak menyerang berwaktu. Cocok saat anak lelah atau belajar materi baru.'],
-    ['autoSpeak', 'Bacakan soal otomatis', 'Setiap soal langsung dibacakan (untuk anak yang belum lancar membaca).']
+    ['autoSpeak', 'Bacakan soal otomatis', 'Setiap soal langsung dibacakan (untuk anak yang belum lancar membaca).'],
+    ['skin', 'Tampilan Petualangan (percobaan)', 'Panel perkamen, bilah kayu & tombol berbingkai. Hanya mengubah tampilan, bukan isi game.']
   ];
+  // "skin" disimpan terpisah (MQ.Skin), pengaturan lain di S.settings
+  const isOn = k => (k === 'skin' ? MQ.Skin.get() : S.settings[k]);
   const VOLUMES = [['music', '🎵 Musik'], ['sfx', '🔔 Efek suara']];
   function renderSettings() {
     $('repVolumes').innerHTML = VOLUMES.map(([k, label]) =>
@@ -88,7 +91,7 @@ MQ.Parent = (() => {
       `<b>${Math.round(S.settings[k] * 100)}</b></label>`).join('');
     $('repSettings').innerHTML = SETTINGS.map(([k, label, desc]) =>
       `<div class="setRow"><span><b>${label}</b><small>${desc}</small></span>` +
-      `<button class="toggle ${S.settings[k] ? 'on' : ''}" data-set="${k}" aria-pressed="${S.settings[k]}">${S.settings[k] ? 'Nyala' : 'Mati'}</button></div>`).join('');
+      `<button class="toggle ${isOn(k) ? 'on' : ''}" data-set="${k}" aria-pressed="${isOn(k)}">${isOn(k) ? 'Nyala' : 'Mati'}</button></div>`).join('');
   }
   $('repVolumes').addEventListener('input', e => {
     const r = e.target.closest('[data-vol]');
@@ -102,7 +105,9 @@ MQ.Parent = (() => {
   $('repSettings').addEventListener('click', e => {
     const b = e.target.closest('[data-set]');
     if (!b) return;
-    S.settings[b.dataset.set] = !S.settings[b.dataset.set];
+    const k = b.dataset.set;
+    if (k === 'skin') MQ.Skin.set(!MQ.Skin.get());
+    else S.settings[k] = !S.settings[k];
     MQ.Audio.sfx.toggle(); State.save(); renderSettings();
   });
 
