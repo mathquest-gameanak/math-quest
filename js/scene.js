@@ -11,7 +11,7 @@ MQ.Scene = (() => {
   const K = '#1a1c2c';
   const $ = id => document.getElementById(id);
   const cv = $('scene'), ctx = cv.getContext('2d');
-  let VW = 120, VH = 100, GY = 83, camX = 0, theme = null, markers = [], running = false;
+  let VW = 120, VH = 100, GY = 83, camX = 0, theme = null, markers = [], running = false, placeId = '';
 
   /* ===== Tema tempat ===== */
   const T = (o) => Object.assign({
@@ -25,7 +25,7 @@ MQ.Scene = (() => {
     hutan: T({sky: ['#3d8fbf', '#4fa3c9', '#62b5d1', '#7cc6d6', '#9ad5d8'], far: ['#257179', '#3a8a7e'], mid: ['#1a4c4f', '#257179'],
               tree: ['#1a4c4f', '#257179', '#5d275d'], trees: 0.95, grass: ['#257179', '#38b764'], deco: 'mushrooms'}),
     bukit: T({far: ['#94b0c2', '#c7d3de'], mid: ['#8fbf6a', '#a7f070'], tree: ['#566c86', '#94b0c2', '#333c57'], treeShape: 'rock', trees: 0.5, deco: 'rocks'}),
-    danau: T({far: ['#41a6f6', '#73eff7'], mid: ['#3b5dc9', '#73eff7'], tree: ['#257179', '#38b764', '#5d275d'], trees: 0.3,
+    danau: T({far: ['#41a6f6', '#73eff7'], mid: ['#3b5dc9', '#73eff7'], tree: null,
               path: ['#ffcd75', '#fff3b0', '#d4a373'], deco: 'reeds'}),
     lembah: T({sky: ['#e8a85a', '#f0b96e', '#f6cb86', '#f9dca2', '#fbe9c0'], sun: '#fff3b0', far: ['#c28553', '#d9a066'], mid: ['#ab5236', '#d4a373'],
                tree: ['#5d275d', '#ab5236', '#5d275d'], treeShape: 'cliff', trees: 0.5, grass: ['#8fbf6a', '#a7f070'], deco: 'logs'}),
@@ -91,12 +91,18 @@ MQ.Scene = (() => {
       const span = VW + 70, x = ((hash(i + 1) * span - camX * 0.08 - t * (2 + i)) % span + span) % span - 35, y = 4 + hash(i + 9) * Math.max(4, GY - 50);
       circle(x, y + 3, 5, '#f4f4f4'); circle(x + 7, y, 6, '#f4f4f4'); circle(x + 15, y + 3, 5, '#f4f4f4'); R('#d6f1fa', x - 4, y + 7, 24, 2);
     }
-    for (let sx = 0; sx < VW; sx++) {
+    // Lapisan khusus tempat (backgrounds.js): sky2 setelah langit, far menggantikan bukit jauh,
+    // mid menggantikan/menambah lapisan tengah, floor menggantikan tanah, front digambar di depan tokoh.
+    const B = (MQ.Backdrops || {})[placeId] || {}, Hp = helpers(t);
+    if (B.sky2) B.sky2(Hp);
+    if (B.far) B.far(Hp);
+    else for (let sx = 0; sx < VW; sx++) {
       const wx = sx + camX * 0.25, y = Math.round(GY - 33 + 5 * Math.sin(wx / 21) + 3 * Math.sin(wx / 8.3));
       R(theme.far[0], sx, y, 1, VH - y); R(theme.far[1], sx, y, 1, 1);
     }
-    const midY = wx => Math.round(GY - 19 + 3 * Math.sin(wx / 14 + 2) + 2 * Math.sin(wx / 5.1));
-    for (let sx = 0; sx < VW; sx++) { const wx = sx + camX * 0.55, y = midY(wx); R(theme.mid[0], sx, y, 1, VH - y); R(theme.mid[1], sx, y, 1, 1); }
+    const midY = Hp.midY;
+    if (!B.noMidHills) for (let sx = 0; sx < VW; sx++) { const wx = sx + camX * 0.55, y = midY(wx); R(theme.mid[0], sx, y, 1, VH - y); R(theme.mid[1], sx, y, 1, 1); }
+    if (B.mid) B.mid(Hp);
     if (theme.tree) {
       const first = Math.floor((camX * 0.55 - 20) / 26);
       for (let k = first; k < first + VW / 26 + 3; k++) {
@@ -105,7 +111,8 @@ MQ.Scene = (() => {
         midThing(wx - camX * 0.55, midY(wx), k);
       }
     }
-    for (let sx = 0; sx < VW; sx++) {
+    if (B.floor) B.floor(Hp);
+    else for (let sx = 0; sx < VW; sx++) {
       const wx = sx + camX, top = GY - 7 + Math.round(1.5 * Math.sin(wx / 9));
       R(theme.grass[0], sx, top, 1, VH - top); R(theme.grass[1], sx, top, 1, 1);
       if (hash(wx) > 0.8) R(theme.grass[1], sx, top - 1, 1, 1);
@@ -129,6 +136,14 @@ MQ.Scene = (() => {
       if (m.type === 'boss') { const fx = m.x + 42 - camX; R(K, fx, GY - 34, 2, 33); R('#e43b44', fx + 2, GY - 34, 10, 6); R('#ffcd75', fx + 2, GY - 34 + (Math.floor(t * 4) % 2), 10, 1); }
     });
   }
+  /** Alat gambar untuk backgrounds.js (nilai saat ini). */
+  function helpers(t) {
+    return {R, circle, hash, K, t, VW, VH, GY, camX, theme,
+            midY: wx => Math.round(GY - 19 + 3 * Math.sin(wx / 14 + 2) + 2 * Math.sin(wx / 5.1)),
+            /** Ulangi benda setiap 'step' piksel dunia pada paralaks f: cb(sx, k) dengan sx = posisi layar. */
+            each(step, f, cb, margin = 30) { const first = Math.floor((camX * f - margin) / step); for (let k = first; k <= first + (VW + margin * 2) / step + 1; k++) cb(k * step - camX * f, k); }};
+  }
+  function drawFront(t) { const B = (MQ.Backdrops || {})[placeId]; if (B && B.front) B.front(helpers(t)); }
   function decoItem(sx, k) {
     const c = ['#e43b44', '#f4f4f4', '#ffcd75', '#f4a3c8'][k & 3], y = GY - 6;
     switch (theme.deco) {
@@ -174,8 +189,8 @@ MQ.Scene = (() => {
   const STEP = 150; // jarak antar titik
 
   /** Mulai tempat baru. stops = jenis tiap titik ('', 'mini', 'boss'), kosong = tanpa jalur (Arena/Ujian). */
-  function setup(placeId, stops) {
-    theme = THEMES[placeId] || THEMES.padang;
+  function setup(id, stops) {
+    placeId = id; theme = THEMES[id] || THEMES.padang;
     markers = (stops || []).map((type, i) => ({x: 110 + i * STEP, type}));
     hero.x = markers.length ? 10 : 30; hero.target = null; hero.act = null; mon = null; parts = []; camX = 0;
     resize(true);
@@ -239,6 +254,7 @@ MQ.Scene = (() => {
       const bob = walk && !animated ? -(Math.floor(hero.walkT * 7) % 2) : !walk && !hero.act ? -(Math.floor(t * 1.5) % 2) : 0;
       if (!(hero.act === 'hurt' && Math.floor(t * 16) % 2)) drawSprite(Object.assign({}, hero.src, {frame: frm}), hero.x, {dx: dash, dy: bob});
     }
+    drawFront(t);
     if (slashT > 0 && mon) {
       slashT -= dt;
       const k = 1 - slashT / 0.3, cx = mon.x - camX + 14, cy = GY - 12;

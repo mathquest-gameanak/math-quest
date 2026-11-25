@@ -205,5 +205,9 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - `MQ.Pix.url(id, skala, siluet)` → gambar persegi untuk Buku Monster (siluet gelap bila belum ditemukan), kartu Dungeon, dan cutscene. Pertarungan memakai `MQ.Pix.has(id)`.
 - SW `mq-v21` (+ monsters.js).
 
+### 2026-11-25 — Grafik baru tahap 4: latar khusus tiap tempat
+- `js/backgrounds.js` (MQ.Backdrops) + kait lapisan di `scene.js` (sky2, far, mid, floor, front, noMidHills). Padang: pagar kayu & kupu-kupu. Hutan: hutan rapat, batang pohon tinggi, berkas cahaya, kunang-kunang. Bukit: gunung bersalju berlapis. Danau: air beriak bergerak, teratai, pulau berpohon. Lembah Ukur: mesa bertingkat & tongkat ukur merah-putih. Menara: bulan sabit, menara berjendela menyala, kota malam, lentera. Kastil: kastil berbendera di langit senja, obor. Arena: tribun penonton & panji. Gua Pola: dinding gua, kristal bercahaya, stalaktit. Kapal Karam: cahaya dari permukaan, kapal tenggelam, rumput laut bergoyang, ikan, gelembung, dasar pasir. Perpustakaan: jendela bulan, lampu gantung, lantai kayu, halaman beterbangan.
+- SW `mq-v22` (+ backgrounds.js).
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
