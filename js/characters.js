@@ -28,6 +28,52 @@ window.MQ = window.MQ || {};
     return P.outline();
   }
 
+  /** Kakek Bilang mengajar (layar Kelas): tangan terangkat, penunjuk kayu berujung kapur ke kiri-atas. */
+  function kakekTunjuk() {
+    const P = grid(32, 32), cx = 17, SK = '#ffd8b0', G = '#38b764', GS = '#257179';
+    for (let k = 0; k < 10; k++) P.px(Math.round(cx - 10 - k * 0.65), 10 - k, '#d4a373');             // penunjuk
+    P.px(cx - 16, 1, W).px(cx - 16, 0, W);                                                             // ujung kapur
+    P.ell(cx, 23, 7.5, 8, G, (x, y) => y >= 15);                                                       // jubah
+    P.rect(cx - 5, 15, 10, 3, G); P.recolor(G, GS, (x, y) => x >= cx + 3 && y >= 17);
+    P.rect(cx - 9, 14, 4, 3, G).rect(cx - 10, 12, 3, 3, G);                                           // lengan terangkat
+    P.ell(cx - 10, 11, 1.6, 1.6, SK);                                                                  // tangan
+    P.rect(cx - 6, 22, 12, 1, '#ffcd75'); P.rect(cx - 1, 23, 2, 6, '#a7f070');                          // sabuk & hiasan
+    P.ell(cx + 6, 21, 1.6, 1.6, SK);                                                                   // tangan satunya
+    P.ell(cx, 10, 6, 5.6, SK);                                                                          // kepala botak
+    P.px(cx - 3, 5, W).px(cx - 2, 5, W);
+    P.ell(cx - 5.6, 10, 1.6, 2.6, W).ell(cx + 5.6, 10, 1.6, 2.6, W);
+    P.rect(cx - 4, 8, 3, 1, W).rect(cx + 1, 8, 3, 1, W);
+    P.rect(cx - 3, 10, 2, 2, K).rect(cx + 2, 10, 2, 2, K).px(cx - 3, 10, W).px(cx + 2, 10, W);         // mata terbuka (sedang menjelaskan)
+    P.ell(cx, 16, 5, 5.5, W, (x, y) => y >= 12);
+    P.rect(cx - 3, 12, 6, 1, W); P.rect(cx - 1, 13, 3, 2, '#b13e53');                                  // mulut berbicara
+    P.px(cx - 5, 12, '#f68aa5').px(cx + 4, 12, '#f68aa5');
+    P.rect(cx - 3, 29, 2, 1, '#5d275d').rect(cx + 1, 29, 2, 1, '#5d275d');
+    return P.outline();
+  }
+
+  /** Kakek Bilang mengajar (layar Kelas): tangan terangkat, penunjuk kayu berujung kapur ke kiri-atas. */
+  function kakekTunjuk() {
+    const P = grid(32, 32), cx = 17, SK = '#ffd8b0', G = '#38b764', GS = '#257179';
+    for (let k = 0; k < 10; k++) P.px(Math.round(cx - 10 - k * 0.65), 10 - k, '#d4a373');             // penunjuk
+    P.px(cx - 16, 1, W).px(cx - 16, 0, W);                                                             // ujung kapur
+    P.ell(cx, 23, 7.5, 8, G, (x, y) => y >= 15);                                                       // jubah
+    P.rect(cx - 5, 15, 10, 3, G); P.recolor(G, GS, (x, y) => x >= cx + 3 && y >= 17);
+    P.rect(cx - 9, 14, 4, 3, G).rect(cx - 10, 12, 3, 3, G);                                           // lengan terangkat
+    P.ell(cx - 10, 11, 1.6, 1.6, SK);                                                                  // tangan
+    P.rect(cx - 6, 22, 12, 1, '#ffcd75'); P.rect(cx - 1, 23, 2, 6, '#a7f070');                          // sabuk & hiasan
+    P.ell(cx + 6, 21, 1.6, 1.6, SK);                                                                   // tangan satunya
+    P.ell(cx, 10, 6, 5.6, SK);                                                                          // kepala botak
+    P.px(cx - 3, 5, W).px(cx - 2, 5, W);
+    P.ell(cx - 5.6, 10, 1.6, 2.6, W).ell(cx + 5.6, 10, 1.6, 2.6, W);
+    P.rect(cx - 4, 8, 3, 1, W).rect(cx + 1, 8, 3, 1, W);
+    P.rect(cx - 3, 10, 2, 2, K).rect(cx + 2, 10, 2, 2, K).px(cx - 3, 10, W).px(cx + 2, 10, W);         // mata terbuka (sedang menjelaskan)
+    P.ell(cx, 16, 5, 5.5, W, (x, y) => y >= 12);
+    P.rect(cx - 3, 12, 6, 1, W); P.rect(cx - 1, 13, 3, 2, '#b13e53');                                  // mulut berbicara
+    P.px(cx - 5, 12, '#f68aa5').px(cx + 4, 12, '#f68aa5');
+    P.rect(cx - 3, 29, 2, 1, '#5d275d').rect(cx + 1, 29, 2, 1, '#5d275d');
+    return P.outline();
+  }
+
   /** Kiki: burung hantu kecil cokelat, mata besar, perut krem bermotif, jambul telinga. */
   function kiki() {
     const P = grid(32, 32), cx = 15, B = '#ab5236', BS = '#5d275d', C = '#ffe4c4';
@@ -155,5 +201,5 @@ window.MQ = window.MQ || {};
     return P.outline();
   }
 
-  Object.assign(MQ.Pix.MONSTERS, {kakek, kiki, penyihir, momo, kapten, hantuBuku, crystal, shard, peti});
+  Object.assign(MQ.Pix.MONSTERS, {kakek, kakekTunjuk, kiki, penyihir, momo, kapten, hantuBuku, crystal, shard, peti});
 })();

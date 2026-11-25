@@ -593,7 +593,6 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 .modeOpt.locked { background: #333c57; color: #94b0c2; }
 
 /* Pelajaran & istirahat */
-.learnBox { display: flex; flex-direction: column; gap: 10px; align-items: center; padding: 12px; min-height: 60vh; }
 .learnRest { background: #333c57; color: #ffcd75; font-weight: 900; padding: 6px 10px; border: 3px solid var(--hitam); text-align: center; width: 100%; }
 .learnStep { font-weight: 900; font-size: 14px; opacity: .85; }
 .learnBody { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
@@ -629,3 +628,64 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 #mapCanvas { image-rendering: pixelated; }
 .mnArt { width: 40px; height: 40px; image-rendering: pixelated; }
 .mapNode.lock .mnArt { opacity: .85; }
+
+/* ===== 🎓 Kelas: ruang kelas dengan papan tulis, Kakek Bilang & murid-murid (2026-11-26) ===== */
+.classroom { position: relative; border: 3px solid var(--hitam); box-shadow: 0 0 0 3px var(--panel-tepi);
+  background: linear-gradient(#e8c9a0 0 72%, #c99a6b 72% 74%, #a8764a 74%);   /* dinding krem, lis, dinding bawah kayu */
+  padding: 10px 8px 0; display: flex; flex-direction: column; }
+.board { position: relative; background: #2d5040; color: #f4f4f4; padding: 10px 10px 14px; min-height: 230px;
+  border: 7px solid #ab5236; box-shadow: 0 0 0 3px var(--hitam), inset 0 0 0 3px #1f3a2e, inset 0 0 40px #0004;
+  display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.board::after { content: ''; position: absolute; left: 18%; right: 18%; bottom: -13px; height: 6px; background: #d4a373;   /* tempat kapur */
+  border: 2px solid var(--hitam); }
+.board::before { content: ''; position: absolute; right: 22%; bottom: -15px; width: 12px; height: 4px; background: #f4f4f4; } /* sepotong kapur */
+.board .learnStep { color: #ffcd75; font-size: 15px; opacity: 1; letter-spacing: .5px; }
+.board .lvText { color: #f4f4f4; font-size: 20px; text-shadow: none; }
+.board .lvQ { text-shadow: none; color: #f4f4f4; }
+.board .lvCap { color: #ffcd75; }
+.board .lvPick { background: transparent; border: 2px dashed #f4f4f4c0; color: #f4f4f4; }
+.board .lvPick.must { background: var(--kuning); color: var(--hitam); border-style: solid; }
+.clsFloor { position: relative; display: flex; align-items: flex-end; justify-content: space-between; min-height: 128px; margin-top: 10px;
+  background: linear-gradient(transparent 62%, #6d4b27 62%); }
+.clsFloor::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 38%; pointer-events: none;
+  background: repeating-linear-gradient(90deg, #0000 0 46px, #0003 46px 48px); }                     /* papan lantai */
+.clsSeats { position: relative; flex: 1; height: 124px; }
+.seatRow { position: absolute; left: 0; right: 0; display: flex; justify-content: center; }
+.seatRow.rowBack { top: 0; gap: 70px; transform: scale(.78); transform-origin: 50% 0; filter: brightness(.9); }
+.seatRow.rowFront { bottom: 2px; gap: 6px; z-index: 1; }
+.seat { position: relative; width: 70px; height: 70px; display: flex; justify-content: center; animation: bob 1.4s steps(1) infinite; }
+.seat img { width: 60px; height: 60px; image-rendering: pixelated; object-fit: contain; }
+.seat.hero img { width: 66px; height: 66px; margin-top: -6px; }
+.seat .desk { position: absolute; left: 2px; right: 2px; bottom: -2px; height: 26px; background: #d4a373;
+  border: 3px solid var(--hitam); box-shadow: inset 0 5px 0 #f0c590, inset 0 -4px 0 #ab5236; }
+.seat .desk::after { content: ''; position: absolute; left: 10px; top: -7px; width: 18px; height: 5px; background: #f4f4f4; border: 2px solid var(--hitam); } /* buku */
+.seat.hero .desk::after { background: #73eff7; }
+.clsSeats.cheer .seat { animation: cheer .6s steps(3); }
+@keyframes cheer { 50% { transform: translateY(-14px); } }
+.clsTeacher { width: 96px; height: 96px; image-rendering: pixelated; margin: 0 -2px 4px 0; position: relative; z-index: 2;
+  animation: bob 2s steps(1) infinite; }
+#scr-learn > .learnNext { align-self: center; }
+#scr-learn > #learnAnswers.learnAns { margin-top: 2px; }
+#scr-learn .learnRest { margin: 0; }
+
+/* ===== Layar lebih lebar dari HP (iPad tegak, ±480×690): soal & tombol jawaban dirapatkan supaya arena tarung
+   tetap tinggi & tokoh tidak tertutup papan nama monster (2026-11-26). HP biasa (rasio < 0,6) tidak terpengaruh. */
+@media (min-aspect-ratio: 3/5) and (max-aspect-ratio: 1/1) {
+  #scr-battle #question { min-height: 118px; padding: 2px 4px; }
+  #scr-battle .qLine { min-height: 40px; }
+  #scr-battle #qText { font-size: 32px; }
+  #scr-battle #qView > * { max-height: 76px; }
+  #scr-battle #answers { min-height: 122px; gap: 6px; }
+  #scr-battle .ans { min-height: 56px; font-size: 30px; }
+  #scr-battle .ans svg { width: 44px; height: 44px; }
+  #scr-battle .thinkTag { font-size: 11px; }
+}
+
+/* Papan nama monster ringkas (2026-11-26): nama di atas, bar HP & bar serangan berdampingan → tidak menutupi monster */
+#scr-battle #mTop { display: grid; grid-template-columns: 3fr 2fr; column-gap: 6px; row-gap: 2px; align-items: center; }
+#scr-battle #mTop #mName { grid-column: 1 / -1; line-height: 1.15; }
+#scr-battle #mTop .bar, #scr-battle #mTop .atkBar { margin-top: 0; }
+#scr-battle #mTop:has(.atkBar[hidden]) .bar { grid-column: 1 / -1; }
+#arena.pair #mTop::before { grid-column: 1 / -1; }
+/* Tablet (html.tablet, diatur skrip di index.html): kolom game memenuhi lebar layar */
+html.tablet #app { max-width: none; }

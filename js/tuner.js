@@ -75,7 +75,9 @@ MQ.Tuner = (() => {
       ['legendMode.lv.0', 'Legenda level dari', '', 1], ['legendMode.lv.1', 'Legenda level sampai', '', 1], ['legendMode.hpMul', 'Legenda HP musuh ×', '', 0.1],
       ['legendMode.dmgMul', 'Legenda damage musuh ×', '', 0.1], ['legendMode.speedMul', 'Legenda jeda ×', '', 0.05],
       ['legendMode.rewardMul', 'Legenda koin ×', '', 0.5],
-      ['upgrade.coins', 'Upgrade: koin per tingkat', 'biaya koin = angka ini × tingkat tujuan', 1],
+      ['upgrade.coins.4', 'Upgrade: koin ke +5', 'biaya tiap tingkat ada di balance.js upgrade.coins', 5],
+      ['upgrade.coins.9', 'Upgrade: koin ke +10', '', 5],
+      ['upgrade.strongMul', 'Upgrade +6..+10: efek ×', '1 = sama dengan +1..+5', 1],
       ['upgrade.per.senjata.atk', 'Upgrade senjata: serangan +', 'per tingkat', 1],
       ['upgrade.per.pelindung.hp', 'Upgrade pelindung: HP +', 'per tingkat', 1],
       ['upgrade.per.aksesori.crit', 'Upgrade aksesori: kritikal % +', 'per tingkat', 1]

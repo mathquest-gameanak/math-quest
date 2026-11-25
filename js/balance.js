@@ -83,9 +83,14 @@ MQ.Balance = {
   /* Dua monster sekaligus: titik (0-based) di area per mode cerita (1 = Pahlawan, 2 = Legenda),
      dan ruang di dungeon per tingkat (⭐⭐: ruang sebelum bos; ⭐⭐⭐: ruang genap). */
   pairs: {story: {1: [3], 2: [1, 3]}},
-  /* Tingkatkan equipment +1..+5 (Pandai Besi). Per tingkat: tambahan efek per slot; biaya tingkat L:
-     bahan khusus slot × L, koin × L, Mahkota Kecil 1 mulai tingkat crownFrom. */
-  upgrade: {max: 5, coins: 10, crownFrom: 4,
+  /* Tingkatkan equipment +1..+10 (Pandai Besi, 2026-11-26: dari +5 jadi +10, sengaja mahal).
+     Biaya naik KE tingkat L = isi daftar ke-L (urutan +1, +2, ... +10): bahan khusus slot, koin, Mahkota Kecil.
+     Total +0 → +10 per perlengkapan: 55 bahan khusus, 1055 koin, 11 Mahkota.
+     Efek per tingkat = "per"; mulai tingkat strongFrom (+6) tiap tingkat memberi × strongMul (lebih kuat). */
+  upgrade: {max: 10, strongFrom: 6, strongMul: 2,
+            coins:  [10, 20, 35, 50, 70, 100, 130, 170, 210, 260],
+            mats:   [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            crowns: [0, 0, 0, 1, 1, 1, 1, 2, 2, 3],
             mat: {senjata: 'kristalPola', pelindung: 'mutiara', aksesori: 'tinta'},
             per: {senjata: {atk: 1}, pelindung: {hp: 3, def: 0.5}, aksesori: {crit: 2, critDmg: 5}}},
   /* Soal CEPAT vs soal PIKIR (2026-11-26). time = pengali waktu per jenis soal (1 = fakta dasar):

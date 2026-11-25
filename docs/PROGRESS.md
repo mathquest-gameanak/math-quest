@@ -264,5 +264,10 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - `data.js`: level area Normal dipadatkan (Padang 1–3 … Menara 11–14, Kastil 14), dungeon (Gua 5–8, Kapal 7–10, Perpustakaan 10–13). Simulasi sekali jalan: Normal selesai ±Lv 16, Pahlawan ±28, Legenda ±40.
 - Musik: lagu `map` (mars D mayor) di layar Peta; lagu cutscene `csCalm`, `csVillain`, `csSad`, `csWin`. `cutscene.js sceneMusic` memilih musik bawaan adegan; langkah cerita bisa mengganti dengan `music` (prolog: tenang → Penyihir → sedih → semangat; Menara: menang → Penyihir → semangat; Kastil: Penyihir → bos; ending: Penyihir → menang). Setelah adegan selesai musik kembali ke layar asal. SW `mq-v33`.
 
+### 2026-11-26 — Upgrade +10, layar Kelas, tarung di iPad
+- Upgrade sampai +10 (`balance.upgrade`: tabel biaya per tingkat `coins/mats/crowns`, total ke +10 = 55 bahan khusus, 1055 koin, 11 Mahkota; +6..+10 efek ×2 lewat `strongFrom/strongMul`, `State.upSteps`). Pandai Besi menampilkan efek tiap tingkat (🔥 untuk +6..+10). Medali baru "Tempa Legenda" (+10). Simpanan: batas tingkat 10.
+- 🎓 Pelajaran → **Kelas**: ruang kelas (papan tulis berisi materi/latihan, sprite baru `kakekTunjuk` di characters.js, pahlawan + 4 monster dari Buku Monster duduk di bangku, sorak saat benar).
+- iPad: viewport tegak = lebar yang membuat tinggi ±812px + `html.tablet` (kolom game penuh lebar), arena tarung jadi setinggi di HP. Skala adegan tarung (scene.js) dihitung dari tinggi arena dikurangi papan nama, dalam piksel layar asli → tokoh lebih besar & tidak tertutup. Papan nama monster ringkas (bar HP & bar serangan berdampingan). Layar rasio ≥ 0,6: soal & tombol jawaban dirapatkan. SW `mq-v34`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

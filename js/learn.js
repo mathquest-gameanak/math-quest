@@ -1,8 +1,10 @@
-/* Math Quest — 🎓 Pelajaran & Istirahat Pahlawan (2026-11-26).
+/* Math Quest — 🎓 Kelas & Istirahat Pahlawan (2026-11-26).
+   Tampil sebagai ruang kelas: materi di papan tulis, Kakek Bilang menunjuk papan, pahlawan duduk di depan
+   bersama beberapa monster yang sudah pernah ditemui (ikut belajar & bersorak saat jawaban benar).
    Materi singkat bergambar per jenis soal (kartu penjelasan → latihan tanpa waktu, jawab benar N kali).
    Saat HP habis, pahlawan PINGSAN: semua pertarungan terkunci selama balance.knockout.lockMin menit DAN
    sampai anak menyelesaikan pelajaran tentang jenis soal yang paling sering salah di pertarungan itu.
-   Pelajaran juga bisa dibuka kapan saja dari ikon 🎓 Pelajaran di beranda. */
+   Kelas juga bisa dibuka kapan saja dari ikon 🎓 Kelas di beranda. */
 'use strict';
 window.MQ = window.MQ || {};
 
@@ -97,7 +99,25 @@ MQ.Learn = (() => {
   }
   const openRest = () => open(S.rest.kind, S.rest.max, true);
 
-  /* ===== Layar pelajaran ===== */
+  /* ===== Ruang kelas: murid-murid ===== */
+  let mates = null; // monster teman sekelas (dipilih sekali tiap masuk kelas)
+  const monImg = id => { const m = MQ.Data.monsters[id]; return MQ.Pix.has(id) ? MQ.Pix.url(id, 3) : MQ.Sprites.url(m.sprite, m.pal); };
+  function renderSeats() {
+    if (!mates) {
+      const met = Object.keys(MQ.Data.monsters).filter(id => (S.bestiary[id] || 0) > 0 && id !== 'naga');
+      const pool = met.length >= 4 ? met : ['lendir', 'jamur', 'kelelawar', 'lendirAir', 'jamurUngu'];
+      mates = pool.slice().sort(() => Math.random() - 0.5).slice(0, 4);
+    }
+    const seat = (src, cls, d) => `<div class="seat ${cls}" style="animation-delay:${d}s"><img src="${src}" alt=""><i class="desk"></i></div>`;
+    $('clsSeats').innerHTML =
+      `<div class="seatRow rowBack">${seat(monImg(mates[2]), 'mon', 0.3)}${seat(monImg(mates[3]), 'mon', 0.6)}</div>` +
+      `<div class="seatRow rowFront">${seat(monImg(mates[0]), 'mon', 0.1)}${seat(MQ.Hero.current(), 'hero', 0)}${seat(monImg(mates[1]), 'mon', 0.45)}</div>`;
+    $('clsTeacher').src = MQ.Pix.url('kakekTunjuk', 3);
+  }
+  /** Murid-murid bersorak (melompat) saat jawaban benar. */
+  function cheer() { const s = $('clsSeats'); s.classList.remove('cheer'); void s.offsetWidth; s.classList.add('cheer'); }
+
+  /* ===== Layar kelas ===== */
   let L = null; // {kind, max, rest, step, ok, q, done}
   function open(kind, max, rest = false) {
     L = {kind: LESSONS[kind] ? kind : 'tambah', max: max || 10, rest, step: 0, ok: 0, q: null, done: false};
@@ -106,14 +126,16 @@ MQ.Learn = (() => {
   const need = () => BAL().practice;
 
   function render() {
+    renderSeats();
     if (!L) return renderList();
     const les = LESSONS[L.kind], cards = les.cards;
-    $('learnTitle').textContent = `${les.icon} ${les.title}`;
+    $('learnTitle').textContent = `🎓 Kelas · ${les.title}`;
     $('learnAnswers').innerHTML = ''; $('learnAnswers').className = '';
     $('learnRest').hidden = !L.rest;
     if (L.rest) $('learnRest').textContent = S.rest && leftMs() > 0 ? `💤 Istirahat ${clock(leftMs())}` : '💤 Istirahat selesai';
     const next = $('learnNext');
     if (L.done) {
+      cheer();
       $('learnStep').textContent = '🎉 Selesai!';
       $('learnBody').innerHTML = `<p class="lvText">Hebat! Kamu sudah belajar ${les.title}.</p>` +
         (L.rest ? `<p class="lvText">${leftMs() > 0 ? `Pahlawan masih istirahat ${clock(leftMs())} lagi. Nanti kembali ya!` : 'Pahlawan sudah segar lagi. Ayo bertualang!'}</p>` : '');
@@ -142,7 +164,7 @@ MQ.Learn = (() => {
         if (b.disabled) return;
         const st = S.stats[q.kind] || (S.stats[q.kind] = {b: 0, s: 0});
         if (c.v === q.ans) {
-          st.b++; State.logDay('b', 1); sfx.correct(); b.classList.add('benar');
+          st.b++; State.logDay('b', 1); sfx.correct(); b.classList.add('benar'); cheer();
           box.querySelectorAll('button').forEach(x => (x.disabled = true));
           L.ok++; L.q = null;
           setTimeout(() => {
@@ -160,15 +182,15 @@ MQ.Learn = (() => {
   }
   $('learnNext').addEventListener('click', () => {
     if (!L) return;
-    if (L.done) { const toMap = L.rest && leftMs() <= 0; L = null; resting(); return UI.show(toMap ? 'map' : 'home'); }
+    if (L.done) { const toMap = L.rest && leftMs() <= 0; L = null; mates = null; resting(); return UI.show(toMap ? 'map' : 'home'); }
     L.step++; render();
   });
-  $('learnBack').addEventListener('click', () => { const was = L; L = null; if (was && !was.rest) return render(); UI.show('home'); });
+  $('learnBack').addEventListener('click', () => { const was = L; L = null; if (was && !was.rest) return render(); mates = null; UI.show('home'); });
 
-  /** Daftar semua pelajaran (dibuka dari ikon 🎓 di beranda). */
+  /** Daftar semua pelajaran (dibuka dari ikon 🎓 Kelas di beranda), ditulis di papan tulis. */
   function renderList() {
-    $('learnTitle').textContent = '🎓 Pelajaran';
-    $('learnStep').textContent = 'Pilih yang mau kamu pelajari';
+    $('learnTitle').textContent = '🎓 Kelas';
+    $('learnStep').textContent = 'Hari ini mau belajar apa?';
     $('learnRest').hidden = !resting();
     if (S.rest) $('learnRest').textContent = '💤 ' + restText();
     $('learnNext').hidden = true;

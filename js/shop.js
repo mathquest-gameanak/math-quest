@@ -91,7 +91,7 @@ MQ.Shop = (() => {
     }});
   });
 
-  /* ===== Pandai Besi: Tingkatkan (+1 sampai +5) =====
+  /* ===== Pandai Besi: Tingkatkan (+1 sampai +10; mulai +6 efeknya dobel) =====
      Biaya & efek di balance.js "upgrade". Soal: nilai efek utama sekarang + tambahan = ? */
   let smithTab = 'make';
   document.querySelector('.smithTabs').addEventListener('click', e => {
@@ -102,19 +102,28 @@ MQ.Shop = (() => {
   const U = () => MQ.Balance.upgrade;
   /** Biaya naik ke tingkat L: {bahan: n, mahkota?: 1, koin: n}. */
   function upCost(id, L) {
-    const c = {[U().mat[items[id].type]]: L};
-    if (L >= U().crownFrom) c.mahkota = 1;
-    c.koin = U().coins * L;
+    const u = U(), i = Math.min(L, u.max) - 1, c = {[u.mat[items[id].type]]: u.mats[i]};
+    if (u.crowns[i] > 0) c.mahkota = u.crowns[i];
+    c.koin = u.coins[i];
     return c;
   }
   /** Efek utama item (untuk soal & keterangan): [nama, nilai sekarang, tambahan per tingkat, satuan]. */
   function mainStat(id) {
-    const it = items[id], L = State.upLevel(id);
-    if (it.type === 'senjata') return ['Serangan', (it.atk || 0) + State.upBonus(id, 'atk'), U().per.senjata.atk, ''];
-    if (it.type === 'pelindung') return ['HP tambahan', (it.hp || 0) + State.upBonus(id, 'hp'), U().per.pelindung.hp, ''];
-    return ['Peluang kritikal', (it.crit || 0) + Math.floor(U().per.aksesori.crit * L), U().per.aksesori.crit, '%'];
+    const it = items[id], L = State.upLevel(id), step = stepMul(L + 1);
+    if (it.type === 'senjata') return ['Serangan', (it.atk || 0) + State.upBonus(id, 'atk'), U().per.senjata.atk * step, ''];
+    if (it.type === 'pelindung') return ['HP tambahan', (it.hp || 0) + State.upBonus(id, 'hp'), U().per.pelindung.hp * step, ''];
+    return ['Peluang kritikal', (it.crit || 0) + State.upBonus(id, 'crit'), U().per.aksesori.crit * step, '%'];
   }
-  const UP_TEXT = {senjata: 'Serangan +1', pelindung: 'HP +3, Pertahanan +½', aksesori: 'Kritikal +2%, damage kritikal +5%'};
+  /** Pengali efek untuk naik KE tingkat L (mulai +6 lebih kuat). */
+  const stepMul = L => (L >= U().strongFrom ? U().strongMul : 1);
+  const half = n => (n % 1 ? (Math.floor(n) ? Math.floor(n) : '') + '½' : n);
+  /** Keterangan tambahan efek naik ke tingkat L, mis. "Serangan +2". */
+  function upText(type, L) {
+    const p = U().per[type], m = stepMul(L);
+    if (type === 'senjata') return `Serangan +${p.atk * m}`;
+    if (type === 'pelindung') return `HP +${p.hp * m}, Pertahanan +${half(p.def * m)}`;
+    return `Kritikal +${p.crit * m}%, damage kritikal +${p.critDmg * m}%`;
+  }
   function renderUp() {
     const owned = Object.keys(S.inv).filter(id => isGear(items[id]));
     $('upList').innerHTML = owned.length ? owned.map(id => {
@@ -122,7 +131,7 @@ MQ.Shop = (() => {
       const need = max ? '<small>Sudah tingkat tertinggi! ✨</small>' : `<div class="needs">${Object.entries(upCost(id, L + 1)).map(([k, n]) =>
         `<span class="need ${have(k) >= n ? 'ok' : ''}">${iconOf(k)}${Math.min(have(k), n)}/${n}</span>`).join('')}</div>`;
       return `<div class="panel shopItem">${UI.itemImg(id, 'iconBig')}<div class="sBody"><b>${items[id].name} <span class="upLv">${L ? '+' + L : ''}</span></b>` +
-        `<small>${max ? 'Maks +5' : `+${L} → +${L + 1}: ${UP_TEXT[items[id].type]}`}</small>${need}</div>` +
+        `<small>${max ? `Maks +${U().max}` : `+${L} → +${L + 1}: ${upText(items[id].type, L + 1)}${L + 1 >= U().strongFrom ? ' 🔥' : ''}`}</small>${need}</div>` +
         `<button class="sBtn" data-up="${id}" ${max ? 'disabled' : ''}>${max ? 'Maks' : 'Tingkatkan'}</button></div>`;
     }).join('') : '<p class="note">Belum punya perlengkapan. Beli di Toko atau buat di tab Buat dulu.</p>';
   }

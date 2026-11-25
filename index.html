@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <script>
-  /* Tablet (iPad dll.): game didesain selebar HP (kolom maks 480px). Supaya penuh layar, lebar viewport diatur
-     ≈ 480px sehingga browser memperbesar seluruh game. Tinggi yang terlihat dijaga minimal ±700px
-     (layar melebar/landscape → kolom tetap di tengah). HP biasa tidak berubah. */
+  /* Tablet (iPad dll.): game didesain untuk HP (±375×812). Lebar viewport diatur supaya tinggi yang terlihat
+     ±812px (tegak) / ±700px (mendatar) → browser memperbesar seluruh game. Tegak: kolom game memenuhi lebar layar;
+     mendatar: kolom 480px di tengah. HP biasa (sisi pendek < 600px) tidak berubah. */
   (function () {
     var m = document.querySelector('meta[name=viewport]');
     function fit() {
@@ -14,7 +14,9 @@
       if (sw < 600) return m.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no');
       var w = portrait ? Math.min(screen.width, screen.height) : Math.max(screen.width, screen.height);
       var h = portrait ? Math.max(screen.width, screen.height) : Math.min(screen.width, screen.height);
-      var vw = portrait ? 480 : Math.max(480, Math.round(700 * w / h)); // tegak: selalu penuh lebar
+      // tegak: tinggi terlihat ±812px seperti HP (arena tarung tetap tinggi), kolom game ikut melebar (html.tablet)
+      var vw = portrait ? Math.max(480, Math.round(812 * w / h)) : Math.max(480, Math.round(700 * w / h));
+      document.documentElement.classList.toggle('tablet', portrait);
       m.setAttribute('content', 'width=' + vw + ', user-scalable=no');
     }
     fit();
@@ -53,7 +55,7 @@
         <button class="sideBtn" data-go="quests"><span>⭐</span><small>Misi</small><b id="questBadge" class="badge" hidden></b></button>
         <button class="sideBtn" data-go="medals"><span>🏅</span><small>Medali</small></button>
         <button class="sideBtn" data-go="smith"><span>🔨</span><small>Pandai Besi</small></button>
-        <button class="sideBtn" data-go="learn"><span>🎓</span><small>Pelajaran</small></button>
+        <button class="sideBtn" data-go="learn"><span>🎓</span><small>Kelas</small></button>
       </div>
       <h1 class="logo">MATH<br>QUEST</h1>
       <div class="heroStage"><img id="homeHero" class="homeHero" alt="Pahlawan"></div>
@@ -64,14 +66,18 @@
 
   <!-- ===== PELAJARAN (materi bergambar + latihan tanpa waktu; wajib setelah pingsan) ===== -->
   <section id="scr-learn" class="screen">
-    <header class="panel topbar"><button class="back" id="learnBack">◀</button><h2 id="learnTitle">Pelajaran</h2></header>
-    <div class="panel learnBox">
-      <div id="learnRest" class="learnRest" hidden></div>
-      <div id="learnStep" class="learnStep"></div>
-      <div id="learnBody" class="learnBody"></div>
-      <div id="learnAnswers"></div>
-      <button id="learnNext" class="learnNext">Lanjut ▶</button>
+    <header class="panel topbar"><button class="back" id="learnBack">◀</button><h2 id="learnTitle">🎓 Kelas</h2></header>
+    <div id="learnRest" class="learnRest" hidden></div>
+    <!-- Ruang kelas: papan tulis (materi), Kakek Bilang menunjuk, pahlawan & monster duduk belajar -->
+    <div class="classroom">
+      <div class="board"><div id="learnStep" class="learnStep"></div><div id="learnBody" class="learnBody"></div></div>
+      <div class="clsFloor">
+        <div id="clsSeats" class="clsSeats"></div>
+        <img id="clsTeacher" class="clsTeacher" alt="Kakek Bilang">
+      </div>
     </div>
+    <div id="learnAnswers"></div>
+    <button id="learnNext" class="learnNext">Lanjut ▶</button>
   </section>
 
   <!-- ===== BUKU MONSTER ===== -->

@@ -61,7 +61,7 @@ MQ.Save = (() => {
       rest: d.rest && typeof d.rest === 'object' && Number.isFinite(d.rest.until) && typeof d.rest.kind === 'string'
         ? {until: Math.min(d.rest.until, Date.now() + 3600000), kind: d.rest.kind, max: num(d.rest.max, 10, 1), learned: d.rest.learned === true} : null,
       storyMode: [0, 1, 2].includes(d.storyMode) ? d.storyMode : d.heroMode === true ? 1 : 0,
-      upgrades: Object.fromEntries(Object.entries(obj(d.upgrades)).filter(([k, v]) => items[k] && num(v, 0, 1) > 0).map(([k, v]) => [k, Math.min(5, num(v, 0, 1))])),
+      upgrades: Object.fromEntries(Object.entries(obj(d.upgrades)).filter(([k, v]) => items[k] && num(v, 0, 1) > 0).map(([k, v]) => [k, Math.min(10, num(v, 0, 1))])),
       bestiary, medals,
       costumes: Array.isArray(d.costumes) ? d.costumes.filter(x => typeof x === 'string') : [],
       kilat: num(d.kilat, 0, 0), crafted: num(d.crafted, 0, 0),

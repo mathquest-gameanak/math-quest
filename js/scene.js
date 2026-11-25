@@ -46,7 +46,12 @@ MQ.Scene = (() => {
   function resize(fresh) {
     const a = $('arena');
     if (!a.clientHeight) return;
-    if (fresh) sc = Math.max(3, Math.min(5, Math.floor(a.clientHeight / 88))); // ±88 piksel dunia tingginya
+    // Skala: setinggi mungkin, tapi tanah (17) + monster terbesar (±58 piksel dunia) harus muat DI BAWAH papan nama monster.
+    // Dihitung dalam piksel layar asli (devicePixelRatio) supaya tetap tajam walau skalanya bukan bilangan bulat (iPad).
+    if (fresh) {
+      const dpr = window.devicePixelRatio || 1, top = 50; // tinggi papan nama + bar HP musuh (CSS px)
+      sc = Math.max(2, Math.min(6, Math.floor((a.clientHeight - top) * dpr / 68) / dpr));
+    }
     VW = Math.max(90, Math.round(a.clientWidth / sc)); VH = Math.max(70, Math.round(a.clientHeight / sc));
     if (cv.width !== VW || cv.height !== VH) { cv.width = VW; cv.height = VH; }
     GY = VH - 17;
