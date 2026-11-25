@@ -12,8 +12,12 @@ MQ.State = (() => {
 
   /** Item yang sedang dipakai di slot tertentu (atau null). */
   const gear = slot => (S.equip[slot] ? items[S.equip[slot]] : null);
-  /** Jumlah efek dari semua equipment yang dipakai, mis. effect('hp'). */
-  const effect = key => ['senjata', 'pelindung', 'aksesori'].reduce((n, s) => n + ((gear(s) || {})[key] || 0), 0);
+  /** Tingkat equipment (+0..+5, Pandai Besi → Tingkatkan). */
+  const upLevel = id => S.upgrades[id] || 0;
+  /** Tambahan efek dari tingkat item (lihat balance.js upgrade.per). */
+  const upBonus = (id, key) => { const it = items[id], per = it && MQ.Balance.upgrade.per[it.type]; return per && per[key] ? Math.floor(per[key] * upLevel(id)) : 0; };
+  /** Jumlah efek dari semua equipment yang dipakai (termasuk tingkatnya), mis. effect('hp'). */
+  const effect = key => ['senjata', 'pelindung', 'aksesori'].reduce((n, s) => n + ((gear(s) || {})[key] || 0) + (S.equip[s] ? upBonus(S.equip[s], key) : 0), 0);
 
   // Rumus & angka: lihat js/balance.js
   const maxHp = () => MQ.Calc.playerHp(S.level, S.alloc.hp, effect('hp'));
@@ -85,7 +89,10 @@ MQ.State = (() => {
 
   const save = () => MQ.Save.save(S);
 
-  return {S, POINTS_PER_LEVEL, maxHp, atk, def, critChance, critMul, xpNeed, bonusFor, effect, gear, addXp, spendPoint,
+  /** Nama item beserta tingkatnya, mis. "Pedang Kayu +2". */
+  const itemName = id => items[id].name + (upLevel(id) ? ` +${upLevel(id)}` : '');
+
+  return {S, POINTS_PER_LEVEL, upLevel, upBonus, itemName, maxHp, atk, def, critChance, critMul, xpNeed, bonusFor, effect, gear, addXp, spendPoint,
           count, addItem, removeItem, equip, unequip, isEquipped, unlocked, mainFields, shards, save,
           today, dateKey, logDay};
 })();

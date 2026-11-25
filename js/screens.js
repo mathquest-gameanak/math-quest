@@ -125,7 +125,7 @@ MQ.UI = (() => {
     // Slot perlengkapan: ketuk untuk melihat / melepas
     $('charEquip').innerHTML = SLOTS.map(([slot, label]) => {
       const id = S.equip[slot];
-      return `<button class="slot${id ? ' full' : ''}" data-slot="${slot}">${id ? itemImg(id) + `<small>${Data.items[id].name}</small>` : `<span>${label}</span>`}</button>`;
+      return `<button class="slot${id ? ' full' : ''}" data-slot="${slot}">${id ? itemImg(id) + `<small>${State.itemName(id)}</small>` : `<span>${label}</span>`}</button>`;
     }).join('');
   };
   const SLOTS = [['senjata', 'Senjata'], ['pelindung', 'Pelindung'], ['aksesori', 'Aksesori']];
@@ -165,7 +165,7 @@ MQ.UI = (() => {
   /** Keterangan item + tombol Pakai/Lepas untuk perlengkapan. after() = gambar ulang layar asal. */
   function itemDetail(id, after) {
     const it = Data.items[id], gearType = ['senjata', 'pelindung', 'aksesori'].includes(it.type);
-    const base = {img: itemImg(id, 'iconBig'), title: it.name, text: `${TYPE_NAMES[it.type]} · ${it.desc}` + (it.type === 'bahan' ? ` Kamu punya ${State.count(id)}.` : '')};
+    const base = {img: itemImg(id, 'iconBig'), title: State.itemName(id), text: `${TYPE_NAMES[it.type]} · ${it.desc}` + (it.type === 'bahan' ? ` Kamu punya ${State.count(id)}.` : '')};
     if (!gearType) return overlay(base);
     const on = State.isEquipped(id);
     overlay(Object.assign(base, {

@@ -96,18 +96,23 @@ MQ.WorldMap = (() => {
 
   /* ===== Status & jalur ===== */
   const places = () => [...Data.fields, Data.arena];
-  const heroOn = () => S.grade > 1 && S.heroMode;
+  /* Mode cerita: 0 Normal, 1 Pahlawan (setelah lulus ujian), 2 Legenda (setelah 6 bos Pahlawan) */
+  const legendOpen = () => State.mainFields().every(f => S.heroCleared.includes(f.id));
+  const mode = () => (S.grade < 2 ? 0 : S.storyMode === 2 && legendOpen() ? 2 : S.storyMode === 1 ? 1 : 0);
+  const heroOn = () => mode() > 0;
+  const modeList = () => (mode() === 2 ? S.legendCleared : S.heroCleared);
+  const MODES = [{name: '⭐ Normal'}, {name: '⭐⭐ Pahlawan', cfg: 'heroMode'}, {name: '⭐⭐⭐ Legenda', cfg: 'legendMode'}];
   function status(p) {
     if (p.soon) return 'soon';
     if (!State.unlocked(p)) return 'lock';
-    if (heroOn() && p.spec) return S.heroCleared.includes(p.id) ? 'done' : 'open'; // Mode Pahlawan: bintang dihitung ulang
+    if (heroOn() && p.spec) return modeList().includes(p.id) ? 'done' : 'open'; // Mode Pahlawan/Legenda: bintang dihitung ulang
     if (S.cleared.includes(p.id)) return 'done';
     return 'open';
   }
   /** Tempat tujuan berikutnya (area terbuka pertama yang belum selesai) — di sini pahlawan berdiri. */
   function currentPlace() {
     const main = Data.fields.filter(f => !f.soon);
-    if (heroOn()) return State.mainFields().find(f => !S.heroCleared.includes(f.id)) || main[main.length - 1];
+    if (heroOn()) return State.mainFields().find(f => !modeList().includes(f.id)) || main[main.length - 1];
     return main.find(f => State.unlocked(f) && !S.cleared.includes(f.id)) || main[main.length - 1];
   }
 
@@ -134,8 +139,9 @@ MQ.WorldMap = (() => {
   UI.renderers.map = () => {
     const hb = $('btnHeroMode');
     hb.hidden = S.grade < 2;
-    hb.textContent = heroOn() ? '⭐⭐ Pahlawan' : '⭐ Normal';
+    hb.textContent = MODES[mode()].name;
     hb.classList.toggle('on', heroOn());
+    hb.classList.toggle('legend', mode() === 2);
     $('scr-map').classList.toggle('heroMode', heroOn());
     if (!terrain) terrain = drawTerrain();
     const cv = $('mapCanvas');
@@ -182,18 +188,22 @@ MQ.WorldMap = (() => {
       return UI.overlay({icon: '📝', title: 'Ujian Naik Kelas', btn: 'Mulai Ujian', btn2: 'Nanti', cb: go,
         text: `12 soal dari semua area. Musuh tidak menyerang, jawab dengan tenang. Lulus jika benar minimal 9. Nilai terbaikmu: ${S.examBest}.`});
     }
-    const hero = heroOn() && p.spec, add = hero ? MQ.Balance.heroMode.lvAdd : 0;
+    const hero = heroOn() && p.spec, M = MODES[hero ? mode() : 0], add = hero ? MQ.Balance[M.cfg].lvAdd : 0;
     const lv = p.lv ? ` Level ${p.lv[0] + add}–${p.lv[1] + add}.` : '';
-    const done = (hero ? S.heroCleared : S.cleared).includes(p.id) ? ' Bos sudah kamu kalahkan ⭐' : '';
-    UI.overlay({icon: p.icon, title: p.name + (hero ? ' ⭐⭐' : ''), btn: 'Main!', btn2: 'Nanti', cb: go,
-      text: `${p.desc}.${lv}${hero ? ' Mode Pahlawan: musuh lebih kuat & lebih cepat, koin lebih banyak!' : ''}${done}`});
+    const done = (hero ? modeList() : S.cleared).includes(p.id) ? ' Bos sudah kamu kalahkan ⭐' : '';
+    UI.overlay({icon: p.icon, title: p.name + (hero ? ' ' + M.name.split(' ')[0] : ''), btn: 'Main!', btn2: 'Nanti', cb: go,
+      text: `${p.desc}.${lv}${hero ? ` Mode ${M.name.split(' ')[1]}: musuh lebih kuat & cepat, kadang DUA monster sekaligus. Koin lebih banyak!` : ''}${done}`});
   });
 
   /* Saklar Mode Pahlawan (hanya setelah lulus ujian) */
+  /* Saklar mode: Normal → Pahlawan → (Legenda bila sudah terbuka) → Normal */
   $('btnHeroMode').addEventListener('click', () => {
-    S.heroMode = !S.heroMode; State.save();
+    const max = legendOpen() ? 2 : 1;
+    S.storyMode = mode() >= max ? 0 : mode() + 1; State.save();
     UI.renderers.map();
-    if (S.heroMode) UI.overlay({icon: '🦸', title: 'Mode Pahlawan ⭐⭐', text: 'Soalnya sama, tapi musuh JAUH lebih kuat dan cepat. Koin dua kali lipat! Buat senjata, pelindung & aksesori dari bahan khusus dungeon di Pandai Besi supaya cukup kuat.'});
+    if (S.storyMode === 1) UI.overlay({icon: '🦸', title: 'Mode Pahlawan ⭐⭐', text: 'Soalnya sama, tapi musuh JAUH lebih kuat dan cepat, kadang DUA monster sekaligus. Koin dua kali lipat! Buat & tingkatkan perlengkapan di Pandai Besi supaya cukup kuat.' +
+      (legendOpen() ? '' : ' Kalahkan keenam bos di sini untuk membuka Mode Legenda!')});
+    if (S.storyMode === 2) UI.overlay({icon: '🐉', title: 'Mode Legenda ⭐⭐⭐', text: 'Tantangan tersulit! Musuh sangat kuat dan cepat. Hanya pahlawan dengan perlengkapan +4 atau +5 yang bisa menang. Koin tiga kali lipat!'});
   });
 
   return {POS};

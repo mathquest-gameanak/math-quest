@@ -209,5 +209,11 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - `js/backgrounds.js` (MQ.Backdrops) + kait lapisan di `scene.js` (sky2, far, mid, floor, front, noMidHills). Padang: pagar kayu & kupu-kupu. Hutan: hutan rapat, batang pohon tinggi, berkas cahaya, kunang-kunang. Bukit: gunung bersalju berlapis. Danau: air beriak bergerak, teratai, pulau berpohon. Lembah Ukur: mesa bertingkat & tongkat ukur merah-putih. Menara: bulan sabit, menara berjendela menyala, kota malam, lentera. Kastil: kastil berbendera di langit senja, obor. Arena: tribun penonton & panji. Gua Pola: dinding gua, kristal bercahaya, stalaktit. Kapal Karam: cahaya dari permukaan, kapal tenggelam, rumput laut bergoyang, ikan, gelembung, dasar pasir. Perpustakaan: jendela bulan, lampu gantung, lantai kayu, halaman beterbangan.
 - SW `mq-v22` (+ backgrounds.js).
 
+### 2026-11-25 — Tahap 5: dua monster sekaligus, Mode Legenda, tingkatkan equipment
+- **Dua monster**: `B.other` (monster kedua, field sama dengan sasaran; ganti sasaran = tukar isi). Muncul sesuai `balance.pairs` (Pahlawan: titik 4; Legenda: titik 2 & 4) dan dungeon ⭐⭐ (ruang sebelum bos) / ⭐⭐⭐ (ruang genap). Masing-masing punya bar serangan; panel kedua `#mTop2` (ketuk untuk ganti), ketuk monster di kanvas (`Scene.hitTest`), tanda ▼ di atas kepala sasaran. Sasaran kalah → pindah otomatis.
+- **Mode Legenda ⭐⭐⭐**: `S.storyMode` 0/1/2 (simpanan lama heroMode → 1), `S.legendCleared`, `balance.legendMode` (+12 lv, HP ×1,8, dmg ×2,2, jeda ×0,6, koin ×3), terbuka setelah 6 bos Pahlawan. Saklar peta berputar Normal → Pahlawan → Legenda.
+- **Tingkatkan +1..+5** (Pandai Besi → tab ✨ Tingkatkan): `S.upgrades`, `balance.upgrade` (bahan khusus slot × tingkat, koin 10 × tingkat, Mahkota mulai +4; senjata ATK +1, pelindung HP +3 & DEF +½, aksesori krit +2% & krit dmg +5% per tingkat). Soal "sekarang X, naik Y, jadi berapa?". Nama item tampil "+n".
+- Medali baru: Legenda Matematika, Ahli Tempa. Atur Angka: angka Legenda & upgrade. Simpanan v11. SW `mq-v23`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

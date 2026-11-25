@@ -74,6 +74,15 @@ MQ.Balance = {
     {lvAdd: 6, hpMul: 1.2, dmgMul: 1.2, speedMul: 0.7, rewardMul: 2}
   ],
   heroMode: {lvAdd: 6, hpMul: 1.4, dmgMul: 1.6, speedMul: 0.7, rewardMul: 2},
+  legendMode: {lvAdd: 12, hpMul: 1.8, dmgMul: 2.2, speedMul: 0.6, rewardMul: 3},  // Legenda: setelah 6 bos Mode Pahlawan
+  /* Dua monster sekaligus: titik (0-based) di area per mode cerita (1 = Pahlawan, 2 = Legenda),
+     dan ruang di dungeon per tingkat (⭐⭐: ruang sebelum bos; ⭐⭐⭐: ruang genap). */
+  pairs: {story: {1: [3], 2: [1, 3]}},
+  /* Tingkatkan equipment +1..+5 (Pandai Besi). Per tingkat: tambahan efek per slot; biaya tingkat L:
+     bahan khusus slot × L, koin × L, Mahkota Kecil 1 mulai tingkat crownFrom. */
+  upgrade: {max: 5, coins: 10, crownFrom: 4,
+            mat: {senjata: 'kristalPola', pelindung: 'mutiara', aksesori: 'tinta'},
+            per: {senjata: {atk: 1}, pelindung: {hp: 3, def: 0.5}, aksesori: {crit: 2, critDmg: 5}}},
   rewards: {
     coinsNormal: [1, 2], coinsBoss: 8,  // koin dari monster
     dropChance: 0.7,                    // peluang monster biasa menjatuhkan 1 bahan

@@ -140,6 +140,11 @@ Lingkaran yang diharapkan membuat anak terus main dan belajar: **dungeon lebih s
 
 **Mode Pahlawan ⭐⭐** (petualangan utama, terbuka setelah lulus Ujian Naik Kelas): area & soal sama, musuh +6 level, HP ×1,4, damage ×1,6, menyerang lebih cepat (jeda ×0,7), koin ×2. Sengaja berat: perlu equipment dari bahan khusus dungeon. Saklar Normal/Pahlawan di atas peta. Medali "Pahlawan Sejati" untuk mengalahkan keenam bos area di Mode Pahlawan.
 
+**Tahap 5 (2026-11-25)**
+- **Dua monster sekaligus**: muncul di Mode Pahlawan (titik 4), Legenda (titik 2 & 4), dungeon ⭐⭐ (ruang sebelum bos) dan ⭐⭐⭐ (beberapa ruang). Masing-masing punya HP & bar serangan sendiri. Jawaban benar memukul monster yang ditandai ▼; ketuk monster (atau panelnya) untuk ganti sasaran. Bila sasaran kalah, sasaran pindah otomatis. Jawaban salah = monster sasaran menyerang.
+- **Mode Legenda ⭐⭐⭐** (petualangan utama): terbuka setelah keenam bos Mode Pahlawan dikalahkan. Musuh +12 level, HP ×1,8, damage ×2,2, jeda ×0,6, koin ×3. Hampir mustahil tanpa equipment yang sudah ditingkatkan. Saklar peta: Normal → Pahlawan → Legenda. Medali "Legenda Matematika".
+- **Tingkatkan equipment +1 sampai +5** (Pandai Besi → Tingkatkan): bahan khusus dungeon sesuai slot (senjata: Kristal Pola, pelindung: Mutiara Laut, aksesori: Tinta Bintang) sebanyak tingkat tujuan, koin 10 × tingkat, Mahkota Kecil di +4 & +5. Tiap tingkat: senjata Serangan +1; pelindung HP +3 & Pertahanan +½; aksesori kritikal +2% & damage kritikal +5%. Ada soal hitungan sebelum meningkatkan ("Serangan 6 naik 1, jadi berapa?").
+
 **Halaman utama**: Buku Monster, Misi, Medali berupa ikon kecil bertumpuk di kiri di bawah kartu nama (ada tanda merah bila ada yang baru). Ikon Pandai Besi juga di situ. Bilah bawah (5): Tas, Karakter, **Beranda (tengah)**, Dungeon, Toko.
 
 ## 8. Laporan Orang Tua

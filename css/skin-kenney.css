@@ -190,3 +190,10 @@ body.skinK .dTier.lock { border-image-source: url(../ui/steel.png); color: #dfe8
 body.skinK .heroToggle { background: none; border: 8px solid transparent; border-image: url(../ui/steel-light.png) 6 fill / 8px stretch; color: #1f2a35; padding: 0 2px; min-height: 0; }
 body.skinK .heroToggle.on { border-image-source: url(../ui/btn-red.png); color: #ffe08a; text-shadow: 1px 1px 0 #0006; }
 body.skinK .dMat { background: #ecd3a4; color: var(--tinta); border: 2px solid #d2ae74; }
+body.skinK #mTop2 { background: none; box-shadow: none; border: 10px solid transparent; border-image: url(../ui/wood.png) 6 fill / 10px stretch; color: var(--kertas); padding: 0 2px; }
+body.skinK #arena.pair #mTop { box-shadow: none; border-image-source: url(../ui/btn-yellow.png); color: var(--tinta); }
+body.skinK #arena.pair #mTop #mName, body.skinK #arena.pair #mTop::before { color: var(--tinta); }
+body.skinK .smithTabs .sBtn { border-image-source: url(../ui/steel.png); }
+body.skinK .smithTabs .sBtn.on { border-image-source: url(../ui/btn-green.png); }
+body.skinK .upLv { color: #a05a14; }
+body.skinK .heroToggle.legend { border-image-source: url(../ui/btn-pink.png); color: #5d275d; text-shadow: none; }

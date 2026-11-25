@@ -528,3 +528,17 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 #scr-home .heroStage::after { width: 110px; bottom: 2px; }
 .mapHero { width: 60px; height: 60px; margin: -104px 0 0 -30px; }
 .csActor.heroNew { width: 124px; height: 124px; margin-left: -62px; bottom: calc(12% - 6px); }
+
+/* ===== Dua monster sekaligus ===== */
+#mTop2 { position: absolute; top: 4px; right: 6px; left: 50%; margin-left: 3px; padding: 2px 6px; z-index: 2; text-align: center; font-weight: 900; font-size: 12px; cursor: pointer; opacity: .85; }
+#mTop2 .bar { height: 10px; margin-top: 1px; }
+#mTop2 .bar > span { font-size: 9px; line-height: 8px; }
+#arena.pair #mTop { right: 50%; margin-right: 3px; font-size: 12px; box-shadow: 0 0 0 3px #ffcd75; }
+#arena.pair #mTop::before { content: "▼ Sasaran"; display: block; font-size: 10px; color: #ffcd75; }
+#mTop2::before { content: "Ketuk untuk ganti"; display: block; font-size: 10px; opacity: .8; }
+/* ===== Pandai Besi: Buat / Tingkatkan ===== */
+.smithTabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.smithTabs .sBtn { background: #566c86; font-size: 15px; padding: 8px; align-self: stretch; }
+.smithTabs .sBtn.on { background: var(--hijau); }
+.upLv { color: var(--kuning); font-weight: 900; }
+.heroToggle.legend { background: #5d275d; color: #ffcd75; }

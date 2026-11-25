@@ -175,8 +175,10 @@
   <!-- ===== PANDAI BESI ===== -->
   <section id="scr-smith" class="screen">
     <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Pandai Besi</h2><span id="smithCoins" class="coins"></span></header>
-    <p class="note">Kumpulkan bahan dari monster, lalu buat senjata hebat!</p>
+    <div class="smithTabs"><button class="sBtn small on" data-st="make">🔨 Buat</button><button class="sBtn small" data-st="up">✨ Tingkatkan</button></div>
+    <p id="smithNote" class="note">Kumpulkan bahan dari monster, lalu buat senjata hebat!</p>
     <div id="smithList" class="list"></div>
+    <div id="upList" class="list" hidden></div>
   </section>
 
   <!-- ===== DUNGEON ===== -->
@@ -240,6 +242,9 @@
       <canvas id="scene"></canvas>
       <div id="mTop" class="panel"><div id="mName"></div><div class="bar"><div id="hpFill"></div><span id="hpText"></span></div>
         <div id="atkBar" class="atkBar" title="Serangan musuh"><span>⚡</span><div class="atkTrack"><div id="atkFill"></div></div></div></div>
+      <!-- Monster kedua (dua monster sekaligus): ketuk untuk menjadikannya sasaran -->
+      <div id="mTop2" class="panel" hidden><div id="mName2"></div><div class="bar"><div id="hpFill2"></div><span id="hpText2"></span></div>
+        <div class="atkBar"><span>⚡</span><div class="atkTrack"><div id="atkFill2"></div></div></div></div>
       <div id="fx"></div>
       <div id="dots" class="dots"></div>
     </section>

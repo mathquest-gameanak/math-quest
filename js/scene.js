@@ -170,29 +170,34 @@ MQ.Scene = (() => {
     if (!im) { im = imgs[src.url] = new Image(); im.src = src.url; }
     return im.complete && im.naturalWidth ? {img: im, w: src.size * src.mul, h: src.size * src.mul} : null;
   }
-  function drawSprite(src, x, opt = {}) {
+  /** Gambar sprite; hide = hitung posisinya saja (kedip saat terkena). Mengembalikan kotaknya di layar. */
+  function drawSprite(src, x, opt = {}, hide = false) {
     const s = source(src);
-    if (!s) return;
+    if (!s) return null;
     const sc = opt.scale || 1;
     const w = Math.round((s.w || s.img.width) * sc), h = Math.round((s.h || s.img.height) * sc);
     const sx = Math.round(x - camX + (opt.dx || 0)), sy = Math.round(GY + 4 - h + (opt.dy || 0));
+    if (hide) return {sx, sy, w, h};
     ctx.globalAlpha = opt.alpha == null ? 1 : opt.alpha;
     R('#0003', sx + 3, GY + 3, Math.max(4, w - 6), 2);
     ctx.imageSmoothingEnabled = false;
     ctx.drawImage(s.img, sx, sy, w, h);
     ctx.globalAlpha = 1;
+    return {sx, sy, w, h};
   }
 
   /* ===== Keadaan ===== */
   const hero = {x: 0, src: null, act: null, actT: 0, walkT: 0, target: null, onArrive: null};
-  let mon = null, slashT = 0, slashCrit = false, parts = [];
+  // mons[0] = monster depan, mons[1] = monster kedua (di belakang, sedikit lebih tinggi). target = yang ditandai ▼.
+  let mons = [null, null], target = 0, slashT = 0, slashCrit = false, slashSlot = 0, parts = [];
+  const pair = () => !!(mons[0] && mons[0].alive && mons[1] && mons[1].alive);
   const STEP = 150; // jarak antar titik
 
   /** Mulai tempat baru. stops = jenis tiap titik ('', 'mini', 'boss'), kosong = tanpa jalur (Arena/Ujian). */
   function setup(id, stops) {
     placeId = id; theme = THEMES[id] || THEMES.padang;
     markers = (stops || []).map((type, i) => ({x: 110 + i * STEP, type}));
-    hero.x = markers.length ? 10 : 30; hero.target = null; hero.act = null; mon = null; parts = []; camX = 0;
+    hero.x = markers.length ? 10 : 30; hero.target = null; hero.act = null; mons = [null, null]; target = 0; parts = []; camX = 0;
     resize(true);
   }
   const fightX = i => (markers.length ? markers[i].x - 30 : 30);
@@ -201,21 +206,33 @@ MQ.Scene = (() => {
     if (!markers.length) { hero.x = fightX(0); return cb && cb(); }
     hero.target = fightX(i); hero.onArrive = cb;
   }
-  /** Munculkan monster di titik i. src = sumber sprite. big = bos (sprite lama lebih besar). */
-  function setMonster(src, i, opt = {}) {
-    mon = {src, x: (markers.length ? markers[i].x : 30 + 30) + 6, act: null, actT: 0, alive: true, deadT: 0, pop: 0.3, scale: opt.scale || 1};
+  /** Munculkan monster di titik i. slot 0 = depan, 1 = monster kedua (di belakang). */
+  function setMonster(src, i, opt = {}, slot = 0) {
+    const x = (markers.length ? markers[i].x : 30 + 30) + 6 + (slot ? 16 : 0);
+    mons[slot] = {src, x, dy: slot ? -9 : 0, act: null, actT: 0, alive: true, deadT: 0, pop: 0.3, scale: (opt.scale || 1) * (slot ? 0.9 : 1)};
+    if (!slot) mons[1] = null;
   }
-  function act(who, name, dur) { const w = who === 'hero' ? hero : mon; if (w) { w.act = name; w.actT = dur; } }
-  function defeat() {
-    if (!mon) return;
-    mon.alive = false; mon.deadT = 0.8;
+  function setTarget(slot) { target = slot; }
+  /** who = 'hero' atau 'mon' (slot = monster ke berapa, bawaan = sasaran). */
+  function act(who, name, dur, slot = target) { const w = who === 'hero' ? hero : mons[slot]; if (w) { w.act = name; w.actT = dur; } }
+  function defeat(slot = target) {
+    const m = mons[slot];
+    if (!m) return;
+    m.alive = false; m.deadT = 0.8;
     for (let i = 0; i < 16; i++) {
       const a = Math.PI * 2 * i / 16;
-      parts.push({x: mon.x + 12, y: GY - 10, vx: Math.cos(a) * (20 + Math.random() * 25), vy: Math.sin(a) * (20 + Math.random() * 25) - 10,
+      parts.push({x: m.x + 12, y: GY - 10 + m.dy, vx: Math.cos(a) * (20 + Math.random() * 25), vy: Math.sin(a) * (20 + Math.random() * 25) - 10,
                   life: 0.6 + Math.random() * 0.3, c: ['#f4f4f4', '#a7f070', '#ffcd75'][i % 3]});
     }
   }
-  function slash(crit) { slashT = 0.3; slashCrit = crit; }
+  function slash(crit, slot = target) { slashT = 0.3; slashCrit = crit; slashSlot = slot; }
+  /** Monster mana yang diketuk (klik di kanvas)? -1 = bukan monster. */
+  function hitTest(clientX, clientY) {
+    const r = cv.getBoundingClientRect(), wx = (clientX - r.left) / r.width * VW + camX, wy = (clientY - r.top) / r.height * VH;
+    let best = -1;
+    mons.forEach((m, i) => { if (m && m.alive && wx >= m.x - 2 && wx <= m.x + 40 && wy >= GY - 44 + m.dy && wy <= GY + 6) best = best < 0 || i === 0 ? i : best; });
+    return best;
+  }
   const walking = () => hero.target != null;
 
   /* ===== Putaran gambar (hanya saat layar pertarungan tampil) ===== */
@@ -230,23 +247,30 @@ MQ.Scene = (() => {
       hero.walkT += dt;
       if (hero.x >= hero.target) { hero.target = null; const cb = hero.onArrive; hero.onArrive = null; if (cb) cb(); }
     }
-    camX += ((hero.x - VW * 0.12) - camX) * Math.min(1, dt * 4);
+    camX += ((hero.x - VW * (pair() ? 0.04 : 0.12)) - camX) * Math.min(1, dt * 4); // dua monster: kamera sedikit ke kanan
     camX = Math.max(0, camX);
-    [hero, mon].forEach(w => { if (w && w.actT > 0) { w.actT -= dt; if (w.actT <= 0) w.act = null; } });
+    [hero, mons[0], mons[1]].forEach(w => { if (w && w.actT > 0) { w.actT -= dt; if (w.actT <= 0) w.act = null; } });
 
     drawBackground(t);
-    if (mon) {
+    [1, 0].forEach(i => { // monster kedua digambar dulu (di belakang)
+      const mon = mons[i];
+      if (!mon) return;
       if (mon.alive) {
         mon.pop = Math.max(0, mon.pop - dt);
-        const bob = Math.floor(t * 2) % 2, shake = mon.act === 'hit' ? (Math.floor(t * 30) % 2 ? 2 : -2) : 0;
+        const bob = Math.floor(t * 2 + i) % 2, shake = mon.act === 'hit' ? (Math.floor(t * 30) % 2 ? 2 : -2) : 0;
         const lunge = mon.act === 'atk' ? -Math.sin((1 - mon.actT / 0.45) * Math.PI) * 14 : 0;
-        if (!(mon.act === 'hit' && Math.floor(t * 20) % 3 === 0)) drawSprite(mon.src, mon.x, {dx: shake + lunge, dy: -bob, scale: mon.scale * (1 - mon.pop / 0.3 * 0.6)});
+        const box = drawSprite(mon.src, mon.x, {dx: shake + lunge, dy: mon.dy - bob, scale: mon.scale * (1 - mon.pop / 0.3 * 0.6)}, mon.act === 'hit' && Math.floor(t * 20) % 3 === 0);
+        if (box) mon.box = box;
+        if (pair() && i === target && mon.box && Math.floor(t * 3) % 2) { // tanda sasaran ▼ di atas kepala
+          const ax = Math.round(mon.box.sx + mon.box.w / 2 - 3), ay = mon.box.sy - 8;
+          R(K, ax - 1, ay - 1, 9, 6); R('#ffcd75', ax, ay, 7, 2); R('#ffcd75', ax + 1, ay + 2, 5, 1); R('#ffcd75', ax + 2, ay + 3, 3, 1); R('#ffcd75', ax + 3, ay + 4, 1, 1);
+        }
       } else if (mon.deadT > 0) {
         mon.deadT -= dt;
         const k = Math.max(0.05, mon.deadT / 0.8);
-        drawSprite(mon.src, mon.x + 12 * (1 - k), {scale: mon.scale * k, alpha: k});
+        drawSprite(mon.src, mon.x + 12 * (1 - k), {scale: mon.scale * k, alpha: k, dy: mon.dy});
       }
-    }
+    });
     if (hero.src) {
       const walk = hero.target != null, frm = hero.act === 'atk' ? 'atk' : hero.act === 'hurt' ? 'hurt' : walk ? (Math.floor(hero.walkT * 7) % 2 ? 'walk1' : 'walk2') : 'idle';
       const dash = hero.act === 'atk' ? Math.sin((1 - hero.actT / 0.35) * Math.PI) * 10 : 0;
@@ -255,9 +279,10 @@ MQ.Scene = (() => {
       if (!(hero.act === 'hurt' && Math.floor(t * 16) % 2)) drawSprite(Object.assign({}, hero.src, {frame: frm}), hero.x, {dx: dash, dy: bob});
     }
     drawFront(t);
-    if (slashT > 0 && mon) {
+    const sm = mons[slashSlot];
+    if (slashT > 0 && sm) {
       slashT -= dt;
-      const k = 1 - slashT / 0.3, cx = mon.x - camX + 14, cy = GY - 12;
+      const k = 1 - slashT / 0.3, cx = sm.x - camX + 14, cy = GY - 12 + sm.dy;
       for (let a = -1.2; a < -1.2 + 2.4 * k; a += 0.08) R(slashCrit ? '#ffcd75' : '#f4f4f4', cx + Math.cos(a) * (slashCrit ? 15 : 12), cy + Math.sin(a) * (slashCrit ? 15 : 12), 2, 2);
     }
     parts = parts.filter(p => (p.life -= dt) > 0);
@@ -266,7 +291,7 @@ MQ.Scene = (() => {
   requestAnimationFrame(frame);
 
   return {
-    setup, walkTo, setMonster, act, defeat, slash, walking, PIX, THEMES,
+    setup, walkTo, setMonster, setTarget, hitTest, act, defeat, slash, walking, PIX, THEMES,
     setHero(src) { hero.src = src; },
     start() { running = true; resize(true); },
     stop() { running = false; }
