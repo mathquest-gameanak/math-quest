@@ -82,6 +82,7 @@ MQ.UI = (() => {
     $('homeInfo').textContent = `LV ${S.level} · 💎 ${State.shards()}/6`;
     $('homeCoins').textContent = `🪙 ${S.coins}`;
     $('btnMusic').textContent = S.settings.music > 0 ? '🎵' : '🔇';
+    if (MQ.HomeScene) MQ.HomeScene.start(); // latar desa bergerak
     if (!MQ.Cutscene.isOpen()) MQ.Collection.check(); // medali yang terpenuhi di luar pertarungan (mis. Pandai Besi)
   };
 
@@ -176,7 +177,6 @@ MQ.UI = (() => {
 
   /* ===== Mulai ===== */
   function init() {
-    Sprites.drawField($('homeScene'));
     document.querySelectorAll('#tabbar [data-icon]').forEach(img => (img.src = Sprites.url(img.dataset.icon)));
     $('btnEditLook').addEventListener('click', () => MQ.Create.open('char'));
     // Tombol 🎵 di Halaman Utama: musik nyala/mati cepat (volume terakhir diingat)

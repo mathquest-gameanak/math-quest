@@ -40,7 +40,7 @@ MQ.Hero = (() => {
   };
 
   /* ===== Gambar pahlawan (32×32, digambar dari bentuk lewat MQ.Pix; tahap 2 grafik baru) =====
-     frame: 'idle' | 'walk1' | 'walk2' | 'atk' | 'hurt'. Lapisan: rambut belakang → badan & pakaian → wajah & rambut depan
+     frame: 'idle' | 'walk1' | 'walk2' | 'atk' | 'hurt' | 'happy'. Lapisan: rambut belakang → badan & pakaian → wajah & rambut depan
      → aksesori → kostum kepala → perisai (tangan kiri) → senjata (tangan kanan). Warna senjata/perisai dari palet item. */
   const WEAPON_PAL = {w: '#f4f4f4', y: '#ffcd75', b: '#ab5236', g: '#94b0c2', G: '#f4f4f4', d: '#566c86'};
   const SHIELD_PAL = {b: '#ab5236', y: '#ffcd75'};
@@ -98,10 +98,13 @@ MQ.Hero = (() => {
     [cx - 5, cx - 4, cx - 2, cx - 1, cx + 1, cx + 2, cx + 4].forEach(x => P.px(x, Y(6), hair));
     if (look.hair === 'pendek') P.px(cx + 1, Y(1), hair).px(cx + 2, Y(1), hair).px(cx + 2, Y(0), hair);
     P.px(cx - 3, Y(2), hairHi).px(cx - 2, Y(2), hairHi).px(cx - 4, Y(3), hairHi).px(cx + 3, Y(3), hairHi);
-    if (frame === 'hurt') { P.px(cx - 4, Y(9), K).px(cx - 3, Y(10), K).px(cx - 4, Y(10), K); P.px(cx + 3, Y(9), K).px(cx + 2, Y(10), K).px(cx + 3, Y(10), K); }
+    if (frame === 'happy') { // mata tersenyum ^ ^
+      [cx - 4, cx + 2].forEach(x => P.px(x - 1, Y(10), K).px(x, Y(9), K).px(x + 1, Y(9), K).px(x + 2, Y(10), K));
+    } else if (frame === 'hurt') { P.px(cx - 4, Y(9), K).px(cx - 3, Y(10), K).px(cx - 4, Y(10), K); P.px(cx + 3, Y(9), K).px(cx + 2, Y(10), K).px(cx + 3, Y(10), K); }
     else { P.rect(cx - 4, Y(8), 2, 3, K).rect(cx + 2, Y(8), 2, 3, K); P.px(cx - 4, Y(8), W).px(cx + 2, Y(8), W); }
     P.px(cx - 5, Y(11), '#f68aa5').px(cx + 4, Y(11), '#f68aa5');
-    if (frame === 'atk') P.rect(cx - 1, Y(12), 2, 1, '#b13e53').px(cx - 1, Y(13), '#b13e53');
+    if (frame === 'happy') P.rect(cx - 2, Y(12), 4, 1, '#b13e53').rect(cx - 1, Y(13), 2, 1, '#f68aa5'); // tertawa
+    else if (frame === 'atk') P.rect(cx - 1, Y(12), 2, 1, '#b13e53').px(cx - 1, Y(13), '#b13e53');
     else P.px(cx - 1, Y(12), '#b13e53').px(cx, Y(12), '#b13e53');
     P.recolor(skin, skinSh, (x, y) => y === Y(14) || (x === cx + 5 && y > Y(9) && y < Y(15)));
 

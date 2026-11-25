@@ -196,11 +196,11 @@ Lingkaran yang diharapkan membuat anak terus main dan belajar: **dungeon lebih s
 1. **Prolog**: desa damai → malam, Penyihir Kusut memecah kristal → monster jadi nakal → Kakek meminta pahlawan mengumpulkan 6 kepingan; Kiki menemani.
 2. **Tiap area**: cutscene pendek saat pertama masuk; setelah bos pertama kali kalah → dapat **kepingan kristal**.
 3. **Menara Seratus** (kepingan ke-6): Penyihir Kusut muncul dan menantang ke Kastil Ujian.
-4. **Kastil Ujian**: terbuka jika 6 area selesai **dan Level 20**. Sebelum ujian: Penyihir memerintah Raja Naga Api.
+4. **Kastil Ujian**: terbuka jika 6 area selesai (tanpa syarat level sejak 2026-11-25; tantangan lanjutan ada di Mode Pahlawan & Legenda). Sebelum ujian: Penyihir memerintah Raja Naga Api.
 5. **Ending** (lulus): kristal utuh, Penyihir kabur, jalan ke Kelas 2 terbuka ("Bersambung…").
 
 ### Dungeon bercerita (putaran berikutnya)
-Setiap dungeon punya cerita sendiri dengan cutscene di awal, setelah monster kunci, dan di akhir; bisa diulang untuk latihan & XP selagi menuju Level 20.
+Setiap dungeon punya cerita sendiri dengan cutscene di awal, setelah monster kunci, dan di akhir; bisa diulang untuk latihan, XP & bahan.
 
 ### Cutscene
 - Latar pixel, tokoh masuk/berjalan, getar layar, kilatan, kilau; teks muncul huruf demi huruf; ketuk untuk lanjut; tombol "Lewati".

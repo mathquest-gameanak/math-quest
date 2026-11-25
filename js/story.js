@@ -88,7 +88,7 @@ MQ.Story = (() => {
       {actors: {rajaMalam: null, kiki: 55, shard: 75}, fx: 'sparkle', who: 'kiki', text: 'Keenam! Semua kepingan sudah terkumpul!'},
       {actors: {penyihir: 78, shard: null}, fx: 'flash', who: 'penyihir', text: 'Grr! Kamu mengumpulkan semua kepinganku?'},
       {who: 'penyihir', text: 'Datanglah ke Kastil Ujian kalau berani! Raja Naga Api akan mengujimu!'},
-      {actors: {penyihir: null}, who: 'kiki', text: 'Kita harus lebih kuat dulu. Latihlah dirimu sampai Level 20, lalu ke Kastil Ujian!'}
+      {actors: {penyihir: null}, who: 'kiki', text: 'Ayo ke Kastil Ujian! Kalau terasa sulit, berlatihlah dulu di area dan dungeon supaya makin kuat.'}
     ],
 
     'kastil-intro': [

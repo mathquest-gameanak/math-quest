@@ -542,3 +542,20 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 .smithTabs .sBtn.on { background: var(--hijau); }
 .upLv { color: var(--kuning); font-weight: 900; }
 .heroToggle.legend { background: #5d275d; color: #ffcd75; }
+
+/* ===== Beranda: ikon samping bersih, pahlawan bisa diketuk ===== */
+.sideBtn { background: none !important; border: 0 !important; border-image: none !important; box-shadow: none !important; width: 56px; padding: 0; }
+.sideBtn span { font-size: 26px; filter: drop-shadow(2px 2px 0 #1a1c2c); }
+.sideBtn small { font-size: 11px; color: #fff !important; text-shadow: 1px 1px 0 #1a1c2c, -1px 1px 0 #1a1c2c, 1px -1px 0 #1a1c2c, -1px -1px 0 #1a1c2c !important; }
+#scr-home .homeHero { cursor: pointer; }
+#scr-home .homeHero.jump { animation: heroJump .9s ease-out; }
+#scr-home .homeHero.swing { animation: heroSwing .9s steps(6); }
+#scr-home .homeHero.spin { animation: heroSpin .9s ease-in-out; }
+@keyframes heroJump { 0%, 100% { transform: translateY(0); } 30% { transform: translateY(-40px) scale(1.05); } 55% { transform: translateY(0) scaleY(.92); } 70% { transform: translateY(-12px); } }
+@keyframes heroSwing { 0%, 100% { transform: translateX(0); } 30% { transform: translateX(18px); } 60% { transform: translateX(-6px); } }
+@keyframes heroSpin { 0% { transform: scaleX(1); } 25% { transform: scaleX(-1) translateY(-10px); } 50% { transform: scaleX(1) translateY(-16px); } 75% { transform: scaleX(-1) translateY(-10px); } 100% { transform: scaleX(1); } }
+.homeSay { position: absolute; bottom: 205px; left: 50%; transform: translateX(-50%); z-index: 3; white-space: nowrap; font-weight: 900; font-size: 16px; color: #1a1c2c;
+  background: #fff; border: 3px solid #1a1c2c; padding: 4px 10px; animation: pop .25s steps(3); }
+.homeSay::after { content: ""; position: absolute; left: 50%; bottom: -9px; margin-left: -6px; border: 6px solid transparent; border-top-color: #1a1c2c; }
+.homeFx { position: absolute; bottom: 150px; z-index: 3; font-style: normal; font-size: 20px; pointer-events: none; opacity: 0; animation: homeFx 1.1s ease-out forwards; }
+@keyframes homeFx { 0% { opacity: 0; transform: translateY(0) scale(.6); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateY(-70px) scale(1.1); } }

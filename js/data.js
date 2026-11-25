@@ -137,7 +137,7 @@ MQ.Data = {
     {id: 'menara', pace: 1.4, name: 'Menara Seratus', icon: '🗼', lv: [16, 20], req: 'lembah', desc: 'Puluhan, urutan & bilangan sampai 100',
      spec: {kinds: ['puluhan', 'urutan', 'banding'], max: 100}, mobs: ['kelelawarMalam', 'lendirUngu'], boss: 'rajaMalam'},
     /* Ujian Naik Kelas: terbuka setelah semua area di atas selesai (reqAll). 2 soal dari tiap area, lulus ≥ 75%. */
-    {id: 'kastil', name: 'Kastil Ujian', icon: '🏰', lv: [18, 20], exam: true, reqAll: true, minLevel: 20, boss: 'naga',
+    {id: 'kastil', name: 'Kastil Ujian', icon: '🏰', lv: [18, 20], exam: true, reqAll: true, boss: 'naga',
      desc: 'Ujian Naik Kelas: 12 soal campuran'}
   ],
 

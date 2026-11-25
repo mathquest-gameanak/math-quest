@@ -219,5 +219,11 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - `js/characters.js`: Kakek Bilang (botak berjanggut putih, jubah hijau, tongkat), Kiki (burung hantu bermata besar, perut bermotif), Penyihir Kusut (kulit hijau, topi ungu berbintang, tongkat sihir; lucu tidak seram), Momo (tikus tanah berhelm tambang berlampu), Kapten Kumis (kucing oranye bajak laut, penutup mata, kumis panjang), Hantu Buku (berkacamata memeluk buku), Kristal Angka & kepingannya. 32×32, ditampilkan seukuran pahlawan di cutscene.
 - Semua gambar game sekarang memakai gaya baru (MQ.Pix). SW `mq-v24`.
 
+### 2026-11-25 — Beranda bergerak & pahlawan interaktif, ujian tanpa kunci level
+- `js/homescene.js` (MQ.HomeScene): latar beranda Desa Bilangan bergerak (langit bertingkat, matahari, awan berarak, bukit, rumah warna-warni berjendela, pohon, pagar, jalan tanah ke tengah, bunga bergoyang, kupu-kupu) dan Kristal Angka di tugu yang makin bercahaya sesuai kepingan. Menggantikan `Sprites.drawField` di beranda.
+- Pahlawan di beranda bisa diketuk: lompat senang (frame baru `happy` ^‿^ + hati), menebas (+ bintang), atau berputar (+ not musik), dengan gelembung kata ("Ayo berhitung!", "Hore!", ...) & bunyi.
+- Ikon Buku/Misi/Medali/Pandai Besi tanpa kotak cokelat (ikon + nama bertepi gelap).
+- Kastil Ujian tidak lagi butuh Level 20 (tantangan lanjutan sudah ada di Pahlawan & Legenda); teks Kiki disesuaikan. SW `mq-v25` (+ homescene.js).
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
