@@ -251,5 +251,9 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Lapisan animasi ~15 fps (hanya saat Peta tampil): kilau air, kunang-kunang, bintang berkelip, bendera berkibar, lava, asap cerobong, kupu-kupu, awan berbayang.
 - Tombol tempat memakai potret bos piksel (siluet bila terkunci); nama tempat diberi ikon. SW `mq-v30`.
 
+### 2026-11-26 — Peta: Menara senja & suasana tingkat
+- Wilayah Menara Seratus jadi dataran batu ungu saat senja (ubin batu, rumput ungu, kristal, lentera berkedip), bukan langit malam yang janggal di bawah gunung berapi.
+- `drawMood`: Pahlawan = senja merah (warna multiply hangat, tepi gelap kemerahan, bara api naik, awan asap, bingkai merah menyala); Legenda = badai ungu gelap (kabut, hujan miring, kilat tiap ±6 detik, bingkai ungu berdenyut). SW `mq-v31`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

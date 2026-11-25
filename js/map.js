@@ -26,6 +26,7 @@ MQ.WorldMap = (() => {
      Peta digambar di ukuran aslinya (160×560 piksel) lalu diperbesar CSS (image-rendering: pixelated),
      sehingga lapisan animasi bisa digambar ulang tiap frame dengan murah. */
   const K = '#1a1c2c';
+  const LANTERNS = [[8, 128], [150, 122], [70, 92], [128, 146]]; // lentera di dataran Menara (menyala & berkedip)
   function painter(cv) {
     const x = cv.getContext('2d');
     const R = (col, a, b, w, h) => { x.fillStyle = col; x.fillRect(Math.round(a), Math.round(b), Math.round(w), Math.round(h)); };
@@ -60,7 +61,7 @@ MQ.WorldMap = (() => {
                                       !road.some(([x, y]) => Math.abs(px - x) < 6 + pad && Math.abs(py - y) < 6 + pad);
 
     /* 1. Warna dasar tiap wilayah: gradasi 3 tingkat + batas berbintik (dither) */
-    const PAL = {kastil: ['#1a1c2c', '#262b44', '#333c57'], menara: ['#1f2a55', '#29366f', '#3b4a8a'], lembah: ['#e8b07a', '#d4a373', '#c28a5c'],
+    const PAL = {kastil: ['#1a1c2c', '#262b44', '#333c57'], menara: ['#8a6fa0', '#7a5f92', '#6b5084'], lembah: ['#e8b07a', '#d4a373', '#c28a5c'],
                  danau: ['#8fd47a', '#7fcf6a', '#6cbf5c'], bukit: ['#b5dc84', '#9fca72', '#86b861'], hutan: ['#1f6b52', '#1a5c48', '#164f3f'],
                  padang: ['#5ac46a', '#45bb63', '#38b764']};
     for (let px = 0; px < W; px++) {
@@ -137,10 +138,12 @@ MQ.WorldMap = (() => {
     // penggaris raksasa tertancap (tanda "Lembah Ukur")
     R(K, 136, 196, 7, 30); R('#ffcd75', 137, 197, 5, 28); for (let k = 0; k < 7; k++) R(K, 137, 199 + k * 4, k % 2 ? 2 : 3, 1);
 
-    /* 7. Menara Seratus: malam berbintang, bulan, bukit ungu, menara, perpustakaan */
-    for (let i = 0; i < 46; i++) R(i % 7 ? '#c7d3de' : '#ffcd75', ri(0, W), ri(80, 140), 1, 1);
-    circle(140, 92, 7, '#fff3b0'); circle(143, 90, 6, '#29366f');                                          // bulan sabit
-    for (let px = 0; px < W; px++) { const top = 140 + Math.round(6 * Math.sin(px / 13) + 3 * Math.sin(px / 5)); R('#3b2a5d', px, top, 1, 160 - top); R('#5d275d', px, top, 1, 1); }
+    /* 7. Menara Seratus: dataran batu ungu saat senja — lantai batu, rumput ungu, kristal, lentera, menara, perpustakaan */
+    for (let i = 0; i < 30; i++) { const a = ri(0, W - 8), b = ri(84, 152); if (!free(a, b, -6)) continue; R('#5d3f6e', a - 1, b - 1, 9, 6); R('#9a80b0', a, b, 7, 4); R('#b8a0cc', a, b, 7, 1); } // ubin batu
+    for (let i = 0; i < 60; i++) { const a = ri(0, W), b = ri(82, 154); if (!free(a, b, -8)) continue; R('#4a3a6a', a, b, 1, 2); R('#4a3a6a', a + 2, b + 1, 1, 1); R('#c7a6e0', a + 1, b - 1, 1, 1); }
+    for (let i = 0; i < 7; i++) { const a = ri(6, W - 6), b = ri(88, 150); if (!free(a, b, 0)) continue; // kristal biru
+      for (let k = 0; k < 6; k++) { const w = k < 2 ? k + 1 : Math.max(1, 4 - k); R(K, a - w - 1, b + k, w * 2 + 2, 1); R(k < 3 ? '#73eff7' : '#41a6f6', a - w, b + k, w * 2, 1); } }
+    LANTERNS.forEach(([lx, ly]) => { R(K, lx - 1, ly, 3, 12); R('#566c86', lx, ly + 1, 1, 11); R(K, lx - 3, ly - 6, 7, 7); R('#ffcd75', lx - 2, ly - 5, 5, 5); });
     const [mx, my] = POS.menara;
     R(K, mx - 10, my - 46, 20, 44); R('#94b0c2', mx - 9, my - 45, 18, 42); R('#566c86', mx + 3, my - 45, 6, 42);
     for (let yy = my - 44; yy < my - 4; yy += 6) R('#566c86', mx - 9, yy, 18, 1);                            // susunan batu
@@ -186,21 +189,22 @@ MQ.WorldMap = (() => {
 
   /* ===== Animasi peta: awan, kilau air, kunang-kunang, bintang, bendera, lava, kupu-kupu ===== */
   const hash = n => { const v = Math.sin(n * 127.1) * 43758.5453; return v - Math.floor(v); };
-  function drawAnim(ctx, t) {
+  function drawAnim(ctx, t, m = 0) {
     const R = (col, a, b, w, h) => { ctx.fillStyle = col; ctx.fillRect(Math.round(a), Math.round(b), w, h); };
     // kilau & riak air danau
     for (let i = 0; i < 14; i++) {
       const on = Math.floor(t * 2 + i * 0.7) % 3 === 0, x = 30 + hash(i) * 100, y = 262 + hash(i + 9) * 24;
       if (on) R('#f4f4f4', x, y, 2, 1); else R('#73eff7', x + Math.round(Math.sin(t + i) * 2), y, 3, 1);
     }
-    // kunang-kunang di hutan & malam menara
-    for (let i = 0; i < 12; i++) {
-      const night = i % 2, bx = hash(i + 20) * W, by = night ? 95 + hash(i + 30) * 50 : 405 + hash(i + 30) * 60;
+    // kunang-kunang di hutan
+    for (let i = 0; i < 8; i++) {
+      const bx = hash(i + 20) * W, by = 405 + hash(i + 30) * 60;
       if (Math.floor(t * 3 + i) % 4 === 0) continue;
       R('#ffcd75', bx + Math.sin(t * 0.8 + i) * 4, by + Math.cos(t * 0.6 + i) * 3, 1, 1);
     }
-    // bintang berkelip
-    for (let i = 0; i < 10; i++) if (Math.floor(t * 2 + i * 1.3) % 5 === 0) { const sx = hash(i + 50) * W, sy = 82 + hash(i + 60) * 50; R('#f4f4f4', sx - 1, sy, 3, 1); R('#f4f4f4', sx, sy - 1, 1, 3); }
+    // lentera Menara berkedip + kilau kristal
+    LANTERNS.forEach(([lx, ly], i) => { const on = Math.floor(t * 3 + i) % 5; R(on ? '#fff3b0' : '#ffcd75', lx - 1, ly - 4, 3, 3);
+      if (on) { ctx.fillStyle = 'rgba(255,224,138,0.25)'; ctx.fillRect(lx - 5, ly - 8, 11, 11); } });
     // bendera berkibar di kastil & menara
     const flag = (fx, fy, col) => { const f = Math.floor(t * 4) % 2; R(K, fx, fy, 1, 10); R(col, fx + 1, fy, 6, 2); R(col, fx + 1, fy + 2, 5 + f, 2); R(col, fx + 1 + f, fy + 4, 4, 1); };
     const [kx, ky] = POS.kastil, [mx, my] = POS.menara;
@@ -218,7 +222,7 @@ MQ.WorldMap = (() => {
     for (let i = 0; i < 4; i++) {
       const span = W + 60, cx = ((hash(i + 80) * span + t * (3 + i)) % span) - 30, cy = 60 + i * 130 + hash(i + 90) * 40;
       ctx.fillStyle = 'rgba(26,28,44,0.12)'; ctx.fillRect(Math.round(cx) + 4, Math.round(cy) + 14, 24, 4);
-      ctx.fillStyle = 'rgba(244,244,244,0.85)';
+      ctx.fillStyle = ['rgba(244,244,244,0.85)', 'rgba(120,70,60,0.75)', 'rgba(50,36,80,0.85)'][m]; // putih / asap / awan badai
       [[0, 3, 5], [7, 0, 6], [15, 3, 5]].forEach(([ox, oy, r]) => { for (let dy = -r; dy <= r; dy++) { const w = Math.round(Math.sqrt(r * r - dy * dy)); ctx.fillRect(Math.round(cx + ox - w), Math.round(cy + oy + dy), w * 2 + 1, 1); } });
     }
   }
@@ -251,7 +255,8 @@ MQ.WorldMap = (() => {
     $('modeMenu').hidden = true;
     hb.classList.toggle('on', heroOn());
     hb.classList.toggle('legend', mode() === 2);
-    $('scr-map').classList.toggle('heroMode', heroOn());
+    $('scr-map').classList.toggle('heroMode', mode() === 1);
+    $('scr-map').classList.toggle('legendMode', mode() === 2);
     // medan + jalan dibuat ulang hanya bila tingkat / tempat terbuka berubah
     const key = mode() + '|' + Data.fields.map(f => (isOpen(f) ? 1 : 0)).join('');
     if (!terrain || key !== terrainKey) { terrain = drawTerrain(); terrainKey = key; }
@@ -277,11 +282,47 @@ MQ.WorldMap = (() => {
     requestAnimationFrame(() => hero.scrollIntoView({block: 'center'})); // langsung tampilkan tujuan berikutnya
   };
 
-  /** Gambar satu frame peta: medan (sudah jadi) + lapisan animasi. ~15 fps, hanya saat Peta tampil. */
+  /** Suasana tingkat: Pahlawan = senja merah membara (bara api naik), Legenda = badai ungu (hujan, kabut, kilat). */
+  function drawMood(ctx, t, m) {
+    if (!m) return;
+    ctx.globalCompositeOperation = 'multiply';
+    ctx.fillStyle = m === 1 ? '#ffb48a' : '#6a5a9a'; ctx.fillRect(0, 0, W, H);
+    if (m === 2) { ctx.fillStyle = '#c8b8e8'; ctx.fillRect(0, 0, W, H); } // dua kali: lebih gelap & kelam
+    ctx.globalCompositeOperation = 'source-over';
+    const edge = m === 1 ? '120,20,10' : '20,8,40';
+    for (let k = 0; k < 12; k++) { ctx.fillStyle = `rgba(${edge},${(12 - k) / 12 * 0.4})`; ctx.fillRect(k, 0, 1, H); ctx.fillRect(W - 1 - k, 0, 1, H); }
+    if (m === 1) { // bara api melayang naik
+      for (let i = 0; i < 40; i++) {
+        const p = (t * (0.04 + hash(i + 3) * 0.05) + hash(i)) % 1, x = hash(i + 11) * W + Math.sin(t * 2 + i) * 3, y = H - p * H;
+        ctx.fillStyle = i % 3 ? '#ef7d57' : '#ffcd75'; ctx.fillRect(Math.round(x), Math.round(y), 1, i % 5 ? 1 : 2);
+      }
+      return;
+    }
+    // Legenda: kabut ungu bergerak, hujan miring, kilat sesekali
+    for (let i = 0; i < 6; i++) {
+      const y = (i * 97 + t * 6) % H, x = ((t * 8 + i * 40) % (W + 80)) - 80;
+      ctx.fillStyle = 'rgba(40,20,70,0.22)'; ctx.fillRect(Math.round(x), Math.round(y), 80, 10); ctx.fillRect(Math.round(x) + 10, Math.round(y) + 3, 70, 4);
+    }
+    ctx.fillStyle = 'rgba(199,211,222,0.35)';
+    for (let i = 0; i < 70; i++) {
+      const x = (hash(i) * (W + 40) + t * 30) % (W + 40) - 20, y = (hash(i + 5) * H + t * 140) % H;
+      for (let k = 0; k < 4; k++) ctx.fillRect(Math.round(x - k), Math.round(y + k * 2), 1, 2);
+    }
+    const cyc = t % 6;
+    if (cyc < 0.22) { // kilat
+      ctx.fillStyle = `rgba(244,244,255,${cyc < 0.08 ? 0.45 : 0.18})`; ctx.fillRect(0, 0, W, H);
+      let bx = 30 + hash(Math.floor(t / 6)) * 100, by = 0;
+      ctx.fillStyle = '#fff3b0';
+      while (by < 90) { const nx = bx + (hash(by + Math.floor(t / 6)) - 0.5) * 10; ctx.fillRect(Math.round(Math.min(bx, nx)), by, Math.abs(Math.round(nx - bx)) + 1, 1); ctx.fillRect(Math.round(nx), by, 1, 6); bx = nx; by += 6; }
+    }
+  }
+
+  /** Gambar satu frame peta: medan (sudah jadi) + lapisan animasi + suasana tingkat. ~15 fps, hanya saat Peta tampil. */
   function paint(t) {
-    const ctx = $('mapCanvas').getContext('2d');
+    const ctx = $('mapCanvas').getContext('2d'), m = mode();
     ctx.drawImage(terrain, 0, 0);
-    drawAnim(ctx, t);
+    drawAnim(ctx, t, m);
+    drawMood(ctx, t, m);
   }
   let lastPaint = 0;
   (function loop(ms) {
