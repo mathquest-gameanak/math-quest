@@ -20,6 +20,7 @@ MQ.Cutscene = (() => {
     if (Story.ACTORS[name]) return Sprites.url(Story.ACTORS[name].sprite, Story.ACTORS[name].pal);
     if (Sprites.DATA[name]) return Sprites.url(name);
     const m = Data.monsters[name];
+    if (m && MQ.Pix.has(name)) return MQ.Pix.url(name, 4);   // gambar monster baru
     return m ? Sprites.url(m.sprite, m.pal) : '';
   }
 

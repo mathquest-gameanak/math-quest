@@ -265,7 +265,7 @@ MQ.Battle = (() => {
     els.atkFill.style.width = B.charge / B.interval * 100 + '%';
     els.mName.textContent = (B.mode === 'exam' ? '📝 UJIAN: ' : B.isBoss ? '👑 BOS: ' : B.isKey ? '⭐ KUNCI: ' : B.isMini ? '⭐ MINI BOS: ' : '') + m.name + (B.mode === 'exam' ? '' : ` · Lv ${B.mLv}`);
     // Gambar baru (pixelart.js) bila sudah ada; selain itu sprite lama diperbesar (bos & mini bos lebih besar)
-    const pix = Scene.PIX[id], size = Sprites.rowsOf(Sprites.DATA[m.sprite])[0].length;
+    const pix = MQ.Pix.has(id) ? id : null, size = Sprites.rowsOf(Sprites.DATA[m.sprite])[0].length;
     const big = B.isBoss ? 1.3 : B.isMini || B.isKey ? 1.15 : 1;
     Scene.setMonster(pix ? {pix} : {url: Sprites.url(m.sprite, m.pal), size, mul: 2}, B.stops.length ? B.stage : 0,
                      {scale: pix ? (B.isMini && !f.mini ? 1.2 : 1) : big});

@@ -16,7 +16,7 @@ MQ.Dungeon = (() => {
   const lvText = (d, t) => `Lv ${d.lv[0] + TIERS()[t].lvAdd}–${d.lv[1] + TIERS()[t].lvAdd}`;
 
   function card(d) {
-    const boss = Data.monsters[d.boss], img = `<img class="dImg" src="${Sprites.url(boss.sprite, boss.pal)}" alt="">`;
+    const boss = Data.monsters[d.boss], img = `<img class="dImg" src="${MQ.Pix.has(d.boss) ? MQ.Pix.url(d.boss, 3) : Sprites.url(boss.sprite, boss.pal)}" alt="">`;
     const mat = Object.keys(d.reward.items).find(id => Data.items[id].from), SLOT = {guaPola: 'senjata', kapalKaram: 'pelindung', perpustakaan: 'aksesori'};
     const matLine = mat ? `<p class="dMat">${UI.itemImg(mat)}<span>Bahan khusus <b>${Data.items[mat].name}</b> untuk ${SLOT[d.id] || 'equipment'} kuat</span></p>` : '';
     const head = `<div class="dHead">${img}<div class="dBody"><b>${d.icon} ${d.name}</b><small>📘 ${d.topic}</small>` +

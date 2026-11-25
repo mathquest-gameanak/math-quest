@@ -40,7 +40,7 @@ MQ.Collection = (() => {
     $('bookProgress').textContent = `👾 ${found()}/${MONSTER_IDS.length}`;
     $('bookGrid').innerHTML = MONSTER_IDS.map(id => {
       const m = Data.monsters[id], seen = count(id) > 0;
-      const img = Sprites.url(m.sprite, seen ? m.pal : silhouette(m.sprite));
+      const img = MQ.Pix.has(id) ? MQ.Pix.url(id, 4, !seen) : Sprites.url(m.sprite, seen ? m.pal : silhouette(m.sprite));
       return `<button class="bookCard${seen ? '' : ' unseen'}${id === selected ? ' on' : ''}" data-mon="${id}">` +
              `<img src="${img}" alt=""><small>${seen ? m.name : '???'}</small>${seen ? `<i>${stars(count(id))}</i>` : ''}</button>`;
     }).join('');
@@ -56,7 +56,7 @@ MQ.Collection = (() => {
   function showDetail(id) {
     selected = id;
     const m = Data.monsters[id], n = count(id), seen = n > 0;
-    $('bookImg').src = Sprites.url(m.sprite, seen ? m.pal : silhouette(m.sprite));
+    $('bookImg').src = MQ.Pix.has(id) ? MQ.Pix.url(id, 4, !seen) : Sprites.url(m.sprite, seen ? m.pal : silhouette(m.sprite));
     $('bookName').textContent = seen ? m.name : '???';
     $('bookRole').textContent = role(id);
     const drop = Data.items[m.drop];

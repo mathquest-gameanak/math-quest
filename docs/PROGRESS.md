@@ -200,5 +200,10 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Kulit lama `#ffcd75` (sama dengan warna emas) dipetakan ke `#ffd8b0`. `pixelart.js` dimuat sebelum `hero.js`.
 - Gambar pahlawan di beranda, peta, & cutscene diperbesar (ada ruang kosong untuk topi/senjata). SW `mq-v20`.
 
+### 2026-11-25 — Grafik baru tahap 3: semua 28 monster
+- `js/monsters.js`: fungsi gambar per jenis tubuh (lendir, jamur, kelelawar bersayap runcing bergerigi, kepiting bermata tangkai, hantu berekor gelombang, naga) dengan pilihan ciri (mahkota emas untuk raja, tekstur batu, motif papan catur, helm, bintang, gelembung, sayap daun, sayap halaman buku, cincin kayu, tetesan tinta, mata menyala, alis marah). Raja ±38 piksel, naga 46×40.
+- `MQ.Pix.url(id, skala, siluet)` → gambar persegi untuk Buku Monster (siluet gelap bila belum ditemukan), kartu Dungeon, dan cutscene. Pertarungan memakai `MQ.Pix.has(id)`.
+- SW `mq-v21` (+ monsters.js).
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

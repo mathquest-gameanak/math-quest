@@ -190,5 +190,20 @@ MQ.Pix = (() => {
     return cache[key];
   }
 
-  return {grid, hero, sprite, MONSTERS, K};
+  /** Data-URL PNG sprite yang diperbesar (untuk <img> di menu, Buku Monster, cutscene). */
+  /* Dibuat persegi (rata bawah, di tengah) supaya tidak gepeng di kotak gambar. sil = siluet gelap (monster belum ditemukan). */
+  const urls = {};
+  function url(name, scale = 6, sil = false) {
+    const key = name + '|' + scale + '|' + sil;
+    if (urls[key]) return urls[key];
+    const s = sprite(name, ''), n = Math.max(s.width, s.height), c = document.createElement('canvas');
+    c.width = c.height = n * scale;
+    const ctx = c.getContext('2d'); ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(s, Math.floor((n - s.width) / 2) * scale, (n - s.height) * scale, s.width * scale, s.height * scale);
+    if (sil) { ctx.globalCompositeOperation = 'source-in'; ctx.fillStyle = '#333c57'; ctx.fillRect(0, 0, c.width, c.height); }
+    return (urls[key] = c.toDataURL());
+  }
+  const has = name => !!MONSTERS[name];
+
+  return {grid, hero, sprite, url, has, MONSTERS, K};
 })();
