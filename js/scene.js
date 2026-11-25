@@ -175,34 +175,53 @@ MQ.Scene = (() => {
     if (!im) { im = imgs[src.url] = new Image(); im.src = src.url; }
     return im.complete && im.naturalWidth ? {img: im, w: src.size * src.mul, h: src.size * src.mul} : null;
   }
-  /** Gambar sprite; hide = hitung posisinya saja (kedip saat terkena). Mengembalikan kotaknya di layar. */
+  /** Gambar sprite; hide = hitung posisinya saja. opt: dx, dy, scale, sx/sy (pengali lebar/tinggi untuk pegas),
+      alpha, tint (warna siluet: putih saat terkena, merah saat terluka) & tintA (kekuatan). Mengembalikan kotaknya di layar. */
+  const tints = new Map();
+  function tinted(img, color) {
+    let m = tints.get(img);
+    if (!m) tints.set(img, m = {});
+    if (!m[color]) {
+      const c = document.createElement('canvas'); c.width = img.width || img.naturalWidth; c.height = img.height || img.naturalHeight;
+      const x = c.getContext('2d'); x.imageSmoothingEnabled = false; x.drawImage(img, 0, 0, c.width, c.height);
+      x.globalCompositeOperation = 'source-in'; x.fillStyle = color; x.fillRect(0, 0, c.width, c.height);
+      m[color] = c;
+    }
+    return m[color];
+  }
   function drawSprite(src, x, opt = {}, hide = false) {
     const s = source(src);
     if (!s) return null;
     const sc = opt.scale || 1;
-    const w = Math.round((s.w || s.img.width) * sc), h = Math.round((s.h || s.img.height) * sc);
-    const sx = Math.round(x - camX + (opt.dx || 0)), sy = Math.round(GY + 4 - h + (opt.dy || 0));
+    const w = Math.round((s.w || s.img.width) * sc * (opt.sx || 1)), h = Math.round((s.h || s.img.height) * sc * (opt.sy || 1));
+    const baseW = Math.round((s.w || s.img.width) * sc);
+    const sx = Math.round(x - camX + (opt.dx || 0) - (w - baseW) / 2), sy = Math.round(GY + 4 - h + (opt.dy || 0));
     if (hide) return {sx, sy, w, h};
     ctx.globalAlpha = opt.alpha == null ? 1 : opt.alpha;
-    R('#0003', sx + 3, GY + 3, Math.max(4, w - 6), 2);
+    if (!opt.noShadow) R('#0003', sx + 3, GY + 3, Math.max(4, w - 6), 2);
     ctx.imageSmoothingEnabled = false;
     ctx.drawImage(s.img, sx, sy, w, h);
+    if (opt.tint && opt.tintA > 0) { ctx.globalAlpha = Math.min(1, opt.tintA) * (opt.alpha == null ? 1 : opt.alpha); ctx.drawImage(tinted(s.img, opt.tint), sx, sy, w, h); }
     ctx.globalAlpha = 1;
     return {sx, sy, w, h};
   }
 
   /* ===== Keadaan ===== */
-  const hero = {x: 0, src: null, act: null, actT: 0, walkT: 0, target: null, onArrive: null};
+  const hero = {x: 0, src: null, act: null, actT: 0, walkT: 0, target: null, onArrive: null,
+                strike: null, kb: 0, hurtT: 0, pendingHurt: 0, cheer: 0};
   // mons[0] = monster depan, mons[1] = monster kedua (di belakang, sedikit lebih tinggi). target = yang ditandai ▼.
-  let mons = [null, null], target = 0, slashT = 0, slashCrit = false, slashSlot = 0, parts = [];
+  let mons = [null, null], target = 0, parts = [], fxs = [];
+  let shakeT = 0, shakeA = 0, freeze = 0, flashA = 0, flashC = '#f4f4f4';
   const pair = () => !!(mons[0] && mons[0].alive && mons[1] && mons[1].alive);
   const STEP = 150; // jarak antar titik
+  const ease = k => 1 - Math.pow(1 - k, 3);
 
   /** Mulai tempat baru. stops = jenis tiap titik ('', 'mini', 'boss'), kosong = tanpa jalur (Arena/Ujian). */
   function setup(id, stops) {
     placeId = id; theme = THEMES[id] || THEMES.padang;
     markers = (stops || []).map((type, i) => ({x: 110 + i * STEP, type}));
-    hero.x = markers.length ? 10 : 30; hero.target = null; hero.act = null; mons = [null, null]; target = 0; parts = []; camX = 0;
+    hero.x = markers.length ? 10 : 30; hero.target = null; hero.act = null; hero.strike = null; hero.kb = 0; hero.hurtT = 0; hero.pendingHurt = 0;
+    mons = [null, null]; target = 0; parts = []; fxs = []; camX = 0; shakeT = 0; flashA = 0;
     resize(true);
   }
   const fightX = i => (markers.length ? markers[i].x - 30 : 30);
@@ -214,23 +233,72 @@ MQ.Scene = (() => {
   /** Munculkan monster di titik i. slot 0 = depan, 1 = monster kedua (di belakang). */
   function setMonster(src, i, opt = {}, slot = 0) {
     const x = (markers.length ? markers[i].x : 30 + 30) + 6 + (slot ? 16 : 0);
-    mons[slot] = {src, x, dy: slot ? -9 : 0, act: null, actT: 0, alive: true, deadT: 0, pop: 0.3, scale: (opt.scale || 1) * (slot ? 0.9 : 1)};
+    mons[slot] = {src, x, dy: slot ? -9 : 0, act: null, actT: 0, alive: true, deadT: 0, pop: 0.35, scale: (opt.scale || 1) * (slot ? 0.9 : 1),
+                  kb: 0, hitT: 0, flashT: 0, charge: 0, landed: false};
     if (!slot) mons[1] = null;
   }
   function setTarget(slot) { target = slot; }
+  /** Bar serangan musuh (0..1) dari battle.js: monster bersiap (ancang-ancang) saat hampir penuh. */
+  function charge(slot, k) { if (mons[slot]) mons[slot].charge = k; }
   /** who = 'hero' atau 'mon' (slot = monster ke berapa, bawaan = sasaran). */
-  function act(who, name, dur, slot = target) { const w = who === 'hero' ? hero : mons[slot]; if (w) { w.act = name; w.actT = dur; } }
+  function act(who, name, dur, slot = target) {
+    if (who === 'hero') {
+      // terluka karena serangan monster: tunggu sampai terjangan monster mengenai
+      if (name === 'hurt' && mons.some(m => m && m.act === 'atk')) { hero.pendingHurt = 0.2; return; }
+      if (name === 'hurt') return hurtHero();
+      if (name === 'atk' && hero.strike) return; // serangan diatur slash()
+      hero.act = name; hero.actT = dur;
+      return;
+    }
+    const m = mons[slot];
+    if (!m || name === 'hit') return; // 'hit' terjadi saat pukulan pahlawan mengenai (lihat strike)
+    m.act = name; m.actT = dur; m.actDur = dur; m.charge = 0;
+  }
+  function hurtHero() {
+    hero.hurtT = 0.6; hero.kb = -7; shake(2.5, 0.25); flash('#e43b44', 0.22);
+    burst(hero.x + 14, GY - 12, 8, ['#e43b44', '#f68aa5', '#f4f4f4'], 30);
+  }
+  function shake(a, t) { shakeA = Math.max(shakeA, a); shakeT = Math.max(shakeT, t); }
+  function flash(c, a) { flashC = c; flashA = Math.max(flashA, a); }
+  function burst(x, y, n, cols, speed = 40, grav = 60) {
+    for (let i = 0; i < n; i++) {
+      const a = Math.PI * 2 * (i + Math.random() * 0.5) / n, v = speed * (0.5 + Math.random() * 0.7);
+      parts.push({x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - speed * 0.3, life: 0.35 + Math.random() * 0.35, c: cols[i % cols.length], g: grav, s: Math.random() < 0.3 ? 2 : 1});
+    }
+  }
   function defeat(slot = target) {
     const m = mons[slot];
     if (!m) return;
-    m.alive = false; m.deadT = 0.8;
-    for (let i = 0; i < 16; i++) {
-      const a = Math.PI * 2 * i / 16;
-      parts.push({x: m.x + 12, y: GY - 10 + m.dy, vx: Math.cos(a) * (20 + Math.random() * 25), vy: Math.sin(a) * (20 + Math.random() * 25) - 10,
-                  life: 0.6 + Math.random() * 0.3, c: ['#f4f4f4', '#a7f070', '#ffcd75'][i % 3]});
-    }
+    m.alive = false; m.deadT = 0.75; m.flashT = 0.75;
+    const box = m.box || {sx: m.x - camX, sy: GY - 20, w: 24, h: 24}, cx = box.sx + camX + box.w / 2, cy = box.sy + box.h / 2;
+    setTimeout(() => { // pecah jadi bintang & cahaya setelah berkedip putih
+      burst(cx, cy, 22, ['#f4f4f4', '#a7f070', '#ffcd75', '#73eff7'], 55, 40);
+      fxs.push({k: 'ring', x: cx, y: cy, t: 0, d: 0.4, c: '#fff3b0'});
+      shake(2, 0.2);
+    }, 260);
+    if (!mons.some(o => o && o.alive)) hero.cheer = 0.9; // pahlawan melompat senang
   }
-  function slash(crit, slot = target) { slashT = 0.3; slashCrit = crit; slashSlot = slot; }
+  /** Serangan pahlawan: ancang-ancang → menerjang → MENGENAI (efek) → kembali. fast = KILAT. */
+  function slash(crit, slot = target, fast = false) {
+    hero.strike = {t: 0, slot, crit, fast, hit: false};
+    hero.act = null;
+  }
+  /** Saat senjata mengenai monster: kilat putih, mundur, percikan, getar, jeda sesaat (hit-stop). */
+  function impact(s) {
+    const m = mons[s.slot];
+    if (!m) return;
+    m.hitT = 0.4; m.flashT = 0.1; m.kb = s.crit ? 9 : 5; m.act = null; m.charge = 0;
+    const box = m.box || {sx: m.x - camX, sy: GY - 20, w: 24, h: 24}, cx = box.sx + camX + box.w * 0.4, cy = box.sy + box.h * 0.5;
+    const cols = s.fast ? ['#73eff7', '#f4f4f4', '#41a6f6'] : s.crit ? ['#ffcd75', '#f4f4f4', '#ef7d57'] : ['#f4f4f4', '#ffcd75'];
+    burst(cx, cy, s.crit ? 16 : 9, cols, s.crit ? 60 : 42, 30);
+    fxs.push({k: 'star', x: cx, y: cy, t: 0, d: s.crit ? 0.22 : 0.15, c: s.fast ? '#73eff7' : s.crit ? '#ffcd75' : '#f4f4f4', big: s.crit});
+    fxs.push({k: 'slash', x: cx, y: cy, t: 0, d: 0.25, c: cols[0], crit: s.crit});
+    if (s.crit) fxs.push({k: 'slash', x: cx, y: cy, t: -0.06, d: 0.25, c: '#f4f4f4', crit: true, flip: true});
+    if (s.fast) fxs.push({k: 'bolt', x: cx, y: cy, t: 0, d: 0.3, seed: Math.random() * 99});
+    freeze = s.crit ? 0.11 : 0.06;
+    shake(s.crit ? 4 : 2, s.crit ? 0.3 : 0.18);
+    if (s.crit) flash(s.fast ? '#73eff7' : '#fff3b0', 0.35);
+  }
   /** Monster mana yang diketuk (klik di kanvas)? -1 = bukan monster. */
   function hitTest(clientX, clientY) {
     const r = cv.getBoundingClientRect(), wx = (clientX - r.left) / r.width * VW + camX, wy = (clientY - r.top) / r.height * VH;
@@ -240,65 +308,157 @@ MQ.Scene = (() => {
   }
   const walking = () => hero.target != null;
 
+  /* ===== Efek (bintang benturan, tebasan, petir KILAT, cincin cahaya) ===== */
+  function drawFx(dt) {
+    fxs = fxs.filter(f => (f.t += dt) < f.d);
+    fxs.forEach(f => {
+      if (f.t < 0) return;
+      const k = f.t / f.d, x = Math.round(f.x - camX), y = Math.round(f.y);
+      if (f.k === 'star') { // bintang 4 sudut yang membesar lalu hilang
+        const r = Math.round((f.big ? 10 : 6) * (k < 0.4 ? k / 0.4 : 1 - (k - 0.4) / 0.6 * 0.5));
+        R(f.c, x - r, y, r * 2 + 1, 1); R(f.c, x, y - r, 1, r * 2 + 1);
+        const d = Math.round(r * 0.5); R(f.c, x - d, y - d, d * 2 + 1, d * 2 + 1 > 2 ? 2 : 1); R('#f4f4f4', x - 1, y - 1, 3, 3);
+      } else if (f.k === 'slash') { // tebasan melengkung
+        const rad = f.crit ? 16 : 12, a0 = f.flip ? -2.4 : -0.9, span = 2.0 * Math.min(1, k * 2.2), fade = k > 0.5 ? 1 - (k - 0.5) * 2 : 1;
+        ctx.globalAlpha = fade;
+        for (let a = 0; a < span; a += 0.07) {
+          const aa = f.flip ? a0 - a : a0 + a, th = (f.crit ? 3 : 2) * (1 - Math.abs(a - span / 2) / (span / 2 + 0.01) * 0.6);
+          R(a > span - 0.25 ? '#f4f4f4' : f.c, x + Math.cos(aa) * rad - 4, y + Math.sin(aa) * rad, Math.max(1, Math.round(th)), Math.max(1, Math.round(th)));
+        }
+        ctx.globalAlpha = 1;
+      } else if (f.k === 'bolt') { // petir dari atas (KILAT)
+        if (Math.floor(f.t * 30) % 2) return;
+        let bx = x + 6, by = 0;
+        while (by < y) { const nx = bx + Math.round((hash(by + f.seed) - 0.5) * 8); R('#73eff7', Math.min(bx, nx), by, Math.abs(nx - bx) + 2, 2); R('#f4f4f4', nx, by, 1, 5); bx = nx; by += 5; }
+      } else if (f.k === 'ring') { // cincin cahaya mengembang
+        const r = 4 + k * 18; ctx.globalAlpha = 1 - k;
+        for (let a = 0; a < Math.PI * 2; a += 0.25) R(f.c, x + Math.cos(a) * r, y + Math.sin(a) * r * 0.8, 2, 2);
+        ctx.globalAlpha = 1;
+      } else if (f.k === 'dust') {
+        ctx.globalAlpha = 1 - k; R('#f4f4f4', x - 6 - k * 8, y, 3, 2); R('#f4f4f4', x + 6 + k * 8, y, 3, 2); ctx.globalAlpha = 1;
+      }
+    });
+  }
+
   /* ===== Putaran gambar (hanya saat layar pertarungan tampil) ===== */
   let last = 0;
   function frame(tms) {
     requestAnimationFrame(frame);
     if (!running || !theme) { last = 0; return; }
-    const t = tms / 1000, dt = last ? Math.min(0.05, t - last) : 0;
+    const t = tms / 1000, rdt = last ? Math.min(0.05, t - last) : 0;
     last = t;
+    // jeda benturan (hit-stop): gerak tokoh berhenti sesaat, efek tetap berjalan
+    let dt = rdt;
+    if (freeze > 0) { freeze -= rdt; dt = 0; }
     if (hero.target != null) {
       hero.x = Math.min(hero.target, hero.x + 42 * dt);
       hero.walkT += dt;
       if (hero.x >= hero.target) { hero.target = null; const cb = hero.onArrive; hero.onArrive = null; if (cb) cb(); }
     }
-    camX += ((hero.x - VW * (pair() ? 0.04 : 0.12)) - camX) * Math.min(1, dt * 4); // dua monster: kamera sedikit ke kanan
+    camX += ((hero.x - VW * (pair() ? 0.04 : 0.12)) - camX) * Math.min(1, rdt * 4); // dua monster: kamera sedikit ke kanan
     camX = Math.max(0, camX);
     [hero, mons[0], mons[1]].forEach(w => { if (w && w.actT > 0) { w.actT -= dt; if (w.actT <= 0) w.act = null; } });
+    if (hero.pendingHurt > 0 && (hero.pendingHurt -= dt) <= 0) hurtHero();
+    hero.hurtT = Math.max(0, hero.hurtT - dt); hero.cheer = Math.max(0, hero.cheer - dt);
+    hero.kb *= Math.pow(0.0005, dt);
+
+    // getar layar (CSS, supaya latar ikut bergetar)
+    if (shakeT > 0) {
+      shakeT -= rdt;
+      const a = shakeA * Math.max(0, shakeT) / 0.3 * sc;
+      cv.style.transform = `translate(${Math.round((Math.random() - 0.5) * 2 * a)}px, ${Math.round((Math.random() - 0.5) * 2 * a)}px)`;
+      if (shakeT <= 0) { cv.style.transform = ''; shakeA = 0; }
+    }
 
     drawBackground(t);
+
+    // ----- monster -----
     [1, 0].forEach(i => { // monster kedua digambar dulu (di belakang)
       const mon = mons[i];
       if (!mon) return;
+      mon.kb *= Math.pow(0.002, dt); mon.hitT = Math.max(0, mon.hitT - dt); mon.flashT = Math.max(0, mon.flashT - rdt);
       if (mon.alive) {
+        const wasPop = mon.pop > 0;
         mon.pop = Math.max(0, mon.pop - dt);
-        const bob = Math.floor(t * 2 + i) % 2, shake = mon.act === 'hit' ? (Math.floor(t * 30) % 2 ? 2 : -2) : 0;
-        const lunge = mon.act === 'atk' ? -Math.sin((1 - mon.actT / 0.45) * Math.PI) * 14 : 0;
-        const box = drawSprite(mon.src, mon.x, {dx: shake + lunge, dy: mon.dy - bob, scale: mon.scale * (1 - mon.pop / 0.3 * 0.6)}, mon.act === 'hit' && Math.floor(t * 20) % 3 === 0);
+        if (wasPop && mon.pop === 0 && !mon.landed) { mon.landed = true; fxs.push({k: 'dust', x: mon.x + 12, y: GY + 2, t: 0, d: 0.35}); }
+        // napas pegas: melebar-memendek bergantian
+        const br = Math.sin(t * 3.2 + i * 1.7);
+        let sx = 1 + br * 0.03, sy = 1 - br * 0.04, dx = mon.kb, dy = mon.dy, tint = null, tintA = 0;
+        // ancang-ancang: bar serangan hampir penuh → mundur sedikit, gemetar, berkedip merah
+        if (!mon.act && mon.charge > 0.75) {
+          const c = (mon.charge - 0.75) / 0.25;
+          dx += 3 * c + (Math.floor(t * 24) % 2 ? 0.6 : -0.6) * c; sx *= 1 + 0.06 * c; sy *= 1 - 0.08 * c;
+          tint = '#e43b44'; tintA = (Math.floor(t * 8) % 2 ? 0.35 : 0.1) * c;
+        }
+        if (mon.act === 'atk') { // terjang ke pahlawan: menunduk → melompat memanjang → kembali
+          const k = 1 - mon.actT / (mon.actDur || 0.45), reach = Math.max(10, mon.x - hero.x - 20);
+          if (k < 0.3) { const q = k / 0.3; dx += 4 * q; sx *= 1 + 0.12 * q; sy *= 1 - 0.15 * q; }
+          else if (k < 0.55) { const q = (k - 0.3) / 0.25; dx += 4 - (reach + 4) * ease(q); sx *= 1.18; sy *= 0.9; dy -= Math.sin(q * Math.PI) * 6; }
+          else { const q = (k - 0.55) / 0.45; dx += -reach * (1 - ease(q)); sx *= 1 - 0.05 * (1 - q); }
+        }
+        if (mon.hitT > 0) { const q = mon.hitT / 0.4; sx *= 1 + 0.12 * q; sy *= 1 - 0.14 * q; dx += (Math.floor(t * 40) % 2 ? 1 : -1) * q * 1.5; }
+        if (mon.flashT > 0) { tint = '#f4f4f4'; tintA = 1; }
+        const pop = mon.pop > 0 ? 1 - mon.pop / 0.35 : 1, popS = pop < 1 ? 0.3 + 0.7 * ease(pop) + Math.sin(pop * Math.PI) * 0.15 : 1;
+        const box = drawSprite(mon.src, mon.x, {dx, dy: dy - (pop < 1 ? Math.sin(pop * Math.PI) * 10 : 0), scale: mon.scale * popS, sx, sy, tint, tintA});
         if (box) mon.box = box;
+        if (!mon.act && mon.charge > 0.85 && box && Math.floor(t * 6) % 2) { // tanda ! sebelum menyerang
+          const ax = box.sx + box.w - 2, ay = box.sy - 6;
+          R(K, ax - 1, ay - 1, 5, 9); R('#ffcd75', ax, ay, 3, 5); R('#ffcd75', ax, ay + 6, 3, 1);
+        }
         if (pair() && i === target && mon.box && Math.floor(t * 3) % 2) { // tanda sasaran ▼ di atas kepala
           const ax = Math.round(mon.box.sx + mon.box.w / 2 - 3), ay = mon.box.sy - 8;
           R(K, ax - 1, ay - 1, 9, 6); R('#ffcd75', ax, ay, 7, 2); R('#ffcd75', ax + 1, ay + 2, 5, 1); R('#ffcd75', ax + 2, ay + 3, 3, 1); R('#ffcd75', ax + 3, ay + 4, 1, 1);
         }
       } else if (mon.deadT > 0) {
-        mon.deadT -= dt;
-        const k = Math.max(0.05, mon.deadT / 0.8);
-        drawSprite(mon.src, mon.x + 12 * (1 - k), {scale: mon.scale * k, alpha: k, dy: mon.dy});
+        mon.deadT -= rdt;
+        // berkedip putih, menggembung, lalu pecah (partikel dari defeat())
+        const k = mon.deadT / 0.75;
+        if (k > 0.4) drawSprite(mon.src, mon.x, {dx: mon.kb, dy: mon.dy, scale: mon.scale * (1 + (1 - k) * 0.35), sx: 1 + (1 - k) * 0.2, sy: 1 - (1 - k) * 0.1,
+                                                 tint: '#f4f4f4', tintA: Math.floor(mon.deadT * 20) % 2 ? 1 : 0.4, noShadow: true});
       }
     });
+
+    // ----- pahlawan -----
     if (hero.src) {
-      const walk = hero.target != null, frm = hero.act === 'atk' ? 'atk' : hero.act === 'hurt' ? 'hurt' : walk ? (Math.floor(hero.walkT * 7) % 2 ? 'walk1' : 'walk2') : 'idle';
-      const dash = hero.act === 'atk' ? Math.sin((1 - hero.actT / 0.35) * Math.PI) * 10 : 0;
-      const animated = hero.src.pix || hero.src.draw; // gambar baru punya langkah kaki sendiri
-      const bob = walk && !animated ? -(Math.floor(hero.walkT * 7) % 2) : !walk && !hero.act ? -(Math.floor(t * 1.5) % 2) : 0;
-      if (!(hero.act === 'hurt' && Math.floor(t * 16) % 2)) drawSprite(Object.assign({}, hero.src, {frame: frm}), hero.x, {dx: dash, dy: bob});
+      const walk = hero.target != null, s = hero.strike;
+      let frm = walk ? (Math.floor(hero.walkT * 7) % 2 ? 'walk1' : 'walk2') : 'idle', dx = hero.kb, dy = 0, sx = 1, sy = 1;
+      if (s) { // ancang-ancang 0–0.12 → terjang 0.12–0.24 → kena → tahan → kembali (total 0.55 detik)
+        s.t += dt;
+        const m = mons[s.slot], reach = m ? Math.max(8, m.x - hero.x - 18) : 10;
+        if (s.t < 0.12) { const q = s.t / 0.12; dx -= 3 * q; sx = 1 + 0.08 * q; sy = 1 - 0.1 * q; }
+        else if (s.t < 0.24) {
+          const q = (s.t - 0.12) / 0.12; dx += -3 + (reach + 3) * ease(q); frm = 'atk'; sx = 1.12; sy = 0.92;
+          if (Math.floor(s.t * 60) % 2 === 0) parts.push({x: hero.x + dx + 6, y: GY - 8 - Math.random() * 10, vx: -20, vy: 0, life: 0.15, c: '#f4f4f4', g: 0, s: 1}); // garis kecepatan
+        } else if (s.t < 0.36) { dx += reach; frm = 'atk'; if (!s.hit) { s.hit = true; impact(s); } }
+        else if (s.t < 0.55) { const q = (s.t - 0.36) / 0.19; dx += reach * (1 - ease(q)); }
+        else hero.strike = null;
+        // jejak tebasan senjata di depan pahlawan saat terjang & kena
+        if (s.t > 0.16 && s.t < 0.36) {
+          const ax = Math.round(hero.x - camX + dx + 22), ay = GY - 14, prog = Math.min(1, (s.t - 0.16) / 0.14);
+          const col = s.fast ? '#73eff7' : s.crit ? '#ffcd75' : '#f4f4f4';
+          ctx.globalAlpha = 0.8;
+          for (let a = -1.6; a < -1.6 + 2.6 * prog; a += 0.12) R(col, ax + Math.cos(a) * 10, ay + Math.sin(a) * 11, 2, 2);
+          ctx.globalAlpha = 1;
+        }
+      } else if (hero.act === 'atk') { frm = 'atk'; dx += Math.sin((1 - hero.actT / 0.35) * Math.PI) * 10; }
+      if (hero.hurtT > 0) { frm = 'hurt'; const q = hero.hurtT / 0.6; sx = 1 - 0.08 * q; sy = 1 + 0.04 * q; }
+      if (hero.cheer > 0 && !s) { frm = 'happy'; dy -= Math.abs(Math.sin((0.9 - hero.cheer) / 0.45 * Math.PI)) * 7; }
+      else if (!walk && !s && !hero.hurtT && !hero.act) { const br = Math.sin(t * 2.4); sy = 1 + br * 0.03; sx = 1 - br * 0.02; } // bernapas
+      drawSprite(Object.assign({}, hero.src, {frame: frm}), hero.x, {dx, dy, sx, sy,
+        tint: hero.hurtT > 0.3 ? '#e43b44' : null, tintA: hero.hurtT > 0.3 && Math.floor(t * 16) % 2 ? 0.7 : 0});
     }
     drawFront(t);
-    const sm = mons[slashSlot];
-    if (slashT > 0 && sm) {
-      slashT -= dt;
-      const k = 1 - slashT / 0.3, cx = sm.x - camX + 14, cy = GY - 12 + sm.dy;
-      for (let a = -1.2; a < -1.2 + 2.4 * k; a += 0.08) R(slashCrit ? '#ffcd75' : '#f4f4f4', cx + Math.cos(a) * (slashCrit ? 15 : 12), cy + Math.sin(a) * (slashCrit ? 15 : 12), 2, 2);
-    }
-    parts = parts.filter(p => (p.life -= dt) > 0);
-    parts.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 60 * dt; R(p.c, p.x - camX, p.y, 2, 2); });
+    drawFx(rdt);
+    parts = parts.filter(p => (p.life -= rdt) > 0);
+    parts.forEach(p => { p.x += p.vx * rdt; p.y += p.vy * rdt; p.vy += (p.g == null ? 60 : p.g) * rdt; R(p.c, p.x - camX, p.y, p.s || 2, p.s || 2); });
+    if (flashA > 0) { ctx.globalAlpha = flashA; R(flashC, 0, 0, VW, VH); ctx.globalAlpha = 1; flashA = Math.max(0, flashA - rdt * 1.6); }
   }
   requestAnimationFrame(frame);
 
   return {
-    setup, walkTo, setMonster, setTarget, hitTest, act, defeat, slash, walking, PIX, THEMES,
+    setup, walkTo, setMonster, setTarget, hitTest, act, defeat, slash, charge, walking, PIX, THEMES,
     setHero(src) { hero.src = src; },
     start() { running = true; resize(true); },
-    stop() { running = false; }
+    stop() { running = false; cv.style.transform = ''; }
   };
 })();

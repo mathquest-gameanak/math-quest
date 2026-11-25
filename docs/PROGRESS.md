@@ -277,5 +277,11 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 ### 2026-11-26 — Ikon item gaya baru
 - `js/itemart.js` (baru): 27 ikon item 24×24 piksel berbayang + garis tepi + kilau (bahan, ramuan, koin, 7 senjata, 4 pelindung, 5 aksesori), digambar dengan MQ.Pix.grid. `UI.itemImg` memakai gambar baru bila ada (cadangan: ikon lama sprites.js); koin di Pandai Besi & tombol ramuan di pertarungan juga. Ikon senjata yang dipegang pahlawan (hero.js) belum diubah. SW `mq-v36` (+ itemart.js).
 
+### 2026-11-26 — Animasi tarung dipoles
+- `scene.js`: serangan pahlawan = ancang-ancang → menerjang ke monster (garis kecepatan, jejak tebasan senjata) → MENGENAI → kembali. Saat kena: monster berkedip putih, terpental & tergencet, percikan, bintang benturan, tebasan melengkung (kritikal: dua tebasan + kilat layar), petir biru untuk KILAT, jeda sesaat (hit-stop) & layar bergetar.
+- Monster: napas pegas, muncul melompat + debu mendarat; saat bar serangan > 75% bersiap (mundur, gemetar, kedip merah, tanda !); menyerang = menunduk → melompat menerjang → kembali. Pahlawan terluka tepat saat terjangan kena (mundur, kedip merah, layar bergetar, percikan merah).
+- Monster kalah: berkedip putih & menggembung lalu pecah jadi bintang + cincin cahaya; pahlawan melompat senang (frame happy). Pahlawan bernapas saat diam.
+- battle.js: `Scene.slash(crit, slot, fast)` (efek kena diatur scene), `Scene.charge(slot, k)` dari bar serangan. SW `mq-v37`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

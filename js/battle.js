@@ -186,8 +186,9 @@ MQ.Battle = (() => {
     const rate = dt / Math.pow(qTime(), BAL.think.slow); // think.slow 0 = kecepatan musuh tetap normal
     B.charge += rate;
     els.atkFill.style.width = Math.min(100, B.charge / B.interval * 100) + '%';
+    Scene.charge(B.slot, B.charge / B.interval); // monster bersiap menyerang (animasi ancang-ancang)
     const o = B.other && B.other.hp > 0 ? B.other : null; // monster kedua menyerang dengan waktunya sendiri
-    if (o) { o.charge += rate; els.atkFill2.style.width = Math.min(100, o.charge / o.interval * 100) + '%'; }
+    if (o) { o.charge += rate; els.atkFill2.style.width = Math.min(100, o.charge / o.interval * 100) + '%'; Scene.charge(o.slot, o.charge / o.interval); }
     if (B.charge >= B.interval) enemyAttack();
     else if (o && o.charge >= o.interval) enemyAttack(o);
   }
@@ -419,7 +420,7 @@ MQ.Battle = (() => {
       B.hp = Math.max(0, B.hp - dmg);
       crit ? sfx.crit() : sfx.correct();
       sfx.slash();
-      Scene.act('hero', 'atk', 0.35); Scene.act('mon', 'hit', 0.4, B.slot); Scene.slash(crit, B.slot);
+      Scene.slash(crit, B.slot, fast); // pahlawan menerjang; efek benturan saat senjata mengenai (scene.js)
       showFloat(exam ? '✔ Benar!' : (fast ? '⚡KILAT! ' : crit ? 'KRITIS! ' : teliti ? '🧠TELITI! ' : '') + '-' + dmg, crit || teliti ? 'crit' : '');
       updateHP(); updateHud();
       later(exam ? examNext : B.hp <= 0 ? defeatMonster : nextQuestion, 750);
