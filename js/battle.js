@@ -1,14 +1,15 @@
 /* Math Quest — layar pertarungan. Dimulai dari peta lewat MQ.Battle.start(tempat).
 
    Empat mode (B.mode):
-     field   : area biasa — tanpa akhir, bos tiap monster ke-5, bos pertama membuka area berikutnya
+     field   : area biasa — jalur 5 titik: 1, 2, ⭐ mini bos, 4, 👑 bos; bos pertama kali membuka area berikutnya; bisa diulang
      arena   : Arena Latihan — seperti field, soal & monster mengikuti level pemain
-     dungeon : beberapa ruang beruntun, HP TIDAK pulih; HP habis = keluar gua; ruang terakhir = bos + peti
+     dungeon : beberapa ruang beruntun (pahlawan berjalan antar ruang), HP TIDAK pulih; HP habis = keluar; ruang terakhir = bos + peti
      exam    : Ujian Naik Kelas — sejumlah soal campuran, musuh tidak menyerang, lulus bila cukup benar
 
    Serangan musuh berwaktu: bar "serangan" terisi selama soal tampil. Saat penuh, musuh menyerang.
    Jeda tiap monster berbeda (Data.styles / monster.spd) × pace tempat. Jawaban salah = musuh langsung menyerang.
-   Waktu berhenti saat animasi jawaban, saat ada pesan, saat soal dibacakan (🔊), dan saat aplikasi tidak terlihat. */
+   Waktu berhenti saat animasi jawaban, saat ada pesan, saat soal dibacakan (🔊), dan saat aplikasi tidak terlihat.
+   Gambar pertarungan (latar bergerak, pahlawan berjalan, monster) digambar oleh scene.js (MQ.Scene). */
 'use strict';
 window.MQ = window.MQ || {};
 
@@ -18,13 +19,14 @@ MQ.Battle = (() => {
   const $ = id => document.getElementById(id);
   const els = {};
   ['scr-battle', 'overlay', 'fastBar', 'fastFill', 'btnExit', 'btnPotion', 'potionCount', 'fieldName', 'lvl', 'heroHpFill', 'heroHpText', 'xpFill', 'xpText',
-   'count', 'combo', 'modes', 'scene', 'mName', 'hpFill', 'hpText', 'atkBar', 'atkFill', 'hero', 'mWrap', 'mImg', 'slash', 'fx',
+   'count', 'combo', 'modes', 'mTop', 'mName', 'hpFill', 'hpText', 'atkBar', 'atkFill', 'fx', 'dots', 'question',
    'qText', 'qView', 'btnSpeak', 'answers'].forEach(id => (els[id] = $(id)));
+  const Scene = MQ.Scene;
 
   /* Status satu pertarungan. run = nomor sesi: dinaikkan saat masuk/keluar,
      sehingga timer dari sesi lama tidak lagi menyentuh layar (lihat later()). */
   const B = {run: 0, field: null, mode: 'field', combo: 0, hp: 0, maxHp: 1, isBoss: false, last: '', q: null, locked: true,
-             room: 0, exam: null, charge: 0, interval: 3, tier: 0, mods: null};
+             room: 0, exam: null, charge: 0, interval: 3, tier: 0, mods: null, stage: 0, stops: [], isMini: false};
   /** Pengubah kesulitan: tingkat dungeon atau Mode Pahlawan (balance.js), selain itu netral. */
   const NONE = {lvAdd: 0, hpMul: 1, dmgMul: 1, speedMul: 1, rewardMul: 1};
   const mods = () => B.mods || NONE;
@@ -32,9 +34,6 @@ MQ.Battle = (() => {
   const kills = () => S.fieldKills[B.field.id] || 0;
   const quest = (type, val) => { if (MQ.Quests) MQ.Quests.track(type, val); }; // misi harian
 
-  /** Putar ulang animasi CSS. */
-  const ANIMS = ['pop', 'hit', 'defeat', 'lunge', 'hurt', 'attack'];
-  function anim(el, cls) { el.classList.remove(...ANIMS); void el.offsetWidth; el.classList.add(cls); }
 
   /* ===== Tampilan ===== */
   function updateHud() {
@@ -51,12 +50,20 @@ MQ.Battle = (() => {
     els.combo.textContent = B.combo >= BAL.combat.comboLabel ? `🔥 KOMBO x${B.combo}!` : B.combo > 0 ? `Beruntun ${B.combo}` : '';
     if (B.mode === 'exam') {
       els.count.textContent = `📝 Soal ${Math.min(B.exam.i + 1, B.exam.qs.length)} dari ${B.exam.qs.length} · Benar ${B.exam.ok}`;
-    } else if (B.mode === 'dungeon') {
-      els.count.textContent = `🕳️ Ruang ${B.room} dari ${B.field.rooms}` + (B.isBoss ? ' · 👑 Bos!' : '');
-    } else {
-      const cur = kills() + 1, bossAt = Math.ceil(cur / 5) * 5; // bos = setiap monster ke-5 di field ini
+    } else if (B.mode === 'arena') {
+      const cur = kills() + 1, bossAt = Math.ceil(cur / 5) * 5; // Arena: bos setiap monster ke-5
       els.count.textContent = B.isBoss ? '👑 Pertarungan bos!' : `Bos setelah ${bossAt - cur} monster lagi`;
-    }
+    } else els.count.textContent = ''; // area & dungeon: kemajuan ditunjukkan bar titik di arena
+    renderDots();
+  }
+
+  /** Bar kemajuan titik/ruang di bawah arena: 1 – 2 – ⭐ – 4 – 👑. */
+  function renderDots() {
+    els.dots.hidden = !B.stops.length;
+    els.dots.innerHTML = B.stops.map((type, i) => {
+      const st = i < B.stage ? 'done' : i === B.stage ? 'now' : '';
+      return (i ? '<i class="dotLine"></i>' : '') + `<span class="dot5 ${st}">${type === 'boss' ? '👑' : type === 'mini' ? '⭐' : i + 1}</span>`;
+    }).join('');
   }
 
   function updateHP() {
@@ -70,7 +77,7 @@ MQ.Battle = (() => {
   function showFloat(text, cls, delay = 0, side = 'monster') {
     const s = document.createElement('span');
     s.className = 'float ' + cls; s.textContent = text;
-    s.style.left = (side === 'hero' ? rand(20, 30) : rand(48, 70)) + '%';
+    s.style.left = (side === 'hero' ? rand(22, 30) : rand(44, 56)) + '%'; // dekat tengah supaya teks panjang tidak terpotong
     s.style.animationDelay = delay + 's';
     s.addEventListener('animationend', () => s.remove());
     els.fx.appendChild(s);
@@ -89,17 +96,19 @@ MQ.Battle = (() => {
   }
   /** Damage serangan musuh: tergantung level tempat & kekuatan monster, dikurangi pertahanan pemain (min 1). */
   function enemyDamage() {
-    return Math.max(1, Math.round(MQ.Calc.monsterDmg(B.mLv, style().power, B.isBoss) * (mods().dmgMul || 1)) - State.def());
+    const power = style().power * (B.isMini && !Data.monsters[B.monId].power ? 1.2 : 1); // mini bos sedikit lebih kuat
+    return Math.max(1, Math.round(MQ.Calc.monsterDmg(B.mLv, power, B.isBoss) * (mods().dmgMul || 1)) - State.def());
   }
   /** Level monster yang akan muncul (lihat rumus di balance.js):
-      area  → naik 1 level tiap levelUpEvery monster dikalahkan di area itu, maks level tertinggi area
+      area  → titik 1 = level awal area, titik 4 = level akhir, bos = level akhir + bonus
       gua   → naik 1 level tiap ruang
       arena → sama dengan level pemain.  Bos mendapat bonus level. */
   function monsterLevel() {
     const M = BAL.monster;
     if (B.mode === 'arena') return S.level + (B.isBoss ? M.bossLevelBonus : 0);
     const [lo, hi] = B.field.lv;
-    const steps = B.mode === 'dungeon' ? B.room - 1 : Math.floor(kills() / M.levelUpEvery);
+    // area: naik merata dari level awal (titik 1) ke level akhir (titik 4); dungeon: +1 tiap ruang
+    const steps = B.mode === 'dungeon' ? B.room - 1 : Math.floor((hi - lo) * Math.min(B.stage, 3) / 3);
     const add = mods().lvAdd, lv = Math.min(hi, lo + steps) + add;
     return B.isBoss ? Math.min(hi + add + M.bossLevelBonus, lv + M.bossLevelBonus) : lv;
   }
@@ -119,8 +128,8 @@ MQ.Battle = (() => {
     B.charge = 0; B.interval = newInterval();
     const dmg = enemyDamage();
     S.hp = Math.max(0, S.hp - dmg);
-    anim(els.mWrap, 'attack'); anim(els.hero, 'hurt');
     sfx.enemy(soundKind()); setTimeout(sfx.hurt, 120); // bunyi serangan khas monster, lalu pahlawan terkena
+    Scene.act('mon', 'atk', 0.45); Scene.act('hero', 'hurt', 0.6);
     showFloat('-' + dmg, 'hurt', 0, 'hero');
     updateHud();
     if (S.hp > 0) return false;
@@ -180,15 +189,45 @@ MQ.Battle = (() => {
     els.btnExit.textContent = B.mode === 'dungeon' ? '◀ Keluar' : '◀ Peta';
     els.modes.hidden = B.mode !== 'arena'; // pilihan jenis soal hanya di Arena Latihan
     els.atkBar.hidden = B.mode === 'exam' || S.settings.santai; // ujian & Mode Santai: musuh tidak menyerang berwaktu
-    els.fx.innerHTML = ''; els.slash.className = '';
+    els.fx.innerHTML = '';
     renderModes();
-    els.hero.src = MQ.Hero.current(); // penampilan + equipment terbaru
+    // Jalur: area = 5 titik, dungeon = ruang-ruangnya, Arena/Ujian = tanpa jalur
+    B.stage = 0;
+    B.stops = B.mode === 'field' ? ['', '', 'mini', '', 'boss']
+      : B.mode === 'dungeon' ? Array.from({length: place.rooms}, (_, i) => (i === place.rooms - 1 ? 'boss' : i + 1 === place.keyRoom ? 'mini' : '')) : [];
     UI.show('battle');
-    spawnMonster(); nextQuestion(); updateHud();
+    Scene.setup(place.id, B.stops);
+    Scene.setHero({url: MQ.Hero.current(), size: 16, mul: 2}); // penampilan + equipment terbaru (gambar baru menyusul di tahap 2)
+    Scene.start();
+    updateHud();
+    goStage();
+  }
+
+  /** Berjalan ke titik/ruang berikutnya, lalu monster muncul. Arena & Ujian: langsung. */
+  function goStage() {
+    B.locked = true;
+    els.mTop.hidden = true;
+    if (!B.stops.length) { els.mTop.hidden = false; spawnMonster(); nextQuestion(); return; }
+    const n = B.stage + 1, type = B.stops[B.stage];
+    els.question.classList.add('walking'); els.answers.classList.add('walking');
+    els.qView.hidden = true; els.fastBar.hidden = true;
+    els.qText.classList.remove('long');
+    els.qText.textContent = type === 'boss' ? '👑 Menuju bos...' : type === 'mini' ? '⭐ Menuju mini bos...' :
+      B.mode === 'dungeon' ? `Masuk ruang ${n}...` : `Berjalan ke titik ${n}...`;
+    els.answers.className = 'walking';
+    els.answers.innerHTML = '<button class="ans">.</button><button class="ans">.</button><button class="ans">.</button><button class="ans">.</button>';
+    renderDots();
+    const r = B.run;
+    Scene.walkTo(B.stage, () => {
+      if (r !== B.run) return; // sudah keluar / mulai ulang
+      els.mTop.hidden = false;
+      spawnMonster(); nextQuestion();
+    });
   }
 
   function exit() {
     B.run++; B.locked = true;
+    Scene.stop();
     if (playSecs >= 1) { State.logDay('t', Math.round(playSecs)); playSecs = 0; } // sisa waktu main yang belum tercatat
     State.save();
     UI.show(B.mode === 'dungeon' ? 'dungeon' : 'map');
@@ -200,12 +239,14 @@ MQ.Battle = (() => {
   /* ===== Monster ===== */
   function spawnMonster() {
     const f = B.field;
-    if (B.mode === 'dungeon') { B.room++; B.isBoss = B.room === f.rooms; }
+    B.isMini = false;
+    if (B.mode === 'dungeon') { B.room = B.stage + 1; B.isBoss = B.room === f.rooms; }
     else if (B.mode === 'exam') B.isBoss = true;
+    else if (B.mode === 'field') { B.isBoss = B.stops[B.stage] === 'boss'; B.isMini = B.stops[B.stage] === 'mini'; }
     else B.isBoss = (kills() + 1) % 5 === 0;
     B.isKey = B.mode === 'dungeon' && !B.isBoss && !!f.key && B.room === f.keyRoom; // monster kunci di tengah dungeon
-    let id = B.isKey ? f.key : f.boss;
-    if (!B.isBoss && !B.isKey) { // monster biasa: acak, jangan sama berturut-turut
+    let id = B.isKey ? f.key : B.isMini && f.mini ? f.mini : f.boss;
+    if (!B.isBoss && !B.isKey && !(B.isMini && f.mini)) { // mini bos tanpa monster khusus = monster biasa yang lebih besar // monster biasa: acak, jangan sama berturut-turut
       const pool = f.mobs.filter(m => m !== B.last);
       id = pool.length ? pool[rand(0, pool.length - 1)] : f.mobs[0];
       B.last = id;
@@ -216,16 +257,18 @@ MQ.Battle = (() => {
       B.maxHp = B.exam.qs.length * 10;
     } else {
       B.mLv = monsterLevel();
-      B.maxHp = Math.round(MQ.Calc.monsterHp(B.mLv, B.isBoss ? 'boss' : B.isKey ? 'key' : '') * (mods().hpMul || 1));
+      B.maxHp = Math.round(MQ.Calc.monsterHp(B.mLv, B.isBoss ? 'boss' : B.isKey || B.isMini ? 'key' : '') * (mods().hpMul || 1));
     }
     B.hp = B.maxHp;
     B.interval = newInterval();
     B.charge = Math.min(0.9, Math.max(0, BAL.monster.startCharge)) * B.interval; // bisa dibuat langsung "siap menyerang"
     els.atkFill.style.width = B.charge / B.interval * 100 + '%';
-    els.mName.textContent = (B.mode === 'exam' ? '📝 UJIAN: ' : B.isBoss ? '👑 BOS: ' : B.isKey ? '⭐ KUNCI: ' : '') + m.name + (B.mode === 'exam' ? '' : ` · Lv ${B.mLv}`);
-    els.mImg.src = Sprites.url(m.sprite, m.pal);
-    els.mWrap.className = B.isBoss ? 'boss' : '';
-    anim(els.mWrap, 'pop');
+    els.mName.textContent = (B.mode === 'exam' ? '📝 UJIAN: ' : B.isBoss ? '👑 BOS: ' : B.isKey ? '⭐ KUNCI: ' : B.isMini ? '⭐ MINI BOS: ' : '') + m.name + (B.mode === 'exam' ? '' : ` · Lv ${B.mLv}`);
+    // Gambar baru (pixelart.js) bila sudah ada; selain itu sprite lama diperbesar (bos & mini bos lebih besar)
+    const pix = Scene.PIX[id], size = Sprites.rowsOf(Sprites.DATA[m.sprite])[0].length;
+    const big = B.isBoss ? 1.3 : B.isMini || B.isKey ? 1.15 : 1;
+    Scene.setMonster(pix ? {pix} : {url: Sprites.url(m.sprite, m.pal), size, mul: 2}, B.stops.length ? B.stage : 0,
+                     {scale: pix ? (B.isMini && !f.mini ? 1.2 : 1) : big});
     updateHP();
     battleMusic();
   }
@@ -246,6 +289,7 @@ MQ.Battle = (() => {
       do { q = Questions.make(spec); } while (B.q && key(q) === key(B.q) && ++tries < 5); // hindari soal kembar
     }
     B.q = q;
+    els.question.classList.remove('walking');
     B.answerTime = 0; els.fastFill.style.width = '100%';
     els.fastBar.hidden = B.mode === 'exam'; // ujian: tanpa kritikal
     els.qText.textContent = q.text;
@@ -291,9 +335,7 @@ MQ.Battle = (() => {
       B.hp = Math.max(0, B.hp - dmg);
       crit ? sfx.crit() : sfx.correct();
       sfx.slash();
-      anim(els.hero, 'lunge');
-      els.slash.className = ''; void els.slash.offsetWidth; els.slash.className = crit ? 'go crit' : 'go';
-      anim(els.mWrap, 'hit');
+      Scene.act('hero', 'atk', 0.35); Scene.act('mon', 'hit', 0.4); Scene.slash(crit);
       showFloat(exam ? '✔ Benar!' : (fast ? '⚡KILAT! ' : crit ? 'KRITIS! ' : '') + '-' + dmg, crit ? 'crit' : '');
       updateHP(); updateHud();
       later(exam ? examNext : B.hp <= 0 ? defeatMonster : nextQuestion, 750);
@@ -305,7 +347,7 @@ MQ.Battle = (() => {
       B.combo = 0;
       sfx.wrong();
       State.logDay('s', 1);
-      if (exam) { anim(els.hero, 'hurt'); B.exam.wrong[q.kind] = (B.exam.wrong[q.kind] || 0) + 1; updateHud(); return later(examNext, 1400); }
+      if (exam) { Scene.act('hero', 'hurt', 0.6); B.exam.wrong[q.kind] = (B.exam.wrong[q.kind] || 0) + 1; updateHud(); return later(examNext, 1400); }
       // Petunjuk bergambar menggantikan gambar soal sebentar, jeda lebih lama agar sempat dilihat
       const hint = q.hint && q.hint();
       if (hint) { els.qView.innerHTML = hint; els.qView.hidden = false; }
@@ -316,7 +358,7 @@ MQ.Battle = (() => {
   /* ===== Monster kalah: XP, hadiah, pesan ===== */
   function defeatMonster() {
     const f = B.field, wasBoss = B.isBoss, wasKey = B.isKey, dungeon = B.mode === 'dungeon';
-    anim(els.mWrap, 'defeat');
+    Scene.defeat(); if (B.stops.length) els.mTop.hidden = true;
     sfx.defeat();
     S.monsters++;
     MQ.Collection.recordKill(B.monId); // Buku Monster
@@ -365,26 +407,29 @@ MQ.Battle = (() => {
     });
     if (firstClear) steps.push(done => MQ.Cutscene.play(`${f.id}-shard`, done)); // cerita: kepingan kristal
     if (wasKey) steps.push(done => MQ.Cutscene.playOnce(`${f.id}-key`, done));   // cerita dungeon: setelah monster kunci
-    if (firstClear) steps.push(done => {
-      const nxt = Data.fields.find(x => x.req === f.id), dun = Data.dungeons.find(x => x.req === f.id);
-      sfx.fanfare();
-      UI.overlay({icon: '🏆', title: 'Area Selesai!', btn: 'Lanjut di sini', cb: done, btn2: 'Ke Peta', cb2: exit,
-        text: `Kamu mengalahkan ${Data.monsters[f.boss].name}! ` + (nxt ? `Tempat baru terbuka: ${nxt.name}. ` : '') +
-              (dun ? `Dungeon baru: ${dun.name} (buka menu 🏰 Dungeon).` : '')});
-    });
-    if (heroClear) steps.push(done => {
-      sfx.fanfare();
-      UI.overlay({icon: '🦸', title: 'Bos Pahlawan Kalah!', btn: 'Lanjut di sini', cb: done, btn2: 'Ke Peta', cb2: exit,
-        text: `Kamu mengalahkan ${Data.monsters[f.boss].name} di Mode Pahlawan ⭐⭐! (${S.heroCleared.length} dari ${State.mainFields().length})`});
-    });
+
     steps.push(done => MQ.Collection.check(done)); // medali baru (jika ada)
     const run = () => {
       const s = steps.shift();
       if (s) return s(run);
       if (dungeon && wasBoss) return dungeonEnd(true);
+      if (B.mode === 'field' && wasBoss) return fieldEnd(firstClear, heroClear);
+      if (B.stops.length) { B.stage++; return goStage(); }
       spawnMonster(); nextQuestion();
     };
     later(run, 900);
+  }
+
+  /* ===== Area selesai (bos titik 5 kalah): ulangi atau ke peta ===== */
+  function fieldEnd(firstClear, heroClear) {
+    const f = B.field, boss = Data.monsters[f.boss].name;
+    const nxt = firstClear && Data.fields.find(x => x.req === f.id), dun = firstClear && Data.dungeons.find(x => x.req === f.id);
+    sfx.fanfare();
+    const text = heroClear ? `Kamu mengalahkan ${boss} di Mode Pahlawan ⭐⭐! (${S.heroCleared.length} dari ${State.mainFields().length})`
+      : `Kamu melewati 5 titik dan mengalahkan ${boss}! ` + (nxt ? `Tempat baru terbuka: ${nxt.name}. ` : '') +
+        (dun ? `Dungeon baru: ${dun.name} (menu 🏰 Dungeon). ` : '') + (firstClear ? '' : 'Ulangi untuk XP, koin & bahan.');
+    UI.overlay({icon: heroClear ? '🦸' : '🏆', title: 'Area Selesai!', btn: 'Ke Peta', cb: () => MQ.Collection.check(exit),
+                btn2: 'Ulangi area', cb2: () => start(f), text});
   }
 
   /* ===== Dungeon selesai (menang) atau HP habis ===== */
@@ -424,7 +469,7 @@ MQ.Battle = (() => {
       return UI.overlay({icon: '📚', title: 'Belum Lulus', btn: 'Coba Lagi', cb: () => start(B.field), btn2: 'Ke Peta', cb2: exit,
         text: `Benar ${ok} dari ${N}. Perlu ${need} untuk lulus. Ayo latihan lagi: ${weak}. Kamu pasti bisa!`});
     }
-    anim(els.mWrap, 'defeat');
+    Scene.defeat();
     const first = S.grade < 2;
     S.grade = Math.max(S.grade, 2);
     if (!S.cleared.includes(B.field.id)) S.cleared.push(B.field.id);
@@ -455,8 +500,6 @@ MQ.Battle = (() => {
     if (!B.locked) nextQuestion(); // saat animasi, soal berikutnya otomatis ikut mode baru
   }));
 
-  /* Gambar latar & pahlawan sekali saja */
-  Sprites.drawField(els.scene);
   els.btnPotion.querySelector('img').src = Sprites.url('potion');
 
   // currentQuestion & state: untuk pengujian otomatis

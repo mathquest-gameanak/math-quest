@@ -20,6 +20,7 @@ MQ.Data = {
   monsters: {
     lendir:         {name: 'Lendir Hijau', lore: 'Lendir Hijau suka melompat sambil menghitung lompatannya. Sayangnya ia sering lupa sudah sampai berapa!', sprite: 'slime', drop: 'lendir'},
     lendirAir:      {name: 'Lendir Air', lore: 'Lendir Air lahir dari embun pagi. Badannya dingin dan memantulkan cahaya matahari.', sprite: 'slime', drop: 'lendir', pal: {g: '#41a6f6', G: '#73eff7', d: '#3b5dc9'}},
+    lendirBunga:    {name: 'Lendir Bunga', lore: 'Lendir Bunga memakai mahkota bunga dan merasa paling cantik di Padang Hitung. Mini bos yang mudah marah!', sprite: 'slime', drop: 'lendir', power: 1.2, pal: {g: '#b06fd0', G: '#f4a3c8', d: '#5d275d'}},
     rajaLendir:     {name: 'Raja Lendir', lore: 'Raja semua lendir. Ia menyimpan kepingan kristal pertama di dalam badannya yang kenyal.', sprite: 'slime', drop: 'lendir', pal: {g: '#ffcd75', G: '#fff3b0', d: '#ef7d57'}},
     jamur:          {name: 'Jamur Nakal', lore: 'Jamur Nakal suka menambah dan mengurangi seenaknya. Alisnya selalu cemberut.', sprite: 'mushroom', drop: 'spora'},
     jamurUngu:      {name: 'Jamur Ungu', lore: 'Jamur Ungu tumbuh di bagian hutan yang paling gelap. Sporanya berkilau ungu.', sprite: 'mushroom', drop: 'spora', pal: {r: '#b06fd0'}},
@@ -118,12 +119,13 @@ MQ.Data = {
   smith: ['pedangPenjumlah', 'kapakPengurang', 'perisaiBatu', 'kalungKoin', 'jimatKilat', 'tongkatBentuk', 'paluPuluhan', 'cincinBintang',
           'pedangKristal', 'perisaiMutiara', 'jimatTinta', 'pedangPahlawan', 'zirahPahlawan', 'mahkotaBijak'],
 
-  /* Field Kelas 1, berurutan. spec.kinds = jenis soal (lihat questions.js GEN);
+  /* Area = jalur 5 titik: 1, 2, ⭐ mini bos (mini, atau monster biasa yang lebih besar), 4, 👑 bos. Bisa diulang.
+     Field Kelas 1, berurutan. spec.kinds = jenis soal (lihat questions.js GEN);
      req = field yang bosnya harus dikalahkan dulu; soon = belum bisa dimainkan;
      pace = pengali jeda serangan musuh (soal yang butuh waktu berpikir → musuh lebih lambat). */
   fields: [
     {id: 'padang', pace: 1.4, name: 'Padang Hitung', icon: '🌼', lv: [1, 4], desc: 'Menghitung & membandingkan sampai 10',
-     spec: {kinds: ['hitung', 'hitung', 'banding'], max: 10}, mobs: ['lendir', 'lendirAir'], boss: 'rajaLendir'},
+     spec: {kinds: ['hitung', 'hitung', 'banding'], max: 10}, mobs: ['lendir', 'lendirAir'], mini: 'lendirBunga', boss: 'rajaLendir'},
     {id: 'hutan', pace: 1.0, name: 'Hutan Tambah-Kurang', icon: '🌲', lv: [4, 8], req: 'padang', desc: 'Tambah & kurang sampai 10',
      spec: {kinds: ['tambah', 'kurang', 'isi'], max: 10}, mobs: ['jamur', 'jamurUngu', 'lendir'], boss: 'rajaJamur'},
     {id: 'bukit', pace: 1.3, name: 'Bukit Bentuk', icon: '⛰️', lv: [7, 11], req: 'hutan', desc: 'Mengenal bentuk & pola',

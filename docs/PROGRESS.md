@@ -189,5 +189,11 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Dibuka dari Orang Tua → 🎨 Contoh tampilan baru. Menunggu pendapat sebelum diterapkan ke game.
 - Orang tua suka (2026-11-25). Arena diperluas: mengisi sisa tinggi layar (HUD, soal & tombol diringkas, bar 5 titik pindah ke dalam arena), skala piksel 3–5× mengikuti tinggi arena (±4× di HP biasa) sehingga tokoh ikut membesar.
 
+### 2026-11-25 — Grafik baru tahap 1: arena besar & jalur 5 titik di game
+- `js/scene.js` (MQ.Scene): kanvas pertarungan bergerak (dipindah dari contoh): latar berlapis + kamera, pahlawan berjalan, monster muncul/terkena/menyerang/meletup, tebasan. Tema warna per tempat (padang, hutan, bukit, danau, lembah, menara malam, kastil senja, arena pasir, gua kristal, kapal bawah air, perpustakaan rak buku). Skala piksel 3–5× dikunci per pertarungan (tinggi arena / 88).
+- `battle.js`: area = 5 titik (`B.stops`/`B.stage`), level naik merata, ⭐ mini bos (data `mini`, Padang = Lendir Bunga baru; area lain = monster biasa lebih besar, HP ×keyHpMul, kekuatan ×1,2), bos titik 5 → `fieldEnd` (Ulangi area / Ke Peta). Dungeon berjalan antar ruang. Arena & Ujian tanpa jalur.
+- Layar pertarungan: arena mengisi sisa tinggi layar, soal & tombol diringkas, bar titik di bawah arena. Sprite baru dipakai bila ada (Lendir, Lendir Air, Lendir Bunga, Raja Lendir); lainnya sprite lama ×2. Pahlawan masih sprite lama (tahap 2).
+- SW `mq-v19` (+ pixelart.js, scene.js).
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

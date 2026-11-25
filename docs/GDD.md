@@ -48,7 +48,7 @@ Sumber: Capaian Pembelajaran Matematika Fase A. **Perlu dicocokkan dengan daftar
 | 6 | Menara Seratus | 16–20 | Puluhan & satuan (ikatan lidi), urutan & membandingkan s/d 100 | Kelelawar Malam, Lendir Ungu · bos Raja Malam |
 | ★ | Kastil Ujian | 18+ | **Ujian Naik Kelas**: campuran semua materi | Bos: Raja Naga Api |
 
-Setiap field punya bos field (setiap monster ke-5) yang menjatuhkan bahan langka.
+Setiap area = **jalur 5 titik**: 1 → 2 → ⭐ mini bos → 4 → 👑 bos area (menjatuhkan bahan langka). Pahlawan berjalan dari titik ke titik di latar bergerak; level musuh naik dari level awal ke level akhir area. Setelah bos kalah: *Ulangi area* atau kembali ke peta. Dungeon memakai cara yang sama (ruang demi ruang). Arena Latihan tetap tanpa akhir (bos tiap monster ke-5).
 
 ### Jenis soal (bertahap dibuat)
 - **Pilihan ganda 4 tombol** (sudah ada): hitungan.

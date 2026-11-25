@@ -499,3 +499,26 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 .heroToggle { margin-left: auto; font-weight: 900; font-size: 13px; padding: 6px 8px; min-height: 36px; background: #566c86; border: 3px solid var(--panel-tepi); white-space: nowrap; }
 .heroToggle.on { background: #b13e53; color: var(--kuning); }
 #scr-map.heroMode #mapCanvas { filter: saturate(1.25) hue-rotate(-12deg) brightness(.92); }
+
+/* ===== Pertarungan: arena besar & jalur titik (tahap 1 grafik baru) ===== */
+#scr-battle.on { height: 100vh; height: 100dvh; gap: 6px; padding: 6px 6px 8px; }
+#scr-battle .hud { padding: 2px 8px; }
+#scr-battle .hud .row + .row, #scr-battle .hud .bar { margin-top: 2px; }
+#scr-battle #arena { flex: 1; min-height: 190px; }
+#scr-battle #mTop { top: 4px; left: 6px; right: 6px; font-size: 14px; padding: 2px 6px; }
+#scr-battle #mTop .bar { height: 12px; margin-top: 1px; }
+#scr-battle #question { flex: none; min-height: 150px; display: flex; flex-direction: column; justify-content: center; padding: 4px; }
+#scr-battle .qLine { min-height: 44px; }
+#scr-battle #qView > * { max-height: 92px; }
+#scr-battle #answers { flex: none; min-height: 140px; gap: 8px; padding: 0 2px; align-content: start; }
+#scr-battle .ans { min-height: 62px; font-size: 32px; padding: 2px 0; }
+#question.walking #qText { font-size: 22px; }
+#question.walking .speak { visibility: hidden; }
+#answers.walking { grid-template-columns: 1fr 1fr; }
+#answers.walking .ans { visibility: hidden; }
+#mTop[hidden] { display: none !important; }
+.dots { position: absolute; left: 0; right: 0; bottom: 4px; z-index: 2; display: flex; gap: 3px; align-items: center; justify-content: center; pointer-events: none; }
+.dot5 { width: 22px; height: 22px; display: grid; place-items: center; font-size: 11px; font-weight: 900; border: 2px solid var(--hitam); background: #566c86; color: #fff; }
+.dot5.done { background: var(--kuning); color: var(--hitam); }
+.dot5.now { background: var(--hijau); animation: bob 1s steps(1) infinite; }
+.dotLine { width: 8px; height: 3px; background: var(--hitam); }
