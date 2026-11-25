@@ -851,3 +851,20 @@ body.skinK #scr-battle #arena { border: 0; border-image: none; }
 #scr-battle #answers.cols3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 #scr-battle #answers.cols3 .ans { font-size: 20px; }
 #scr-battle .bar.heroHp > span { font-size: 10px; letter-spacing: -.3px; }
+
+/* ===== Papan nama & status musuh MELAYANG di atas monsternya (2026-11-26) =====
+   Posisi diatur scene.js tiap frame (left/top dalam px, di tengah atas kotak monster). */
+#scr-battle #mTop, #scr-battle #mTop2, #scr-battle #arena.pair #mTop {
+  width: 150px; right: auto; margin: 0; transform: translateX(-50%); padding: 3px 6px 4px; font-size: 12px; z-index: 2;
+  transition: none; pointer-events: auto; }
+#scr-battle #arena.pair #mTop, #scr-battle #mTop2 { width: 122px; font-size: 11px; }
+#scr-battle #mTop .bar { height: 10px; }
+#scr-battle #mTop .bar > span { font-size: 9px; line-height: 7px; }
+#scr-battle #arena.pair #mTop { z-index: 3; }
+body.skinK #scr-battle #mTop, body.skinK #scr-battle #mTop2 { border: 2px solid #1a1c2c; border-image: none; background: #1a1c2cd0; box-shadow: 0 2px 0 #1a1c2c80; color: #f4f4f4; }
+body.skinK #scr-battle #arena.pair #mTop { border-color: #ffcd75; background: #1a1c2ce0; }
+body.skinK #scr-battle #arena.pair #mTop #mName, body.skinK #scr-battle #arena.pair #mTop::before { color: #ffcd75; }
+body.skinK #scr-battle #mName, body.skinK #scr-battle #mName2 { color: #f4f4f4; }
+/* ekor kecil menunjuk ke monster */
+#scr-battle #mTop::after, #scr-battle #mTop2::after { content: ''; position: absolute; left: 50%; bottom: -7px; margin-left: -5px;
+  border: 5px solid transparent; border-top-color: #1a1c2c; border-bottom: 0; }

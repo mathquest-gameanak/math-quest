@@ -55,16 +55,14 @@ MQ.Scene = (() => {
       const ar = a.getBoundingClientRect(), q = $('qa') || $('question'), hud = document.querySelector('#scr-battle .hud'), md = $('modes');
       let top = 0, bot = a.clientHeight;
       if (q && q.offsetHeight && hud) {
-        const mt = $('mTop');
-        top = Math.max(hud.getBoundingClientRect().bottom, md && md.offsetHeight ? md.getBoundingClientRect().bottom : 0,
-                       mt && mt.offsetHeight ? mt.getBoundingClientRect().bottom : 0) - ar.top;
+        top = Math.max(hud.getBoundingClientRect().bottom, md && md.offsetHeight ? md.getBoundingClientRect().bottom : 0) - ar.top;
         bot = q.getBoundingClientRect().top - ar.top;
       }
       if (bot - top < 140) { top = 0; bot = a.clientHeight; }
       a.style.setProperty('--freeTop', Math.round(top) + 'px');
       a.style.setProperty('--freeBot', Math.round(a.clientHeight - bot) + 'px');
       freeTop = top; freeBot = bot;
-      const dpr = window.devicePixelRatio || 1, byH = (bot - top - 30) / 62, byW = a.clientWidth / 76; // papan nama musuh kini di samping HUD (bukan di ruang dunia)
+      const dpr = window.devicePixelRatio || 1, byH = (bot - top - 56) / 62, byW = a.clientWidth / 76; // papan nama musuh kini di samping HUD (bukan di ruang dunia)
       sc = Math.max(2, Math.min(7, Math.floor(Math.min(byH, byW) * dpr) / dpr));
     }
     VW = Math.max(60, Math.round(a.clientWidth / sc)); VH = Math.max(70, Math.round(a.clientHeight / sc));
@@ -73,7 +71,7 @@ MQ.Scene = (() => {
     if (fresh) GY = GYt;
   }
   /** Garis tanah (piksel dunia) untuk batas bawah ruang kosong bot (CSS px), tidak lebih tinggi dari papan nama + tinggi monster. */
-  const groundFor = bot => Math.max(Math.round((freeTop + 30) / sc) + 40, Math.min(VH - 8, Math.round(bot / sc) - 5));
+  const groundFor = bot => Math.max(Math.round((freeTop + 56) / sc) + 40, Math.min(VH - 8, Math.round(bot / sc) - 5));
   let GYt = 0;
   /** Kotak soal berubah tinggi (soal cerita / gambar / petunjuk): tanah & tokoh ikut naik-turun perlahan, tidak tertutup. */
   function refit() {
@@ -350,6 +348,21 @@ MQ.Scene = (() => {
       return true;
     });
   }
+  /** Papan nama & status musuh melayang tepat di atas kepala monsternya (mTop = sasaran, mTop2 = monster lain). */
+  function placeTags() {
+    const a = $('arena'), kx = a.clientWidth / VW, ky = a.clientHeight / VH;
+    [[$('mTop'), mons[target]], [$('mTop2'), mons[1 - target]]].forEach(([el, m]) => {
+      if (!el || !m || el.hidden) return;
+      const src = source(m.src);
+      if (!src) return;
+      // jangkar tetap (tidak ikut bergoyang/menerjang): ukuran asli sprite di posisi berdirinya
+      const w0 = (src.w || src.img.width) * m.scale, h0 = (src.h || src.img.height) * m.scale;
+      const w = el.offsetWidth || 150, h = el.offsetHeight || 40;
+      const cx = Math.max(w / 2 + 4, Math.min(a.clientWidth - w / 2 - 4, (m.x - camX + w0 / 2) * kx));
+      const top = Math.max(freeTop + 2, (GY + 4 - h0 + m.dy) * ky - h - 10);
+      el.style.left = Math.round(cx) + 'px'; el.style.top = Math.round(top) + 'px';
+    });
+  }
   /** Monster mana yang diketuk (klik di kanvas)? -1 = bukan monster. */
   function hitTest(clientX, clientY) {
     const r = cv.getBoundingClientRect(), wx = (clientX - r.left) / r.width * VW + camX, wy = (clientY - r.top) / r.height * VH;
@@ -504,6 +517,7 @@ MQ.Scene = (() => {
         tint: hero.hurtT > 0.3 ? '#e43b44' : null, tintA: hero.hurtT > 0.3 && Math.floor(t * 16) % 2 ? 0.7 : 0});
     }
     drawFront(t);
+    placeTags();
     drawFx(rdt);
     drawCoins(rdt, t);
     parts = parts.filter(p => (p.life -= rdt) > 0);

@@ -296,5 +296,9 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Atas: HUD pahlawan (kiri, ringkas: ◀, nama tempat, Lv, HP, ramuan, XP) | papan nama musuh (kanan). Bawah: `#qa` = kotak soal (kiri, huruf lebih kecil, tombol 🔊 di bawah soal) | pilihan jawaban 2×2 (kanan). Ruang dunia di tengah jauh lebih tinggi.
 - scene.js: ruang dunia diukur dari HUD/papan nama sampai `#qa`; skala tokoh dibatasi lebar ±76 piksel dunia (sebelumnya 92) → tokoh lebih besar (HP ±4,5×, iPad sampai 7×); monster kedua lebih dekat (+12). Batas minimal lebar kanvas 90 dihapus (membuat gambar terpotong). SW `mq-v40`.
 
+### 2026-11-26 — Papan nama musuh di atas monster
+- `#mTop` (sasaran) & `#mTop2` (monster lain) melayang tepat di atas kepala monsternya: `Scene.placeTags()` tiap frame, jangkar tetap dari ukuran asli sprite (tidak ikut bergoyang/menerjang), dibatasi di dalam layar. Gaya: kotak gelap tembus pandang + ekor penunjuk; sasaran berbingkai kuning saat dua monster.
+- HUD pahlawan tetap di kiri atas. Ruang dunia mulai tepat di bawah HUD (cadangan ±56px untuk papan nama di atas monster). SW `mq-v41`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
