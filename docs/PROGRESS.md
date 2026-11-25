@@ -288,5 +288,9 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Koin dari monster & Peti Teka-teki melompat keluar lalu terbang ke pojok kanan atas (`Scene.coins`).
 - Perbaikan: judul panjang di pita merah (skin Kenney) keluar dari pita → judul panjang satu baris dengan huruf lebih kecil; medali sekarang berjudul nama medalinya + label "MEDALI BARU". SW `mq-v38`.
 
+### 2026-11-26 — Dunia tarung penuh layar
+- Arena pertarungan menutupi seluruh layar; HUD, papan nama monster, kotak soal & jawaban melayang di atasnya. `scene.js resize` mengukur ruang kosong antara HUD dan kotak soal (`--freeTop/--freeBot` di #arena), tanah tepat di atas kotak soal, skala tokoh sebesar mungkin (tinggi ruang & lebar ±92 piksel dunia). Kotak soal berubah tinggi → tanah & tokoh naik-turun perlahan (`refit`, ResizeObserver).
+- Kamera memusatkan pahlawan & monster saat bertarung. HUD & tombol jawaban sedikit lebih ringkas; jalur titik pindah ke bawah papan nama; koin terbang ke pojok kanan atas ruang dunia. SW `mq-v39`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

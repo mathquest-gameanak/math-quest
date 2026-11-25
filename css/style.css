@@ -789,3 +789,27 @@ html.tablet #app { max-width: none; }
 .confetti { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .confetti i { position: absolute; top: -12px; width: 8px; height: 12px; animation: confFall linear both; }
 @keyframes confFall { to { transform: translate(var(--x), 105vh) rotate(var(--r)); } }
+
+/* ===== Dunia tarung penuh layar (2026-11-26): arena di belakang seluruh layar pertarungan,
+   HUD / soal / jawaban melayang di atasnya. scene.js mengukur ruang kosong di antaranya (--freeTop / --freeBot)
+   dan menaruh tanah tepat di atas kotak soal. ===== */
+#scr-battle.on { position: relative; }
+#scr-battle #arena { position: absolute; inset: 0; min-height: 0; border: 0; box-shadow: none; z-index: 0; }
+body.skinK #scr-battle #arena { border: 0; border-image: none; }
+#scr-battle > :not(#arena) { position: relative; z-index: 1; }
+#scr-battle #question { margin-top: auto; min-height: 168px; }
+#scr-battle #mTop { top: calc(var(--freeTop, 110px) + 4px); }
+#scr-battle #mTop2 { top: calc(var(--freeTop, 110px) + 4px); }
+#scr-battle #fx { position: absolute; left: 0; right: 0; top: var(--freeTop, 110px); bottom: var(--freeBot, 330px); pointer-events: none; z-index: 3; }
+#scr-battle #dots { bottom: auto; top: calc(var(--freeTop, 110px) + 60px); } /* jalur titik di bawah papan nama, tidak menutupi kaki tokoh */
+/* HUD ringkas & sedikit tembus pandang supaya dunia terlihat */
+#scr-battle .hud { padding: 2px 6px; opacity: .97; }
+#scr-battle .hud .back { min-height: 30px; padding: 2px 8px; }
+#scr-battle #lvl { font-size: 18px; }
+#scr-battle .bar.heroHp { height: 20px; }
+#scr-battle .hud > .bar { height: 10px; }
+#scr-battle .hud > .bar > span { font-size: 9px; line-height: 7px; }
+#scr-battle .hud .row.small { margin-top: 1px; font-size: 12px; }
+#scr-battle #answers { min-height: 132px; }
+#scr-battle .ans { min-height: 58px; }
+#scr-battle #qText.story { font-size: 19px; }

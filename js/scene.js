@@ -43,21 +43,47 @@ MQ.Scene = (() => {
 
   /* ===== Ukuran ===== */
   let sc = 4; // skala tetap selama satu pertarungan, supaya tokoh tidak berubah ukuran saat tinggi arena berubah
+  let freeTop = 0, freeBot = 0; // batas atas & bawah ruang kosong (atas kotak soal), CSS px dari atas arena
+  /* Dunia penuh layar: arena menutupi seluruh layar pertarungan, HUD di atas & kotak soal di bawah melayang di atasnya.
+     Ruang kosong di antaranya diukur; tanah diletakkan tepat di atas kotak soal, tokoh sebesar mungkin di ruang itu:
+     muat tingginya (papan nama monster ±52px + monster terbesar ±62 piksel dunia) dan lebarnya (pahlawan + monster ±92 piksel dunia).
+     Skala dihitung dalam piksel layar asli (devicePixelRatio) supaya tetap tajam walau bukan bilangan bulat (iPad). */
   function resize(fresh) {
     const a = $('arena');
     if (!a.clientHeight) return;
-    // Skala: setinggi mungkin, tapi tanah (17) + monster terbesar (±58 piksel dunia) harus muat DI BAWAH papan nama monster.
-    // Dihitung dalam piksel layar asli (devicePixelRatio) supaya tetap tajam walau skalanya bukan bilangan bulat (iPad).
     if (fresh) {
-      const dpr = window.devicePixelRatio || 1, top = 50; // tinggi papan nama + bar HP musuh (CSS px)
-      sc = Math.max(2, Math.min(6, Math.floor((a.clientHeight - top) * dpr / 68) / dpr));
+      const ar = a.getBoundingClientRect(), q = $('question'), hud = document.querySelector('#scr-battle .hud'), md = $('modes');
+      let top = 0, bot = a.clientHeight;
+      if (q && q.offsetHeight && hud) {
+        top = Math.max(hud.getBoundingClientRect().bottom, md && md.offsetHeight ? md.getBoundingClientRect().bottom : 0) - ar.top;
+        bot = q.getBoundingClientRect().top - ar.top;
+      }
+      if (bot - top < 140) { top = 0; bot = a.clientHeight; }
+      a.style.setProperty('--freeTop', Math.round(top) + 'px');
+      a.style.setProperty('--freeBot', Math.round(a.clientHeight - bot) + 'px');
+      freeTop = top; freeBot = bot;
+      const dpr = window.devicePixelRatio || 1, byH = (bot - top - 52) / 62, byW = a.clientWidth / 92;
+      sc = Math.max(2, Math.min(7, Math.floor(Math.min(byH, byW) * dpr) / dpr));
     }
     VW = Math.max(90, Math.round(a.clientWidth / sc)); VH = Math.max(70, Math.round(a.clientHeight / sc));
     if (cv.width !== VW || cv.height !== VH) { cv.width = VW; cv.height = VH; }
-    GY = VH - 17;
+    GYt = freeBot ? groundFor(freeBot) : VH - 17;
+    if (fresh) GY = GYt;
+  }
+  /** Garis tanah (piksel dunia) untuk batas bawah ruang kosong bot (CSS px), tidak lebih tinggi dari papan nama + tinggi monster. */
+  const groundFor = bot => Math.max(Math.round((freeTop + 52) / sc) + 40, Math.min(VH - 8, Math.round(bot / sc) - 5));
+  let GYt = 0;
+  /** Kotak soal berubah tinggi (soal cerita / gambar / petunjuk): tanah & tokoh ikut naik-turun perlahan, tidak tertutup. */
+  function refit() {
+    const a = $('arena'), q = $('question');
+    if (!freeBot || !a.clientHeight || !q.offsetHeight) return;
+    const bot = q.getBoundingClientRect().top - a.getBoundingClientRect().top;
+    if (Math.abs(bot - freeBot) < 2) return;
+    freeBot = bot; a.style.setProperty('--freeBot', Math.round(a.clientHeight - bot) + 'px');
+    GYt = groundFor(bot);
   }
   addEventListener('resize', () => resize(true));
-  if (window.ResizeObserver) new ResizeObserver(() => resize(false)).observe($('arena'));
+  if (window.ResizeObserver) { new ResizeObserver(() => resize(false)).observe($('arena')); new ResizeObserver(() => refit()).observe($('question')); }
 
   /* ===== Gambar dasar ===== */
   const hash = n => { const x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); };
@@ -313,7 +339,7 @@ MQ.Scene = (() => {
       let x = c.x - camX, y = c.y;
       if (c.t < c.home) { c.x += c.vx * dt; c.vy += 160 * dt; c.y += c.vy * dt; if (c.y > GY) { c.y = GY; c.vy *= -0.45; } x = c.x - camX; y = c.y; }
       else { // terbang ke dompet
-        const k = Math.min(1, (c.t - c.home) / 0.35), sx = c.x - camX, tx = VW - 8, ty = 6;
+        const k = Math.min(1, (c.t - c.home) / 0.35), sx = c.x - camX, tx = VW - 8, ty = Math.round(freeTop / sc) + 6;
         x = sx + (tx - sx) * k * k; y = c.y + (ty - c.y) * k - Math.sin(k * Math.PI) * 10;
         if (k >= 1) { burst(tx + camX, ty, 3, ['#fff3b0', '#ffcd75'], 20, 0); return false; }
       }
@@ -370,6 +396,7 @@ MQ.Scene = (() => {
     if (!running || !theme) { last = 0; return; }
     const t = tms / 1000, rdt = last ? Math.min(0.05, t - last) : 0;
     last = t;
+    if (GYt && GY !== GYt) { GY += (GYt - GY) * Math.min(1, rdt * 8); if (Math.abs(GYt - GY) < 0.3) GY = GYt; }
     // jeda benturan (hit-stop): gerak tokoh berhenti sesaat, efek tetap berjalan
     let dt = rdt;
     if (freeze > 0) { freeze -= rdt; dt = 0; }
@@ -378,7 +405,11 @@ MQ.Scene = (() => {
       hero.walkT += dt;
       if (hero.x >= hero.target) { hero.target = null; const cb = hero.onArrive; hero.onArrive = null; if (cb) cb(); }
     }
-    camX += ((hero.x - VW * (pair() ? 0.04 : 0.12)) - camX) * Math.min(1, rdt * 4); // dua monster: kamera sedikit ke kanan
+    // kamera: saat berjalan mengikuti pahlawan; saat bertarung memusatkan pahlawan & monster
+    let camT = hero.x - VW * 0.12;
+    const fm = mons.filter(m => m && (m.alive || m.deadT > 0));
+    if (hero.target == null && fm.length) camT = (hero.x + Math.max(...fm.map(m => m.x + 30))) / 2 - VW / 2;
+    camX += (camT - camX) * Math.min(1, rdt * 4);
     camX = Math.max(0, camX);
     [hero, mons[0], mons[1]].forEach(w => { if (w && w.actT > 0) { w.actT -= dt; if (w.actT <= 0) w.act = null; } });
     if (hero.pendingHurt > 0 && (hero.pendingHurt -= dt) <= 0) hurtHero();
