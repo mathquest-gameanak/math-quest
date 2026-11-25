@@ -2,11 +2,11 @@
    Strategi: ambil dari simpanan dulu (cepat & offline), sambil diam-diam mengambil versi terbaru dari internet
    untuk dipakai saat game dibuka berikutnya.
    PENTING: naikkan VERSION setiap kali file game diubah, supaya HP mengganti simpanan lama. */
-const VERSION = 'mq-v23';
+const VERSION = 'mq-v24';
 const FILES = [
   './', './index.html', './manifest.webmanifest', './css/style.css', './css/skin-kenney.css',
   './js/questions.js', './js/save.js', './js/audio.js', './js/sprites.js', './js/visuals.js', './js/data.js',
-  './js/balance.js', './js/hero.js', './js/state.js', './js/screens.js', './js/pixelart.js', './js/monsters.js', './js/scene.js', './js/backgrounds.js', './js/battle.js', './js/shop.js',
+  './js/balance.js', './js/hero.js', './js/state.js', './js/screens.js', './js/pixelart.js', './js/monsters.js', './js/characters.js', './js/scene.js', './js/backgrounds.js', './js/battle.js', './js/shop.js',
   './js/quests.js', './js/parent.js', './js/tuner.js', './js/soundlab.js', './js/create.js', './js/story.js', './js/cutscene.js', './js/collection.js', './js/map.js', './js/dungeon.js', './js/main.js',
   './audio/sfx/back1.mp3', './audio/sfx/book1.mp3', './audio/sfx/book2.mp3', './audio/sfx/book3.mp3', './audio/sfx/bookOpen1.mp3', './audio/sfx/chest1.mp3', './audio/sfx/click1.mp3', './audio/sfx/click2.mp3', './audio/sfx/coin1.mp3', './audio/sfx/coin2.mp3', './audio/sfx/confirm1.mp3', './audio/sfx/confirm2.mp3', './audio/sfx/craft1.mp3', './audio/sfx/craft2.mp3', './audio/sfx/craft3.mp3', './audio/sfx/door1.mp3', './audio/sfx/door2.mp3', './audio/sfx/equip1.mp3', './audio/sfx/equip2.mp3', './audio/sfx/equip3.mp3', './audio/sfx/loot1.mp3', './audio/sfx/slash1.mp3', './audio/sfx/slash2.mp3', './audio/sfx/toggle1.mp3', './audio/sfx/toggle2.mp3',
   './ui/btn-blue.png', './ui/btn-cyan.png', './ui/btn-green.png', './ui/btn-lime.png', './ui/btn-pink.png', './ui/btn-red.png', './ui/btn-yellow.png', './ui/panel.png', './ui/ribbon.png', './ui/steel-light.png', './ui/steel.png', './ui/wood.png',

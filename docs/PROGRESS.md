@@ -215,5 +215,9 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - **Tingkatkan +1..+5** (Pandai Besi → tab ✨ Tingkatkan): `S.upgrades`, `balance.upgrade` (bahan khusus slot × tingkat, koin 10 × tingkat, Mahkota mulai +4; senjata ATK +1, pelindung HP +3 & DEF +½, aksesori krit +2% & krit dmg +5% per tingkat). Soal "sekarang X, naik Y, jadi berapa?". Nama item tampil "+n".
 - Medali baru: Legenda Matematika, Ahli Tempa. Atur Angka: angka Legenda & upgrade. Simpanan v11. SW `mq-v23`.
 
+### 2026-11-25 — Tokoh cerita digambar ulang (grafik baru selesai)
+- `js/characters.js`: Kakek Bilang (botak berjanggut putih, jubah hijau, tongkat), Kiki (burung hantu bermata besar, perut bermotif), Penyihir Kusut (kulit hijau, topi ungu berbintang, tongkat sihir; lucu tidak seram), Momo (tikus tanah berhelm tambang berlampu), Kapten Kumis (kucing oranye bajak laut, penutup mata, kumis panjang), Hantu Buku (berkacamata memeluk buku), Kristal Angka & kepingannya. 32×32, ditampilkan seukuran pahlawan di cutscene.
+- Semua gambar game sekarang memakai gaya baru (MQ.Pix). SW `mq-v24`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

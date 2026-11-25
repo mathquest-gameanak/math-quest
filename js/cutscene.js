@@ -13,10 +13,13 @@ MQ.Cutscene = (() => {
                name: $('csName'), text: $('csText'), portrait: $('csPortrait'), skip: $('csSkip')};
   let steps = [], idx = 0, sceneId = '', onDone = null, typing = null, voice = null, bgNow = '', fullText = '';
 
+  /** Tokoh cerita 32×32 (characters.js): ditampilkan seukuran pahlawan. */
+  const CHARS = new Set(['kakek', 'kiki', 'penyihir', 'momo', 'kapten', 'hantuBuku']);
   const heroName = () => (S.hero && S.hero.name) || 'Pahlawan';
   /** Gambar tokoh: pahlawan (sesuai penampilan & equipment), tokoh cerita, item, atau monster. */
   function actorSrc(name) {
     if (name === 'hero') return MQ.Hero.current();
+    if (MQ.Pix.has(name)) return MQ.Pix.url(name, 4); // tokoh cerita, kristal & monster bergambar baru
     if (Story.ACTORS[name]) return Sprites.url(Story.ACTORS[name].sprite, Story.ACTORS[name].pal);
     if (Sprites.DATA[name]) return Sprites.url(name);
     const m = Data.monsters[name];
@@ -80,7 +83,7 @@ MQ.Cutscene = (() => {
     if (!el) {
       el = new Image();
       el.alt = ''; el.dataset.a = name;
-      el.className = 'csActor enter' + (name === 'crystal' || name === 'shard' ? ' item' : '') + (name === 'naga' ? ' big' : '') + (name === 'hero' ? ' heroNew' : '');
+      el.className = 'csActor enter' + (name === 'crystal' || name === 'shard' ? ' item' : '') + (name === 'naga' ? ' big' : '') + (name === 'hero' || CHARS.has(name) ? ' heroNew' : '');
       el.src = actorSrc(name);
       el.style.left = (pos < 50 ? -25 : 125) + '%';
       els.actors.appendChild(el);
@@ -106,7 +109,7 @@ MQ.Cutscene = (() => {
       Audio.sfx.chest();
     }
     if (kind === 'shards') { // kristal pecah: 6 kepingan terbang ke segala arah
-      const src = Sprites.url('shard');
+      const src = MQ.Pix.url('shard', 4);
       for (let i = 0; i < 6; i++) {
         const img = new Image(); img.className = 'csShard'; img.src = src; img.alt = '';
         const ang = (i / 6) * Math.PI * 2 - Math.PI / 2;
