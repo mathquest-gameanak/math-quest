@@ -166,5 +166,9 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Ditambah ke `skin-kenney.css`: latar cokelat tua, kotak cekung krem di dalam perkamen (slot tas/perlengkapan, ringkasan, isian, pilihan Buat Karakter), kartu Buku Monster & Medali perkamen/emas, bingkai kayu peta & arena, ikon peta (hijau/emas/baja), tombol mode, kotak bicara cutscene, tombol Orang Tua.
 - Teks pendek agar tidak terpotong: info beranda `LV 1 · 💎 0/6`, Buku `👾 0/27`, Medali `🏅 0/22`. SW `mq-v13`.
 
+### 2026-11-25 — Suara pilihan orang tua jadi bawaan
+- `DEFAULT_PICKS` di `audio.js`: benar pizzi01, salah pizzi03, kritikal zap1, terkena plateL, monster kalah nes07, naik level nes00, tombol uiRoll1, ramuan phaserUp3. Serang, medali, peti, koin tetap suara lama.
+- Coba Suara: ★ = bawaan, chip "Suara lama" = suara buatan kode; HP hanya menyimpan yang berbeda dari bawaan. SW `mq-v14`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

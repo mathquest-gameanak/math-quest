@@ -233,11 +233,21 @@ MQ.Audio = (() => {
     } catch (e) { /* suara tidak tersedia */ }
   }
 
-  /* ===== Pilihan suara dari orang tua (Orang Tua → 🎧 Coba Suara) =====
-     picks = {namaEfek: idFile}; file di audio/pilihan/<id>.mp3. Tanpa pilihan = suara bawaan (di atas). */
+  /* ===== Pilihan suara (Orang Tua → 🎧 Coba Suara) =====
+     DEFAULT_PICKS = pilihan bawaan (dipilih orang tua 2026-11-25); file di audio/pilihan/<id>.mp3.
+     HP ini bisa menimpa per efek (localStorage); '-' = pakai suara lama (buatan kode / rekaman di atas). */
+  const DEFAULT_PICKS = {correct: 'pizzi01', wrong: 'pizzi03', crit: 'zap1', hurt: 'plateL', defeat: 'nes07',
+    levelUp: 'nes00', click: 'uiRoll1', potion: 'phaserUp3'};
   const PICK_KEY = 'mathQuest.sfxPick';
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(PICK_KEY) || '{}') || {}; } catch (e) { saved = {}; }
   let picks = {};
-  try { picks = JSON.parse(localStorage.getItem(PICK_KEY) || '{}') || {}; } catch (e) { picks = {}; }
+  const merge = () => {
+    for (const k of Object.keys(saved)) if (saved[k] === DEFAULT_PICKS[k]) delete saved[k]; // sama dengan bawaan = bukan penimpaan
+    picks = Object.assign({}, DEFAULT_PICKS, saved);
+    for (const k of Object.keys(picks)) if (picks[k] === '-') delete picks[k];
+  };
+  merge();
   const pickBuf = {}, pickLoading = {};
   function loadPick(id) {
     if (!ac || !id || pickLoading[id]) return pickLoading[id];
@@ -248,21 +258,26 @@ MQ.Audio = (() => {
   function playBuf(buf) {
     try { const src = ac.createBufferSource(); src.buffer = buf; src.connect(sfxBus); src.start(); return true; } catch (e) { return false; }
   }
-  // Bungkus semua efek: bila ada pilihan yang sudah termuat → putar itu; selain itu → suara bawaan
+  // Bungkus semua efek: bila ada pilihan yang sudah termuat → putar itu; selain itu → suara lama
   const base = {};
   for (const k of Object.keys(sfx)) {
     base[k] = sfx[k];
     sfx[k] = (...a) => { const id = picks[k]; if (id && ac && pickBuf[id] && playBuf(pickBuf[id])) return; return base[k](...a); };
   }
   const choose = {
+    /** Pilihan yang berlaku: {efek: idFile}; efek tanpa entri = suara lama. */
     get: () => Object.assign({}, picks),
+    defaults: () => Object.assign({}, DEFAULT_PICKS),
+    /** id kosong = suara lama. Bila sama dengan bawaan, penimpaan dihapus. */
     set(slot, id) {
-      if (id) picks[slot] = id; else delete picks[slot];
-      try { localStorage.setItem(PICK_KEY, JSON.stringify(picks)); } catch (e) { /* abaikan */ }
-      loadPick(id);
+      const want = id || '-', def = DEFAULT_PICKS[slot] || '-';
+      if (want === def) delete saved[slot]; else saved[slot] = want;
+      try { localStorage.setItem(PICK_KEY, JSON.stringify(saved)); } catch (e) { /* abaikan */ }
+      merge(); loadPick(id);
     },
-    reset() { picks = {}; try { localStorage.removeItem(PICK_KEY); } catch (e) { /* abaikan */ } },
-    /** Dengarkan contoh: id file, atau kosong = suara bawaan efek itu. */
+    changed: () => Object.keys(saved).length,
+    reset() { saved = {}; merge(); try { localStorage.removeItem(PICK_KEY); } catch (e) { /* abaikan */ } },
+    /** Dengarkan contoh: id file, atau kosong = suara lama efek itu. */
     preview(slot, id) {
       unlock();
       if (!id) return base[slot] && base[slot]();

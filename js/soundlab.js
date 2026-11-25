@@ -1,6 +1,6 @@
 /* Math Quest — 🎧 Coba Suara (untuk orang tua).
    Dengarkan kandidat efek suara (Kenney, CC0) di HP lalu pilih. Pilihan disimpan di HP ini (MQ.Audio.choose)
-   dan langsung dipakai di game. "Bawaan" = suara yang sekarang (buatan kode / rekaman sebelumnya). */
+   dan langsung dipakai di game. Tanda ★ = pilihan bawaan; "Suara lama" = suara buatan kode / rekaman sebelumnya. */
 'use strict';
 window.MQ = window.MQ || {};
 
@@ -26,15 +26,15 @@ MQ.SoundLab = (() => {
   ];
 
   function render() {
-    const picks = C().get();
+    const picks = C().get(), defs = C().defaults();
     $('soundList').innerHTML = SLOTS.map(([slot, title, desc, opts]) => {
-      const cur = picks[slot] || '';
-      const chip = (id, label) => `<button class="sChip${cur === id ? ' on' : ''}" data-slot="${slot}" data-id="${id}">▶ ${label}</button>`;
+      const cur = picks[slot] || '', def = defs[slot] || '';
+      const chip = (id, label) => `<button class="sChip${cur === id ? ' on' : ''}" data-slot="${slot}" data-id="${id}">▶ ${label}${def === id ? ' ★' : ''}</button>`;
       return `<div class="panel box soundSlot"><h3>${title}</h3>${desc ? `<p class="note left">${desc}</p>` : ''}` +
-        `<div class="sChips">${chip('', 'Bawaan')}${opts.map(([id, l]) => chip(id, l)).join('')}</div></div>`;
+        `<div class="sChips">${chip('', 'Suara lama')}${opts.map(([id, l]) => chip(id, l)).join('')}</div></div>`;
     }).join('');
-    const n = Object.keys(picks).length;
-    $('soundMsg').textContent = n ? `${n} suara diganti.` : 'Semua memakai suara bawaan.';
+    const n = C().changed();
+    $('soundMsg').textContent = n ? `${n} suara berbeda dari bawaan (★).` : 'Semua memakai suara bawaan (★).';
   }
   UI.renderers.sound = render;
 
@@ -51,7 +51,7 @@ MQ.SoundLab = (() => {
     catch (e) { $('soundMsg').textContent = text; }
   });
   $('soundReset').addEventListener('click', () => {
-    UI.overlay({icon: '🎧', title: 'Kembali ke suara bawaan?', btn: 'Ya', btn2: 'Batal', text: 'Semua pilihan suara dihapus.',
+    UI.overlay({icon: '🎧', title: 'Kembali ke suara bawaan?', btn: 'Ya', btn2: 'Batal', text: 'Semua efek kembali ke pilihan bertanda ★.',
       cb: () => { C().reset(); UI.show('sound'); }});
   });
 
