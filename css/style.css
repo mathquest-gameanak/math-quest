@@ -813,3 +813,41 @@ body.skinK #scr-battle #arena { border: 0; border-image: none; }
 #scr-battle #answers { min-height: 132px; }
 #scr-battle .ans { min-height: 58px; }
 #scr-battle #qText.story { font-size: 19px; }
+
+/* ===== Tata letak tarung berdampingan (2026-11-26) =====
+   Atas: info pahlawan (kiri) | info musuh (kanan). Bawah: soal (kiri) | pilihan jawaban (kanan).
+   Ruang dunia di tengah jadi jauh lebih tinggi → tokoh & animasi lebih besar. */
+#scr-battle .hud { width: calc(50% - 3px); align-self: flex-start; }
+#scr-battle .hud .row:first-child { gap: 4px; }
+#scr-battle .hud .back { font-size: 0; padding: 2px 8px; min-width: 30px; }
+#scr-battle .hud .back::before { content: '◀'; font-size: 14px; }
+#scr-battle .fieldName { font-size: 11px; line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#scr-battle #lvl { font-size: 15px; white-space: nowrap; }
+#scr-battle .hpIcon { font-size: 13px; }
+#scr-battle .potion { padding: 0 4px; }
+#scr-battle .potion img { width: 20px; height: 20px; }
+#scr-battle .hud .row.small { font-size: 11px; }
+#scr-battle #mTop { top: 6px; left: calc(50% + 3px); right: 6px; margin: 0; }
+#scr-battle #arena.pair #mTop { right: 6px; margin-right: 0; }
+#scr-battle #mTop2 { top: calc(var(--freeTop, 110px) + 4px); left: calc(50% + 3px); right: 6px; margin-left: 0; }
+#scr-battle #dots { top: calc(var(--freeTop, 110px) + 6px); }
+#scr-battle #arena.pair #dots { left: 0; right: 50%; }
+/* bawah */
+#scr-battle .qa { margin-top: auto; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 6px; align-items: stretch; min-height: 140px; }
+#scr-battle #question { margin: 0; min-height: 0; padding: 4px 4px 6px; display: flex; flex-direction: column; justify-content: center; }
+#scr-battle .qLine { min-height: 36px; padding: 0 2px; flex-direction: column; gap: 2px; }
+#scr-battle #qText { font-size: 26px; }
+#scr-battle #qText.long { font-size: 19px; }
+#scr-battle #qText.story { font-size: 14px; line-height: 1.25; max-width: none; }
+#scr-battle #question.walking #qText { font-size: 15px; }
+#scr-battle .speak { position: static; margin: 2px auto 0; width: 32px; height: 28px; font-size: 15px; }
+#scr-battle #qView > * { max-height: 70px; }
+#scr-battle #qView svg { max-width: 100%; }
+#scr-battle .thinkTag { font-size: 10px; line-height: 1.15; }
+#scr-battle .fastBar { margin-bottom: 2px; }
+#scr-battle #answers { min-height: 0; gap: 6px; padding: 0; align-content: center; }
+#scr-battle .ans { min-height: 60px; font-size: 26px; padding: 2px 0; }
+#scr-battle .ans svg { width: 38px; height: 38px; }
+#scr-battle #answers.cols3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+#scr-battle #answers.cols3 .ans { font-size: 20px; }
+#scr-battle .bar.heroHp > span { font-size: 10px; letter-spacing: -.3px; }

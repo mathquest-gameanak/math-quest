@@ -292,5 +292,9 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Arena pertarungan menutupi seluruh layar; HUD, papan nama monster, kotak soal & jawaban melayang di atasnya. `scene.js resize` mengukur ruang kosong antara HUD dan kotak soal (`--freeTop/--freeBot` di #arena), tanah tepat di atas kotak soal, skala tokoh sebesar mungkin (tinggi ruang & lebar ±92 piksel dunia). Kotak soal berubah tinggi → tanah & tokoh naik-turun perlahan (`refit`, ResizeObserver).
 - Kamera memusatkan pahlawan & monster saat bertarung. HUD & tombol jawaban sedikit lebih ringkas; jalur titik pindah ke bawah papan nama; koin terbang ke pojok kanan atas ruang dunia. SW `mq-v39`.
 
+### 2026-11-26 — Tata letak tarung berdampingan
+- Atas: HUD pahlawan (kiri, ringkas: ◀, nama tempat, Lv, HP, ramuan, XP) | papan nama musuh (kanan). Bawah: `#qa` = kotak soal (kiri, huruf lebih kecil, tombol 🔊 di bawah soal) | pilihan jawaban 2×2 (kanan). Ruang dunia di tengah jauh lebih tinggi.
+- scene.js: ruang dunia diukur dari HUD/papan nama sampai `#qa`; skala tokoh dibatasi lebar ±76 piksel dunia (sebelumnya 92) → tokoh lebih besar (HP ±4,5×, iPad sampai 7×); monster kedua lebih dekat (+12). Batas minimal lebar kanvas 90 dihapus (membuat gambar terpotong). SW `mq-v40`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

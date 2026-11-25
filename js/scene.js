@@ -52,30 +52,32 @@ MQ.Scene = (() => {
     const a = $('arena');
     if (!a.clientHeight) return;
     if (fresh) {
-      const ar = a.getBoundingClientRect(), q = $('question'), hud = document.querySelector('#scr-battle .hud'), md = $('modes');
+      const ar = a.getBoundingClientRect(), q = $('qa') || $('question'), hud = document.querySelector('#scr-battle .hud'), md = $('modes');
       let top = 0, bot = a.clientHeight;
       if (q && q.offsetHeight && hud) {
-        top = Math.max(hud.getBoundingClientRect().bottom, md && md.offsetHeight ? md.getBoundingClientRect().bottom : 0) - ar.top;
+        const mt = $('mTop');
+        top = Math.max(hud.getBoundingClientRect().bottom, md && md.offsetHeight ? md.getBoundingClientRect().bottom : 0,
+                       mt && mt.offsetHeight ? mt.getBoundingClientRect().bottom : 0) - ar.top;
         bot = q.getBoundingClientRect().top - ar.top;
       }
       if (bot - top < 140) { top = 0; bot = a.clientHeight; }
       a.style.setProperty('--freeTop', Math.round(top) + 'px');
       a.style.setProperty('--freeBot', Math.round(a.clientHeight - bot) + 'px');
       freeTop = top; freeBot = bot;
-      const dpr = window.devicePixelRatio || 1, byH = (bot - top - 52) / 62, byW = a.clientWidth / 92;
+      const dpr = window.devicePixelRatio || 1, byH = (bot - top - 30) / 62, byW = a.clientWidth / 76; // papan nama musuh kini di samping HUD (bukan di ruang dunia)
       sc = Math.max(2, Math.min(7, Math.floor(Math.min(byH, byW) * dpr) / dpr));
     }
-    VW = Math.max(90, Math.round(a.clientWidth / sc)); VH = Math.max(70, Math.round(a.clientHeight / sc));
+    VW = Math.max(60, Math.round(a.clientWidth / sc)); VH = Math.max(70, Math.round(a.clientHeight / sc));
     if (cv.width !== VW || cv.height !== VH) { cv.width = VW; cv.height = VH; }
     GYt = freeBot ? groundFor(freeBot) : VH - 17;
     if (fresh) GY = GYt;
   }
   /** Garis tanah (piksel dunia) untuk batas bawah ruang kosong bot (CSS px), tidak lebih tinggi dari papan nama + tinggi monster. */
-  const groundFor = bot => Math.max(Math.round((freeTop + 52) / sc) + 40, Math.min(VH - 8, Math.round(bot / sc) - 5));
+  const groundFor = bot => Math.max(Math.round((freeTop + 30) / sc) + 40, Math.min(VH - 8, Math.round(bot / sc) - 5));
   let GYt = 0;
   /** Kotak soal berubah tinggi (soal cerita / gambar / petunjuk): tanah & tokoh ikut naik-turun perlahan, tidak tertutup. */
   function refit() {
-    const a = $('arena'), q = $('question');
+    const a = $('arena'), q = $('qa') || $('question');
     if (!freeBot || !a.clientHeight || !q.offsetHeight) return;
     const bot = q.getBoundingClientRect().top - a.getBoundingClientRect().top;
     if (Math.abs(bot - freeBot) < 2) return;
@@ -83,7 +85,7 @@ MQ.Scene = (() => {
     GYt = groundFor(bot);
   }
   addEventListener('resize', () => resize(true));
-  if (window.ResizeObserver) { new ResizeObserver(() => resize(false)).observe($('arena')); new ResizeObserver(() => refit()).observe($('question')); }
+  if (window.ResizeObserver) { new ResizeObserver(() => resize(false)).observe($('arena')); new ResizeObserver(() => refit()).observe($('qa') || $('question')); }
 
   /* ===== Gambar dasar ===== */
   const hash = n => { const x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); };
@@ -258,7 +260,7 @@ MQ.Scene = (() => {
   }
   /** Munculkan monster di titik i. slot 0 = depan, 1 = monster kedua (di belakang). */
   function setMonster(src, i, opt = {}, slot = 0) {
-    const x = (markers.length ? markers[i].x : 30 + 30) + 6 + (slot ? 16 : 0);
+    const x = (markers.length ? markers[i].x : 30 + 30) + 6 + (slot ? 12 : 0);
     mons[slot] = {src, x, dy: slot ? -9 : 0, act: null, actT: 0, alive: true, deadT: 0, pop: 0.35, scale: (opt.scale || 1) * (slot ? 0.9 : 1),
                   kb: 0, hitT: 0, flashT: 0, charge: 0, landed: false};
     if (!slot) mons[1] = null;
