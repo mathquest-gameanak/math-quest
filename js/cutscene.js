@@ -35,12 +35,19 @@ MQ.Cutscene = (() => {
     play(id, done);
   }
 
+  /** Musik bawaan adegan sesuai suasananya; langkah cerita dengan "music" menggantinya di tengah adegan (story.js). */
+  function sceneMusic(id) {
+    if (/-(shard|key|end)$/.test(id) || id === 'ending') return 'csWin';     // menang, kepingan, harta
+    if (/^(guaPola|kapalKaram|perpustakaan)-intro$/.test(id)) return 'dungeon'; // dungeon: misterius
+    if (id === 'kastil-intro') return 'csVillain';
+    return 'csCalm';                                                            // pembuka area, prolog
+  }
   function play(id, done) {
     if (!Story.SCENES[id]) { if (done) done(); return; }
     steps = Story.SCENES[id]; idx = 0; sceneId = id; onDone = done || null; bgNow = '';
     els.actors.innerHTML = ''; els.fx.innerHTML = '';
     els.root.hidden = false;
-    Audio.music.play(/^(kastil-intro|menara-shard)$/.test(id) ? 'boss' : 'home'); // adegan menegangkan pakai musik bos
+    Audio.music.play(steps[0].music || sceneMusic(id));
     show();
   }
 
@@ -50,6 +57,7 @@ MQ.Cutscene = (() => {
     if (st.bg && st.bg !== bgNow) { Story.drawBg(els.bg, st.bg); bgNow = st.bg; }
     if (st.actors) for (const [name, pos] of Object.entries(st.actors)) setActor(name, pos);
     if (st.fx) fx(st.fx);
+    if (st.music && idx > 0) Audio.music.play(st.music); // suasana berganti di tengah adegan
     // Pembicara: nama, potret, dan tokohnya bergoyang
     const name = Story.speakerName(st.who, heroName());
     els.name.textContent = name; els.name.hidden = !name;
@@ -137,6 +145,9 @@ MQ.Cutscene = (() => {
     els.root.hidden = true;
     S.story.seen[sceneId] = true; State.save();
     const cb = onDone; onDone = null;
+    // kembalikan musik layar di belakang adegan (pertarungan mengatur musiknya sendiri)
+    const scr = document.querySelector('.screen.on');
+    if (scr && scr.id !== 'scr-battle') Audio.music.play(scr.id === 'scr-map' ? 'map' : 'home');
     if (cb) cb();
   }
 

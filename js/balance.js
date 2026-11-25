@@ -38,17 +38,20 @@ MQ.Balance = {
     defPerPoint: 0.5,                                            // Pertahanan (dibulatkan ke bawah: 2 poin = −1 damage)
     pointsPerLevel: 1                                            // poin status tiap naik level
   },
+  /* KURVA LEVEL (2026-11-26, hasil main orang tua): Normal ≈ Lv 1–15, Pahlawan ≈ Lv 16–30, Legenda ≈ Lv 31–40.
+     Level monster mengikuti rentang itu (data.js "lv" untuk Normal, heroMode/legendMode "lv" di bawah),
+     dan XP dikurangi bila pemain sudah 2 level di atas monster, jadi level pemain ikut tertahan di rentang tingkatnya. */
   xp: {
     base: 30, perLevel: 15,               // XP untuk naik level = base + perLevel × (level − 1)
-    monsterBase: 8, perMonsterLevel: 2,   // XP dari monster = monsterBase + perMonsterLevel × level monster
+    monsterBase: 5, perMonsterLevel: 3,   // XP dari monster = monsterBase + perMonsterLevel × level monster
     bossMul: 3,                           // bos memberi XP × bossMul
-    penaltyFrom: 3,                       // mulai dikurangi jika pemain ≥ 3 level di atas monster
+    penaltyFrom: 2,                       // mulai dikurangi jika pemain ≥ 2 level di atas monster
     penaltyStep: 0.25, minFactor: 0.1     // tiap level selisih berikutnya −25%, minimal 10%
   },
   monster: {
-    hpBase: 12, hpPerLevel: 3, bossHpMul: 1.5, keyHpMul: 1.3,   // Lv 1 = 15, Lv 10 = 42, Lv 20 = 72
+    hpBase: 12, hpPerLevel: 3.5, bossHpMul: 1.5, keyHpMul: 1.3, // Lv 1 = 16, Lv 15 = 65, Lv 30 = 117, Lv 40 = 152
     hpGrowthPct: 0,              // HP tambahan berlipat: × (1 + %/100) per level di atas 1 (0 = garis lurus)
-    dmgBase: 1.6, dmgPerLevel: 0.35, bossDmgMul: 1.4,           // Lv 1 ≈ 2, Lv 10 ≈ 5, Lv 20 ≈ 9
+    dmgBase: 2, dmgPerLevel: 0.55, bossDmgMul: 1.4,             // Lv 1 ≈ 3, Lv 15 ≈ 10, Lv 30 ≈ 19, Lv 40 ≈ 24
     dmgGrowthPct: 0,             // damage tambahan berlipat per level (0 = garis lurus)
     speedMul: 1,                 // pengali jeda serangan SEMUA musuh (0.5 = dua kali lebih cepat)
     startCharge: 0,              // bar serangan musuh sudah terisi sekian (0–0.9) saat muncul
@@ -67,14 +70,16 @@ MQ.Balance = {
   /* Tingkat dungeon ⭐/⭐⭐/⭐⭐⭐ dan Mode Pahlawan (petualangan utama setelah lulus ujian):
      lvAdd = level monster ditambah (HP, damage & XP ikut naik), hpMul / dmgMul = pengali HP & damage musuh,
      speedMul = pengali jeda serangan (< 1 = lebih cepat), rewardMul = pengali koin & isi peti.
-     Mode Pahlawan sengaja berat: dirancang untuk dikalahkan dengan equipment dari bahan khusus dungeon. */
+     Pahlawan & Legenda memakai "lv: [dari, sampai]": level Normal 1–15 dipetakan ke rentang itu (bukan ditambah).
+     Dungeon ⭐⭐⭐ setara pertengahan Pahlawan: tempat mengumpulkan bahan equipment terbaik untuk Legenda.
+     Legenda sengaja berat: dirancang untuk dikalahkan dengan equipment terbaik dari dungeon + ditingkatkan di Pandai Besi. */
   tiers: [
     {lvAdd: 0, hpMul: 1, dmgMul: 1, speedMul: 1, rewardMul: 1},
-    {lvAdd: 3, hpMul: 1, dmgMul: 1, speedMul: 0.85, rewardMul: 1.5},
-    {lvAdd: 6, hpMul: 1.2, dmgMul: 1.2, speedMul: 0.7, rewardMul: 2}
+    {lvAdd: 7, hpMul: 1, dmgMul: 1, speedMul: 0.85, rewardMul: 1.5},
+    {lvAdd: 16, hpMul: 1.15, dmgMul: 1.15, speedMul: 0.7, rewardMul: 2}
   ],
-  heroMode: {lvAdd: 6, hpMul: 1.4, dmgMul: 1.6, speedMul: 0.7, rewardMul: 2},
-  legendMode: {lvAdd: 12, hpMul: 1.8, dmgMul: 2.2, speedMul: 0.6, rewardMul: 3},  // Legenda: setelah 6 bos Mode Pahlawan
+  heroMode: {lv: [16, 30], hpMul: 1.15, dmgMul: 1.15, speedMul: 0.8, rewardMul: 2},
+  legendMode: {lv: [31, 40], hpMul: 1.3, dmgMul: 1.4, speedMul: 0.65, rewardMul: 3},  // Legenda: setelah lulus Ujian Pahlawan
   /* Dua monster sekaligus: titik (0-based) di area per mode cerita (1 = Pahlawan, 2 = Legenda),
      dan ruang di dungeon per tingkat (⭐⭐: ruang sebelum bos; ⭐⭐⭐: ruang genap). */
   pairs: {story: {1: [3], 2: [1, 3]}},
@@ -120,6 +125,13 @@ MQ.Balance = {
 
 /** Rumus bersama (dipakai pertarungan & pratinjau Atur Angka), supaya keduanya selalu sama. */
 MQ.Calc = {
+  /** Level monster di tingkat cerita: level Normal (1–15) dipetakan ke cfg.lv [dari, sampai]; tanpa lv → + cfg.lvAdd. */
+  storyLv(L, cfg) {
+    if (!cfg) return L;
+    if (!cfg.lv) return L + (cfg.lvAdd || 0);
+    const [a, b] = cfg.lv;
+    return Math.min(b, a + Math.round((L - 1) * (b - a) / 14));
+  },
   /** HP maks & serangan pemain (poin = poin status yang dibagi, eq = tambahan equipment). */
   playerHp(lv, pts, eq) { const P = MQ.Balance.player; return Math.round(P.baseHp + P.hpPerLevel * (lv - 1) + P.hpPerPoint * pts + eq); },
   playerAtk(lv, pts, eq) { const P = MQ.Balance.player; return Math.floor(P.baseAtk + P.atkPerLevel * (lv - 1)) + P.atkPerPoint * pts + eq; },

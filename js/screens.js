@@ -14,7 +14,8 @@ MQ.UI = (() => {
   function show(name) {
     document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === 'scr-' + name));
     if (renderers[name]) renderers[name]();
-    if (name !== 'battle') MQ.Audio.music.play('home'); // menu & peta: lagu ceria; pertarungan diatur battle.js
+    // menu: lagu ceria; Peta Petualangan: mars bersemangat; pertarungan diatur battle.js
+    if (name !== 'battle') MQ.Audio.music.play(name === 'map' ? 'map' : 'home');
     const tabbed = TABS.includes(name);
     $('tabbar').hidden = !tabbed;
     document.body.classList.toggle('hasTabs', tabbed);

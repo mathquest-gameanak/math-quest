@@ -8,6 +8,8 @@
        fx     : efek: shake | flash | sparkle | shards | dark
        who    : yang berbicara (hero, kakek, kiki, penyihir, narator, atau id monster)
        text   : kalimat; {nama} diganti nama pahlawan
+       music  : (pilihan) ganti musik mulai langkah ini: csCalm | csVillain | csSad | csWin | map | boss | dungeon
+                (tanpa ini: musik bawaan adegan, lihat sceneMusic di cutscene.js)
    Id tiap baris untuk rekaman suara = "<adegan>-<nomor>" (mulai 1), mis. "prolog-3".
    Rekaman ditaruh di audio/vo/<id>.mp3 lalu id-nya dimasukkan ke VO di bawah. */
 'use strict';
@@ -25,11 +27,11 @@ MQ.Story = (() => {
     prolog: [
       {bg: 'desa', actors: {kakek: 30, hero: 70, crystal: 50}, who: 'kakek', text: 'Halo, {nama}! Selamat datang di Desa Bilangan.'},
       {who: 'kakek', text: 'Lihat Kristal Angka itu. Kristal itu membuat semua angka di lembah ini rapi dan tertib.'},
-      {bg: 'malam', actors: {kakek: null, hero: null, penyihir: 20}, fx: 'flash', who: 'penyihir', text: 'Hihihi! Aku Penyihir Kusut. Aku TIDAK suka angka yang rapi!'},
+      {bg: 'malam', actors: {kakek: null, hero: null, penyihir: 20}, fx: 'flash', music: 'csVillain', who: 'penyihir', text: 'Hihihi! Aku Penyihir Kusut. Aku TIDAK suka angka yang rapi!'},
       {fx: 'shards', actors: {crystal: null}, who: 'penyihir', text: 'Kristal ini kupecah jadi 6 kepingan! Biar semua angka kacau-balau!'},
-      {bg: 'desa', actors: {penyihir: null, kakek: 30, hero: 70}, fx: 'shake', who: 'kakek', text: 'Oh tidak! Monster-monster jadi nakal karena angkanya kacau.'},
+      {bg: 'desa', actors: {penyihir: null, kakek: 30, hero: 70}, fx: 'shake', music: 'csSad', who: 'kakek', text: 'Oh tidak! Monster-monster jadi nakal karena angkanya kacau.'},
       {who: 'kakek', text: '{nama}, kamu pemberani dan pintar berhitung. Maukah kamu mengumpulkan 6 kepingan kristal?'},
-      {who: 'hero', text: 'Siap, Kek! Aku akan mengumpulkan semuanya!'},
+      {music: 'map', who: 'hero', text: 'Siap, Kek! Aku akan mengumpulkan semuanya!'},
       {actors: {kiki: 50}, fx: 'sparkle', who: 'kiki', text: 'Kuk-kuk! Aku Kiki. Aku akan menemanimu berpetualang!'},
       {who: 'kakek', text: 'Kepingan pertama dibawa Raja Lendir di Padang Hitung. Hati-hati, ya!'}
     ],
@@ -86,21 +88,21 @@ MQ.Story = (() => {
     'menara-shard': [
       {bg: 'menara', actors: {hero: 30, rajaMalam: 72}, who: 'rajaMalam', text: 'Hmm... Kamu benar-benar paham puluhan dan satuan.'},
       {actors: {rajaMalam: null, kiki: 55, shard: 75}, fx: 'sparkle', who: 'kiki', text: 'Keenam! Semua kepingan sudah terkumpul!'},
-      {actors: {penyihir: 78, shard: null}, fx: 'flash', who: 'penyihir', text: 'Grr! Kamu mengumpulkan semua kepinganku?'},
+      {actors: {penyihir: 78, shard: null}, fx: 'flash', music: 'csVillain', who: 'penyihir', text: 'Grr! Kamu mengumpulkan semua kepinganku?'},
       {who: 'penyihir', text: 'Datanglah ke Kastil Ujian kalau berani! Raja Naga Api akan mengujimu!'},
-      {actors: {penyihir: null}, who: 'kiki', text: 'Ayo ke Kastil Ujian! Kalau terasa sulit, berlatihlah dulu di area dan dungeon supaya makin kuat.'}
+      {actors: {penyihir: null}, music: 'map', who: 'kiki', text: 'Ayo ke Kastil Ujian! Kalau terasa sulit, berlatihlah dulu di area dan dungeon supaya makin kuat.'}
     ],
 
     'kastil-intro': [
       {bg: 'kastil', actors: {hero: 25, kiki: 45, penyihir: 80}, fx: 'dark', who: 'penyihir', text: 'Akhirnya kamu datang juga, {nama}!'},
-      {actors: {naga: 70, penyihir: 90}, fx: 'shake', who: 'penyihir', text: 'Raja Naga Api, uji anak itu dengan 12 soal sulit!'},
+      {actors: {naga: 70, penyihir: 90}, fx: 'shake', music: 'boss', who: 'penyihir', text: 'Raja Naga Api, uji anak itu dengan 12 soal sulit!'},
       {who: 'kiki', text: 'Jawab dengan tenang. Di ujian, musuh tidak menyerang. Kamu pasti bisa!'}
     ],
     /* ===== Dungeon bercerita ===== */
     'guaPola-intro': [
-      {bg: 'gua', actors: {hero: 25, kiki: 45, momo: 75}, who: 'momo', text: 'Tolong! Aku Momo si tikus tanah. Keluargaku terkunci di dalam Gua Pola!'},
+      {bg: 'gua', actors: {hero: 25, kiki: 45, momo: 75}, music: 'csSad', who: 'momo', text: 'Tolong! Aku Momo si tikus tanah. Keluargaku terkunci di dalam Gua Pola!'},
       {who: 'momo', text: 'Pintu-pintunya hanya terbuka kalau polanya benar.'},
-      {who: 'kiki', text: 'Ayo bantu Momo! Ingat, HP tidak pulih di dalam gua. Bawa ramuan!'}
+      {music: 'dungeon', who: 'kiki', text: 'Ayo bantu Momo! Ingat, HP tidak pulih di dalam gua. Bawa ramuan!'}
     ],
     'guaPola-key': [
       {bg: 'gua', actors: {hero: 25, penjagaPola: 72}, fx: 'shake', who: 'penjagaPola', text: 'Grrr... Kamu memecahkan pola pintuku!'},
@@ -140,12 +142,12 @@ MQ.Story = (() => {
     ],
 
     ending: [
-      {bg: 'kastil', actors: {hero: 25, kiki: 45, naga: 70, penyihir: 90}, fx: 'shake', who: 'penyihir', text: 'Tidaaak! Semua jawabanmu benar!'},
-      {actors: {naga: null, penyihir: null}, fx: 'flash', who: 'narator', text: 'Penyihir Kusut kabur terbirit-birit. Keenam kepingan bersinar terang...'},
+      {bg: 'kastil', actors: {hero: 25, kiki: 45, naga: 70, penyihir: 90}, fx: 'shake', music: 'csVillain', who: 'penyihir', text: 'Tidaaak! Semua jawabanmu benar!'},
+      {actors: {naga: null, penyihir: null}, fx: 'flash', music: 'csWin', who: 'narator', text: 'Penyihir Kusut kabur terbirit-birit. Keenam kepingan bersinar terang...'},
       {bg: 'desa', actors: {kakek: 30, hero: 70, kiki: 50, crystal: 50}, fx: 'sparkle', who: 'kakek', text: 'Kristal Angka utuh kembali! Terima kasih, {nama}!'},
       {who: 'kakek', text: 'Kamu lulus Kelas 1. Kamu pahlawan Desa Bilangan!'},
       {who: 'kiki', text: 'Kuk-kuk! Lihat, ada jalan baru menuju Kelas 2...'},
-      {who: 'narator', text: 'Bersambung...'}
+      {music: 'csCalm', who: 'narator', text: 'Bersambung...'}
     ]
   };
 

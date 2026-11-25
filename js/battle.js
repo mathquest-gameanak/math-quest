@@ -136,8 +136,9 @@ MQ.Battle = (() => {
     const [lo, hi] = B.field.lv;
     // area: naik merata dari level awal (titik 1) ke level akhir (titik 4); dungeon: +1 tiap ruang
     const steps = B.mode === 'dungeon' ? B.room - 1 : Math.floor((hi - lo) * Math.min(B.stage, 3) / 3);
-    const add = mods().lvAdd, lv = Math.min(hi, lo + steps) + add;
-    return B.isBoss ? Math.min(hi + add + M.bossLevelBonus, lv + M.bossLevelBonus) : lv;
+    // Normal: level apa adanya; dungeon: + lvAdd tingkat; Pahlawan/Legenda: dipetakan ke rentang tingkatnya (balance.js)
+    const base = Math.min(hi, lo + steps), L = B.isBoss ? Math.min(hi + M.bossLevelBonus, base + M.bossLevelBonus) : base;
+    return MQ.Calc.storyLv(L, B.mods);
   }
   /** Jenis bunyi serangan: monster kuat & lambat (batu) berdentum, selain itu mengikuti jenis tubuh. */
   function soundKind(M = B) { const m = Data.monsters[M.monId]; return style(M).power >= 1.4 && m.sprite !== 'dragon' ? 'rock' : m.sprite; }

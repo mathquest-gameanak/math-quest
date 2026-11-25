@@ -149,6 +149,38 @@ MQ.Audio = (() => {
       bass: 'G2 . D3 . G2 . D3 . D3 . A3 . D3 . A3 . C3 . G3 . C3 . G3 . D3 . A3 . D3 . F#3 . ' +
             'G2 . D3 . G2 . D3 . E3 . B3 . C3 . G3 . D3 . A3 . D3 . A3 . G2 . D3 . G2 . - . ',
       drum: 'k h s h k k s h '},
+    /* Peta Petualangan: mars bersemangat, D mayor */
+    map: {bpm: 144,
+      lead: 'D5 . A4 . D5 . F#5 . A5 . . . F#5 . D5 . G5 . B5 . A5 . G5 . F#5 . E5 . D5 . E5 . ' +
+            'D5 . A4 . D5 . F#5 . A5 . . . D6 . A5 . B5 . G5 . E5 . C#5 . D5 . . . - . A4 . ',
+      bass: 'D3 . A3 . D3 . A3 . D3 . A3 . D3 . A3 . G2 . D3 . G2 . D3 . A2 . E3 . A2 . E3 . ' +
+            'D3 . A3 . D3 . A3 . F#2 . C#3 . F#2 . A2 . G2 . D3 . A2 . E3 . D3 . A3 . D3 - - . ',
+      drum: 'k h s h k k s h '},
+    /* ===== Musik cutscene per suasana (cutscene.js memilihnya; langkah cerita boleh menggantinya dengan "music") ===== */
+    csCalm: {bpm: 92, // tenang & penasaran, F mayor
+      lead: 'A4 . . . C5 . . . F5 . . . E5 . D5 . C5 . . . A4 . . . G4 . . . . . . . ' +
+            'A4 . . . C5 . . . F5 . . . G5 . A5 . G5 . . . E5 . C5 . F5 . . . . . . . ',
+      bass: 'F2 . . . C3 . . . A#2 . . . F2 . . . F2 . . . A2 . . . C3 . . . G2 . . . ' +
+            'F2 . . . C3 . . . D3 . . . A#2 . . . C3 . . . C3 . . . F2 . . . C3 . . . ',
+      drum: 'k - - - - - - - '},
+    csVillain: {bpm: 110, // Penyihir Kusut: mengendap-endap & licik, E minor
+      lead: 'E4 - G4 - A#4 - B4 . - - B4 - A#4 - G4 - E4 - G4 - A#4 - B4 . D5 . C5 . B4 . - - ' +
+            'E4 - G4 - A#4 - B4 . - - E5 - D#5 - D5 - C5 - B4 - A#4 - A4 - G4 . F#4 . E4 . - - ',
+      bass: 'E2 - B2 - E2 - B2 - E2 - B2 - E2 - B2 - E2 - B2 - E2 - B2 - G2 - D3 - G2 - B2 - ' +
+            'E2 - B2 - E2 - B2 - C3 - G2 - C3 - G2 - A2 - E2 - A2 - E2 - B2 - F#2 - B2 . . . ',
+      drum: 'k - - h s - - h '},
+    csSad: {bpm: 76, // sedih / kehilangan, A minor (tanpa drum)
+      lead: 'E5 . . . D5 . C5 . B4 . . . A4 . . . C5 . . . B4 . A4 . G#4 . . . . . . . ' +
+            'A4 . . . C5 . E5 . F5 . . . E5 . D5 . C5 . B4 . A4 . G#4 . A4 . . . . . . . ',
+      bass: 'A2 . . . . . . . F2 . . . . . . . D3 . . . . . . . E2 . . . . . . . ' +
+            'A2 . . . . . . . D3 . . . . . . . E2 . . . . . . . A2 . . . . . . . ',
+      drum: ''},
+    csWin: {bpm: 126, // menang & gembira, C mayor
+      lead: 'C5 . C5 . G5 . . . E5 . G5 . C6 . . . A5 . G5 . F5 . E5 . D5 . E5 . G5 . . . ' +
+            'C5 . C5 . G5 . . . E5 . G5 . C6 . D6 . E6 . D6 . C6 . B5 . C6 . . . G5 . - . ',
+      bass: 'C3 . G3 . C3 . G3 . C3 . G3 . E3 . G3 . F2 . C3 . F2 . C3 . G2 . D3 . G2 . B2 . ' +
+            'C3 . G3 . C3 . G3 . A2 . E3 . A2 . E3 . F2 . C3 . G2 . D3 . C3 . G3 . C3 . - . ',
+      drum: 'k h s h k h s h '},
     boss: {bpm: 152, // tegang, A minor
       lead: 'A4 . C5 . E5 . A4 . G4 . B4 . E5 . G4 . F4 . A4 . C5 . F4 . E4 . G#4 . B4 . E5 . ' +
             'A4 A4 C5 . E5 E5 A5 . G5 . E5 . D5 . B4 . C5 . A4 . F4 . A4 . G#4 . . . E4 . . . ',

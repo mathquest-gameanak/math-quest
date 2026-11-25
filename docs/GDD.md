@@ -40,13 +40,13 @@ Sumber: Capaian Pembelajaran Matematika Fase A. **Perlu dicocokkan dengan daftar
 
 | # | Field | Rek. level | Materi | Musuh (usulan) |
 |---|---|---|---|---|
-| 1 | Padang Hitung | 1–4 | Membilang benda s/d 10, membandingkan bilangan (> < =) | Lendir Hijau, Lendir Air · bos Raja Lendir |
-| 2 | Hutan Tambah-Kurang | 4–8 | Tambah & kurang s/d 10, kalimat matematika (`3 + □ = 5`), pasangan bilangan & membuat 10, soal cerita | Jamur Nakal, Jamur Ungu · bos Raja Jamur |
-| 3 | Bukit Bentuk | 7–11 | Bangun datar & ruang, pola (warna/bentuk) | Lendir Batu, Jamur Batu · bos Raja Batu |
-| 4 | Danau Dua Puluh | 10–15 | Tambah, kurang & isi kosong s/d 20, soal cerita s/d 20 | Lendir Air, Kelelawar Ungu · bos Raja Kelelawar |
-| 5 | Lembah Ukur | 13–17 | Membandingkan & mengukur panjang (satuan kotak). Nanti: berat, waktu, data | Kelelawar Daun, Jamur Kayu · bos Raja Jamur Kayu |
-| 6 | Menara Seratus | 16–20 | Puluhan & satuan (ikatan lidi), urutan & membandingkan s/d 100 | Kelelawar Malam, Lendir Ungu · bos Raja Malam |
-| ★ | Kastil Ujian | 18+ | **Ujian Naik Kelas**: campuran semua materi | Bos: Raja Naga Api |
+| 1 | Padang Hitung | 1–3 | Membilang benda s/d 10, membandingkan bilangan (> < =) | Lendir Hijau, Lendir Air · bos Raja Lendir |
+| 2 | Hutan Tambah-Kurang | 3–5 | Tambah & kurang s/d 10, kalimat matematika (`3 + □ = 5`), pasangan bilangan & membuat 10, soal cerita | Jamur Nakal, Jamur Ungu · bos Raja Jamur |
+| 3 | Bukit Bentuk | 5–7 | Bangun datar & ruang, pola (warna/bentuk) | Lendir Batu, Jamur Batu · bos Raja Batu |
+| 4 | Danau Dua Puluh | 7–10 | Tambah, kurang & isi kosong s/d 20, soal cerita s/d 20 | Lendir Air, Kelelawar Ungu · bos Raja Kelelawar |
+| 5 | Lembah Ukur | 9–12 | Membandingkan & mengukur panjang (satuan kotak). Nanti: berat, waktu, data | Kelelawar Daun, Jamur Kayu · bos Raja Jamur Kayu |
+| 6 | Menara Seratus | 11–14 | Puluhan & satuan (ikatan lidi), urutan & membandingkan s/d 100 | Kelelawar Malam, Lendir Ungu · bos Raja Malam |
+| ★ | Kastil Ujian | 15 | **Ujian Naik Kelas**: campuran semua materi | Bos: Raja Naga Api |
 
 Setiap area = **jalur 5 titik**: 1 → 2 → ⭐ mini bos → 4 → 👑 bos area (menjatuhkan bahan langka). Pahlawan berjalan dari titik ke titik di latar bergerak; level musuh naik dari level awal ke level akhir area. Setelah bos kalah: *Ulangi area* atau kembali ke peta. Dungeon memakai cara yang sama (ruang demi ruang). Arena Latihan tetap tanpa akhir (bos tiap monster ke-5).
 
@@ -71,7 +71,7 @@ Dua angka yang **terpisah**:
 - **Kelas** hanya naik lewat **Ujian Naik Kelas**. Lulus ujian membuka wilayah kelas berikutnya.
 
 Aturan agar level tetap seimbang:
-- Field punya **rekomendasi level**. Kelas 1 kira-kira Lv 1–20, kelas 2 Lv 20–40, dan seterusnya. Rentangnya terbentuk dari field, bukan batas keras.
+- Field punya **rekomendasi level**. Kelas 1: **Normal ≈ Lv 1–15, Pahlawan ≈ Lv 16–30, Legenda ≈ Lv 31–40** (ditetapkan orang tua 2026-11-26 setelah bermain). Level monster di Pahlawan/Legenda = level Normal dipetakan ke rentang itu (`heroMode.lv`, `legendMode.lv`). Rentangnya terbentuk dari field, bukan batas keras: XP dikurangi bila pemain ≥ 2 level di atas monster.
 - Musuh yang levelnya jauh di bawah pemain memberi XP lebih sedikit (minimal 1). Anak terdorong maju tanpa dilarang mengulang.
 - Ujian bisa diulang tanpa hukuman. Kalau gagal, game menunjukkan topik yang perlu dilatih.
 - **Tes penempatan** (opsional) di awal: anak yang sudah mahir bisa langsung mulai dari kelas yang lebih tinggi.
@@ -85,8 +85,8 @@ Aturan agar level tetap seimbang:
 - Jawaban salah = musuh langsung menyerang, kombo hilang, jawaban benar ditunjukkan.
 - **Soal cepat vs soal pikir** (2026-11-26): tiap jenis soal punya pengali waktu (`balance.think.time`). Fakta dasar (tambah/kurang/bandingkan) = 1: bar musuh normal, KILAT ≤ 2 detik. Soal yang perlu dipikir lebih lama (isi kosong, puluhan, panjang ±1,5) membuat **damage musuh lebih kecil** (dibagi pengali, `think.soft`) dan batas KILAT lebih panjang; kecepatan serangan tetap normal supaya pertarungan tetap terasa (pilihan orang tua 2026-11-26, `think.slow` 0). Soal cerita tidak lagi dibacakan otomatis (suara bawaan HP/laptop beraksen aneh); tombol 🔊 tetap ada. **Soal pikir** (pola, ukur, soal cerita; pengali ≥ 2): tanpa bar KILAT, muncul tanda "🧠 serangan musuh lebih lemah, yang penting teliti", dan jawaban benar selalu menjadi serangan **TELITI!** (damage ×1,5). Tujuannya: anak dihargai karena teliti, tidak didorong menebak cepat. Kelas lanjutan akan punya lebih banyak soal pikir.
 - **Angka kecil** (keputusan 2026-11-25): semua HP & damage di bawah 100 dan damage **tetap (tidak acak)**, supaya anak bisa ikut berhitung ("HP 15, pukul 5, tinggal 10"). Kritikal = **×2**.
-- Damage musuh = 1,6 + 0,35 × level monster (dibulatkan) × kekuatan monster − Pertahanan (minimal 1): Lv 1 ≈ 2, Lv 10 ≈ 5, Lv 20 ≈ 9. Mengalahkan monster memulihkan 20% HP (kecuali di dungeon).
-- HP monster = 12 + 3 × level: Lv 1 = 15, Lv 10 = 42, Lv 20 = 72 (bos ×1,5). Monster butuh ±3–5 pukulan.
+- Damage musuh = 2 + 0,55 × level monster (dibulatkan) × kekuatan monster − Pertahanan (minimal 1): Lv 1 ≈ 3, Lv 15 ≈ 10, Lv 30 ≈ 19, Lv 40 ≈ 24. Mengalahkan monster memulihkan 20% HP (kecuali di dungeon).
+- HP monster = 12 + 3,5 × level: Lv 1 = 16, Lv 15 = 65, Lv 30 = 117, Lv 40 = 152 (bos ×1,5). Monster butuh ±3–5 pukulan.
 - HP habis = **Pahlawan Pingsan** (2026-11-26, permintaan orang tua): semua pertarungan terkunci `knockout.lockMin` menit (bawaan 5) DAN sampai anak menyelesaikan 🎓 pelajaran tentang jenis soal yang paling sering salah di pertarungan itu (kartu materi bergambar → latihan tanpa waktu, benar 3 kali). Hitung mundur tampil di beranda. Bila `lockMin` 0 dan `mustLearn` 0: kembali ke cara lama (istirahat sebentar, HP penuh). Pelajaran juga bisa dibuka kapan saja dari ikon 🎓 Pelajaran di beranda.
 - Ujian Naik Kelas: musuh tidak menyerang.
 
@@ -143,11 +143,11 @@ Lingkaran yang diharapkan membuat anak terus main dan belajar: **dungeon lebih s
 - Dibuka dari tombol **🏰 Dungeon** di bilah bawah (bukan dari peta). Halaman berisi satu kartu per dungeon: gambar, nama, materi, level, hadiah; yang belum terbuka tampil terkunci dengan syaratnya.
 - **Tingkat ⭐ / ⭐⭐ / ⭐⭐⭐** (seperti bintang di game anak): soal sama, musuh lebih tinggi levelnya & lebih cepat, hadiah peti lebih besar (×1 / ×1,5 / ×2). Tingkat berikutnya terbuka setelah tingkat sebelumnya selesai. Tanpa energi, timer, atau peringkat.
 
-**Mode Pahlawan ⭐⭐** (petualangan utama, terbuka setelah lulus Ujian Naik Kelas): area & soal sama, musuh +6 level, HP ×1,4, damage ×1,6, menyerang lebih cepat (jeda ×0,7), koin ×2. Sengaja berat: perlu equipment dari bahan khusus dungeon. Peta ikut berubah suasana: Pahlawan = senja merah membara, Legenda = badai ungu berkilat. Pilihan tingkat di peta berupa **dropdown**: Normal / Pahlawan / Legenda selalu terlihat, yang belum terbuka bergembok dengan syaratnya. Di Pahlawan & Legenda area terbuka **berurutan lagi dari Padang Hitung**, lalu Kastil Ujian tingkat itu. Ujian Pahlawan/Legenda: Raja Naga **menyerang** (berwaktu); lulus = hadiah & membuka tingkat berikutnya, bukan syarat naik kelas (naik Kelas 2 cukup lulus ujian Normal). Medali "Pahlawan Sejati" untuk mengalahkan keenam bos area di Mode Pahlawan.
+**Mode Pahlawan ⭐⭐** (petualangan utama, terbuka setelah lulus Ujian Naik Kelas): area & soal sama, musuh Lv 16–30, HP ×1,15, damage ×1,15, menyerang lebih cepat (jeda ×0,8), koin ×2. Dungeon ⭐⭐ (+7 level) & ⭐⭐⭐ (+16 level) cocok dimainkan di tahap ini untuk mengumpulkan bahan equipment terbaik. Peta ikut berubah suasana: Pahlawan = senja merah membara, Legenda = badai ungu berkilat. Pilihan tingkat di peta berupa **dropdown**: Normal / Pahlawan / Legenda selalu terlihat, yang belum terbuka bergembok dengan syaratnya. Di Pahlawan & Legenda area terbuka **berurutan lagi dari Padang Hitung**, lalu Kastil Ujian tingkat itu. Ujian Pahlawan/Legenda: Raja Naga **menyerang** (berwaktu); lulus = hadiah & membuka tingkat berikutnya, bukan syarat naik kelas (naik Kelas 2 cukup lulus ujian Normal). Medali "Pahlawan Sejati" untuk mengalahkan keenam bos area di Mode Pahlawan.
 
 **Tahap 5 (2026-11-25)**
 - **Dua monster sekaligus**: muncul di Mode Pahlawan (titik 4), Legenda (titik 2 & 4), dungeon ⭐⭐ (ruang sebelum bos) dan ⭐⭐⭐ (beberapa ruang). Masing-masing punya HP & bar serangan sendiri. Jawaban benar memukul monster yang ditandai ▼; ketuk monster (atau panelnya) untuk ganti sasaran. Bila sasaran kalah, sasaran pindah otomatis. Jawaban salah = monster sasaran menyerang.
-- **Mode Legenda ⭐⭐⭐** (petualangan utama): terbuka setelah lulus Ujian Pahlawan (6 bos Pahlawan + ujiannya). Musuh +12 level, HP ×1,8, damage ×2,2, jeda ×0,6, koin ×3. Hampir mustahil tanpa equipment yang sudah ditingkatkan. Dipilih dari dropdown tingkat di peta. Medali "Legenda Matematika".
+- **Mode Legenda ⭐⭐⭐** (petualangan utama): terbuka setelah lulus Ujian Pahlawan (6 bos Pahlawan + ujiannya). Musuh Lv 31–40, HP ×1,3, damage ×1,4, jeda ×0,65, koin ×3. Sangat sulit tanpa equipment terbaik dari dungeon yang sudah ditingkatkan, terutama Menara Seratus & ujiannya. Dipilih dari dropdown tingkat di peta. Medali "Legenda Matematika".
 - **Tingkatkan equipment +1 sampai +5** (Pandai Besi → Tingkatkan): bahan khusus dungeon sesuai slot (senjata: Kristal Pola, pelindung: Mutiara Laut, aksesori: Tinta Bintang) sebanyak tingkat tujuan, koin 10 × tingkat, Mahkota Kecil di +4 & +5. Tiap tingkat: senjata Serangan +1; pelindung HP +3 & Pertahanan +½; aksesori kritikal +2% & damage kritikal +5%. Ada soal hitungan sebelum meningkatkan ("Serangan 6 naik 1, jadi berapa?").
 
 **Halaman utama**: Buku Monster, Misi, Medali berupa ikon kecil bertumpuk di kiri di bawah kartu nama (ada tanda merah bila ada yang baru). Ikon Pandai Besi juga di situ. Bilah bawah (5): Tas, Karakter, **Beranda (tengah)**, Dungeon, Toko.
@@ -166,7 +166,7 @@ Lingkaran yang diharapkan membuat anak terus main dan belajar: **dungeon lebih s
 - Sprite ditulis langsung di kode sebagai baris karakter, tanpa file gambar. Musuh biasa 16×16, bos 24×24, pahlawan 16×16.
 - Latar digambar di kanvas resolusi rendah lalu diperbesar tanpa blur.
 - **Teks dan angka tetap pakai font tebal yang mudah dibaca**, bukan font pixel kecil (pembacanya anak 6 tahun).
-- Suara: efek chiptune dengan Web Audio API. Musik latar sederhana (nanti).
+- Suara: efek chiptune dengan Web Audio API. Musik chiptune orisinal (audio.js SONGS): menu ceria, **Peta Petualangan mars bersemangat**, pertarungan/bos/dungeon/ujian, dan **musik cutscene per suasana** (tenang, Penyihir licik, sedih, menang) yang bisa berganti di tengah adegan.
 
 ## 10. Teknis
 

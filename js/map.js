@@ -358,8 +358,8 @@ MQ.WorldMap = (() => {
       return UI.overlay({icon: '📝', title: 'Ujian Naik Kelas', btn: 'Mulai Ujian', btn2: 'Nanti', cb: go,
         text: `12 soal dari semua area. Musuh tidak menyerang, jawab dengan tenang. Lulus jika benar minimal 9. Nilai terbaikmu: ${S.examBest}.`});
     }
-    const hero = heroOn() && p.spec, M = MODES[hero ? mode() : 0], add = hero ? MQ.Balance[M.cfg].lvAdd : 0;
-    const lv = p.lv ? ` Level ${p.lv[0] + add}–${p.lv[1] + add}.` : '';
+    const hero = heroOn() && p.spec, M = MODES[hero ? mode() : 0], cfg = hero ? MQ.Balance[M.cfg] : null;
+    const lv = p.lv ? ` Level ${MQ.Calc.storyLv(p.lv[0], cfg)}–${MQ.Calc.storyLv(p.lv[1] + 1, cfg)}.` : '';
     const done = (hero ? modeList() : S.cleared).includes(p.id) ? ' Bos sudah kamu kalahkan ⭐' : '';
     UI.overlay({icon: p.icon, title: p.name + (hero ? ' ' + M.name.split(' ')[0] : ''), btn: 'Main!', btn2: 'Nanti', cb: go,
       text: `${p.desc}.${lv}${hero ? ` Mode ${M.name.split(' ')[1]}: musuh lebih kuat & cepat, kadang DUA monster sekaligus. Koin lebih banyak!` : ''}${done}`});

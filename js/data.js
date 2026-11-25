@@ -124,20 +124,20 @@ MQ.Data = {
      req = field yang bosnya harus dikalahkan dulu; soon = belum bisa dimainkan;
      pace = pengali jeda serangan musuh (soal yang butuh waktu berpikir → musuh lebih lambat). */
   fields: [
-    {id: 'padang', pace: 1.4, name: 'Padang Hitung', icon: '🌼', lv: [1, 4], desc: 'Menghitung & membandingkan sampai 10',
+    {id: 'padang', pace: 1.4, name: 'Padang Hitung', icon: '🌼', lv: [1, 3], desc: 'Menghitung & membandingkan sampai 10',
      spec: {kinds: ['hitung', 'hitung', 'banding'], max: 10}, mobs: ['lendir', 'lendirAir'], mini: 'lendirBunga', boss: 'rajaLendir'},
-    {id: 'hutan', pace: 1.0, name: 'Hutan Tambah-Kurang', icon: '🌲', lv: [4, 8], req: 'padang', desc: 'Tambah, kurang, pasangan & cerita sampai 10',
+    {id: 'hutan', pace: 1.0, name: 'Hutan Tambah-Kurang', icon: '🌲', lv: [3, 5], req: 'padang', desc: 'Tambah, kurang, pasangan & cerita sampai 10',
      spec: {kinds: ['tambah', 'kurang', 'isi', 'tambah', 'kurang', 'pasangan', 'pasangan', 'cerita'], max: 10}, mobs: ['jamur', 'jamurUngu', 'lendir'], boss: 'rajaJamur'},
-    {id: 'bukit', pace: 1.3, name: 'Bukit Bentuk', icon: '⛰️', lv: [7, 11], req: 'hutan', desc: 'Mengenal bentuk & pola',
+    {id: 'bukit', pace: 1.3, name: 'Bukit Bentuk', icon: '⛰️', lv: [5, 7], req: 'hutan', desc: 'Mengenal bentuk & pola',
      spec: {kinds: ['bentuk', 'pola']}, mobs: ['lendirBatu', 'jamurBatu'], boss: 'rajaBatu'},
-    {id: 'danau', pace: 1.1, name: 'Danau Dua Puluh', icon: '🌊', lv: [10, 15], req: 'bukit', desc: 'Tambah, kurang & cerita sampai 20',
+    {id: 'danau', pace: 1.1, name: 'Danau Dua Puluh', icon: '🌊', lv: [7, 10], req: 'bukit', desc: 'Tambah, kurang & cerita sampai 20',
      spec: {kinds: ['tambah', 'kurang', 'isi', 'tambah', 'kurang', 'pasangan', 'cerita', 'cerita'], max: 20}, mobs: ['lendirAir', 'kelelawar'], boss: 'rajaKelelawar'},
-    {id: 'lembah', pace: 1.3, name: 'Lembah Ukur', icon: '📏', lv: [13, 17], req: 'danau', desc: 'Membandingkan & mengukur panjang',
+    {id: 'lembah', pace: 1.3, name: 'Lembah Ukur', icon: '📏', lv: [9, 12], req: 'danau', desc: 'Membandingkan & mengukur panjang',
      spec: {kinds: ['panjang', 'ukur']}, mobs: ['kelelawarDaun', 'jamurKayu'], boss: 'rajaJamurKayu'},
-    {id: 'menara', pace: 1.4, name: 'Menara Seratus', icon: '🗼', lv: [16, 20], req: 'lembah', desc: 'Puluhan, urutan & bilangan sampai 100',
+    {id: 'menara', pace: 1.4, name: 'Menara Seratus', icon: '🗼', lv: [11, 14], req: 'lembah', desc: 'Puluhan, urutan & bilangan sampai 100',
      spec: {kinds: ['puluhan', 'urutan', 'banding'], max: 100}, mobs: ['kelelawarMalam', 'lendirUngu'], boss: 'rajaMalam'},
     /* Ujian Naik Kelas: terbuka setelah semua area di atas selesai (reqAll). 2 soal dari tiap area, lulus ≥ 75%. */
-    {id: 'kastil', name: 'Kastil Ujian', icon: '🏰', lv: [18, 20], exam: true, reqAll: true, boss: 'naga',
+    {id: 'kastil', name: 'Kastil Ujian', icon: '🏰', lv: [14, 14], exam: true, reqAll: true, boss: 'naga',
      desc: 'Ujian Naik Kelas: 12 soal campuran'}
   ],
 
@@ -145,15 +145,15 @@ MQ.Data = {
      rooms ruang beruntun, HP tidak pulih; ruang keyRoom = monster kunci (key), ruang terakhir = bos, lalu peti.
      Cerita: adegan "<id>-intro", "<id>-key", "<id>-end" di story.js (tampil sekali). Bisa diulang untuk latihan & XP. */
   dungeons: [
-    {id: 'guaPola', pace: 1.3, name: 'Gua Pola', icon: '🕳️', req: 'bukit', lv: [8, 12], rooms: 5, keyRoom: 3, key: 'penjagaPola',
+    {id: 'guaPola', pace: 1.3, name: 'Gua Pola', icon: '🕳️', req: 'bukit', lv: [5, 8], rooms: 5, keyRoom: 3, key: 'penjagaPola',
      dungeon: true, desc: 'Bantu Momo menyelamatkan keluarganya.', topic: 'Pola & bentuk',
      spec: {kinds: ['pola', 'bentuk', 'pola']}, mobs: ['lendirBatu', 'jamurBatu', 'kelelawar'], boss: 'rajaBatu',
      reward: {coins: 15, items: {ramuan: 1, mahkota: 1, kristalPola: 2}}},
-    {id: 'kapalKaram', pace: 1.2, name: 'Kapal Karam', icon: '⛵', req: 'danau', lv: [12, 16], rooms: 6, keyRoom: 3, key: 'kepitingBesar',
+    {id: 'kapalKaram', pace: 1.2, name: 'Kapal Karam', icon: '⛵', req: 'danau', lv: [7, 10], rooms: 6, keyRoom: 3, key: 'kepitingBesar',
      dungeon: true, desc: 'Bantu Kapten Kumis mencari hartanya.', topic: 'Tambah & kurang sampai 20',
      spec: {kinds: ['tambah', 'kurang', 'isi', 'hitung', 'cerita'], max: 20}, mobs: ['kepiting', 'lendirLaut'], boss: 'rajaKepiting',
      reward: {coins: 25, items: {ramuan: 2, mahkota: 1, mutiara: 2}}},
-    {id: 'perpustakaan', pace: 1.4, name: 'Perpustakaan Tua', icon: '📚', req: 'lembah', lv: [16, 20], rooms: 7, keyRoom: 4, key: 'hantuTinta',
+    {id: 'perpustakaan', pace: 1.4, name: 'Perpustakaan Tua', icon: '📚', req: 'lembah', lv: [10, 13], rooms: 7, keyRoom: 4, key: 'hantuTinta',
      dungeon: true, desc: 'Bantu Hantu Buku merapikan nomor halaman.', topic: 'Puluhan, urutan & bandingkan sampai 100',
      spec: {kinds: ['urutan', 'puluhan', 'banding'], max: 100}, mobs: ['hantuKertas', 'kelelawarBuku'], boss: 'rajaTinta',
      reward: {coins: 35, items: {ramuan: 2, mahkota: 2, tinta: 2}}}

@@ -258,5 +258,11 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 ### 2026-11-26 — Tablet penuh layar
 - `index.html`: skrip kecil di `<head>` mengatur meta viewport di tablet (sisi pendek layar ≥ 600px): tegak `width=480` (browser memperbesar seluruh game sampai penuh lebar), mendatar lebar dihitung supaya tinggi terlihat ±700px. HP tidak berubah. SW `mq-v32`.
 
+### 2026-11-26 — Kurva level baru & musik per suasana
+- Hasil main orang tua (tanpa poin status & item): selesai Menara di Lv 12, damage bos 5–8, cukup menantang tapi bisa lebih. Target baru: Normal Lv 1–15, Pahlawan 16–30, Legenda 31–40.
+- `balance.js`: XP monster 5 + 3 × level, potongan XP mulai 2 level di atas monster; HP monster 12 + 3,5 × level; damage 2 + 0,55 × level. `heroMode.lv [16,30]`, `legendMode.lv [31,40]` (dipetakan dari level Normal lewat `MQ.Calc.storyLv`, ganti `lvAdd`); Pahlawan HP/damage ×1,15 jeda ×0,8, Legenda HP ×1,3 damage ×1,4 jeda ×0,65. Dungeon ⭐⭐ +7, ⭐⭐⭐ +16.
+- `data.js`: level area Normal dipadatkan (Padang 1–3 … Menara 11–14, Kastil 14), dungeon (Gua 5–8, Kapal 7–10, Perpustakaan 10–13). Simulasi sekali jalan: Normal selesai ±Lv 16, Pahlawan ±28, Legenda ±40.
+- Musik: lagu `map` (mars D mayor) di layar Peta; lagu cutscene `csCalm`, `csVillain`, `csSad`, `csWin`. `cutscene.js sceneMusic` memilih musik bawaan adegan; langkah cerita bisa mengganti dengan `music` (prolog: tenang → Penyihir → sedih → semangat; Menara: menang → Penyihir → semangat; Kastil: Penyihir → bos; ending: Penyihir → menang). Setelah adegan selesai musik kembali ke layar asal. SW `mq-v33`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
