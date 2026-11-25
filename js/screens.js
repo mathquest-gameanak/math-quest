@@ -79,7 +79,7 @@ MQ.UI = (() => {
     const hero = MQ.Hero.current();
     $('homeHero').src = hero; $('homeAvatar').src = hero;
     $('homeName').textContent = (S.hero && S.hero.name) || 'Pahlawan'; // nama dari pemain → textContent
-    $('homeInfo').textContent = `LV ${S.level} · 💎 ${State.shards()}/6 kepingan`;
+    $('homeInfo').textContent = `LV ${S.level} · 💎 ${State.shards()}/6`;
     $('homeCoins').textContent = `🪙 ${S.coins}`;
     $('btnMusic').textContent = S.settings.music > 0 ? '🎵' : '🔇';
     $('homeBook').textContent = `📖 Buku Monster ${MQ.Collection.found()}/${MQ.Collection.MONSTER_IDS.length}`;

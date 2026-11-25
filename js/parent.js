@@ -80,7 +80,7 @@ MQ.Parent = (() => {
   const SETTINGS = [
     ['santai', 'Mode Santai', 'Musuh tidak menyerang berwaktu. Cocok saat anak lelah atau belajar materi baru.'],
     ['autoSpeak', 'Bacakan soal otomatis', 'Setiap soal langsung dibacakan (untuk anak yang belum lancar membaca).'],
-    ['skin', 'Tampilan Petualangan (percobaan)', 'Panel perkamen, bilah kayu & tombol berbingkai. Hanya mengubah tampilan, bukan isi game.']
+    ['skin', 'Tampilan Petualangan', 'Panel perkamen, bilah kayu & tombol berbingkai. Matikan untuk kembali ke tampilan lama (biru). Hanya mengubah tampilan.']
   ];
   // "skin" disimpan terpisah (MQ.Skin), pengaturan lain di S.settings
   const isOn = k => (k === 'skin' ? MQ.Skin.get() : S.settings[k]);

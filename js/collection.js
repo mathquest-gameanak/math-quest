@@ -37,7 +37,7 @@ MQ.Collection = (() => {
   let selected = null;
   UI.renderers.book = () => {
     MQ.Audio.sfx.bookOpen();
-    $('bookProgress').textContent = `Ditemukan ${found()} dari ${MONSTER_IDS.length}`;
+    $('bookProgress').textContent = `👾 ${found()}/${MONSTER_IDS.length}`;
     $('bookGrid').innerHTML = MONSTER_IDS.map(id => {
       const m = Data.monsters[id], seen = count(id) > 0;
       const img = Sprites.url(m.sprite, seen ? m.pal : silhouette(m.sprite));
@@ -134,7 +134,7 @@ MQ.Collection = (() => {
 
   UI.renderers.medals = () => {
     const got = MEDALS.filter(m => S.medals[m.id]).length;
-    $('medalProgress').textContent = `${got} dari ${MEDALS.length} medali`;
+    $('medalProgress').textContent = `🏅 ${got}/${MEDALS.length}`;
     $('medalList').innerHTML = MEDALS.map(m => {
       const have = !!S.medals[m.id], v = Math.min(m.val(), m.target), pct = Math.round(v / m.target * 100);
       return `<div class="medal${have ? ' got' : ''}"><span class="mIcon">${m.icon}</span><div class="mBody"><b>${m.name}</b><small>${m.desc}</small>` +

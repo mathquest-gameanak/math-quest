@@ -161,5 +161,10 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - 50 kandidat efek (396 KB) di `audio/pilihan/`, untuk 12 efek: benar, salah, serang, kritikal, terkena, monster kalah, naik level, medali, peti, koin, tombol, ramuan.
 - Layar **Coba Suara** (`js/soundlab.js`, dari Orang Tua): ketuk untuk mendengar & memilih; disimpan di `localStorage['mathQuest.sfxPick']`. `audio.js` membungkus semua `sfx.*`: pilihan yang termuat diputar, selain itu suara bawaan. "Salin pilihan" untuk dijadikan bawaan. SW `mq-v12`.
 
+### 2026-11-25 — Tampilan Petualangan jadi bawaan, semua layar
+- `body.skinK` sekarang **bawaan**; tampilan lama (biru) dipilih lewat Orang Tua → Pengaturan (disimpan `'lama'` di `localStorage['mathQuest.skin']`), atau `?skin=0`.
+- Ditambah ke `skin-kenney.css`: latar cokelat tua, kotak cekung krem di dalam perkamen (slot tas/perlengkapan, ringkasan, isian, pilihan Buat Karakter), kartu Buku Monster & Medali perkamen/emas, bingkai kayu peta & arena, ikon peta (hijau/emas/baja), tombol mode, kotak bicara cutscene, tombol Orang Tua.
+- Teks pendek agar tidak terpotong: info beranda `LV 1 · 💎 0/6`, Buku `👾 0/27`, Medali `🏅 0/22`. SW `mq-v13`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

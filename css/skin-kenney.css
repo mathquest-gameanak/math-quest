@@ -77,7 +77,103 @@ body.skinK .who { padding: 0 2px; }
 body.skinK .who small { color: #ffe9c4; }
 body.skinK .coinPill, body.skinK .parentBtn { padding: 0 4px; }
 body.skinK .topbar small, body.skinK .hud small, body.skinK #mTop small, body.skinK #question small { color: #ffe9c4; }
-body.skinK #charName { color: #8e3f38; text-shadow: none; }
+body.skinK #charName { color: var(--tinta) !important; text-shadow: none; }
 body.skinK .panel .tag { color: #fff; }
 body.skinK .sChip { background: #f6e3bd; color: var(--tinta); border-color: #c58747; }
 body.skinK .sChip.on { background: #38b764; color: #fff; border-color: #2f6b3a; }
+
+/* =====================================================================
+   Semua layar lain (v13): latar, kotak dalam perkamen, peta, arena, cutscene
+   ===================================================================== */
+body.skinK { background: #241a10; }
+body.skinK #app { background: #3b2c1c; }
+body.skinK .screen > .note { color: #f0dcb4; }
+
+/* Kotak "cekung" di dalam perkamen (pengganti kotak hitam) */
+body.skinK .panel .slot, body.skinK .sumBox, body.skinK .shopItem .iconBig, body.skinK .mIcon, body.skinK .pick,
+body.skinK #heroName, body.skinK .gateRow input, body.skinK #backupText, body.skinK .tunInputs input:not([type=checkbox]),
+body.skinK .tunInputs select, body.skinK .tunRow input, body.skinK #tunNewLv {
+  background: #ecd3a4; color: var(--tinta); border-color: #b98a52;
+}
+body.skinK .panel .slot.full { background: #f6e3bd; border-color: #a3703a; }
+body.skinK .panel .slot span, body.skinK .equip .slot small { color: var(--tinta2); }
+body.skinK .qty { color: #fff; }
+body.skinK .pick.on { border-color: #d0661c; box-shadow: 0 0 0 2px #d0661c; background: #fff6df; }
+body.skinK .pick small { color: var(--tinta); }
+body.skinK .optLabel, body.skinK .gate b, body.skinK #bookName { color: #8e3f38; }
+body.skinK #gateMsg { color: #b13e53; }
+
+/* Garis pemisah & teks kecil di perkamen */
+body.skinK .skRow, body.skinK .setRow, body.skinK .alloc, body.skinK .stat, body.skinK .volRow, body.skinK .tunRow, body.skinK .bookRow { border-bottom-color: #d2ae74; }
+body.skinK .skRow small, body.skinK .setRow small, body.skinK .alloc small, body.skinK .sBody small, body.skinK .bookRow b,
+body.skinK #bookRole, body.skinK .dayRow small, body.skinK .tunRow small, body.skinK .tunTable td small, body.skinK .tunInputs label { color: var(--tinta2); }
+body.skinK .dayBar { background: #ecd3a4; border-color: #b98a52; }
+body.skinK .pts, body.skinK .dataMsg, body.skinK .need.ok { color: #2f7a3a; }
+body.skinK .need { color: #b13e53; }
+body.skinK .price { color: #a05a14; }
+body.skinK .tunRow.changed b { color: #c25a00; }
+body.skinK .tunRow.changed input { border-color: #d0661c; }
+body.skinK .tunTable th, body.skinK .tunTable td { border-bottom-color: #d2ae74; }
+body.skinK .tunTable .tHead th { background: #e6c48e; }
+body.skinK .tunTable .tHead small { color: var(--tinta2); }
+body.skinK .tunTable td.warn { color: #c0392b; }
+body.skinK .volRow input, body.skinK .tunInputs input[type=checkbox] { accent-color: #d0661c; }
+body.skinK .panel .bar > span { color: #fff; }
+
+/* Karakter */
+body.skinK #charHero, body.skinK #createPreview, body.skinK #bookImg { border-color: #6d4b27; box-shadow: none; }
+body.skinK .charLv b { color: #8e3f38; text-shadow: none; }
+body.skinK .charLv .bar span { color: #fff; }
+body.skinK .plus { border-width: 8px; border-image-width: 8px; font-size: 24px; padding: 0; }
+body.skinK .sBtn.small { border-width: 8px; border-image-width: 8px; padding: 2px 4px; }
+
+/* Buku Monster & Medali: kartu perkamen */
+body.skinK .bookCard, body.skinK .medal {
+  background: none; color: var(--tinta); border: 8px solid transparent; border-image: url(../ui/panel.png) 6 fill / 8px stretch;
+}
+body.skinK .bookCard { padding: 0; }
+body.skinK .bookCard.on { border-image-source: url(../ui/btn-yellow.png); }
+body.skinK .bookCard.unseen small { color: #b99a6c; }
+body.skinK .medal { opacity: .8; }
+body.skinK .medal.got { opacity: 1; border-image-source: url(../ui/btn-yellow.png); }
+body.skinK .mBody small { color: var(--tinta2); }
+body.skinK .mReward { color: #a05a14 !important; }
+body.skinK .mIcon { border-color: #b98a52; }
+
+/* Bingkai kayu untuk gambar besar: halaman utama, peta, arena */
+body.skinK .mapScroll, body.skinK #arena {
+  border: 10px solid transparent; border-image: url(../ui/wood.png) 6 / 10px stretch; box-shadow: none;
+}
+body.skinK .mnIcon { background: none; box-shadow: none; border: 8px solid transparent; border-image: url(../ui/steel.png) 6 fill / 8px stretch; }
+body.skinK .mapNode.open .mnIcon { border-image-source: url(../ui/btn-green.png); }
+body.skinK .mapNode.done .mnIcon { border-image-source: url(../ui/btn-yellow.png); }
+body.skinK .mapNode.lock .mnIcon, body.skinK .mapNode.soon .mnIcon { border-image-source: url(../ui/steel.png); }
+body.skinK .mapNode.cur .mnIcon { animation: pulseK 1s steps(2) infinite; }
+@keyframes pulseK { 50% { filter: brightness(1.3) drop-shadow(0 0 4px #ffe08a); } }
+body.skinK .mnName { background: #fff1d2ee; color: var(--tinta); border-color: #6d4b27; }
+body.skinK .mapNode.lock .mnName { color: var(--tinta2); }
+
+/* Pertarungan */
+body.skinK .hud .row b, body.skinK #lvl { color: #ffe08a; }
+body.skinK #fieldName { color: var(--kertas); }
+body.skinK #mTop { position: absolute; }
+body.skinK .mode { background: none; border: 8px solid transparent; border-image: url(../ui/steel.png) 6 fill / 8px stretch; color: #dfe8f0; padding: 0; }
+body.skinK .mode.on { border-image-source: url(../ui/btn-yellow.png); color: var(--tinta); }
+body.skinK .speak, body.skinK .potion { background: #3b2a17; border-color: #ffe9c4; }
+body.skinK #answers.pics .ans:not(.benar):not(.salah) { background: none; border-image-source: url(../ui/panel.png); }
+
+/* Cutscene: kotak bicara perkamen */
+body.skinK .csBox { background: none; box-shadow: none; border: 12px solid transparent; border-image: url(../ui/panel.png) 6 fill / 12px stretch; padding: 4px 6px 14px; }
+body.skinK #csName { color: #8e3f38; }
+body.skinK #csText { color: var(--tinta); }
+body.skinK .csNext { color: #8e3f38; }
+body.skinK #csPortrait { background: #ecd3a4; border-color: #6d4b27; }
+body.skinK .csSkip { background: none; border: 8px solid transparent; border-image: url(../ui/steel-light.png) 6 fill / 8px stretch; color: #1f2a35; padding: 0 4px; }
+
+/* Halaman utama: info pahlawan tidak terpotong */
+body.skinK .who small { overflow: hidden; text-overflow: ellipsis; }
+
+/* Tombol khusus orang tua */
+body.skinK .tunOpen { border-image-source: url(../ui/btn-pink.png); color: var(--tinta); text-shadow: none; }
+body.skinK .soundOpen { border-image-source: url(../ui/btn-cyan.png); color: var(--tinta); text-shadow: none; }
+body.skinK .fileBtn { color: #fff; }
