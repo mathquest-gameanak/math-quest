@@ -3,6 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script>
+  /* Tablet (iPad dll.): game didesain selebar HP (kolom maks 480px). Supaya penuh layar, lebar viewport diatur
+     ≈ 480px sehingga browser memperbesar seluruh game. Tinggi yang terlihat dijaga minimal ±700px
+     (layar melebar/landscape → kolom tetap di tengah). HP biasa tidak berubah. */
+  (function () {
+    var m = document.querySelector('meta[name=viewport]');
+    function fit() {
+      var sw = Math.min(screen.width, screen.height), portrait = innerHeight >= innerWidth;
+      if (sw < 600) return m.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no');
+      var w = portrait ? Math.min(screen.width, screen.height) : Math.max(screen.width, screen.height);
+      var h = portrait ? Math.max(screen.width, screen.height) : Math.min(screen.width, screen.height);
+      var vw = portrait ? 480 : Math.max(480, Math.round(700 * w / h)); // tegak: selalu penuh lebar
+      m.setAttribute('content', 'width=' + vw + ', user-scalable=no');
+    }
+    fit();
+    addEventListener('orientationchange', function () { setTimeout(fit, 200); });
+  })();
+</script>
 <meta name="theme-color" content="#1a1c2c">
 <title>Math Quest</title>
 <link rel="stylesheet" href="css/style.css">

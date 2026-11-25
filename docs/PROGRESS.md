@@ -255,5 +255,8 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Wilayah Menara Seratus jadi dataran batu ungu saat senja (ubin batu, rumput ungu, kristal, lentera berkedip), bukan langit malam yang janggal di bawah gunung berapi.
 - `drawMood`: Pahlawan = senja merah (warna multiply hangat, tepi gelap kemerahan, bara api naik, awan asap, bingkai merah menyala); Legenda = badai ungu gelap (kabut, hujan miring, kilat tiap ±6 detik, bingkai ungu berdenyut). SW `mq-v31`.
 
+### 2026-11-26 — Tablet penuh layar
+- `index.html`: skrip kecil di `<head>` mengatur meta viewport di tablet (sisi pendek layar ≥ 600px): tegak `width=480` (browser memperbesar seluruh game sampai penuh lebar), mendatar lebar dihitung supaya tinggi terlihat ±700px. HP tidak berubah. SW `mq-v32`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
