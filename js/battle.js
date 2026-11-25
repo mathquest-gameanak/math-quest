@@ -638,7 +638,7 @@ MQ.Battle = (() => {
     if (!B.locked) nextQuestion(); // saat animasi, soal berikutnya otomatis ikut mode baru
   }));
 
-  els.btnPotion.querySelector('img').src = Sprites.url('potion');
+  els.btnPotion.querySelector('img').src = MQ.ItemArt.url('ramuan');
 
   // currentQuestion & state: untuk pengujian otomatis
   return {start, currentQuestion: () => B.q, debug: () => ({charge: B.charge, interval: B.interval, mode: B.mode, monId: B.monId})};

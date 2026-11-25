@@ -11,7 +11,7 @@ MQ.Shop = (() => {
   const isGear = it => ['senjata', 'pelindung', 'aksesori'].includes(it.type);
   const have = k => (k === 'koin' ? S.coins : State.count(k));
   const nameOf = k => (k === 'koin' ? 'koin' : items[k].name);
-  const iconOf = k => (k === 'koin' ? `<img class="icon" src="${MQ.Sprites.url('coin')}" alt="">` : UI.itemImg(k));
+  const iconOf = k => (k === 'koin' ? `<img class="icon" src="${MQ.ItemArt.url('coin')}" alt="">` : UI.itemImg(k));
 
   /** Tempat mencari bahan: field yang monsternya menjatuhkan bahan itu. */
   function whereToFind(k) {

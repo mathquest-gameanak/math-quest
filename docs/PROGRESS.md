@@ -274,5 +274,8 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - `js/dungeon.js` ditulis ulang: kartu bergambar → halaman dungeon (penghuni, pilih tingkat, isi peti, tombol Masuk). Catatan "HP tidak pulih" pindah ke tombol ⓘ (Aturan Dungeon).
 - Tas: angka jumlah barang jadi lencana gelap berangka putih (sebelumnya teks gelap + bayangan gelap di skin Kenney → terlihat berbayang). SW `mq-v35` (+ dungeonart.js).
 
+### 2026-11-26 — Ikon item gaya baru
+- `js/itemart.js` (baru): 27 ikon item 24×24 piksel berbayang + garis tepi + kilau (bahan, ramuan, koin, 7 senjata, 4 pelindung, 5 aksesori), digambar dengan MQ.Pix.grid. `UI.itemImg` memakai gambar baru bila ada (cadangan: ikon lama sprites.js); koin di Pandai Besi & tombol ramuan di pertarungan juga. Ikon senjata yang dipegang pahlawan (hero.js) belum diubah. SW `mq-v36` (+ itemart.js).
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

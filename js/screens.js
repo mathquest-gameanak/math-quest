@@ -32,7 +32,9 @@ MQ.UI = (() => {
   }
 
   /** Gambar ikon item sebagai <img> (data dari data.js). */
-  const itemImg = (id, cls = 'icon') => { const it = Data.items[id]; return `<img class="${cls}" src="${Sprites.url(it.icon, it.pal)}" alt="">`; };
+  // ikon item: gambar baru (itemart.js) bila ada, selain itu ikon lama
+  const itemSrc = id => (MQ.ItemArt && MQ.ItemArt.url(id)) || Sprites.url(Data.items[id].icon, Data.items[id].pal);
+  const itemImg = (id, cls = 'icon') => `<img class="${cls}" src="${itemSrc(id)}" alt="">`;
 
   /* ===== Jendela pesan =====
      overlay({icon | img, title, text, btn, cb, btn2, cb2})  — 1 atau 2 tombol
