@@ -157,9 +157,15 @@ MQ.Vis = (() => {
   const hintBond = (w, a, b) => hintBox(`<div class="dots">${dot('#ffcd75').repeat(a)}<b class="gap"></b>${dot('#73eff7').repeat(b)}</div>`,
     `${a} dan ${b} jadi ${w}`);
   const hintTen = n => hintBox(tenFrame(n, true), `${n} + ${10 - n} = 10 (hitung kotak kosong)`);
+  /** Petunjuk deret: bilangan berurutan, jawaban disorot, keterangan langkahnya. */
+  const hintSeq = (seq, ans, cap) => hintBox(`<div class="numLine">${seq.concat(ans).map((v, i) => `<span class="nl${i === seq.length ? ' on' : ''}">${v}</span>`).join('')}</div>`, cap);
+  const hintNote = cap => hintBox('', cap);
+  /** Kotak kembar: n kotak sama (isi ?), dibagi rata. */
+  const hintEqual = (k, x) => hintBox(`<div class="dots">${Array.from({length: k}, () => dot('#ffcd75').repeat(x)).join('<b class="gap"></b>')}</div>`,
+    `${k * x} dibagi rata ke ${k} kotak → tiap kotak ${x}`);
   const hintBar = (parts, total, cap) => hintBox(bar(parts, total), cap);
   const hintBar2 = (a, b, la, lb, cap) => hintBox(bar2(a, b, la, lb, a - b), cap);
 
   return {count, SHAPES, shape, COLORS, token, patternRow, pencils, ruler, lidi, story, bar, bond, tenFrame,
-          hintAdd, hintSub, hintCompare, hintCount, hintTens, hintLine, hintRuler, hintBond, hintTen, hintBar, hintBar2};
+          hintAdd, hintSub, hintCompare, hintCount, hintTens, hintLine, hintRuler, hintBond, hintTen, hintBar, hintBar2, hintSeq, hintNote, hintEqual};
 })();

@@ -140,5 +140,20 @@ window.MQ = window.MQ || {};
     return P.outline();
   }
 
-  Object.assign(MQ.Pix.MONSTERS, {kakek, kiki, penyihir, momo, kapten, hantuBuku, crystal, shard});
+  /** Peti Teka-teki: peti kayu bersabuk emas dengan gembok bertanda tanya. */
+  function peti() {
+    const P = grid(28, 24), Y = '#ffcd75', YD = '#d4a373', WD = '#8a5a3c', WL = '#b86f50';
+    P.ell(14, 8, 12, 5, WL); P.rect(2, 8, 24, 4, WL);                       // tutup melengkung
+    P.rect(2, 12, 24, 10, WD);                                              // badan
+    P.recolor(WD, '#5d3a28', (x, y) => x > 21);
+    P.rect(2, 12, 24, 1, K);                                                // celah tutup
+    [5, 20].forEach(x => P.rect(x, 3, 3, 19, Y).rect(x + 2, 3, 1, 19, YD)); // sabuk emas
+    P.rect(2, 20, 24, 2, '#5d3a28');
+    P.rect(10, 9, 8, 8, Y); P.rect(10, 15, 8, 2, YD);                       // gembok
+    P.px(13, 10, K).px(14, 10, K).px(15, 11, K).px(14, 12, K).px(14, 14, K); // tanda ?
+    P.px(4, 6, W).px(5, 5, W);                                              // kilau
+    return P.outline();
+  }
+
+  Object.assign(MQ.Pix.MONSTERS, {kakek, kiki, penyihir, momo, kapten, hantuBuku, crystal, shard, peti});
 })();

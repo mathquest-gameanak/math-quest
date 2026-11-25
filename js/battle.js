@@ -147,7 +147,7 @@ MQ.Battle = (() => {
   /** Waktu musuh berjalan hanya saat anak sedang menjawab. */
   const timerActive = () => els['scr-battle'].classList.contains('on') && els.overlay.hidden && !B.locked &&
     B.mode !== 'exam' && !S.settings.santai && !document.hidden && !MQ.Cutscene.isOpen() &&
-    !(BAL.monster.pauseWhileReading && window.speechSynthesis && window.speechSynthesis.speaking);
+    !(BAL.monster.pauseWhileReading && window.speechSynthesis && window.speechSynthesis.speaking) && !B.chest;
 
   /** Musuh menyerang. Mengembalikan true jika HP pemain habis. */
   function enemyAttack(M = B) {
@@ -223,7 +223,7 @@ MQ.Battle = (() => {
     els.fx.innerHTML = '';
     renderModes();
     // Jalur: area = 5 titik, dungeon = ruang-ruangnya, Arena/Ujian = tanpa jalur
-    B.stage = 0;
+    B.stage = 0; B.chest = null; B.chestDone = false;
     B.stops = B.mode === 'field' ? ['', '', 'mini', '', 'boss']
       : B.mode === 'dungeon' ? Array.from({length: place.rooms}, (_, i) => (i === place.rooms - 1 ? 'boss' : i + 1 === place.keyRoom ? 'mini' : '')) : [];
     UI.show('battle');
@@ -338,11 +338,16 @@ MQ.Battle = (() => {
       let tries = 0;
       do { q = Questions.make(spec); } while (B.q && key(q) === key(B.q) && ++tries < 5); // hindari soal kembar
     }
+    showQuestion(q);
+  }
+  /** Tampilkan soal di panel (soal pertarungan maupun teka-teki peti). */
+  function showQuestion(q) {
     B.q = q;
-    els.question.classList.remove('walking');
+    els.question.classList.remove('walking'); els.answers.classList.remove('walking');
     B.answerTime = 0; els.fastFill.style.width = '100%';
     els.fastBar.hidden = B.mode === 'exam' || q.think; // ujian: tanpa kritikal; soal pikir: tanpa KILAT
     els.thinkTag.hidden = B.mode === 'exam' || !q.think;
+    els.thinkTag.textContent = B.chest ? '📜 Peti Teka-teki: tanpa waktu, pikirkan pelan-pelan!' : '🧠 Soal pikir: santai saja, yang penting teliti!';
     els.qText.textContent = q.text;
     els.qText.classList.toggle('long', q.text.length > 12); // kalimat panjang → huruf sedikit lebih kecil
     els.qText.classList.toggle('story', !!q.story);          // soal cerita: kalimat, huruf biasa
@@ -376,6 +381,8 @@ MQ.Battle = (() => {
   function answer(btn, val) {
     if (B.locked) return;
     B.locked = true;
+    try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch (e) { /* - */ } // sudah menjawab → berhenti membacakan (agar musuh tidak tertahan)
+    if (B.chest) return chestAnswer(btn, val);
     const q = B.q, stat = S.stats[q.kind] || (S.stats[q.kind] = {b: 0, s: 0});
     const exam = B.mode === 'exam';
     if (val === q.ans) {
@@ -478,10 +485,48 @@ MQ.Battle = (() => {
       if (dungeon && wasBoss) return dungeonEnd(true);
       if (otherAlive) { swapTarget(); B.other = null; renderOther(); return nextQuestion(); } // masih ada monster kedua
       if (B.mode === 'field' && wasBoss) return fieldEnd(firstClear, heroClear);
-      if (B.stops.length) { B.stage++; return goStage(); }
+      if (B.stops.length) return maybeChest(() => { B.stage++; goStage(); });
       spawnMonster(); nextQuestion();
     };
     later(run, 900);
+  }
+
+  /* ===== Peti Teka-teki (area): kadang muncul setelah titik 2 / 4; soal tanpa waktu, hadiah bila terbuka ===== */
+  function maybeChest(next) {
+    const C = BAL.chest;
+    if (B.mode !== 'field' || B.chestDone || !C.at.includes(B.stage) || Math.random() >= C.chance) return next();
+    B.chestDone = true; B.chest = {tries: 0, next};
+    els.mTop.hidden = true;
+    Scene.setMonster({pix: 'peti'}, B.stage);
+    showFloat('📜 Peti Teka-teki!', 'loot', 0);
+    sfx.loot();
+    showQuestion(Questions.make({kinds: ['teka'], max: B.field.spec.max}));
+  }
+  function chestAnswer(btn, val) {
+    const q = B.q, ch = B.chest, C = BAL.chest, stat = S.stats[q.kind] || (S.stats[q.kind] = {b: 0, s: 0});
+    if (val !== q.ans) { // tanpa hukuman: tombol itu mati, petunjuk muncul, coba lagi
+      ch.tries++; stat.s++; State.logDay('s', 1);
+      sfx.wrong(); btn.classList.add('salah'); btn.disabled = true;
+      const h = q.hint && q.hint();
+      if (h) { els.qView.innerHTML = h; els.qView.hidden = false; }
+      B.locked = false;
+      return;
+    }
+    stat.b++; State.logDay('b', 1);
+    btn.classList.add('benar'); sfx.correct();
+    const first = ch.tries === 0, mul = mods().rewardMul;
+    const coins = Math.round((first ? C.coins[0] : C.coins[1]) * mul);
+    S.coins += coins;
+    Scene.defeat(0); Scene.act('hero', 'atk', 0.4);
+    showFloat(first ? '✨ Peti terbuka!' : 'Peti terbuka!', 'loot', 0);
+    showFloat(`+${coins} koin`, 'coin', 0.3);
+    if (first) {
+      const id = Data.monsters[MQ.pick(B.field.mobs)].drop, n = C.items;
+      State.addItem(id, n); showFloat(`+${n} ${Data.items[id].name}`, 'loot', 0.6);
+    }
+    later(sfx.loot, 300);
+    State.save(); updateHud();
+    later(() => { B.chest = null; ch.next(); }, 1800);
   }
 
   /* ===== Area selesai (bos titik 5 kalah): ulangi atau ke peta ===== */

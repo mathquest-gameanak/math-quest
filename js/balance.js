@@ -89,10 +89,18 @@ MQ.Balance = {
      supaya anak dihargai karena teliti, bukan karena cepat. */
   think: {
     time: {tambah: 1, kurang: 1, kali: 1, banding: 1, hitung: 1.3, urutan: 1.3, bentuk: 1.3, isi: 1.5, panjang: 1.5, pasangan: 1.5,
-           puluhan: 1.6, pola: 2, ukur: 2, cerita: 3},
+           puluhan: 1.6, pola: 2, ukur: 2, cerita: 3, teka: 3},
     from: 2,
     telitiMul: 1.5,
     storySpeak: 1     // 1 = soal cerita selalu dibacakan otomatis (anak kelas 1 belum tentu lancar membaca)
+  },
+  /* Peti Teka-teki (2026-11-26): kadang muncul di jalur area setelah titik 2 / titik 4. Soal teka-teki TANPA waktu;
+     salah = coba lagi (tanpa hukuman), hadiah penuh bila benar pada percobaan pertama. Paling banyak 1 peti per jalan. */
+  chest: {
+    chance: 0.4,     // peluang muncul di tiap titik di "at" (0 = tidak pernah)
+    at: [1, 3],      // indeks titik yang baru dilewati (0 = titik 1)
+    coins: [6, 2],   // koin: benar pertama kali / setelah mencoba lagi
+    items: 2         // bahan area bila benar pertama kali
   },
   rewards: {
     coinsNormal: [1, 2], coinsBoss: 8,  // koin dari monster

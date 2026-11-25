@@ -235,5 +235,9 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Masuk ke Hutan Tambah-Kurang (s/d 10), Danau Dua Puluh (s/d 20) dan dungeon Kapal Karam; ikut bonus senjata. Pengali waktu pasangan 1,5.
 - Perbaikan: gaya `.dots` penanda titik jalur ikut mengenai titik petunjuk (sekarang `#dots`); petunjuk tidak lagi terpotong 92px; tanda soal pikir disembunyikan saat berjalan. SW `mq-v27`.
 
+### 2026-11-26 — Peti Teka-teki
+- `balance.chest`, `GEN.teka` (kind `teka`, pengali waktu 3), gambar `peti` di characters.js, petunjuk `hintSeq/hintNote/hintEqual`. Battle: `maybeChest`, `chestAnswer`, `showQuestion` (dipisah dari nextQuestion); musuh tidak berjalan selama peti.
+- Membacakan soal berhenti saat anak menjawab (musuh tidak tertahan oleh suara). SW `mq-v28`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

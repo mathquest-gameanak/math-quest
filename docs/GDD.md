@@ -50,6 +50,8 @@ Sumber: Capaian Pembelajaran Matematika Fase A. **Perlu dicocokkan dengan daftar
 
 Setiap area = **jalur 5 titik**: 1 → 2 → ⭐ mini bos → 4 → 👑 bos area (menjatuhkan bahan langka). Pahlawan berjalan dari titik ke titik di latar bergerak; level musuh naik dari level awal ke level akhir area. Setelah bos kalah: *Ulangi area* atau kembali ke peta. Dungeon memakai cara yang sama (ruang demi ruang). Arena Latihan tetap tanpa akhir (bos tiap monster ke-5).
 
+**📜 Peti Teka-teki** (2026-11-26): kadang (balance `chest`) muncul di jalur area setelah titik 2 atau 4, paling banyak 1 per jalan. Isinya soal teka-teki **tanpa waktu**: bilangan misteri ("Aku lebih dari 5 dan kurang dari 7"), kotak kembar (□ + □ = 8), pola loncat 2/5, hitung mundur, cerita dua langkah. Salah = tombol itu mati + petunjuk, coba lagi tanpa hukuman. Benar pertama kali: 6 koin + 2 bahan area; setelah mencoba lagi: 2 koin.
+
 ### Jenis soal (bertahap dibuat)
 - **Pilihan ganda 4 tombol** (sudah ada): hitungan.
 - **Hitung gambar**: "Ada berapa apel?" (sprite apel 1–10).

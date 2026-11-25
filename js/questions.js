@@ -198,6 +198,43 @@ MQ.Questions = (() => {
       return hint(q, hf);
     }
   };
+  /** Teka-teki Peti (tanpa waktu): bilangan misteri, kotak kembar, pola loncat, mundur, cerita dua langkah. */
+  GEN.teka = s => {
+    const M = Math.max(10, Math.min(20, s.max || 10)), type = pick(['misteri', 'lebih', 'kembar', 'tiga', 'loncat', 'mundur', 'dua']);
+    const q = (text, speak, ans, extra, hf, story) => { const r = hint(numQ('teka', text, speak, ans, extra, 0), hf); r.story = !!story; return r; };
+    if (type === 'misteri') {
+      const n = rand(2, M - 1);
+      return q(`Aku lebih dari ${n - 1} dan kurang dari ${n + 1}. Siapa aku?`, `Aku lebih dari ${n - 1} dan kurang dari ${n + 1}. Siapa aku?`, n, [n - 1, n + 1],
+               () => V().hintLine(n, n), true);
+    }
+    if (type === 'lebih') {
+      const a = rand(1, M - 3), d = rand(1, 3), up = rand(0, 1);
+      return up ? q(`Aku ${d} lebih banyak dari ${a}. Siapa aku?`, `Aku ${d} lebih banyak dari ${a}. Siapa aku?`, a + d, [a, a - d].filter(v => v >= 0),
+                    () => V().hintNote(`${a} + ${d} = ${a + d}`), true)
+                : q(`Aku ${d} lebih sedikit dari ${a + d}. Siapa aku?`, `Aku ${d} lebih sedikit dari ${a + d}. Siapa aku?`, a, [a + d, a + d + d],
+                    () => V().hintNote(`${a + d} − ${d} = ${a}`), true);
+    }
+    if (type === 'kembar' || type === 'tiga') {
+      const k = type === 'kembar' ? 2 : 3, x = rand(1, Math.floor(M / k)), sum = k * x;
+      return q(`${Array(k).fill('□').join(' + ')} = ${sum}. Kotaknya sama. □ = ?`,
+               `${Array(k).fill('kotak').join(' tambah ')} sama dengan ${sum}. Isi kotaknya sama. Berapa isi satu kotak?`,
+               x, [sum, x + 1, x - 1].filter(v => v >= 0), () => V().hintEqual(k, x));
+    }
+    if (type === 'loncat') {
+      const step = M >= 20 ? pick([2, 2, 5]) : 2, start = step === 5 ? 0 : rand(0, Math.max(0, (M - 8) / 2)) * 2;
+      const seq = [0, 1, 2, 3].map(i => start + step * (i + (step === 5 ? 1 : 0))), ans = seq[3] + step;
+      return q(`${seq.join(', ')}, ?`, `Lanjutkan pola bilangan: ${seq.join(', ')}. Berapa berikutnya?`, ans, [seq[3] + 1, ans + step],
+               () => V().hintSeq(seq, ans, `Setiap kali loncat +${step}`));
+    }
+    if (type === 'mundur') {
+      const a = rand(5, M), seq = [a, a - 1, a - 2], ans = a - 3;
+      return q(`${seq.join(', ')}, ?`, `Lanjutkan: ${seq.join(', ')}. Berapa berikutnya?`, ans, [a - 1, a + 1],
+               () => V().hintSeq(seq, ans, 'Setiap kali mundur −1'));
+    }
+    const who = pick(PEOPLE), it = pick(THINGS), a = rand(2, M - 2), b = rand(1, M - a), c = rand(1, a + b - 1), r = a + b - c;
+    const text = `${who.n} punya ${a} ${it.n}. Dapat ${b} lagi, lalu ${c} ${it.gone}. Berapa sisanya?`;
+    return q(text, text, r, [a + b, a + b + c, a - c].filter(v => v >= 0), () => V().hintNote(`${a} + ${b} = ${a + b}, lalu ${a + b} − ${c} = ${r}`), true);
+  };
   /** Tokoh & benda untuk soal cerita (id = gambar MQ.Pix / MQ.Sprites). */
   const PEOPLE = [{id: 'kiki', n: 'Kiki'}, {id: 'momo', n: 'Momo'}, {id: 'kakek', n: 'Kakek'}, {id: 'kapten', n: 'Kapten'}];
   const THINGS = [{s: 'apple', n: 'apel', gone: 'dimakan'}, {s: 'star', n: 'bintang', gone: 'terbang'},
@@ -216,7 +253,7 @@ MQ.Questions = (() => {
   /** Nama jenis soal untuk tampilan (statistik kemampuan). */
   const NAMES = {tambah: 'Tambah +', kurang: 'Kurang −', kali: 'Kali ×', isi: 'Isi kosong', hitung: 'Menghitung', banding: 'Bandingkan',
                  bentuk: 'Bentuk', pola: 'Pola', panjang: 'Panjang', ukur: 'Mengukur', puluhan: 'Puluhan', urutan: 'Urutan',
-                 pasangan: 'Pasangan bilangan', cerita: 'Soal cerita'};
+                 pasangan: 'Pasangan bilangan', cerita: 'Soal cerita', teka: 'Teka-teki'};
 
   return {make, GEN, NAMES, maxFor, specForLevel, nearChoices};
 })();
