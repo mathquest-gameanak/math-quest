@@ -37,14 +37,14 @@ MQ.Data = {
     rajaMalam:      {name: 'Raja Malam', lore: 'Raja Malam menjaga kepingan terakhir. Matanya berkilau seperti bintang.', sprite: 'bat', drop: 'sayap', pal: {p: '#1a1c2c', P: '#5d275d', w: '#ffcd75'}},
     naga:           {name: 'Raja Naga Api', lore: 'Raja Naga Api adalah penguji paling hebat. Napas apinya hangat, bukan panas: ia hanya ingin melihatmu pintar!', sprite: 'dragon', drop: 'batu'},
     // Monster dungeon (kunci = monster penting di tengah dungeon)
-    penjagaPola:    {name: 'Penjaga Pola', lore: 'Penjaga Pola menjaga pintu-pintu Gua Pola. Pintu hanya terbuka bagi yang paham pola.', sprite: 'slime', drop: 'batu', spd: [3.5, 5], power: 1.3, pal: {g: '#ffcd75', G: '#fff3b0', d: '#566c86'}},
+    penjagaPola:    {name: 'Penjaga Pola', lore: 'Penjaga Pola menjaga pintu-pintu Gua Pola. Pintu hanya terbuka bagi yang paham pola.', sprite: 'slime', drop: 'kristalPola', spd: [3.5, 5], power: 1.3, pal: {g: '#ffcd75', G: '#fff3b0', d: '#566c86'}},
     kepiting:       {name: 'Kepiting Capit', lore: 'Kepiting Capit suka menyembunyikan koin di balik cangkangnya.', sprite: 'crab', drop: 'batu'},
     lendirLaut:     {name: 'Lendir Laut', lore: 'Lendir Laut terbawa ombak sampai ke Kapal Karam. Rasanya asin!', sprite: 'slime', drop: 'lendir', pal: {g: '#257179', G: '#73eff7', d: '#29366f'}},
-    kepitingBesar:  {name: 'Kepiting Besar', lore: 'Kepiting Besar memegang peta harta milik Kapten Kumis.', sprite: 'crab', drop: 'batu', power: 1.4, pal: {r: '#ef7d57'}},
+    kepitingBesar:  {name: 'Kepiting Besar', lore: 'Kepiting Besar memegang peta harta milik Kapten Kumis.', sprite: 'crab', drop: 'mutiara', power: 1.4, pal: {r: '#ef7d57'}},
     rajaKepiting:   {name: 'Raja Kepiting', lore: 'Raja Kepiting duduk di atas peti harta. Capit ungunya berkilau di bawah air.', sprite: 'crab', drop: 'batu', pal: {r: '#b06fd0', w: '#ffcd75'}},
     hantuKertas:    {name: 'Hantu Kertas', lore: 'Hantu Kertas terbuat dari halaman buku yang sobek. Ia senang mengacak nomor halaman.', sprite: 'ghost', drop: 'kayu', pal: {w: '#ffe4c4'}},
     kelelawarBuku:  {name: 'Kelelawar Buku', lore: 'Kelelawar Buku tinggal di rak paling tinggi. Kepakan sayapnya berbunyi seperti halaman dibalik.', sprite: 'bat', drop: 'sayap', pal: {p: '#ab5236', P: '#ffe4c4'}},
-    hantuTinta:     {name: 'Hantu Tinta', lore: 'Hantu Tinta meneteskan tinta biru ke mana-mana. Bersihkan dengan jawaban yang benar!', sprite: 'ghost', drop: 'kayu', power: 1.3, pal: {w: '#73eff7'}},
+    hantuTinta:     {name: 'Hantu Tinta', lore: 'Hantu Tinta meneteskan tinta biru ke mana-mana. Bersihkan dengan jawaban yang benar!', sprite: 'ghost', drop: 'tinta', power: 1.3, pal: {w: '#73eff7'}},
     rajaTinta:      {name: 'Raja Tinta', lore: 'Raja Tinta adalah hantu paling iseng di Perpustakaan Tua.', sprite: 'ghost', drop: 'kayu', pal: {w: '#566c86', k: '#1a1c2c'}}
   },
 
@@ -61,6 +61,13 @@ MQ.Data = {
     batu:    {type: 'bahan', name: 'Batu Kotak', icon: 'rock', desc: 'Keras sekali. Dari monster batu.'},
     kayu:    {type: 'bahan', name: 'Kayu Ajaib', icon: 'log', desc: 'Dari Jamur Kayu & Lendir Ungu.'},
     mahkota: {type: 'bahan', name: 'Mahkota Kecil', icon: 'crown', desc: 'Langka! Hanya dari bos.'},
+    // Bahan khusus dungeon (from = id dungeon): dari peti harta & monster kunci. Untuk equipment kuat (Mode Pahlawan).
+    kristalPola: {type: 'bahan', name: 'Kristal Pola', icon: 'shard', pal: {c: '#b06fd0', C: '#f4a3c8'}, from: 'guaPola',
+                  desc: 'Bahan khusus SENJATA. Dari Gua Pola (makin banyak di ⭐⭐⭐).'},
+    mutiara:     {type: 'bahan', name: 'Mutiara Laut', icon: 'coin', pal: {y: '#c7f0ff', Y: '#f4f4f4'}, from: 'kapalKaram',
+                  desc: 'Bahan khusus PELINDUNG. Dari Kapal Karam (makin banyak di ⭐⭐⭐).'},
+    tinta:       {type: 'bahan', name: 'Tinta Bintang', icon: 'star', pal: {y: '#73eff7'}, from: 'perpustakaan',
+                  desc: 'Bahan khusus AKSESORI. Dari Perpustakaan Tua (makin banyak di ⭐⭐⭐).'},
 
     ramuan:  {type: 'ramuan', name: 'Ramuan Penyembuh', icon: 'potion', price: 5, desc: 'Minum saat bertarung: HP penuh lagi.'},
 
@@ -79,9 +86,19 @@ MQ.Data = {
                       bonus: {kinds: ['puluhan', 'urutan', 'banding'], dmg: 5}, recipe: {kayu: 4, batu: 4, koin: 20},
                       desc: 'Serangan +4. Ekstra +5 di soal puluhan, urutan & bandingkan. Kritikal +5%, damage kritikal +40%.'},
 
+    pedangKristal:   {type: 'senjata', name: 'Pedang Kristal', icon: 'sword', pal: {w: '#b06fd0', y: '#f4a3c8'}, atk: 5, crit: 10, critDmg: 20,
+                      recipe: {kristalPola: 3, batu: 5, koin: 30}, desc: 'Serangan +5. Kritikal +10%, damage kritikal +20%.'},
+    pedangPahlawan:  {type: 'senjata', name: 'Pedang Pahlawan', icon: 'sword', pal: {w: '#ffcd75', y: '#e43b44'}, atk: 8, crit: 15, critDmg: 40,
+                      recipe: {kristalPola: 8, mahkota: 3, koin: 60}, desc: 'Serangan +8. Kritikal +15%, damage kritikal +40%.'},
+
     perisaiKayu:     {type: 'pelindung', name: 'Perisai Kayu', icon: 'shield', price: 12, hp: 4, def: 1, desc: 'HP +4, Pertahanan +1.'},
     perisaiBatu:     {type: 'pelindung', name: 'Perisai Batu', icon: 'shield', pal: {b: '#566c86', y: '#94b0c2'}, hp: 8, def: 2,
                       recipe: {batu: 6, koin: 15}, desc: 'HP +8, Pertahanan +2.'},
+
+    perisaiMutiara:  {type: 'pelindung', name: 'Perisai Mutiara', icon: 'shield', pal: {b: '#c7f0ff', y: '#73eff7'}, hp: 15, def: 3,
+                      recipe: {mutiara: 3, batu: 5, koin: 30}, desc: 'HP +15, Pertahanan +3.'},
+    zirahPahlawan:   {type: 'pelindung', name: 'Perisai Pahlawan', icon: 'shield', pal: {b: '#ffcd75', y: '#e43b44'}, hp: 25, def: 5,
+                      recipe: {mutiara: 8, mahkota: 3, koin: 60}, desc: 'HP +25, Pertahanan +5.'},
 
     kalungKoin:      {type: 'aksesori', name: 'Kalung Koin', icon: 'ring', pal: {r: '#ffcd75', y: '#94b0c2'}, coins: 1,
                       recipe: {sayap: 5, koin: 10}, desc: 'Setiap monster memberi +1 koin.'},
@@ -89,11 +106,17 @@ MQ.Data = {
                       recipe: {mahkota: 2, sayap: 3, koin: 20}, desc: 'XP +20%.'},
     jimatKilat:      {type: 'aksesori', name: 'Jimat Kilat', icon: 'ring', pal: {r: '#73eff7', y: '#ffcd75'}, crit: 15, critDmg: 20,
                       recipe: {sayap: 4, mahkota: 1, koin: 15}, desc: 'Kritikal +15%, damage kritikal +20%.'}
+,
+    jimatTinta:      {type: 'aksesori', name: 'Jimat Tinta', icon: 'ring', pal: {r: '#3b5dc9', y: '#73eff7'}, crit: 10, xp: 30,
+                      recipe: {tinta: 3, sayap: 5, koin: 30}, desc: 'Kritikal +10%, XP +30%.'},
+    mahkotaBijak:    {type: 'aksesori', name: 'Mahkota Bijak', icon: 'crown', pal: {y: '#73eff7', r: '#b06fd0'}, crit: 20, critDmg: 50, coins: 2,
+                      recipe: {tinta: 8, mahkota: 3, koin: 60}, desc: 'Kritikal +20%, damage kritikal +50%, +2 koin tiap monster.'}
   },
 
   /** Urutan barang di Toko dan resep di Pandai Besi. */
   shop: ['ramuan', 'pedangKayu', 'perisaiKayu'],
-  smith: ['pedangPenjumlah', 'kapakPengurang', 'perisaiBatu', 'kalungKoin', 'jimatKilat', 'tongkatBentuk', 'paluPuluhan', 'cincinBintang'],
+  smith: ['pedangPenjumlah', 'kapakPengurang', 'perisaiBatu', 'kalungKoin', 'jimatKilat', 'tongkatBentuk', 'paluPuluhan', 'cincinBintang',
+          'pedangKristal', 'perisaiMutiara', 'jimatTinta', 'pedangPahlawan', 'zirahPahlawan', 'mahkotaBijak'],
 
   /* Field Kelas 1, berurutan. spec.kinds = jenis soal (lihat questions.js GEN);
      req = field yang bosnya harus dikalahkan dulu; soon = belum bisa dimainkan;
@@ -123,15 +146,15 @@ MQ.Data = {
     {id: 'guaPola', pace: 1.3, name: 'Gua Pola', icon: '🕳️', req: 'bukit', lv: [8, 12], rooms: 5, keyRoom: 3, key: 'penjagaPola',
      dungeon: true, desc: 'Bantu Momo menyelamatkan keluarganya.', topic: 'Pola & bentuk',
      spec: {kinds: ['pola', 'bentuk', 'pola']}, mobs: ['lendirBatu', 'jamurBatu', 'kelelawar'], boss: 'rajaBatu',
-     reward: {coins: 15, items: {ramuan: 1, mahkota: 1}}},
+     reward: {coins: 15, items: {ramuan: 1, mahkota: 1, kristalPola: 2}}},
     {id: 'kapalKaram', pace: 1.2, name: 'Kapal Karam', icon: '⛵', req: 'danau', lv: [12, 16], rooms: 6, keyRoom: 3, key: 'kepitingBesar',
      dungeon: true, desc: 'Bantu Kapten Kumis mencari hartanya.', topic: 'Tambah & kurang sampai 20',
      spec: {kinds: ['tambah', 'kurang', 'isi', 'hitung'], max: 20}, mobs: ['kepiting', 'lendirLaut'], boss: 'rajaKepiting',
-     reward: {coins: 25, items: {ramuan: 2, mahkota: 1}}},
+     reward: {coins: 25, items: {ramuan: 2, mahkota: 1, mutiara: 2}}},
     {id: 'perpustakaan', pace: 1.4, name: 'Perpustakaan Tua', icon: '📚', req: 'lembah', lv: [16, 20], rooms: 7, keyRoom: 4, key: 'hantuTinta',
      dungeon: true, desc: 'Bantu Hantu Buku merapikan nomor halaman.', topic: 'Puluhan, urutan & bandingkan sampai 100',
      spec: {kinds: ['urutan', 'puluhan', 'banding'], max: 100}, mobs: ['hantuKertas', 'kelelawarBuku'], boss: 'rajaTinta',
-     reward: {coins: 35, items: {ramuan: 2, mahkota: 2}}}
+     reward: {coins: 35, items: {ramuan: 2, mahkota: 2, tinta: 2}}}
   ],
 
   /* Arena Latihan: selalu terbuka, soal mengikuti level & mode pilihan, monster ikut level pemain. */

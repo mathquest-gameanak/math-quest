@@ -26,7 +26,7 @@ MQ.Battle = (() => {
   const B = {run: 0, field: null, mode: 'field', combo: 0, hp: 0, maxHp: 1, isBoss: false, last: '', q: null, locked: true,
              room: 0, exam: null, charge: 0, interval: 3, tier: 0, mods: null};
   /** Pengubah kesulitan: tingkat dungeon atau Mode Pahlawan (balance.js), selain itu netral. */
-  const NONE = {lvAdd: 0, speedMul: 1, rewardMul: 1};
+  const NONE = {lvAdd: 0, hpMul: 1, dmgMul: 1, speedMul: 1, rewardMul: 1};
   const mods = () => B.mods || NONE;
   const later = (fn, ms) => { const r = B.run; setTimeout(() => { if (r === B.run) fn(); }, ms); };
   const kills = () => S.fieldKills[B.field.id] || 0;
@@ -89,7 +89,7 @@ MQ.Battle = (() => {
   }
   /** Damage serangan musuh: tergantung level tempat & kekuatan monster, dikurangi pertahanan pemain (min 1). */
   function enemyDamage() {
-    return Math.max(1, MQ.Calc.monsterDmg(B.mLv, style().power, B.isBoss) - State.def());
+    return Math.max(1, Math.round(MQ.Calc.monsterDmg(B.mLv, style().power, B.isBoss) * (mods().dmgMul || 1)) - State.def());
   }
   /** Level monster yang akan muncul (lihat rumus di balance.js):
       area  → naik 1 level tiap levelUpEvery monster dikalahkan di area itu, maks level tertinggi area
@@ -216,7 +216,7 @@ MQ.Battle = (() => {
       B.maxHp = B.exam.qs.length * 10;
     } else {
       B.mLv = monsterLevel();
-      B.maxHp = MQ.Calc.monsterHp(B.mLv, B.isBoss ? 'boss' : B.isKey ? 'key' : '');
+      B.maxHp = Math.round(MQ.Calc.monsterHp(B.mLv, B.isBoss ? 'boss' : B.isKey ? 'key' : '') * (mods().hpMul || 1));
     }
     B.hp = B.maxHp;
     B.interval = newInterval();

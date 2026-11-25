@@ -10,7 +10,7 @@ MQ.UI = (() => {
 
   /* ===== Pindah layar: tiap <section class="screen" id="scr-NAMA"> ===== */
   const renderers = {};
-  const TABS = ['home', 'char', 'bag', 'shop', 'smith', 'dungeon']; // layar yang memakai bilah tombol bawah
+  const TABS = ['bag', 'char', 'home', 'dungeon', 'shop']; // layar yang memakai bilah tombol bawah
   function show(name) {
     document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === 'scr-' + name));
     if (renderers[name]) renderers[name]();

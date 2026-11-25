@@ -17,8 +17,10 @@ MQ.Dungeon = (() => {
 
   function card(d) {
     const boss = Data.monsters[d.boss], img = `<img class="dImg" src="${Sprites.url(boss.sprite, boss.pal)}" alt="">`;
+    const mat = Object.keys(d.reward.items).find(id => Data.items[id].from), SLOT = {guaPola: 'senjata', kapalKaram: 'pelindung', perpustakaan: 'aksesori'};
+    const matLine = mat ? `<p class="dMat">${UI.itemImg(mat)}<span>Bahan khusus <b>${Data.items[mat].name}</b> untuk ${SLOT[d.id] || 'equipment'} kuat</span></p>` : '';
     const head = `<div class="dHead">${img}<div class="dBody"><b>${d.icon} ${d.name}</b><small>📘 ${d.topic}</small>` +
-                 `<small>🚪 ${d.rooms} ruang · ${lvText(d, 0)}</small></div></div><p class="dStory">${d.desc}</p>`;
+                 `<small>🚪 ${d.rooms} ruang · ${lvText(d, 0)}</small></div></div><p class="dStory">${d.desc}</p>${matLine}`;
     if (!State.unlocked(d)) {
       const req = Data.fields.find(f => f.id === d.req);
       return `<div class="panel dCard lock">${head}<p class="dLock">🔒 Kalahkan bos ${req.name} dulu</p></div>`;

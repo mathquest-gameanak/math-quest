@@ -313,10 +313,11 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 
 /* Bilah tombol bawah */
 .tabbar { position: fixed; left: 50%; bottom: 0; width: 100%; max-width: 480px; transform: translateX(-50%); z-index: 5;
-  display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); background: var(--hitam); border-top: 3px solid var(--panel-tepi);
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); background: var(--hitam); border-top: 3px solid var(--panel-tepi);
   padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); }
 .tabbar button { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px 0; background: none; color: #94b0c2; min-height: 56px; }
 .tabbar img { width: 30px; height: 30px; }
+.tabbar .tabHome img { width: 36px; height: 36px; margin-top: -4px; } /* Beranda di tengah sedikit lebih besar */
 .tabbar span { font-size: 11px; font-weight: 700; line-height: 1.1; text-align: center; }
 .tabbar button.on { color: var(--kuning); background: #29366f; box-shadow: inset 0 3px 0 var(--kuning); }
 .tabbar .badge { position: absolute; top: 0; right: 4px; margin: 0; min-width: 22px; height: 22px; line-height: 16px; font-size: 12px; border-width: 2px; }
@@ -410,11 +411,11 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 
 /* ===== Koleksi: Halaman Utama, Buku Monster, Medali ===== */
 /* Ikon kecil di kiri halaman utama: Buku, Misi, Medali */
-.homeSide { position: absolute; left: 10px; top: 72px; z-index: 2; display: flex; flex-direction: column; gap: 8px; }
-.sideBtn { position: relative; width: 58px; padding: 4px 0 3px; display: flex; flex-direction: column; align-items: center; gap: 0;
+.homeSide { position: absolute; left: 10px; top: 70px; z-index: 2; display: flex; flex-direction: column; gap: 6px; }
+.sideBtn { position: relative; width: 50px; padding: 3px 0 2px; display: flex; flex-direction: column; align-items: center; gap: 0;
   background: #1a1c2cd0; border: 3px solid var(--panel-tepi); box-shadow: 0 3px 0 var(--hitam); }
-.sideBtn span { font-size: 24px; line-height: 1.1; }
-.sideBtn small { font-size: 11px; font-weight: 900; color: var(--teks); }
+.sideBtn span { font-size: 19px; line-height: 1.1; }
+.sideBtn small { font-size: 10px; font-weight: 900; color: var(--teks); line-height: 1.05; text-align: center; }
 .sideBtn:active { transform: translateY(3px); }
 .sideBtn .badge { top: -8px; right: -8px; margin: 0; min-width: 22px; height: 22px; line-height: 16px; font-size: 12px; border-width: 2px; }
 #scr-home .heroStage { bottom: 4%; }
@@ -483,6 +484,8 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 .dBody small { font-size: 13px; color: #94b0c2; }
 .dStory { font-size: 14px; line-height: 1.35; }
 .dLock { font-weight: 900; color: #f4a3c8; text-align: center; padding: 6px 0 2px; }
+.dMat { display: flex; align-items: center; gap: 6px; font-size: 13px; background: #1a1c2c80; padding: 3px 6px; }
+.dMat .icon { width: 24px; height: 24px; flex: none; }
 .dCard.lock .dImg { filter: grayscale(1) brightness(.6); }
 .dTiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
 .dTier { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 6px 2px; font-weight: 900;

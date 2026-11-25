@@ -65,10 +65,13 @@ MQ.Tuner = (() => {
       ['rewards.coinsBoss', 'Koin bos', '', 1],
       ['rewards.dropChance', 'Peluang drop', '0.7 = 70%', 0.05]
     ]},
-    {title: '🏰 Tingkat dungeon & Mode Pahlawan', note: 'Level + = level musuh ditambah. Jeda × < 1 = musuh lebih cepat. Hadiah × = koin & isi peti.', rows: [
+    {title: '🏰 Tingkat dungeon & Mode Pahlawan', note: 'Level + = level musuh ditambah. HP/damage × = pengali musuh. Jeda × < 1 = musuh lebih cepat. Hadiah × = koin & isi peti.', rows: [
       ['tiers.1.lvAdd', '⭐⭐ level +', '', 1], ['tiers.1.speedMul', '⭐⭐ jeda ×', '', 0.05], ['tiers.1.rewardMul', '⭐⭐ hadiah ×', '', 0.5],
       ['tiers.2.lvAdd', '⭐⭐⭐ level +', '', 1], ['tiers.2.speedMul', '⭐⭐⭐ jeda ×', '', 0.05], ['tiers.2.rewardMul', '⭐⭐⭐ hadiah ×', '', 0.5],
-      ['heroMode.lvAdd', 'Mode Pahlawan level +', '', 1], ['heroMode.speedMul', 'Mode Pahlawan jeda ×', '', 0.05], ['heroMode.rewardMul', 'Mode Pahlawan koin ×', '', 0.5]
+      ['tiers.2.hpMul', '⭐⭐⭐ HP musuh ×', '', 0.1], ['tiers.2.dmgMul', '⭐⭐⭐ damage musuh ×', '', 0.1],
+      ['heroMode.lvAdd', 'Mode Pahlawan level +', '', 1], ['heroMode.hpMul', 'Mode Pahlawan HP musuh ×', '', 0.1],
+      ['heroMode.dmgMul', 'Mode Pahlawan damage musuh ×', '', 0.1], ['heroMode.speedMul', 'Mode Pahlawan jeda ×', '', 0.05],
+      ['heroMode.rewardMul', 'Mode Pahlawan koin ×', '', 0.5]
     ]},
     {title: '🦇 Kecepatan jenis monster', note: 'Jeda serangan acak antara cepat–lambat (detik), sebelum dikali pace area. Kekuatan mengalikan damage.',
      rows: () => Object.keys(Data.styles).flatMap(k => [

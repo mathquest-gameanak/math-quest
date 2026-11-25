@@ -177,5 +177,11 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - **Beranda**: ikon kecil Buku/Misi/Medali di kiri (badge misi pindah ke sini); tombol besar Buku & Medali dihapus.
 - Atur Angka: grup baru "Tingkat dungeon & Mode Pahlawan". Simpanan v10. SW `mq-v15`.
 
+### 2026-11-25 — Bahan khusus dungeon, Mode Pahlawan lebih berat, bilah bawah 5 tombol
+- Bilah bawah: Tas, Karakter, **Beranda (tengah)**, Dungeon, Toko. Pandai Besi pindah ke ikon kiri beranda (Buku, Misi, Medali, Pandai Besi; ikon diperkecil).
+- Mode Pahlawan: level +6, HP musuh ×1,4, damage ×1,6, jeda ×0,7, koin ×2 (`balance.heroMode`, juga `hpMul`/`dmgMul` per tingkat dungeon; ⭐⭐⭐ ×1,2).
+- Bahan khusus: Kristal Pola (Gua Pola → senjata), Mutiara Laut (Kapal Karam → pelindung), Tinta Bintang (Perpustakaan → aksesori). Dari peti (2/3/4 per ⭐) & monster kunci. 6 equipment baru di Pandai Besi: Pedang Kristal/Pahlawan, Perisai Mutiara/Pahlawan, Jimat Tinta, Mahkota Bijak.
+- GDD §14: rencana skala angka Kelas 1–6 (HP puluhan → ratusan → ribuan → puluhan ribu, mengikuti rentang bilangan sekolah). SW `mq-v16`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

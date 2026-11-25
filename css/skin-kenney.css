@@ -178,7 +178,7 @@ body.skinK .soundOpen { border-image-source: url(../ui/btn-cyan.png); color: var
 body.skinK .fileBtn { color: #fff; }
 
 /* ===== v15: ikon samping beranda, Dungeon, Mode Pahlawan ===== */
-body.skinK .sideBtn { background: none; box-shadow: none; border: 8px solid transparent; border-image: url(../ui/wood.png) 6 fill / 8px stretch; padding: 0; width: 62px; }
+body.skinK .sideBtn { background: none; box-shadow: none; border: 6px solid transparent; border-image: url(../ui/wood.png) 6 fill / 6px stretch; padding: 1px 0; width: 52px; }
 body.skinK .sideBtn small { color: var(--kertas); text-shadow: 1px 1px 0 #6d4b27; }
 body.skinK .dImg { border-color: #6d4b27; }
 body.skinK .dBody b, body.skinK .dStory { color: var(--tinta); }
@@ -189,3 +189,4 @@ body.skinK .dTier.done { border-image-source: url(../ui/btn-yellow.png); color: 
 body.skinK .dTier.lock { border-image-source: url(../ui/steel.png); color: #dfe8f0; opacity: .8; }
 body.skinK .heroToggle { background: none; border: 8px solid transparent; border-image: url(../ui/steel-light.png) 6 fill / 8px stretch; color: #1f2a35; padding: 0 2px; min-height: 0; }
 body.skinK .heroToggle.on { border-image-source: url(../ui/btn-red.png); color: #ffe08a; text-shadow: 1px 1px 0 #0006; }
+body.skinK .dMat { background: #ecd3a4; color: var(--tinta); border: 2px solid #d2ae74; }

@@ -109,6 +109,16 @@ Aturan agar level tetap seimbang:
 
 Slot equipment: **senjata, pelindung, aksesori**.
 
+**Bahan khusus dungeon** (2026-11-25): setiap dungeon punya satu bahan khusus untuk satu slot. Bahan ini didapat dari peti harta (2 / 3 / 4 di ⭐ / ⭐⭐ / ⭐⭐⭐) dan dari monster kuncinya.
+
+| Dungeon | Bahan | Equipment (Pandai Besi) |
+|---|---|---|
+| Gua Pola | Kristal Pola | Pedang Kristal (ATK +5) → Pedang Pahlawan (ATK +8) |
+| Kapal Karam | Mutiara Laut | Perisai Mutiara (HP +15, DEF +3) → Perisai Pahlawan (HP +25, DEF +5) |
+| Perpustakaan Tua | Tinta Bintang | Jimat Tinta (krit +10%, XP +30%) → Mahkota Bijak (krit +20%, krit dmg +50%, koin +2) |
+
+Lingkaran yang diharapkan membuat anak terus main dan belajar: **dungeon lebih sulit → bahan lebih banyak → equipment lebih kuat → bisa mengalahkan Mode Pahlawan / ⭐⭐⭐**.
+
 ## 7. Kota & misi
 
 **Kota Kelas 1: Desa Bilangan.** Berupa layar ilustrasi; bangunan diketuk untuk masuk (lebih mudah di HP daripada berjalan di peta).
@@ -128,9 +138,9 @@ Slot equipment: **senjata, pelindung, aksesori**.
 - Dibuka dari tombol **🏰 Dungeon** di bilah bawah (bukan dari peta). Halaman berisi satu kartu per dungeon: gambar, nama, materi, level, hadiah; yang belum terbuka tampil terkunci dengan syaratnya.
 - **Tingkat ⭐ / ⭐⭐ / ⭐⭐⭐** (seperti bintang di game anak): soal sama, musuh lebih tinggi levelnya & lebih cepat, hadiah peti lebih besar (×1 / ×1,5 / ×2). Tingkat berikutnya terbuka setelah tingkat sebelumnya selesai. Tanpa energi, timer, atau peringkat.
 
-**Mode Pahlawan ⭐⭐** (petualangan utama, terbuka setelah lulus Ujian Naik Kelas): area & soal sama, musuh +4 level dan menyerang lebih cepat, koin ×1,5. Saklar Normal/Pahlawan di atas peta. Medali "Pahlawan Sejati" untuk mengalahkan keenam bos area di Mode Pahlawan.
+**Mode Pahlawan ⭐⭐** (petualangan utama, terbuka setelah lulus Ujian Naik Kelas): area & soal sama, musuh +6 level, HP ×1,4, damage ×1,6, menyerang lebih cepat (jeda ×0,7), koin ×2. Sengaja berat: perlu equipment dari bahan khusus dungeon. Saklar Normal/Pahlawan di atas peta. Medali "Pahlawan Sejati" untuk mengalahkan keenam bos area di Mode Pahlawan.
 
-**Halaman utama**: Buku Monster, Misi, Medali berupa ikon kecil bertumpuk di kiri di bawah kartu nama (ada tanda merah bila ada yang baru). Bilah bawah: Beranda, Karakter, Tas, Toko, Pandai Besi, Dungeon.
+**Halaman utama**: Buku Monster, Misi, Medali berupa ikon kecil bertumpuk di kiri di bawah kartu nama (ada tanda merah bila ada yang baru). Ikon Pandai Besi juga di situ. Bilah bawah (5): Tas, Karakter, **Beranda (tengah)**, Dungeon, Toko.
 
 ## 8. Laporan Orang Tua
 
@@ -190,3 +200,20 @@ Setiap dungeon punya cerita sendiri dengan cutscene di awal, setelah monster kun
 ### Cutscene
 - Latar pixel, tokoh masuk/berjalan, getar layar, kilatan, kilau; teks muncul huruf demi huruf; ketuk untuk lanjut; tombol "Lewati".
 - Naskah di `js/story.js`. Suara opsional per baris: file `audio/vo/<id>.mp3` (daftar id di `docs/naskah-suara.md`), didaftarkan di `MQ.Story.VO`.
+
+## 14. Skala angka dari Kelas 1 sampai Kelas 6 (rencana)
+
+Progress pemain **terus berlanjut** antar kelas: level, equipment, medali, dan koleksi tidak di-reset. Besarnya HP & damage tumbuh mengikuti **rentang bilangan yang sedang dipelajari**, sehingga membaca HP dan damage juga menjadi latihan:
+
+| Kelas | Rentang bilangan di sekolah | Level kira-kira | HP pahlawan | Damage |
+|---|---|---|---|---|
+| 1 | sampai 100 | 1–20 | 20–60 (gear sampai ±100) | satuan – puluhan kecil |
+| 2 | sampai 1.000 | 20–40 | ratusan | puluhan |
+| 3–4 | sampai 10.000 | 40–80 | ribuan | ratusan |
+| 5–6 | sampai 1.000.000 | 80–120 | puluhan ribu | ribuan |
+
+Cara membuatnya (nanti, saat Kelas 2 dikerjakan):
+- `balance.js` diberi blok angka per kelas (HP dasar, HP per level, damage, dll.). Pertumbuhan **di dalam** satu kelas tetap lurus (mudah ditebak); lompatannya terjadi **antar kelas** (± ×5–10).
+- Saat naik kelas, monster di wilayah baru langsung jauh lebih kuat, jadi equipment kelas lama terasa lemah. Equipment baru dibuat dari bahan & dungeon kelas itu, dengan pola yang sama: dungeon → bahan khusus → equipment kuat → Mode Pahlawan.
+- Pahlawan juga ikut "naik skala" saat lulus ujian (bonus HP & serangan dasar kelas baru), supaya tidak terasa tertinggal.
+- Angka besar ditampilkan dengan pemisah ribuan (12.500) sesuai cara menulis di buku sekolah.

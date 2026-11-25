@@ -193,7 +193,7 @@ MQ.WorldMap = (() => {
   $('btnHeroMode').addEventListener('click', () => {
     S.heroMode = !S.heroMode; State.save();
     UI.renderers.map();
-    if (S.heroMode) UI.overlay({icon: '🦸', title: 'Mode Pahlawan ⭐⭐', text: 'Soalnya sama, tapi musuh lebih kuat dan lebih cepat. Koin lebih banyak! Kalahkan lagi keenam bos area.'});
+    if (S.heroMode) UI.overlay({icon: '🦸', title: 'Mode Pahlawan ⭐⭐', text: 'Soalnya sama, tapi musuh JAUH lebih kuat dan cepat. Koin dua kali lipat! Buat senjata, pelindung & aksesori dari bahan khusus dungeon di Pandai Besi supaya cukup kuat.'});
   });
 
   return {POS};

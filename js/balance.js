@@ -65,14 +65,15 @@ MQ.Balance = {
     healOnKillPct: 20            // HP pulih (%) setiap mengalahkan monster (bukan di dungeon)
   },
   /* Tingkat dungeon ⭐/⭐⭐/⭐⭐⭐ dan Mode Pahlawan (petualangan utama setelah lulus ujian):
-     lvAdd = level monster ditambah (HP, damage & XP ikut naik), speedMul = pengali jeda serangan (< 1 = lebih cepat),
-     rewardMul = pengali koin & isi peti. */
+     lvAdd = level monster ditambah (HP, damage & XP ikut naik), hpMul / dmgMul = pengali HP & damage musuh,
+     speedMul = pengali jeda serangan (< 1 = lebih cepat), rewardMul = pengali koin & isi peti.
+     Mode Pahlawan sengaja berat: dirancang untuk dikalahkan dengan equipment dari bahan khusus dungeon. */
   tiers: [
-    {lvAdd: 0, speedMul: 1, rewardMul: 1},
-    {lvAdd: 3, speedMul: 0.85, rewardMul: 1.5},
-    {lvAdd: 6, speedMul: 0.7, rewardMul: 2}
+    {lvAdd: 0, hpMul: 1, dmgMul: 1, speedMul: 1, rewardMul: 1},
+    {lvAdd: 3, hpMul: 1, dmgMul: 1, speedMul: 0.85, rewardMul: 1.5},
+    {lvAdd: 6, hpMul: 1.2, dmgMul: 1.2, speedMul: 0.7, rewardMul: 2}
   ],
-  heroMode: {lvAdd: 4, speedMul: 0.8, rewardMul: 1.5},
+  heroMode: {lvAdd: 6, hpMul: 1.4, dmgMul: 1.6, speedMul: 0.7, rewardMul: 2},
   rewards: {
     coinsNormal: [1, 2], coinsBoss: 8,  // koin dari monster
     dropChance: 0.7,                    // peluang monster biasa menjatuhkan 1 bahan
