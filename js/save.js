@@ -57,6 +57,9 @@ MQ.Save = (() => {
     return {
       dungeonStars, heroCleared: strList(d.heroCleared), legendCleared: strList(d.legendCleared), // area yang bosnya kalah di Pahlawan / Legenda
       // mode petualangan utama: 0 Normal, 1 Pahlawan, 2 Legenda (simpanan lama: heroMode true → 1)
+      // istirahat setelah pingsan: {until: waktu (ms), kind: jenis pelajaran, max, learned}
+      rest: d.rest && typeof d.rest === 'object' && Number.isFinite(d.rest.until) && typeof d.rest.kind === 'string'
+        ? {until: Math.min(d.rest.until, Date.now() + 3600000), kind: d.rest.kind, max: num(d.rest.max, 10, 1), learned: d.rest.learned === true} : null,
       storyMode: [0, 1, 2].includes(d.storyMode) ? d.storyMode : d.heroMode === true ? 1 : 0,
       upgrades: Object.fromEntries(Object.entries(obj(d.upgrades)).filter(([k, v]) => items[k] && num(v, 0, 1) > 0).map(([k, v]) => [k, Math.min(5, num(v, 0, 1))])),
       bestiary, medals,
@@ -100,7 +103,7 @@ MQ.Save = (() => {
         coins: s.coins, inv: s.inv, equip: s.equip, grade: s.grade, examBest: s.examBest, daily: s.daily,
         alloc: s.alloc, points: s.points, settings: s.settings, days: pruneDays(s.days), hero: s.hero, story: s.story,
         bestiary: s.bestiary, medals: s.medals, costumes: s.costumes, kilat: s.kilat, crafted: s.crafted,
-        dungeonStars: s.dungeonStars, storyMode: s.storyMode, heroCleared: s.heroCleared, legendCleared: s.legendCleared, upgrades: s.upgrades
+        dungeonStars: s.dungeonStars, storyMode: s.storyMode, heroCleared: s.heroCleared, legendCleared: s.legendCleared, upgrades: s.upgrades, rest: s.rest
       }));
     } catch (e) { /* penyimpanan tidak tersedia: game tetap jalan */ }
   }

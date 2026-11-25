@@ -35,11 +35,25 @@
         <button class="sideBtn" data-go="quests"><span>⭐</span><small>Misi</small><b id="questBadge" class="badge" hidden></b></button>
         <button class="sideBtn" data-go="medals"><span>🏅</span><small>Medali</small></button>
         <button class="sideBtn" data-go="smith"><span>🔨</span><small>Pandai Besi</small></button>
+        <button class="sideBtn" data-go="learn"><span>🎓</span><small>Pelajaran</small></button>
       </div>
       <h1 class="logo">MATH<br>QUEST</h1>
       <div class="heroStage"><img id="homeHero" class="homeHero" alt="Pahlawan"></div>
+      <button id="restBanner" class="restBanner" hidden></button>
     </div>
     <button class="adventure" data-go="map">⚔️ PETUALANGAN</button>
+  </section>
+
+  <!-- ===== PELAJARAN (materi bergambar + latihan tanpa waktu; wajib setelah pingsan) ===== -->
+  <section id="scr-learn" class="screen">
+    <header class="panel topbar"><button class="back" id="learnBack">◀</button><h2 id="learnTitle">Pelajaran</h2></header>
+    <div class="panel learnBox">
+      <div id="learnRest" class="learnRest" hidden></div>
+      <div id="learnStep" class="learnStep"></div>
+      <div id="learnBody" class="learnBody"></div>
+      <div id="learnAnswers"></div>
+      <button id="learnNext" class="learnNext">Lanjut ▶</button>
+    </div>
   </section>
 
   <!-- ===== BUKU MONSTER ===== -->
@@ -191,6 +205,7 @@
   <!-- ===== PETA ===== -->
   <section id="scr-map" class="screen">
     <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Peta</h2><button id="btnHeroMode" class="heroToggle" hidden></button></header>
+    <div id="modeMenu" class="modeMenu" hidden></div>
     <div id="mapScroll" class="mapScroll">
       <div class="mapWrap"><canvas id="mapCanvas"></canvas><div id="mapNodes"></div><img id="mapHero" class="mapHero" alt="Posisimu"></div>
     </div>
@@ -251,7 +266,7 @@
 
     <div id="question" class="panel">
       <div id="fastBar" class="fastBar" title="Jawab sebelum habis = KILAT (pasti kritikal)"><span>⚡</span><div class="fastTrack"><div id="fastFill"></div></div></div>
-      <div id="thinkTag" class="thinkTag" hidden>🧠 Soal pikir: santai saja, yang penting teliti!</div>
+      <div id="thinkTag" class="thinkTag" hidden>🧠 Soal pikir: serangan musuh lebih lemah, yang penting teliti!</div>
       <div id="qView" hidden></div>
       <div class="qLine"><span id="qText">?</span><button id="btnSpeak" class="speak" aria-label="Bacakan soal">🔊</button></div>
     </div>
@@ -309,6 +324,7 @@
 <script src="js/cutscene.js"></script>
 <script src="js/collection.js"></script>
 <script src="js/map.js"></script>
+<script src="js/learn.js"></script>
 <script src="js/dungeon.js"></script>
 <script src="js/homescene.js"></script>
 <script src="js/main.js"></script>

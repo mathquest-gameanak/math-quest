@@ -97,23 +97,21 @@ MQ.WorldMap = (() => {
   /* ===== Status & jalur ===== */
   const places = () => [...Data.fields, Data.arena];
   /* Mode cerita: 0 Normal, 1 Pahlawan (setelah lulus ujian), 2 Legenda (setelah 6 bos Pahlawan) */
-  const legendOpen = () => State.mainFields().every(f => S.heroCleared.includes(f.id));
-  const mode = () => (S.grade < 2 ? 0 : S.storyMode === 2 && legendOpen() ? 2 : S.storyMode === 1 ? 1 : 0);
+  const mode = () => State.storyMode();
   const heroOn = () => mode() > 0;
-  const modeList = () => (mode() === 2 ? S.legendCleared : S.heroCleared);
-  const MODES = [{name: '⭐ Normal'}, {name: '⭐⭐ Pahlawan', cfg: 'heroMode'}, {name: '⭐⭐⭐ Legenda', cfg: 'legendMode'}];
+  const modeList = () => State.modeList(mode());
+  const MODES = [{name: '⭐ Normal', short: 'Normal'}, {name: '⭐⭐ Pahlawan', short: 'Pahlawan', cfg: 'heroMode'},
+                 {name: '⭐⭐⭐ Legenda', short: 'Legenda', cfg: 'legendMode'}];
+  const isOpen = p => State.unlockedIn(p, mode());
   function status(p) {
     if (p.soon) return 'soon';
-    if (!State.unlocked(p)) return 'lock';
-    if (heroOn() && p.spec) return modeList().includes(p.id) ? 'done' : 'open'; // Mode Pahlawan/Legenda: bintang dihitung ulang
-    if (S.cleared.includes(p.id)) return 'done';
-    return 'open';
+    if (!isOpen(p)) return 'lock';
+    return (p.spec || p.exam ? modeList() : S.cleared).includes(p.id) ? 'done' : 'open'; // tiap tingkat: bintang dihitung ulang
   }
   /** Tempat tujuan berikutnya (area terbuka pertama yang belum selesai) — di sini pahlawan berdiri. */
   function currentPlace() {
     const main = Data.fields.filter(f => !f.soon);
-    if (heroOn()) return State.mainFields().find(f => !modeList().includes(f.id)) || main[main.length - 1];
-    return main.find(f => State.unlocked(f) && !S.cleared.includes(f.id)) || main[main.length - 1];
+    return main.find(f => isOpen(f) && !modeList().includes(f.id)) || main[main.length - 1];
   }
 
   /** Jalur titik-titik antar tempat; terang jika tujuannya sudah terbuka. */
@@ -130,7 +128,7 @@ MQ.WorldMap = (() => {
       }
     };
     const order = Data.fields.map(f => f.id);
-    for (let i = 1; i < order.length; i++) seg(order[i - 1], order[i], State.unlocked(Data.fields[i]));
+    for (let i = 1; i < order.length; i++) seg(order[i - 1], order[i], isOpen(Data.fields[i]));
     seg('padang', 'arena', true);
     ctx.restore();
   }
@@ -138,8 +136,9 @@ MQ.WorldMap = (() => {
   /* ===== Layar Peta ===== */
   UI.renderers.map = () => {
     const hb = $('btnHeroMode');
-    hb.hidden = S.grade < 2;
-    hb.textContent = MODES[mode()].name;
+    hb.hidden = false;
+    hb.textContent = MODES[mode()].name + ' ▾';
+    $('modeMenu').hidden = true;
     hb.classList.toggle('on', heroOn());
     hb.classList.toggle('legend', mode() === 2);
     $('scr-map').classList.toggle('heroMode', heroOn());
@@ -171,20 +170,24 @@ MQ.WorldMap = (() => {
     if (!b) return;
     const p = places().find(x => x.id === b.dataset.place);
     if (p.soon) return UI.overlay({icon: '🚧', title: p.name, text: 'Tempat ini sedang dibangun. Segera hadir!'});
-    if (!State.unlocked(p)) {
-      if (p.reqAll && !State.mainFields().every(f => S.cleared.includes(f.id))) {
-        const all = State.mainFields(), done = all.filter(f => S.cleared.includes(f.id)).length;
-        return UI.overlay({icon: '🔒', title: 'Masih Terkunci', text: `Selesaikan semua area Kelas 1 dulu (${done} dari ${all.length} selesai), lalu ikuti Ujian Naik Kelas!`});
+    if (!isOpen(p)) {
+      const lst = modeList(), lvl = heroOn() ? ` di tingkat ${MODES[mode()].short}` : '';
+      if (p.reqAll && !State.mainFields().every(f => lst.includes(f.id))) {
+        const all = State.mainFields(), done = all.filter(f => lst.includes(f.id)).length;
+        return UI.overlay({icon: '🔒', title: 'Masih Terkunci', text: `Selesaikan semua area Kelas 1${lvl} dulu (${done} dari ${all.length} selesai), lalu ikuti ujiannya!`});
       }
       if (p.minLevel && S.level < p.minLevel) {
         return UI.overlay({icon: '💪', title: 'Belum Cukup Kuat', text: `Kastil Ujian butuh Level ${p.minLevel} (sekarang Level ${S.level}). Latihan di area dan dungeon untuk naik level!`});
       }
       const req = Data.fields.find(x => x.id === p.req);
-      return UI.overlay({icon: '🔒', title: 'Masih Terkunci', text: `Kalahkan bos di ${req.name} dulu untuk membuka ${p.name}.`});
+      return UI.overlay({icon: '🔒', title: 'Masih Terkunci', text: `Kalahkan bos di ${req.name}${lvl} dulu untuk membuka ${p.name}.`});
     }
     // Cerita pembuka tempat ini (sekali saja), lalu bertarung
     const go = () => MQ.Cutscene.playOnce(`${p.id}-intro`, () => MQ.Battle.start(p));
     if (p.exam) {
+      if (heroOn()) return UI.overlay({icon: '📝', title: `Ujian ${MODES[mode()].short}`, btn: 'Mulai Ujian', btn2: 'Nanti', cb: go,
+        text: '12 soal dari semua area. Kali ini Raja Naga MENYERANG! Lulus jika benar minimal 9. ' +
+              (mode() === 1 ? 'Lulus = membuka tingkat Legenda ⭐⭐⭐.' : 'Ujian terberat di Kelas 1!')});
       return UI.overlay({icon: '📝', title: 'Ujian Naik Kelas', btn: 'Mulai Ujian', btn2: 'Nanti', cb: go,
         text: `12 soal dari semua area. Musuh tidak menyerang, jawab dengan tenang. Lulus jika benar minimal 9. Nilai terbaikmu: ${S.examBest}.`});
     }
@@ -195,14 +198,36 @@ MQ.WorldMap = (() => {
       text: `${p.desc}.${lv}${hero ? ` Mode ${M.name.split(' ')[1]}: musuh lebih kuat & cepat, kadang DUA monster sekaligus. Koin lebih banyak!` : ''}${done}`});
   });
 
-  /* Saklar Mode Pahlawan (hanya setelah lulus ujian) */
-  /* Saklar mode: Normal → Pahlawan → (Legenda bila sudah terbuka) → Normal */
-  $('btnHeroMode').addEventListener('click', () => {
-    const max = legendOpen() ? 2 : 1;
-    S.storyMode = mode() >= max ? 0 : mode() + 1; State.save();
+  /* Pilihan tingkat kesulitan (dropdown): tingkat yang belum terbuka tetap terlihat dengan gembok & syaratnya */
+  const LOCK_TEXT = ['', 'Lulus Ujian Naik Kelas (Normal) dulu', 'Lulus Ujian Pahlawan dulu'];
+  function renderModeMenu() {
+    $('modeMenu').innerHTML = MODES.map((M, i) => {
+      const open = State.modeOpen(i), list = State.modeList(i), n = State.mainFields().filter(f => list.includes(f.id)).length;
+      const sub = !open ? '🔒 ' + LOCK_TEXT[i] : `${n} dari ${State.mainFields().length} bos` + ((i === 0 ? S.grade >= 2 : list.includes('kastil')) ? ' · ujian lulus 🎓' : '');
+      return `<button class="modeOpt${i === mode() ? ' on' : ''}${open ? '' : ' locked'}" data-m="${i}"><b>${M.name}</b><small>${sub}</small></button>`;
+    }).join('');
+  }
+  $('btnHeroMode').addEventListener('click', e => {
+    e.stopPropagation();
+    const menu = $('modeMenu');
+    if (menu.hidden) renderModeMenu();
+    menu.hidden = !menu.hidden;
+  });
+  document.addEventListener('click', e => { if (!e.target.closest('#modeMenu')) $('modeMenu').hidden = true; });
+  $('modeMenu').addEventListener('click', e => {
+    const b = e.target.closest('.modeOpt');
+    if (!b) return;
+    const m = +b.dataset.m;
+    if (!State.modeOpen(m)) {
+      MQ.Audio.sfx.wrong();
+      return UI.overlay({icon: '🔒', title: `${MODES[m].short} masih terkunci`, text: LOCK_TEXT[m] + ' untuk membuka tingkat ini.'});
+    }
+    $('modeMenu').hidden = true;
+    if (m === mode()) return;
+    S.storyMode = m; State.save();
     UI.renderers.map();
     if (S.storyMode === 1) UI.overlay({icon: '🦸', title: 'Mode Pahlawan ⭐⭐', text: 'Soalnya sama, tapi musuh JAUH lebih kuat dan cepat, kadang DUA monster sekaligus. Koin dua kali lipat! Buat & tingkatkan perlengkapan di Pandai Besi supaya cukup kuat.' +
-      (legendOpen() ? '' : ' Kalahkan keenam bos di sini untuk membuka Mode Legenda!')});
+      (State.modeOpen(2) ? '' : ' Mulai lagi dari Padang Hitung. Selesaikan semua area dan lulus ujiannya untuk membuka Mode Legenda!')});
     if (S.storyMode === 2) UI.overlay({icon: '🐉', title: 'Mode Legenda ⭐⭐⭐', text: 'Tantangan tersulit! Musuh sangat kuat dan cepat. Hanya pahlawan dengan perlengkapan +4 atau +5 yang bisa menang. Koin tiga kali lipat!'});
   });
 

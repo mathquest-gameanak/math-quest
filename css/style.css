@@ -575,3 +575,47 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 #scr-battle .hint svg.wide { max-height: 64px; width: auto; max-width: 100%; display: block; margin: 0 auto; }
 #scr-battle .hint svg.frame10 { width: 120px; display: block; margin: 0 auto; }
 #scr-battle .hint .hintCap { font-size: 15px; }
+
+/* Peta: menu tingkat kesulitan (dropdown) */
+#scr-map { position: relative; }
+.modeMenu { position: absolute; top: 58px; right: 8px; z-index: 30; display: flex; flex-direction: column; gap: 6px; padding: 8px;
+  background: var(--panel); border: 3px solid var(--hitam); box-shadow: 4px 4px 0 #0008; width: 250px; }
+.modeOpt { display: flex; flex-direction: column; align-items: flex-start; text-align: left; padding: 8px 10px; background: #566c86;
+  border: 3px solid var(--hitam); color: #f4f4f4; }
+.modeOpt b { font-size: 16px; }
+.modeOpt small { font-size: 12px; font-weight: 700; opacity: .9; }
+.modeOpt.on { background: var(--kuning); color: var(--hitam); }
+.modeOpt.locked { background: #333c57; color: #94b0c2; }
+
+/* Pelajaran & istirahat */
+.learnBox { display: flex; flex-direction: column; gap: 10px; align-items: center; padding: 12px; min-height: 60vh; }
+.learnRest { background: #333c57; color: #ffcd75; font-weight: 900; padding: 6px 10px; border: 3px solid var(--hitam); text-align: center; width: 100%; }
+.learnStep { font-weight: 900; font-size: 14px; opacity: .85; }
+.learnBody { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.lvVis { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 340px; }
+.lvVis svg.wide, .lvVis svg.lidi { width: 100%; height: auto; }
+.lvVis svg.bond { width: 170px; height: auto; }
+.lvVis svg.frame10 { width: 180px; height: auto; }
+.lvText { font-size: 19px; font-weight: 800; line-height: 1.35; text-align: center; max-width: 340px; margin: 0; }
+.lvCap { font-weight: 900; margin: 4px 0 0; }
+.lvQ { font-size: 30px; font-weight: 900; text-align: center; margin: 0; text-shadow: 2px 2px 0 var(--hitam); }
+.lvQ.story { font-size: 19px; line-height: 1.3; }
+.lvRow { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.lvRow span { display: flex; flex-direction: column; align-items: center; width: 72px; }
+.lvRow svg { width: 56px; height: 56px; }
+.lvRow small { font-weight: 800; font-size: 12px; text-align: center; }
+.learnAns { display: grid; gap: 8px; width: 100%; }
+.learnAns.cols2 { grid-template-columns: 1fr 1fr; }
+.learnAns.cols3 { grid-template-columns: 1fr 1fr 1fr; }
+.learnAns .ans { min-height: 64px; font-size: 28px; }
+.learnAns .ans svg { width: 52px; height: 52px; }
+.learnNext { font-weight: 900; font-size: 20px; padding: 12px 22px; background: var(--kuning); color: var(--hitam); border: 3px solid var(--hitam); }
+.lvList { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
+.lvPick { display: flex; align-items: center; gap: 8px; padding: 10px; font-weight: 900; font-size: 15px; text-align: left; background: #566c86; border: 3px solid var(--hitam); color: #f4f4f4; }
+.lvPick span { font-size: 22px; }
+.lvPick.must { background: var(--kuning); color: var(--hitam); animation: bob 1s steps(1) infinite; }
+.restBanner { position: absolute; left: 50%; transform: translateX(-50%); bottom: 8px; z-index: 5; background: #333c57; color: #ffcd75;
+  font-weight: 900; font-size: 15px; padding: 6px 12px; border: 3px solid var(--hitam); white-space: nowrap; }
+.lvVis .dot { width: 20px; height: 20px; }
+.lvVis .hintCap { font-size: 18px; }
+.lvVis .hint { max-width: 340px; }

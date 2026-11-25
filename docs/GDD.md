@@ -14,7 +14,7 @@
 | **Modal** | Nol. Tanpa server, tanpa library berbayar, hosting gratis |
 
 ### Prinsip desain (wajib dipegang)
-1. **Tidak ada game over.** Gagal = istirahat sebentar, lalu lanjut. Anak tidak boleh takut salah.
+1. **Tidak ada game over.** Salah menjawab tidak dihukum (tunjukkan jawaban benar). Tapi kalau HP habis, pahlawan **pingsan**: istirahat beberapa menit + wajib menyelesaikan pelajaran singkat (lihat §5), supaya kalah = belajar dulu, bukan langsung main lagi.
 2. **Salah = kesempatan belajar.** Setiap jawaban salah menampilkan jawaban benar, dan nanti juga *petunjuk bergambar*.
 3. **Sedikit teks, banyak gambar.** Anak kelas 1 baru belajar membaca: pakai ikon, angka besar, dan soal yang dibacakan (suara).
 4. **Sesi pendek.** Satu sesi main yang memuaskan ±10–15 menit.
@@ -83,11 +83,11 @@ Aturan agar level tetap seimbang:
 - **Musuh menyerang berwaktu**: bar ⚡ terisi selama soal tampil; saat penuh, musuh menyerang. Jeda acak per jenis monster (kelelawar 1,5–3 dtk, lendir 2,5–4,5, jamur 3–5, batu 4–6, naga 3,5–5,5) × *pace* area (soal yang butuh berpikir lebih lama → musuh lebih lambat). Bos sedikit lebih lambat tapi 1,5× lebih kuat.
 - Waktu musuh berhenti saat animasi, saat ada pesan, saat soal dibacakan (🔊), dan saat aplikasi tidak terlihat.
 - Jawaban salah = musuh langsung menyerang, kombo hilang, jawaban benar ditunjukkan.
-- **Soal cepat vs soal pikir** (2026-11-26): tiap jenis soal punya pengali waktu (`balance.think.time`). Fakta dasar (tambah/kurang/bandingkan) = 1: bar musuh normal, KILAT ≤ 2 detik. Soal yang perlu dipikir lebih lama (isi kosong, puluhan, panjang ±1,5) membuat musuh lebih sabar dan batas KILAT lebih panjang. **Soal pikir** (pola, ukur, soal cerita; pengali ≥ 2): tanpa bar KILAT, muncul tanda "🧠 santai saja, yang penting teliti", dan jawaban benar selalu menjadi serangan **TELITI!** (damage ×1,5). Tujuannya: anak dihargai karena teliti, tidak didorong menebak cepat. Kelas lanjutan akan punya lebih banyak soal pikir.
+- **Soal cepat vs soal pikir** (2026-11-26): tiap jenis soal punya pengali waktu (`balance.think.time`). Fakta dasar (tambah/kurang/bandingkan) = 1: bar musuh normal, KILAT ≤ 2 detik. Soal yang perlu dipikir lebih lama (isi kosong, puluhan, panjang ±1,5) membuat **damage musuh lebih kecil** (dibagi pengali, `think.soft`) dan batas KILAT lebih panjang; kecepatan serangan tetap normal supaya pertarungan tetap terasa (pilihan orang tua 2026-11-26, `think.slow` 0). Soal cerita tidak lagi dibacakan otomatis (suara bawaan HP/laptop beraksen aneh); tombol 🔊 tetap ada. **Soal pikir** (pola, ukur, soal cerita; pengali ≥ 2): tanpa bar KILAT, muncul tanda "🧠 serangan musuh lebih lemah, yang penting teliti", dan jawaban benar selalu menjadi serangan **TELITI!** (damage ×1,5). Tujuannya: anak dihargai karena teliti, tidak didorong menebak cepat. Kelas lanjutan akan punya lebih banyak soal pikir.
 - **Angka kecil** (keputusan 2026-11-25): semua HP & damage di bawah 100 dan damage **tetap (tidak acak)**, supaya anak bisa ikut berhitung ("HP 15, pukul 5, tinggal 10"). Kritikal = **×2**.
 - Damage musuh = 1,6 + 0,35 × level monster (dibulatkan) × kekuatan monster − Pertahanan (minimal 1): Lv 1 ≈ 2, Lv 10 ≈ 5, Lv 20 ≈ 9. Mengalahkan monster memulihkan 20% HP (kecuali di dungeon).
 - HP monster = 12 + 3 × level: Lv 1 = 15, Lv 10 = 42, Lv 20 = 72 (bos ×1,5). Monster butuh ±3–5 pukulan.
-- HP habis = "Pahlawan istirahat", HP penuh lagi. **Tidak ada game over.** Di dungeon: keluar gua, hadiah tetap.
+- HP habis = **Pahlawan Pingsan** (2026-11-26, permintaan orang tua): semua pertarungan terkunci `knockout.lockMin` menit (bawaan 5) DAN sampai anak menyelesaikan 🎓 pelajaran tentang jenis soal yang paling sering salah di pertarungan itu (kartu materi bergambar → latihan tanpa waktu, benar 3 kali). Hitung mundur tampil di beranda. Bila `lockMin` 0 dan `mustLearn` 0: kembali ke cara lama (istirahat sebentar, HP penuh). Pelajaran juga bisa dibuka kapan saja dari ikon 🎓 Pelajaran di beranda.
 - Ujian Naik Kelas: musuh tidak menyerang.
 
 ### Status pemain
@@ -143,11 +143,11 @@ Lingkaran yang diharapkan membuat anak terus main dan belajar: **dungeon lebih s
 - Dibuka dari tombol **🏰 Dungeon** di bilah bawah (bukan dari peta). Halaman berisi satu kartu per dungeon: gambar, nama, materi, level, hadiah; yang belum terbuka tampil terkunci dengan syaratnya.
 - **Tingkat ⭐ / ⭐⭐ / ⭐⭐⭐** (seperti bintang di game anak): soal sama, musuh lebih tinggi levelnya & lebih cepat, hadiah peti lebih besar (×1 / ×1,5 / ×2). Tingkat berikutnya terbuka setelah tingkat sebelumnya selesai. Tanpa energi, timer, atau peringkat.
 
-**Mode Pahlawan ⭐⭐** (petualangan utama, terbuka setelah lulus Ujian Naik Kelas): area & soal sama, musuh +6 level, HP ×1,4, damage ×1,6, menyerang lebih cepat (jeda ×0,7), koin ×2. Sengaja berat: perlu equipment dari bahan khusus dungeon. Saklar Normal/Pahlawan di atas peta. Medali "Pahlawan Sejati" untuk mengalahkan keenam bos area di Mode Pahlawan.
+**Mode Pahlawan ⭐⭐** (petualangan utama, terbuka setelah lulus Ujian Naik Kelas): area & soal sama, musuh +6 level, HP ×1,4, damage ×1,6, menyerang lebih cepat (jeda ×0,7), koin ×2. Sengaja berat: perlu equipment dari bahan khusus dungeon. Pilihan tingkat di peta berupa **dropdown**: Normal / Pahlawan / Legenda selalu terlihat, yang belum terbuka bergembok dengan syaratnya. Di Pahlawan & Legenda area terbuka **berurutan lagi dari Padang Hitung**, lalu Kastil Ujian tingkat itu. Ujian Pahlawan/Legenda: Raja Naga **menyerang** (berwaktu); lulus = hadiah & membuka tingkat berikutnya, bukan syarat naik kelas (naik Kelas 2 cukup lulus ujian Normal). Medali "Pahlawan Sejati" untuk mengalahkan keenam bos area di Mode Pahlawan.
 
 **Tahap 5 (2026-11-25)**
 - **Dua monster sekaligus**: muncul di Mode Pahlawan (titik 4), Legenda (titik 2 & 4), dungeon ⭐⭐ (ruang sebelum bos) dan ⭐⭐⭐ (beberapa ruang). Masing-masing punya HP & bar serangan sendiri. Jawaban benar memukul monster yang ditandai ▼; ketuk monster (atau panelnya) untuk ganti sasaran. Bila sasaran kalah, sasaran pindah otomatis. Jawaban salah = monster sasaran menyerang.
-- **Mode Legenda ⭐⭐⭐** (petualangan utama): terbuka setelah keenam bos Mode Pahlawan dikalahkan. Musuh +12 level, HP ×1,8, damage ×2,2, jeda ×0,6, koin ×3. Hampir mustahil tanpa equipment yang sudah ditingkatkan. Saklar peta: Normal → Pahlawan → Legenda. Medali "Legenda Matematika".
+- **Mode Legenda ⭐⭐⭐** (petualangan utama): terbuka setelah lulus Ujian Pahlawan (6 bos Pahlawan + ujiannya). Musuh +12 level, HP ×1,8, damage ×2,2, jeda ×0,6, koin ×3. Hampir mustahil tanpa equipment yang sudah ditingkatkan. Dipilih dari dropdown tingkat di peta. Medali "Legenda Matematika".
 - **Tingkatkan equipment +1 sampai +5** (Pandai Besi → Tingkatkan): bahan khusus dungeon sesuai slot (senjata: Kristal Pola, pelindung: Mutiara Laut, aksesori: Tinta Bintang) sebanyak tingkat tujuan, koin 10 × tingkat, Mahkota Kecil di +4 & +5. Tiap tingkat: senjata Serangan +1; pelindung HP +3 & Pertahanan +½; aksesori kritikal +2% & damage kritikal +5%. Ada soal hitungan sebelum meningkatkan ("Serangan 6 naik 1, jadi berapa?").
 
 **Halaman utama**: Buku Monster, Misi, Medali berupa ikon kecil bertumpuk di kiri di bawah kartu nama (ada tanda merah bila ada yang baru). Ikon Pandai Besi juga di situ. Bilah bawah (5): Tas, Karakter, **Beranda (tengah)**, Dungeon, Toko.

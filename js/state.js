@@ -84,6 +84,18 @@ MQ.State = (() => {
   const unlocked = place => !place.soon && (!place.req || S.cleared.includes(place.req)) &&
                             (!place.reqAll || mainFields().every(f => S.cleared.includes(f.id))) &&
                             (!place.minLevel || S.level >= place.minLevel);
+  /* Tingkat cerita: 0 Normal, 1 Pahlawan, 2 Legenda. Pahlawan terbuka setelah lulus Ujian Normal (naik Kelas 2);
+     Legenda terbuka setelah lulus Ujian Pahlawan. Di tiap tingkat area terbuka berurutan lagi dari awal.
+     Ujian yang lulus di Pahlawan/Legenda dicatat sebagai 'kastil' di heroCleared/legendCleared. */
+  const modeList = m => (m === 2 ? S.legendCleared : m === 1 ? S.heroCleared : S.cleared);
+  const modeOpen = m => (m === 0 ? true : m === 1 ? S.grade >= 2 : S.grade >= 2 && S.heroCleared.includes('kastil'));
+  const storyMode = () => (modeOpen(S.storyMode) ? S.storyMode : modeOpen(1) && S.storyMode === 2 ? 1 : 0);
+  /** Tempat terbuka di tingkat m (arena & dungeon mengikuti Normal). */
+  const unlockedIn = (place, m) => {
+    if (!m || !(place.spec || place.exam)) return unlocked(place);
+    const list = modeList(m);
+    return !place.soon && (!place.req || list.includes(place.req)) && (!place.reqAll || mainFields().every(f => list.includes(f.id)));
+  };
   /** Jumlah kepingan kristal = area utama yang bosnya sudah dikalahkan (cerita). */
   const shards = () => mainFields().filter(f => S.cleared.includes(f.id)).length;
 
@@ -93,6 +105,6 @@ MQ.State = (() => {
   const itemName = id => items[id].name + (upLevel(id) ? ` +${upLevel(id)}` : '');
 
   return {S, POINTS_PER_LEVEL, upLevel, upBonus, itemName, maxHp, atk, def, critChance, critMul, xpNeed, bonusFor, effect, gear, addXp, spendPoint,
-          count, addItem, removeItem, equip, unequip, isEquipped, unlocked, mainFields, shards, save,
+          count, addItem, removeItem, equip, unequip, isEquipped, unlocked, mainFields, shards, save, modeList, modeOpen, storyMode, unlockedIn,
           today, dateKey, logDay};
 })();

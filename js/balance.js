@@ -84,7 +84,7 @@ MQ.Balance = {
             mat: {senjata: 'kristalPola', pelindung: 'mutiara', aksesori: 'tinta'},
             per: {senjata: {atk: 1}, pelindung: {hp: 3, def: 0.5}, aksesori: {crit: 2, critDmg: 5}}},
   /* Soal CEPAT vs soal PIKIR (2026-11-26). time = pengali waktu per jenis soal (1 = fakta dasar):
-     bar serangan musuh terisi lebih lambat (dibagi angka ini) dan batas KILAT lebih panjang (dikali angka ini).
+     damage musuh lebih kecil (dibagi angka ini ^ soft) dan batas KILAT lebih panjang (dikali angka ini); kecepatan musuh tetap (slow 0).
      Jenis dengan pengali ≥ from = soal PIKIR: tanpa KILAT; jawaban benar = serangan TELITI! (damage × telitiMul),
      supaya anak dihargai karena teliti, bukan karena cepat. */
   think: {
@@ -92,7 +92,9 @@ MQ.Balance = {
            puluhan: 1.6, pola: 2, ukur: 2, cerita: 3, teka: 3},
     from: 2,
     telitiMul: 1.5,
-    storySpeak: 1     // 1 = soal cerita selalu dibacakan otomatis (anak kelas 1 belum tentu lancar membaca)
+    storySpeak: 0,    // 1 = soal cerita selalu dibacakan otomatis (0: suara bawaan HP/laptop beraksen aneh; tombol 🔊 tetap ada)
+    soft: 1,          // damage musuh dibagi (pengali waktu ^ soft): pola/ukur ×2 → damage 50%, cerita/teka ×3 → 33%
+    slow: 0           // bar serangan musuh dibagi (pengali waktu ^ slow): 0 = kecepatan tetap normal (pilihan orang tua 2026-11-26)
   },
   /* Peti Teka-teki (2026-11-26): kadang muncul di jalur area setelah titik 2 / titik 4. Soal teka-teki TANPA waktu;
      salah = coba lagi (tanpa hukuman), hadiah penuh bila benar pada percobaan pertama. Paling banyak 1 peti per jalan. */
@@ -101,6 +103,13 @@ MQ.Balance = {
     at: [1, 3],      // indeks titik yang baru dilewati (0 = titik 1)
     coins: [6, 2],   // koin: benar pertama kali / setelah mencoba lagi
     items: 2         // bahan area bila benar pertama kali
+  },
+  /* Pingsan (HP habis, 2026-11-26): pertarungan terkunci lockMin menit DAN sampai pelajaran selesai (mustLearn 1),
+     pelajaran = jenis soal yang paling sering salah di pertarungan itu, latihan tanpa waktu sampai benar "practice" kali. */
+  knockout: {
+    lockMin: 5,      // menit istirahat (0 = tanpa menunggu)
+    mustLearn: 1,    // 1 = wajib menyelesaikan pelajaran dulu
+    practice: 3      // jumlah jawaban benar di latihan pelajaran
   },
   rewards: {
     coinsNormal: [1, 2], coinsBoss: 8,  // koin dari monster

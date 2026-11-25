@@ -239,5 +239,12 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - `balance.chest`, `GEN.teka` (kind `teka`, pengali waktu 3), gambar `peti` di characters.js, petunjuk `hintSeq/hintNote/hintEqual`. Battle: `maybeChest`, `chestAnswer`, `showQuestion` (dipisah dari nextQuestion); musuh tidak berjalan selama peti.
 - Membacakan soal berhenti saat anak menjawab (musuh tidak tertahan oleh suara). SW `mq-v28`.
 
+### 2026-11-26 — Soal panjang lebih adil, tingkat di peta, ujian Pahlawan, pingsan + pelajaran
+- Soal panjang: kecepatan musuh tetap normal, damage musuh dibagi pengali waktu (`think.soft` 1, `think.slow` 0). Soal cerita tidak dibacakan otomatis (`think.storySpeak` 0).
+- Peta: tombol tingkat jadi dropdown (Normal/Pahlawan/Legenda, gembok + syarat). `State.modeOpen/modeList/storyMode/unlockedIn`: tiap tingkat area terbuka berurutan dari awal. Legenda terbuka setelah lulus Ujian Pahlawan (dicatat 'kastil' di heroCleared).
+- Ujian Pahlawan/Legenda: `B.examAtk`, musuh menyerang; lulus → `storyExamPass` (hadiah, buka Legenda), tidak mengubah kelas.
+- Pingsan: `js/learn.js` (MQ.Learn) — 14 materi bergambar + latihan tanpa waktu; `balance.knockout` (lockMin 5, mustLearn 1, practice 3); simpanan `rest`; `Learn.gate()` di awal `Battle.start`; spanduk hitung mundur di beranda; ikon 🎓 Pelajaran. Atur Angka: grup Pingsan & Peti.
+- SW `mq-v29` (+ learn.js).
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

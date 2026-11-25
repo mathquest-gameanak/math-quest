@@ -53,7 +53,7 @@ MQ.Battle = (() => {
   const NONE = {lvAdd: 0, hpMul: 1, dmgMul: 1, speedMul: 1, rewardMul: 1};
   const STORY_STARS = ['', ' ⭐⭐', ' ⭐⭐⭐'];
   /** Pengali waktu soal sekarang (soal pikir → musuh lebih sabar, batas KILAT lebih panjang). */
-  const qTime = () => (B.q && B.mode !== 'exam' ? B.q.time || 1 : 1);
+  const qTime = () => (B.q ? B.q.time || 1 : 1);
   const kilatSec = () => BAL.combat.fastCritSec * qTime();
   const mods = () => B.mods || NONE;
   const later = (fn, ms) => { const r = B.run; setTimeout(() => { if (r === B.run) fn(); }, ms); };
@@ -123,7 +123,8 @@ MQ.Battle = (() => {
   /** Damage serangan musuh: tergantung level tempat & kekuatan monster, dikurangi pertahanan pemain (min 1). */
   function enemyDamage(M = B) {
     const power = style(M).power * (M.isMini && !Data.monsters[M.monId].power ? 1.2 : 1); // mini bos sedikit lebih kuat
-    return Math.max(1, Math.round(MQ.Calc.monsterDmg(M.mLv, power, M.isBoss) * (mods().dmgMul || 1)) - State.def());
+    const soft = 1 / Math.pow(qTime(), BAL.think.soft); // soal panjang: serangan musuh lebih lemah (bukan lebih lambat)
+    return Math.max(1, Math.round(MQ.Calc.monsterDmg(M.mLv, power, M.isBoss) * (mods().dmgMul || 1) * soft) - State.def());
   }
   /** Level monster yang akan muncul (lihat rumus di balance.js):
       area  → titik 1 = level awal area, titik 4 = level akhir, bos = level akhir + bonus
@@ -146,7 +147,7 @@ MQ.Battle = (() => {
   }
   /** Waktu musuh berjalan hanya saat anak sedang menjawab. */
   const timerActive = () => els['scr-battle'].classList.contains('on') && els.overlay.hidden && !B.locked &&
-    B.mode !== 'exam' && !S.settings.santai && !document.hidden && !MQ.Cutscene.isOpen() &&
+    (B.mode !== 'exam' || B.examAtk) && !S.settings.santai && !document.hidden && !MQ.Cutscene.isOpen() &&
     !(BAL.monster.pauseWhileReading && window.speechSynthesis && window.speechSynthesis.speaking) && !B.chest;
 
   /** Musuh menyerang. Mengembalikan true jika HP pemain habis. */
@@ -181,7 +182,7 @@ MQ.Battle = (() => {
       els.fastFill.style.width = Math.max(0, 1 - B.answerTime / kilatSec()) * 100 + '%';
     }
     if (!timerActive()) return;
-    const rate = dt / qTime(); // soal pikir: bar serangan musuh terisi lebih lambat
+    const rate = dt / Math.pow(qTime(), BAL.think.slow); // think.slow 0 = kecepatan musuh tetap normal
     B.charge += rate;
     els.atkFill.style.width = Math.min(100, B.charge / B.interval * 100) + '%';
     const o = B.other && B.other.hp > 0 ? B.other : null; // monster kedua menyerang dengan waktunya sendiri
@@ -195,6 +196,17 @@ MQ.Battle = (() => {
   function knockedOut() {
     B.locked = true; B.combo = 0;
     State.save();
+    // Pingsan: istirahat beberapa menit + pelajaran tentang soal yang paling sering salah
+    const weak = Object.entries(B.wrongs || {}).sort((a, b) => b[1] - a[1])[0];
+    const kind = weak ? weak[0] : (B.q && B.q.kind) || 'tambah', max = (B.field.spec && B.field.spec.max) || 10;
+    if (MQ.Learn.knockOut(kind, max)) {
+      S.hp = State.maxHp(); State.save(); // HP pulih saat bangun nanti
+      const K = BAL.knockout, les = MQ.Learn.LESSONS[S.rest.kind];
+      return later(() => UI.overlay({icon: '😵', title: 'Pahlawan Pingsan!',
+        text: `HP-mu habis. Pahlawan harus istirahat ${K.lockMin} menit dulu.` + (K.mustLearn ? ` Sambil menunggu, ayo belajar "${les.title}" supaya lebih kuat!` : ''),
+        btn: K.mustLearn ? '🎓 Belajar' : 'Oke', cb: () => { exit(); if (K.mustLearn) MQ.Learn.openRest(); },
+        btn2: K.mustLearn ? 'Nanti' : null, cb2: () => { exit(); UI.show('home'); }}), 900);
+    }
     later(() => {
       if (B.mode === 'dungeon') return dungeonEnd(false);
       UI.overlay({icon: '💤', title: 'Pahlawan Istirahat', btn: 'Ayo Lanjut!',
@@ -206,11 +218,13 @@ MQ.Battle = (() => {
   /* ===== Masuk & keluar ===== */
   /** opt.tier = tingkat dungeon (0 = ⭐). Area biasa memakai Mode Pahlawan bila dinyalakan. */
   function start(place, opt = {}) {
-    B.run++;
+    if (MQ.Learn && !MQ.Learn.gate()) return; // pahlawan masih istirahat setelah pingsan
+    B.run++; B.wrongs = {};
     B.field = place; B.combo = 0; B.q = null; B.last = ''; B.room = 0;
     B.mode = place.exam ? 'exam' : place.dungeon ? 'dungeon' : place.id === 'arena' ? 'arena' : 'field';
     B.tier = B.mode === 'dungeon' ? (opt.tier || 0) : 0;
-    B.story = B.mode === 'field' ? storyMode() : 0; // 0 Normal, 1 Pahlawan, 2 Legenda
+    B.story = B.mode === 'field' || B.mode === 'exam' ? storyMode() : 0; // 0 Normal, 1 Pahlawan, 2 Legenda
+    B.examAtk = B.mode === 'exam' && B.story > 0; // ujian Pahlawan/Legenda: musuh tetap menyerang
     B.mods = B.mode === 'dungeon' ? BAL.tiers[B.tier] : B.story === 2 ? BAL.legendMode : B.story === 1 ? BAL.heroMode : null;
     B.other = null;
     if (B.mode === 'exam') B.exam = {i: 0, ok: 0, wrong: {}, qs: makeExam()};
@@ -219,7 +233,7 @@ MQ.Battle = (() => {
     els.fieldName.textContent = place.name + (B.mode === 'dungeon' ? ' ' + '⭐'.repeat(B.tier + 1) : STORY_STARS[B.story]);
     els.btnExit.textContent = B.mode === 'dungeon' ? '◀ Keluar' : '◀ Peta';
     els.modes.hidden = B.mode !== 'arena'; // pilihan jenis soal hanya di Arena Latihan
-    els.atkBar.hidden = B.mode === 'exam' || S.settings.santai; // ujian & Mode Santai: musuh tidak menyerang berwaktu
+    els.atkBar.hidden = (B.mode === 'exam' && !B.examAtk) || S.settings.santai; // ujian & Mode Santai: musuh tidak menyerang berwaktu
     els.fx.innerHTML = '';
     renderModes();
     // Jalur: area = 5 titik, dungeon = ruang-ruangnya, Arena/Ujian = tanpa jalur
@@ -265,7 +279,7 @@ MQ.Battle = (() => {
   }
   els.btnExit.addEventListener('click', exit);
   /** Mode cerita yang berlaku (dipilih di Peta): Pahlawan setelah lulus ujian, Legenda setelah 6 bos Pahlawan. */
-  const storyMode = () => (S.grade < 2 ? 0 : S.storyMode === 2 && State.mainFields().every(f => S.heroCleared.includes(f.id)) ? 2 : S.storyMode === 1 ? 1 : 0);
+  const storyMode = () => State.storyMode();
   /** Di titik/ruang ini muncul dua monster? (balance.js pairs; tidak untuk bos, mini bos, monster kunci) */
   function pairHere() {
     if (B.isBoss || B.isKey || B.isMini) return false;
@@ -293,6 +307,7 @@ MQ.Battle = (() => {
     const m = Data.monsters[id];
     if (B.mode === 'exam') { // HP ujian = jumlah soal × 10; tiap jawaban benar -10
       B.maxHp = B.exam.qs.length * 10;
+      if (B.examAtk) B.mLv = monsterLevel(); // ujian Pahlawan/Legenda: naga menyerang sesuai levelnya
     } else {
       B.mLv = monsterLevel();
       B.maxHp = Math.round(MQ.Calc.monsterHp(B.mLv, B.isBoss ? 'boss' : B.isKey || B.isMini ? 'key' : '') * (mods().hpMul || 1));
@@ -347,7 +362,7 @@ MQ.Battle = (() => {
     B.answerTime = 0; els.fastFill.style.width = '100%';
     els.fastBar.hidden = B.mode === 'exam' || q.think; // ujian: tanpa kritikal; soal pikir: tanpa KILAT
     els.thinkTag.hidden = B.mode === 'exam' || !q.think;
-    els.thinkTag.textContent = B.chest ? '📜 Peti Teka-teki: tanpa waktu, pikirkan pelan-pelan!' : '🧠 Soal pikir: santai saja, yang penting teliti!';
+    els.thinkTag.textContent = B.chest ? '📜 Peti Teka-teki: tanpa waktu, pikirkan pelan-pelan!' : '🧠 Soal pikir: serangan musuh lebih lemah, yang penting teliti!';
     els.qText.textContent = q.text;
     els.qText.classList.toggle('long', q.text.length > 12); // kalimat panjang → huruf sedikit lebih kecil
     els.qText.classList.toggle('story', !!q.story);          // soal cerita: kalimat, huruf biasa
@@ -412,7 +427,7 @@ MQ.Battle = (() => {
       stat.s++;
       btn.classList.add('salah');
       [...els.answers.children].find(b => b.dataset.v === q.ans).classList.add('benar');
-      B.combo = 0;
+      B.combo = 0; B.wrongs[q.kind] = (B.wrongs[q.kind] || 0) + 1;
       sfx.wrong();
       State.logDay('s', 1);
       if (exam) { Scene.act('hero', 'hurt', 0.6); B.exam.wrong[q.kind] = (B.exam.wrong[q.kind] || 0) + 1; updateHud(); return later(examNext, 1400); }
@@ -580,6 +595,7 @@ MQ.Battle = (() => {
         text: `Benar ${ok} dari ${N}. Perlu ${need} untuk lulus. Ayo latihan lagi: ${weak}. Kamu pasti bisa!`});
     }
     Scene.defeat();
+    if (B.story > 0) return storyExamPass(ok, N);
     const first = S.grade < 2;
     S.grade = Math.max(S.grade, 2);
     if (!S.cleared.includes(B.field.id)) S.cleared.push(B.field.id);
@@ -590,6 +606,17 @@ MQ.Battle = (() => {
     const result = () => UI.overlay({icon: '🎓', title: 'Lulus Kelas 1!', btn: 'Ke Peta', cb: () => MQ.Collection.check(exit),
       text: `${stars} Benar ${ok} dari ${N}. ` + (first ? 'Hadiah: 30 koin & 2 Mahkota Kecil. Dunia Kelas 2 segera hadir!' : 'Kamu tetap juara!')});
     later(() => (first ? MQ.Cutscene.play('ending', result) : result()), 900); // lulus pertama kali → cerita penutup
+  }
+
+  /** Lulus ujian di Pahlawan/Legenda: bukan syarat naik kelas, tapi membuka tingkat berikutnya + hadiah. */
+  function storyExamPass(ok, N) {
+    const list = State.modeList(B.story), first = !list.includes('kastil');
+    if (first) { list.push('kastil'); S.coins += B.story === 2 ? 150 : 80; State.addItem('mahkota', B.story === 2 ? 5 : 3); }
+    State.save(); sfx.fanfare();
+    const name = B.story === 2 ? 'Legenda ⭐⭐⭐' : 'Pahlawan ⭐⭐';
+    later(() => UI.overlay({icon: B.story === 2 ? '🐉' : '🦸', title: `Lulus Ujian ${name}!`, btn: 'Ke Peta', cb: () => MQ.Collection.check(exit),
+      text: `Benar ${ok} dari ${N}. ` + (first ? `Hadiah: ${B.story === 2 ? '150 koin & 5' : '80 koin & 3'} Mahkota Kecil.` +
+            (B.story === 1 ? ' Tingkat Legenda ⭐⭐⭐ sekarang terbuka!' : ' Kamu benar-benar legenda!') : 'Kamu tetap juara!')}), 900);
   }
 
   /* ===== Ramuan Penyembuh: HP penuh ===== */

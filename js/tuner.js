@@ -80,10 +80,21 @@ MQ.Tuner = (() => {
       ['upgrade.per.pelindung.hp', 'Upgrade pelindung: HP +', 'per tingkat', 1],
       ['upgrade.per.aksesori.crit', 'Upgrade aksesori: kritikal % +', 'per tingkat', 1]
     ]},
-    {title: '🧠 Soal cepat & soal pikir', note: 'Pengali waktu per jenis soal: bar serangan musuh dibagi angka ini, batas KILAT dikali angka ini. ≥ batas = soal pikir (tanpa KILAT, benar = TELITI!).', rows: [
+    {title: '🧠 Soal cepat & soal pikir', note: 'Pengali waktu per jenis soal: damage musuh dibagi angka ini (soft 1), batas KILAT dikali angka ini. ≥ batas = soal pikir (tanpa KILAT, benar = TELITI!).', rows: [
+      ['think.soft', 'Pengurang damage', '1 = damage dibagi pengali waktu; 0 = tanpa pengurangan', 0.1],
+      ['think.slow', 'Pelambat musuh', '0 = kecepatan normal; 1 = bar musuh dibagi pengali waktu', 0.1],
+      ['think.storySpeak', 'Bacakan soal cerita', '1 = soal cerita selalu dibacakan otomatis', 1],
       ['think.from', 'Batas soal pikir', 'pengali waktu ≥ angka ini = soal pikir', 0.1],
       ['think.telitiMul', 'Damage TELITI! ×', 'serangan saat menjawab benar soal pikir', 0.1],
-      ...['hitung', 'isi', 'urutan', 'bentuk', 'pola', 'panjang', 'ukur', 'puluhan', 'cerita'].map(k => [`think.time.${k}`, `Waktu soal ${k} ×`, '', 0.1])
+      ...['hitung', 'isi', 'urutan', 'bentuk', 'pola', 'panjang', 'ukur', 'puluhan', 'pasangan', 'cerita', 'teka'].map(k => [`think.time.${k}`, `Waktu soal ${k} ×`, '', 0.1])
+    ]},
+    {title: '😵 Pingsan & 📜 Peti Teka-teki', note: 'Saat HP habis: istirahat (menit) + pelajaran wajib. Peti: peluang muncul di titik 2 & 4, hadiahnya.', rows: [
+      ['knockout.lockMin', 'Istirahat (menit)', '0 = langsung boleh main lagi', 1],
+      ['knockout.mustLearn', 'Wajib belajar', '1 = harus menyelesaikan pelajaran dulu', 1],
+      ['knockout.practice', 'Latihan pelajaran', 'jawaban benar yang dibutuhkan', 1],
+      ['chest.chance', 'Peluang peti', '0–1 per titik (0 = tidak pernah)', 0.1],
+      ['chest.coins.0', 'Koin peti (benar pertama)', '', 1],
+      ['chest.items', 'Bahan peti (benar pertama)', '', 1]
     ]},
     {title: '🦇 Kecepatan jenis monster', note: 'Jeda serangan acak antara cepat–lambat (detik), sebelum dikali pace area. Kekuatan mengalikan damage.',
      rows: () => Object.keys(Data.styles).flatMap(k => [
