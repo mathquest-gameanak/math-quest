@@ -112,7 +112,6 @@ MQ.Backdrops = (() => {
 
     /* Menara Seratus: bulan besar, menara tinggi berjendela menyala, lentera di jalan */
     menara: {
-      sky2(H) { H.circle(22, 14, 8, '#f4f4f4'); H.circle(25, 12, 7, '#1a1c2c'); },
       far(H) {
         H.R('#29366f', 0, H.GY - 26, H.VW, H.VH);
         const tx = H.VW * 0.62 - H.camX * 0.05;

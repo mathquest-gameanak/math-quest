@@ -300,5 +300,10 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - `#mTop` (sasaran) & `#mTop2` (monster lain) melayang tepat di atas kepala monsternya: `Scene.placeTags()` tiap frame, jangkar tetap dari ukuran asli sprite (tidak ikut bergoyang/menerjang), dibatasi di dalam layar. Gaya: kotak gelap tembus pandang + ekor penunjuk; sasaran berbingkai kuning saat dua monster.
 - HUD pahlawan tetap di kiri atas. Ruang dunia mulai tepat di bawah HUD (cadangan ±56px untuk papan nama di atas monster). SW `mq-v41`.
 
+### 2026-11-26 — HUD lebar lagi & langit lebih kaya
+- HUD pahlawan kembali selebar layar (tombol "◀ Peta", nama tempat, Lv).
+- `js/skyart.js` (baru): lapisan langit/atas per tempat (`back` di belakang bukit, `over` di depan lapisan tengah), digambar mulai baris dunia teratas yang terlihat (`H.ST`, di bawah HUD). Padang: awan berlapis, kawanan burung, balon udara. Hutan: kanopi daun + sulur, daun berguguran. Bukit: gunung besar bersalju, awan berbentuk lingkaran/segitiga/persegi, elang. Danau: pelangi, camar putih. Lembah: bukit karang (mesa), elang, debu angin. Menara: bintang berkelip + bintang jatuh, bulan besar berkawah, lentera kertas naik. Kastil: awan badai + kilat + kelelawar. Arena: tali bendera warna-warni. Gua Pola: langit-langit, stalaktit menetes, kristal atap. Kapal Karam: kawanan ikan, ubur-ubur, gelembung. Perpustakaan: lampu gantung bergoyang, halaman melayang.
+- Matahari/bulan bawaan digeser ke bawah HUD; bulan sabit lama Menara dihapus. SW `mq-v42` (+ skyart.js).
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

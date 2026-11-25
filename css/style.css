@@ -814,15 +814,10 @@ body.skinK #scr-battle #arena { border: 0; border-image: none; }
 #scr-battle .ans { min-height: 58px; }
 #scr-battle #qText.story { font-size: 19px; }
 
-/* ===== Tata letak tarung berdampingan (2026-11-26) =====
-   Atas: info pahlawan (kiri) | info musuh (kanan). Bawah: soal (kiri) | pilihan jawaban (kanan).
+/* ===== Tata letak tarung (2026-11-26) =====
+   Atas: info pahlawan selebar layar (info musuh melayang di atas monsternya). Bawah: soal (kiri) | pilihan jawaban (kanan).
    Ruang dunia di tengah jadi jauh lebih tinggi → tokoh & animasi lebih besar. */
-#scr-battle .hud { width: calc(50% - 3px); align-self: flex-start; }
 #scr-battle .hud .row:first-child { gap: 4px; }
-#scr-battle .hud .back { font-size: 0; padding: 2px 8px; min-width: 30px; }
-#scr-battle .hud .back::before { content: '◀'; font-size: 14px; }
-#scr-battle .fieldName { font-size: 11px; line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-#scr-battle #lvl { font-size: 15px; white-space: nowrap; }
 #scr-battle .hpIcon { font-size: 13px; }
 #scr-battle .potion { padding: 0 4px; }
 #scr-battle .potion img { width: 20px; height: 20px; }
@@ -850,7 +845,6 @@ body.skinK #scr-battle #arena { border: 0; border-image: none; }
 #scr-battle .ans svg { width: 38px; height: 38px; }
 #scr-battle #answers.cols3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 #scr-battle #answers.cols3 .ans { font-size: 20px; }
-#scr-battle .bar.heroHp > span { font-size: 10px; letter-spacing: -.3px; }
 
 /* ===== Papan nama & status musuh MELAYANG di atas monsternya (2026-11-26) =====
    Posisi diatur scene.js tiap frame (left/top dalam px, di tengah atas kotak monster). */
@@ -868,3 +862,4 @@ body.skinK #scr-battle #mName, body.skinK #scr-battle #mName2 { color: #f4f4f4; 
 /* ekor kecil menunjuk ke monster */
 #scr-battle #mTop::after, #scr-battle #mTop2::after { content: ''; position: absolute; left: 50%; bottom: -7px; margin-left: -5px;
   border: 5px solid transparent; border-top-color: #1a1c2c; border-bottom: 0; }
+#scr-battle .fieldName { font-size: 14px; }

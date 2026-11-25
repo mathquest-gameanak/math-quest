@@ -117,8 +117,10 @@ MQ.Scene = (() => {
     S.forEach((c, i) => R(c, 0, i * band, VW, band + 1));
     for (let i = 1; i < S.length; i++) for (let x = (i % 2); x < VW; x += 2) R(S[i], x, i * band - 1, 1, 1);
     if (theme.stars) for (let i = 0; i < 26; i++) R(Math.floor(t * 2 + i) % 7 ? '#f4f4f4' : '#ffcd75', ((hash(i) * 400 - camX * 0.05) % VW + VW) % VW, hash(i + 3) * (GY - 35), 1, 1);
-    if (theme.sun) { circle(VW - 18, 11, 7, theme.stars ? '#c7d3de' : '#fff3b0'); circle(VW - 18, 11, 5, theme.sun); }
-    if (theme.clouds) for (let i = 0; i < 4; i++) {
+    const st = Math.round(freeTop / sc);
+    if (theme.sun && placeId !== 'menara') { circle(VW - 18, st + 11, 7, theme.stars ? '#c7d3de' : '#fff3b0'); circle(VW - 18, st + 11, 5, theme.sun); }
+    const SA = MQ.SkyArt;
+    if (theme.clouds && !(SA && SA.hasBack(placeId))) for (let i = 0; i < 4; i++) {
       const span = VW + 70, x = ((hash(i + 1) * span - camX * 0.08 - t * (2 + i)) % span + span) % span - 35, y = 4 + hash(i + 9) * Math.max(4, GY - 50);
       circle(x, y + 3, 5, '#f4f4f4'); circle(x + 7, y, 6, '#f4f4f4'); circle(x + 15, y + 3, 5, '#f4f4f4'); R('#d6f1fa', x - 4, y + 7, 24, 2);
     }
@@ -126,6 +128,7 @@ MQ.Scene = (() => {
     // mid menggantikan/menambah lapisan tengah, floor menggantikan tanah, front digambar di depan tokoh.
     const B = (MQ.Backdrops || {})[placeId] || {}, Hp = helpers(t);
     if (B.sky2) B.sky2(Hp);
+    if (SA) SA.back(placeId, Hp); // langit lebih kaya (skyart.js)
     if (B.far) B.far(Hp);
     else for (let sx = 0; sx < VW; sx++) {
       const wx = sx + camX * 0.25, y = Math.round(GY - 33 + 5 * Math.sin(wx / 21) + 3 * Math.sin(wx / 8.3));
@@ -142,6 +145,7 @@ MQ.Scene = (() => {
         midThing(wx - camX * 0.55, midY(wx), k);
       }
     }
+    if (SA) SA.over(placeId, Hp);
     if (B.floor) B.floor(Hp);
     else for (let sx = 0; sx < VW; sx++) {
       const wx = sx + camX, top = GY - 7 + Math.round(1.5 * Math.sin(wx / 9));
@@ -169,7 +173,7 @@ MQ.Scene = (() => {
   }
   /** Alat gambar untuk backgrounds.js (nilai saat ini). */
   function helpers(t) {
-    return {R, circle, hash, K, t, VW, VH, GY, camX, theme,
+    return {R, circle, hash, K, t, VW, VH, GY, camX, theme, ST: Math.round(freeTop / sc), // ST = baris dunia teratas yang terlihat (di bawah HUD)
             midY: wx => Math.round(GY - 19 + 3 * Math.sin(wx / 14 + 2) + 2 * Math.sin(wx / 5.1)),
             /** Ulangi benda setiap 'step' piksel dunia pada paralaks f: cb(sx, k) dengan sx = posisi layar. */
             each(step, f, cb, margin = 30) { const first = Math.floor((camX * f - margin) / step); for (let k = first; k <= first + (VW + margin * 2) / step + 1; k++) cb(k * step - camX * f, k); }};
