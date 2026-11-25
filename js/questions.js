@@ -155,7 +155,13 @@ MQ.Questions = (() => {
   };
 
   /** Membuat satu soal dari spesifikasi { kinds[], max, mulA?, mulB? }. */
-  const make = spec => GEN[pick(spec.kinds)](spec);
+  /** Buat soal; q.time = pengali waktu jenisnya (balance.js think.time), q.think = soal pikir (tanpa buru-buru). */
+  const make = spec => {
+    const q = GEN[pick(spec.kinds)](spec), T = MQ.Balance && MQ.Balance.think;
+    q.time = (T && T.time[q.kind]) || 1;
+    q.think = !!T && q.time >= T.from;
+    return q;
+  };
 
   /** Nama jenis soal untuk tampilan (statistik kemampuan). */
   const NAMES = {tambah: 'Tambah +', kurang: 'Kurang −', kali: 'Kali ×', isi: 'Isi kosong', hitung: 'Menghitung', banding: 'Bandingkan',

@@ -83,6 +83,16 @@ MQ.Balance = {
   upgrade: {max: 5, coins: 10, crownFrom: 4,
             mat: {senjata: 'kristalPola', pelindung: 'mutiara', aksesori: 'tinta'},
             per: {senjata: {atk: 1}, pelindung: {hp: 3, def: 0.5}, aksesori: {crit: 2, critDmg: 5}}},
+  /* Soal CEPAT vs soal PIKIR (2026-11-26). time = pengali waktu per jenis soal (1 = fakta dasar):
+     bar serangan musuh terisi lebih lambat (dibagi angka ini) dan batas KILAT lebih panjang (dikali angka ini).
+     Jenis dengan pengali ≥ from = soal PIKIR: tanpa KILAT; jawaban benar = serangan TELITI! (damage × telitiMul),
+     supaya anak dihargai karena teliti, bukan karena cepat. */
+  think: {
+    time: {tambah: 1, kurang: 1, kali: 1, banding: 1, hitung: 1.3, urutan: 1.3, bentuk: 1.3, isi: 1.5, panjang: 1.5,
+           puluhan: 1.6, pola: 2, ukur: 2, cerita: 3},
+    from: 2,
+    telitiMul: 1.5
+  },
   rewards: {
     coinsNormal: [1, 2], coinsBoss: 8,  // koin dari monster
     dropChance: 0.7,                    // peluang monster biasa menjatuhkan 1 bahan

@@ -559,3 +559,6 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 .homeSay::after { content: ""; position: absolute; left: 50%; bottom: -9px; margin-left: -6px; border: 6px solid transparent; border-top-color: #1a1c2c; }
 .homeFx { position: absolute; bottom: 150px; z-index: 3; font-style: normal; font-size: 20px; pointer-events: none; opacity: 0; animation: homeFx 1.1s ease-out forwards; }
 @keyframes homeFx { 0% { opacity: 0; transform: translateY(0) scale(.6); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateY(-70px) scale(1.1); } }
+
+/* Soal pikir: tanda pengganti bar KILAT */
+.thinkTag { font-size: 13px; font-weight: 900; color: #a7f070; margin-bottom: 2px; }

@@ -21,7 +21,7 @@ MQ.Battle = (() => {
   ['scr-battle', 'overlay', 'fastBar', 'fastFill', 'btnExit', 'btnPotion', 'potionCount', 'fieldName', 'lvl', 'heroHpFill', 'heroHpText', 'xpFill', 'xpText',
    'count', 'combo', 'modes', 'mTop', 'mName', 'hpFill', 'hpText', 'atkBar', 'atkFill', 'fx', 'dots', 'question', 'arena', 'scene',
    'mTop2', 'mName2', 'hpFill2', 'hpText2', 'atkFill2',
-   'qText', 'qView', 'btnSpeak', 'answers'].forEach(id => (els[id] = $(id)));
+   'qText', 'qView', 'btnSpeak', 'answers', 'thinkTag'].forEach(id => (els[id] = $(id)));
   const Scene = MQ.Scene;
 
   /* Status satu pertarungan. run = nomor sesi: dinaikkan saat masuk/keluar,
@@ -52,6 +52,9 @@ MQ.Battle = (() => {
   /** Pengubah kesulitan: tingkat dungeon atau Mode Pahlawan (balance.js), selain itu netral. */
   const NONE = {lvAdd: 0, hpMul: 1, dmgMul: 1, speedMul: 1, rewardMul: 1};
   const STORY_STARS = ['', ' ⭐⭐', ' ⭐⭐⭐'];
+  /** Pengali waktu soal sekarang (soal pikir → musuh lebih sabar, batas KILAT lebih panjang). */
+  const qTime = () => (B.q && B.mode !== 'exam' ? B.q.time || 1 : 1);
+  const kilatSec = () => BAL.combat.fastCritSec * qTime();
   const mods = () => B.mods || NONE;
   const later = (fn, ms) => { const r = B.run; setTimeout(() => { if (r === B.run) fn(); }, ms); };
   const kills = () => S.fieldKills[B.field.id] || 0;
@@ -175,13 +178,14 @@ MQ.Battle = (() => {
       !MQ.Cutscene.isOpen() && !(window.speechSynthesis && window.speechSynthesis.speaking);
     if (answering && B.mode !== 'exam') {
       B.answerTime += dt;
-      els.fastFill.style.width = Math.max(0, 1 - B.answerTime / BAL.combat.fastCritSec) * 100 + '%';
+      els.fastFill.style.width = Math.max(0, 1 - B.answerTime / kilatSec()) * 100 + '%';
     }
     if (!timerActive()) return;
-    B.charge += dt;
+    const rate = dt / qTime(); // soal pikir: bar serangan musuh terisi lebih lambat
+    B.charge += rate;
     els.atkFill.style.width = Math.min(100, B.charge / B.interval * 100) + '%';
     const o = B.other && B.other.hp > 0 ? B.other : null; // monster kedua menyerang dengan waktunya sendiri
-    if (o) { o.charge += dt; els.atkFill2.style.width = Math.min(100, o.charge / o.interval * 100) + '%'; }
+    if (o) { o.charge += rate; els.atkFill2.style.width = Math.min(100, o.charge / o.interval * 100) + '%'; }
     if (B.charge >= B.interval) enemyAttack();
     else if (o && o.charge >= o.interval) enemyAttack(o);
   }
@@ -337,7 +341,8 @@ MQ.Battle = (() => {
     B.q = q;
     els.question.classList.remove('walking');
     B.answerTime = 0; els.fastFill.style.width = '100%';
-    els.fastBar.hidden = B.mode === 'exam'; // ujian: tanpa kritikal
+    els.fastBar.hidden = B.mode === 'exam' || q.think; // ujian: tanpa kritikal; soal pikir: tanpa KILAT
+    els.thinkTag.hidden = B.mode === 'exam' || !q.think;
     els.qText.textContent = q.text;
     els.qText.classList.toggle('long', q.text.length > 12); // kalimat panjang → huruf sedikit lebih kecil
     els.qView.innerHTML = q.view || '';  // gambar buatan visuals.js (bukan masukan pengguna)
@@ -379,18 +384,19 @@ MQ.Battle = (() => {
       B.combo++; S.bestCombo = Math.max(S.bestCombo, B.combo);
       quest('correct', q.kind); quest('combo', B.combo);
       // Kritikal: pasti jika menjawab cepat (KILAT), selain itu peluang acak dari status & equipment
-      const fast = !exam && B.answerTime <= BAL.combat.fastCritSec;
+      const fast = !exam && !q.think && B.answerTime <= kilatSec();
+      const teliti = !exam && q.think; // soal pikir: benar = serangan TELITI!
       if (fast) S.kilat++; // untuk medali "Secepat Kilat"
       const crit = !exam && (fast || Math.random() * 100 < State.critChance()), [lo, hi] = State.atk();
       const extra = exam ? 0 : State.bonusFor(q.kind); // senjata bertopik: damage tambahan untuk jenis soal ini
-      const dmg = exam ? 10 : Math.round((rand(lo, hi) + extra) * (crit ? State.critMul() : 1));
+      const dmg = exam ? 10 : Math.round((rand(lo, hi) + extra) * (crit ? State.critMul() : teliti ? BAL.think.telitiMul : 1));
       if (extra) showFloat('⚔️ Bonus senjata!', 'xp', 0.15);
       if (exam) B.exam.ok++;
       B.hp = Math.max(0, B.hp - dmg);
       crit ? sfx.crit() : sfx.correct();
       sfx.slash();
       Scene.act('hero', 'atk', 0.35); Scene.act('mon', 'hit', 0.4, B.slot); Scene.slash(crit, B.slot);
-      showFloat(exam ? '✔ Benar!' : (fast ? '⚡KILAT! ' : crit ? 'KRITIS! ' : '') + '-' + dmg, crit ? 'crit' : '');
+      showFloat(exam ? '✔ Benar!' : (fast ? '⚡KILAT! ' : crit ? 'KRITIS! ' : teliti ? '🧠TELITI! ' : '') + '-' + dmg, crit || teliti ? 'crit' : '');
       updateHP(); updateHud();
       later(exam ? examNext : B.hp <= 0 ? defeatMonster : nextQuestion, 750);
     } else {

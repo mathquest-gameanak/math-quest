@@ -225,5 +225,10 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Ikon Buku/Misi/Medali/Pandai Besi tanpa kotak cokelat (ikon + nama bertepi gelap).
 - Kastil Ujian tidak lagi butuh Level 20 (tantangan lanjutan sudah ada di Pahlawan & Legenda); teks Kiki disesuaikan. SW `mq-v25` (+ homescene.js).
 
+### 2026-11-26 — Soal cepat vs soal pikir
+- `balance.think`: pengali waktu per jenis soal (tambah/kurang/bandingkan 1; hitung/urutan/bentuk 1,3; isi/panjang 1,5; puluhan 1,6; pola/ukur 2; cerita 3 untuk nanti). `Questions.make` memberi `q.time` & `q.think`.
+- Pertarungan: bar serangan musuh (kedua monster) terisi `dt / q.time`; batas KILAT = 2 detik × q.time. Soal pikir (≥ 2): bar KILAT diganti tanda "🧠 Soal pikir: santai saja, yang penting teliti!", jawaban benar = serangan 🧠 TELITI! (damage ×1,5).
+- Halaman Karakter & Atur Angka ikut menampilkan/mengatur angka ini. SW `mq-v26`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

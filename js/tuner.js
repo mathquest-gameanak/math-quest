@@ -80,6 +80,11 @@ MQ.Tuner = (() => {
       ['upgrade.per.pelindung.hp', 'Upgrade pelindung: HP +', 'per tingkat', 1],
       ['upgrade.per.aksesori.crit', 'Upgrade aksesori: kritikal % +', 'per tingkat', 1]
     ]},
+    {title: '🧠 Soal cepat & soal pikir', note: 'Pengali waktu per jenis soal: bar serangan musuh dibagi angka ini, batas KILAT dikali angka ini. ≥ batas = soal pikir (tanpa KILAT, benar = TELITI!).', rows: [
+      ['think.from', 'Batas soal pikir', 'pengali waktu ≥ angka ini = soal pikir', 0.1],
+      ['think.telitiMul', 'Damage TELITI! ×', 'serangan saat menjawab benar soal pikir', 0.1],
+      ...['hitung', 'isi', 'urutan', 'bentuk', 'pola', 'panjang', 'ukur', 'puluhan', 'cerita'].map(k => [`think.time.${k}`, `Waktu soal ${k} ×`, '', 0.1])
+    ]},
     {title: '🦇 Kecepatan jenis monster', note: 'Jeda serangan acak antara cepat–lambat (detik), sebelum dikali pace area. Kekuatan mengalikan damage.',
      rows: () => Object.keys(Data.styles).flatMap(k => [
       [`styles.${k}.spd.0`, `${k}: jeda tercepat`, '', 0.5],

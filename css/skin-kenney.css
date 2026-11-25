@@ -197,3 +197,4 @@ body.skinK .smithTabs .sBtn { border-image-source: url(../ui/steel.png); }
 body.skinK .smithTabs .sBtn.on { border-image-source: url(../ui/btn-green.png); }
 body.skinK .upLv { color: #a05a14; }
 body.skinK .heroToggle.legend { border-image-source: url(../ui/btn-pink.png); color: #5d275d; text-shadow: none; }
+body.skinK .thinkTag { color: #ffe08a; }
