@@ -522,3 +522,9 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 .dot5.done { background: var(--kuning); color: var(--hitam); }
 .dot5.now { background: var(--hijau); animation: bob 1s steps(1) infinite; }
 .dotLine { width: 8px; height: 3px; background: var(--hitam); }
+
+/* Pahlawan baru 32×32 punya ruang kosong di sekeliling (untuk topi & senjata): tampilkan sedikit lebih besar */
+#scr-home .homeHero { width: 190px; height: 190px; }
+#scr-home .heroStage::after { width: 110px; bottom: 2px; }
+.mapHero { width: 60px; height: 60px; margin: -104px 0 0 -30px; }
+.csActor.heroNew { width: 124px; height: 124px; margin-left: -62px; bottom: calc(12% - 6px); }

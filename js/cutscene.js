@@ -79,7 +79,7 @@ MQ.Cutscene = (() => {
     if (!el) {
       el = new Image();
       el.alt = ''; el.dataset.a = name;
-      el.className = 'csActor enter' + (name === 'crystal' || name === 'shard' ? ' item' : '') + (name === 'naga' ? ' big' : '');
+      el.className = 'csActor enter' + (name === 'crystal' || name === 'shard' ? ' item' : '') + (name === 'naga' ? ' big' : '') + (name === 'hero' ? ' heroNew' : '');
       el.src = actorSrc(name);
       el.style.left = (pos < 50 ? -25 : 125) + '%';
       els.actors.appendChild(el);

@@ -197,7 +197,7 @@ MQ.Battle = (() => {
       : B.mode === 'dungeon' ? Array.from({length: place.rooms}, (_, i) => (i === place.rooms - 1 ? 'boss' : i + 1 === place.keyRoom ? 'mini' : '')) : [];
     UI.show('battle');
     Scene.setup(place.id, B.stops);
-    Scene.setHero({url: MQ.Hero.current(), size: 16, mul: 2}); // penampilan + equipment terbaru (gambar baru menyusul di tahap 2)
+    Scene.setHero({draw: MQ.Hero.currentCanvas}); // penampilan + equipment terbaru, beranimasi
     Scene.start();
     updateHud();
     goStage();

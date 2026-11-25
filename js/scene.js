@@ -3,7 +3,7 @@
    Pahlawan berjalan dari titik ke titik (jalur 5 titik di area, ruang di dungeon). Kamera mengikuti pahlawan.
    1 piksel dunia = 3–5 piksel layar, mengikuti tinggi arena (arena lebih tinggi → tokoh lebih besar).
    Tema warna per tempat ada di THEMES (tahap 4 nanti: latar khusus tiap area).
-   Sprite: gambar baru dari pixelart.js bila ada (PIX), selain itu sprite lama (sprites.js) diperbesar 2×. */
+   Sprite: pahlawan dari hero.js (32×32, beranimasi); monster baru dari pixelart.js bila ada (PIX), selain itu sprite lama ×2. */
 'use strict';
 window.MQ = window.MQ || {};
 
@@ -149,6 +149,7 @@ MQ.Scene = (() => {
   const imgs = {};
   /** Kanvas/gambar untuk sebuah sumber: {pix: nama} atau {url: dataURL sprite lama, size: piksel asli}. */
   function source(src) {
+    if (src.draw) return {img: src.draw(src.frame || 'idle')};                      // mis. pahlawan (hero.js)
     if (src.pix) return {img: MQ.Pix.sprite(src.pix, src.frame || ''), scale: 1};
     let im = imgs[src.url];
     if (!im) { im = imgs[src.url] = new Image(); im.src = src.url; }
@@ -234,7 +235,8 @@ MQ.Scene = (() => {
     if (hero.src) {
       const walk = hero.target != null, frm = hero.act === 'atk' ? 'atk' : hero.act === 'hurt' ? 'hurt' : walk ? (Math.floor(hero.walkT * 7) % 2 ? 'walk1' : 'walk2') : 'idle';
       const dash = hero.act === 'atk' ? Math.sin((1 - hero.actT / 0.35) * Math.PI) * 10 : 0;
-      const bob = walk && !hero.src.pix ? -(Math.floor(hero.walkT * 7) % 2) : !walk && !hero.act ? -(Math.floor(t * 1.5) % 2) : 0;
+      const animated = hero.src.pix || hero.src.draw; // gambar baru punya langkah kaki sendiri
+      const bob = walk && !animated ? -(Math.floor(hero.walkT * 7) % 2) : !walk && !hero.act ? -(Math.floor(t * 1.5) % 2) : 0;
       if (!(hero.act === 'hurt' && Math.floor(t * 16) % 2)) drawSprite(Object.assign({}, hero.src, {frame: frm}), hero.x, {dx: dash, dy: bob});
     }
     if (slashT > 0 && mon) {

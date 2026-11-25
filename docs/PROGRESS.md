@@ -195,5 +195,10 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Layar pertarungan: arena mengisi sisa tinggi layar, soal & tombol diringkas, bar titik di bawah arena. Sprite baru dipakai bila ada (Lendir, Lendir Air, Lendir Bunga, Raja Lendir); lainnya sprite lama ×2. Pahlawan masih sprite lama (tahap 2).
 - SW `mq-v19` (+ pixelart.js, scene.js).
 
+### 2026-11-25 — Grafik baru tahap 2: pahlawan 32×32
+- `hero.js` ditulis ulang: pahlawan digambar dari bentuk (MQ.Pix) 32×32 dengan semua pilihan (3 rambut, 5 warna rambut, 3 kulit, gaun / baju & celana, 6 warna), 7 kostum (telinga kucing, pita besar, mahkota bunga, mahkota emas, topi bajak laut, topi penyihir, kacamata berlensa), senjata per ikon (pedang, kapak, tongkat, palu; warna dari item), perisai, aksesori (kalung koin, jimat kilat/tinta, cincin bintang, mahkota bijak). Frame idle/jalan/serang/terkena dipakai di pertarungan (`Hero.currentCanvas`).
+- Kulit lama `#ffcd75` (sama dengan warna emas) dipetakan ke `#ffd8b0`. `pixelart.js` dimuat sebelum `hero.js`.
+- Gambar pahlawan di beranda, peta, & cutscene diperbesar (ada ruang kosong untuk topi/senjata). SW `mq-v20`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
