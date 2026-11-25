@@ -96,7 +96,7 @@ body.skinK .tunInputs select, body.skinK .tunRow input, body.skinK #tunNewLv {
 }
 body.skinK .panel .slot.full { background: #f6e3bd; border-color: #a3703a; }
 body.skinK .panel .slot span, body.skinK .equip .slot small { color: var(--tinta2); }
-body.skinK .qty { color: #fff; }
+body.skinK .panel .qty { color: #fff; text-shadow: none; } /* lencana jumlah: angka putih di kotak gelap */
 body.skinK .pick.on { border-color: #d0661c; box-shadow: 0 0 0 2px #d0661c; background: #fff6df; }
 body.skinK .pick small { color: var(--tinta); }
 body.skinK .optLabel, body.skinK .gate b, body.skinK #bookName { color: #8e3f38; }

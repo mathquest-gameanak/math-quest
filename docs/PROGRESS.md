@@ -269,5 +269,10 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - 🎓 Pelajaran → **Kelas**: ruang kelas (papan tulis berisi materi/latihan, sprite baru `kakekTunjuk` di characters.js, pahlawan + 4 monster dari Buku Monster duduk di bangku, sorak saat benar).
 - iPad: viewport tegak = lebar yang membuat tinggi ±812px + `html.tablet` (kolom game penuh lebar), arena tarung jadi setinggi di HP. Skala adegan tarung (scene.js) dihitung dari tinggi arena dikurangi papan nama, dalam piksel layar asli → tokoh lebih besar & tidak tertutup. Papan nama monster ringkas (bar HP & bar serangan berdampingan). Layar rasio ≥ 0,6: soal & tombol jawaban dirapatkan. SW `mq-v34`.
 
+### 2026-11-26 — Dungeon bergambar & angka Tas
+- `js/dungeonart.js` (baru): pemandangan luar tiap dungeon & lorong dalam, kanvas 160×96 piksel, animasi ±12 fps hanya saat halaman Dungeon tampil.
+- `js/dungeon.js` ditulis ulang: kartu bergambar → halaman dungeon (penghuni, pilih tingkat, isi peti, tombol Masuk). Catatan "HP tidak pulih" pindah ke tombol ⓘ (Aturan Dungeon).
+- Tas: angka jumlah barang jadi lencana gelap berangka putih (sebelumnya teks gelap + bayangan gelap di skin Kenney → terlihat berbayang). SW `mq-v35` (+ dungeonart.js).
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

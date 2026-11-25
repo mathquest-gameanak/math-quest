@@ -221,9 +221,10 @@
 
   <!-- ===== DUNGEON ===== -->
   <section id="scr-dungeon" class="screen">
-    <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Dungeon</h2></header>
-    <p class="note">HP tidak pulih di dalam dungeon, bawa Ramuan! Selesaikan ⭐ untuk membuka ⭐⭐.</p>
+    <header class="panel topbar"><button class="back" id="dungeonBack">◀</button><h2>Dungeon</h2>
+      <button id="dungeonInfo" class="infoBtn" aria-label="Aturan dungeon">i</button></header>
     <div id="dungeonList" class="list"></div>
+    <div id="dungeonDetail" class="dDetail" hidden></div>
   </section>
 
   <!-- ===== PETA ===== -->
@@ -349,6 +350,7 @@
 <script src="js/collection.js"></script>
 <script src="js/map.js"></script>
 <script src="js/learn.js"></script>
+<script src="js/dungeonart.js"></script>
 <script src="js/dungeon.js"></script>
 <script src="js/homescene.js"></script>
 <script src="js/main.js"></script>

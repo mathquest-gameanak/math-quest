@@ -116,7 +116,8 @@ button { font: inherit; cursor: pointer; border: none; color: inherit; }
 .bag { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
 .slot.full { position: relative; border: 3px solid #94b0c2; background: #29366f; padding: 4px; }
 .slot.full .icon { width: 70%; height: auto; }
-.qty { position: absolute; right: 3px; bottom: 1px; font-size: 15px; text-shadow: 2px 2px 0 var(--hitam); }
+/* jumlah barang: lencana gelap kecil (angka putih tajam, tanpa bayangan yang membuatnya terlihat berbayang) */
+.qty { position: absolute; right: 2px; bottom: 2px; font-size: 13px; line-height: 1; padding: 2px 4px; color: #f4f4f4; background: var(--hitam); text-shadow: none; }
 .eq { position: absolute; left: 3px; top: 1px; font-size: 12px; background: var(--hijau); padding: 0 4px; }
 .equip .slot.full { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
 .equip .slot.full .icon { width: 55%; }
@@ -689,3 +690,52 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 #arena.pair #mTop::before { grid-column: 1 / -1; }
 /* Tablet (html.tablet, diatur skrip di index.html): kolom game memenuhi lebar layar */
 html.tablet #app { max-width: none; }
+
+/* ===== 🏰 Dungeon bergambar (2026-11-26): kartu pemandangan luar + halaman lorong dalam ===== */
+.infoBtn { margin-left: auto; width: 34px; height: 34px; border-radius: 50%; background: var(--biru); color: #f4f4f4; font-weight: 900; font-size: 18px;
+  font-style: italic; font-family: Georgia, serif; border: 3px solid var(--hitam); box-shadow: 0 3px 0 var(--hitam); }
+#scr-dungeon .dCard { padding: 0; gap: 0; overflow: hidden; cursor: pointer; }
+#scr-dungeon .dCard:active { transform: translateY(2px); }
+.dArt { position: relative; line-height: 0; border-bottom: 3px solid var(--hitam); }
+.dArt canvas { width: 100%; aspect-ratio: 160 / 96; image-rendering: pixelated; display: block; }
+.dArt .dName { position: absolute; left: 6px; top: 6px; line-height: 1.1; font-size: 18px; font-weight: 900; color: #fff3b0;
+  padding: 3px 8px; background: #1a1c2cd0; border: 2px solid #fff3b0; }
+.dArt .dStars { position: absolute; right: 6px; top: 6px; line-height: 1; padding: 3px 5px; background: #1a1c2cd0; border: 2px solid var(--hitam); }
+.dArt .dStars i { font-style: normal; font-size: 16px; color: #566c86; }
+.dArt .dStars i.on { color: var(--kuning); text-shadow: 0 0 4px #ffcd75; }
+.dArt .dEnter { position: absolute; right: 6px; bottom: 6px; line-height: 1.1; font-weight: 900; font-size: 15px; padding: 5px 10px;
+  background: var(--kuning); color: var(--hitam); border: 3px solid var(--hitam); box-shadow: 0 3px 0 var(--hitam); animation: bob 1.2s steps(1) infinite; }
+.dArt .dLockTag { position: absolute; left: 0; right: 0; bottom: 0; line-height: 1.2; padding: 6px; text-align: center; font-weight: 900; font-size: 14px;
+  background: #1a1c2ce0; color: #f4a3c8; }
+.dCard.lock canvas { filter: grayscale(.85) brightness(.5); }
+.dInfo { padding: 8px 10px 10px; display: flex; flex-direction: column; gap: 6px; }
+.dChips { display: flex; flex-wrap: wrap; gap: 4px; }
+.dChips span { font-size: 12px; font-weight: 800; padding: 3px 6px; background: #1a1c2c90; border: 2px solid #566c86; }
+.dDetail { display: flex; flex-direction: column; gap: 8px; }
+.dDetail[hidden] { display: none; }
+.dArt.big { border: 3px solid var(--hitam); box-shadow: 0 0 0 3px var(--panel-tepi), 0 0 18px #e43b4466; }
+.dSub { font-size: 15px; color: var(--kuning); text-shadow: 2px 2px 0 var(--hitam); margin: 4px 0 0; }
+.dFoes { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+.dFoe { flex: none; width: 74px; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px 2px;
+  background: var(--panel); border: 3px solid var(--panel-tepi); }
+.dFoe img { width: 48px; height: 48px; image-rendering: pixelated; }
+.dFoe small { font-size: 10px; font-weight: 800; text-align: center; line-height: 1.15; }
+.dFoe.key { border-color: #b06fd0; }
+.dFoe.boss { border-color: #e43b44; background: #5d275d; }
+#scr-dungeon .dTier { padding: 8px 2px; }
+#scr-dungeon .dTier.on { outline: 3px solid #fff3b0; outline-offset: 2px; transform: translateY(-3px); }
+#scr-dungeon .dTier em { font-style: normal; font-size: 11px; }
+#scr-dungeon .dTier.open { background: var(--hijau); animation: none; }
+.dPick { padding: 8px 10px; display: flex; flex-direction: column; gap: 4px; }
+.dPick small { font-size: 13px; color: #c7d3de; }
+.dLoots { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 2px; }
+.dLootT { font-weight: 900; font-size: 13px; }
+.dLoot { display: inline-flex; align-items: center; gap: 2px; font-weight: 900; font-size: 14px; padding: 2px 6px; background: #1a1c2c90; border: 2px solid #566c86; }
+.dLoot .icon { width: 22px; height: 22px; }
+.dGo { font-weight: 900; font-size: 22px; padding: 12px; background: #e43b44; color: #fff3b0; border: 3px solid var(--hitam);
+  box-shadow: inset -5px -5px 0 #0003, 0 5px 0 var(--hitam); text-shadow: 2px 2px 0 var(--hitam); }
+.dGo.off { background: #566c86; color: #c7d3de; }
+.dGo:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--hitam); }
+.dDetail > .dStory { color: #f4f4f4; margin: 0; }
+.dFoes .dFoe { width: 64px; }
+.dFoe img { width: 44px; height: 44px; }
