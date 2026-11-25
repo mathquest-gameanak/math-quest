@@ -29,10 +29,15 @@
         <button id="btnMusic" class="parentBtn musicBtn" aria-label="Musik nyala/mati">🎵</button>
         <button class="parentBtn" data-go="parent" aria-label="Untuk Orang Tua">👪</button>
       </div>
+      <!-- Ikon kecil di kiri: Buku Monster, Misi, Medali -->
+      <div class="homeSide">
+        <button class="sideBtn" data-go="book"><span>📖</span><small>Buku</small></button>
+        <button class="sideBtn" data-go="quests"><span>⭐</span><small>Misi</small><b id="questBadge" class="badge" hidden></b></button>
+        <button class="sideBtn" data-go="medals"><span>🏅</span><small>Medali</small></button>
+      </div>
       <h1 class="logo">MATH<br>QUEST</h1>
       <div class="heroStage"><img id="homeHero" class="homeHero" alt="Pahlawan"></div>
     </div>
-    <div class="homeBtns"><button id="homeBook" class="sBtn" data-go="book">📖 Buku Monster</button><button id="homeMedal" class="sBtn" data-go="medals">🏅 Medali</button></div>
     <button class="adventure" data-go="map">⚔️ PETUALANGAN</button>
   </section>
 
@@ -172,9 +177,16 @@
     <div id="smithList" class="list"></div>
   </section>
 
+  <!-- ===== DUNGEON ===== -->
+  <section id="scr-dungeon" class="screen">
+    <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Dungeon</h2></header>
+    <p class="note">HP tidak pulih di dalam dungeon, bawa Ramuan! Selesaikan ⭐ untuk membuka ⭐⭐.</p>
+    <div id="dungeonList" class="list"></div>
+  </section>
+
   <!-- ===== PETA ===== -->
   <section id="scr-map" class="screen">
-    <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Peta Petualangan</h2></header>
+    <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Peta</h2><button id="btnHeroMode" class="heroToggle" hidden></button></header>
     <div id="mapScroll" class="mapScroll">
       <div class="mapWrap"><canvas id="mapCanvas"></canvas><div id="mapNodes"></div><img id="mapHero" class="mapHero" alt="Posisimu"></div>
     </div>
@@ -257,7 +269,7 @@
   <button data-go="bag" data-tab="bag"><img data-icon="bag" alt=""><span>Tas</span></button>
   <button data-go="shop" data-tab="shop"><img data-icon="coin" alt=""><span>Toko</span></button>
   <button data-go="smith" data-tab="smith"><img data-icon="hammer" alt=""><span>Pandai Besi</span></button>
-  <button data-go="quests" data-tab="quests"><img data-icon="star" alt=""><span>Misi</span><b id="questBadge" class="badge" hidden></b></button>
+  <button data-go="dungeon" data-tab="dungeon"><img data-icon="gate" alt=""><span>Dungeon</span></button>
 </nav>
 
 <!-- Jendela pesan -->
@@ -289,6 +301,7 @@
 <script src="js/cutscene.js"></script>
 <script src="js/collection.js"></script>
 <script src="js/map.js"></script>
+<script src="js/dungeon.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

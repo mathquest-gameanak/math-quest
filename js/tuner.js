@@ -16,11 +16,11 @@ MQ.Tuner = (() => {
   /* ===== Daftar angka: [jalur, label, keterangan, step] ===== */
   const GROUPS = [
     {title: '🧒 Karakter', rows: [
-      ['player.baseHp', 'HP awal', 'HP dasar sebelum level', 1],
+      ['player.baseHp', 'HP di Level 1', 'HP = awal + per level × (level − 1)', 1],
       ['player.hpPerLevel', 'HP per level', 'tambahan HP otomatis tiap level', 1],
       ['player.hpPerPoint', 'HP per poin', 'tiap poin status ke HP', 1],
-      ['player.baseAtk', 'Serangan awal', 'serangan dasar', 1],
-      ['player.atkSpread', 'Acak serangan', 'serangan acak dari X sampai X + angka ini', 1],
+      ['player.baseAtk', 'Serangan di Level 1', 'serangan = awal + per level × (level − 1), dibulatkan ke bawah', 1],
+      ['player.atkSpread', 'Acak serangan', '0 = damage tetap; 2 = acak dari X sampai X + 2', 1],
       ['player.atkPerLevel', 'Serangan per level', 'tambahan otomatis tiap level', 0.5],
       ['player.atkPerPoint', 'Serangan per poin', 'tiap poin status ke ATK', 0.5],
       ['player.defPerPoint', 'Pertahanan per poin', 'pengurang damage per poin DEF (dibulatkan ke bawah)', 0.25],
@@ -30,8 +30,8 @@ MQ.Tuner = (() => {
       ['monster.hpBase', 'HP dasar', 'HP musuh = dasar + per level × level', 1],
       ['monster.hpPerLevel', 'HP per level', '', 1],
       ['monster.hpGrowthPct', 'HP berlipat (%)', 'tambahan % per level, berlipat. 0 = naik lurus; 5 = makin curam di level tinggi', 1],
-      ['monster.dmgBase', 'Damage dasar', 'damage = (dasar + per level × level) × kekuatan', 0.5],
-      ['monster.dmgPerLevel', 'Damage per level', '', 0.1],
+      ['monster.dmgBase', 'Damage dasar', 'damage = (dasar + per level × level) × kekuatan', 0.1],
+      ['monster.dmgPerLevel', 'Damage per level', '', 0.05],
       ['monster.dmgGrowthPct', 'Damage berlipat (%)', 'tambahan % per level, berlipat', 1],
       ['monster.bossHpMul', 'HP bos ×', '', 0.1],
       ['monster.bossDmgMul', 'Damage bos ×', '', 0.1],
@@ -64,6 +64,11 @@ MQ.Tuner = (() => {
       ['rewards.coinsNormal.1', 'Koin monster (maks)', '', 1],
       ['rewards.coinsBoss', 'Koin bos', '', 1],
       ['rewards.dropChance', 'Peluang drop', '0.7 = 70%', 0.05]
+    ]},
+    {title: '🏰 Tingkat dungeon & Mode Pahlawan', note: 'Level + = level musuh ditambah. Jeda × < 1 = musuh lebih cepat. Hadiah × = koin & isi peti.', rows: [
+      ['tiers.1.lvAdd', '⭐⭐ level +', '', 1], ['tiers.1.speedMul', '⭐⭐ jeda ×', '', 0.05], ['tiers.1.rewardMul', '⭐⭐ hadiah ×', '', 0.5],
+      ['tiers.2.lvAdd', '⭐⭐⭐ level +', '', 1], ['tiers.2.speedMul', '⭐⭐⭐ jeda ×', '', 0.05], ['tiers.2.rewardMul', '⭐⭐⭐ hadiah ×', '', 0.5],
+      ['heroMode.lvAdd', 'Mode Pahlawan level +', '', 1], ['heroMode.speedMul', 'Mode Pahlawan jeda ×', '', 0.05], ['heroMode.rewardMul', 'Mode Pahlawan koin ×', '', 0.5]
     ]},
     {title: '🦇 Kecepatan jenis monster', note: 'Jeda serangan acak antara cepat–lambat (detik), sebelum dikali pace area. Kekuatan mengalikan damage.',
      rows: () => Object.keys(Data.styles).flatMap(k => [
@@ -127,10 +132,10 @@ MQ.Tuner = (() => {
     else if (split === 'hp') a.hp = pts;
     else a = {hp: pts / 3, atk: pts / 3, def: pts / 3};
     const eq = $('tunEquip').checked, e = k => (eq ? State.effect(k) : 0);
-    const atkLo = P.baseAtk + P.atkPerLevel * L + P.atkPerPoint * Math.round(a.atk) + e('atk');
+    const atkLo = MQ.Calc.playerAtk(L, Math.round(a.atk), e('atk'));
     const critC = BAL.combat.critChance + e('crit'), critM = BAL.combat.critMul + e('critDmg') / 100;
     return {
-      hp: Math.round(P.baseHp + P.hpPerLevel * L + P.hpPerPoint * Math.round(a.hp) + e('hp')),
+      hp: MQ.Calc.playerHp(L, Math.round(a.hp), e('hp')),
       atk: atkLo + P.atkSpread / 2, atkLo, atkHi: atkLo + P.atkSpread,
       def: Math.floor(P.defPerPoint * Math.round(a.def)) + e('def'), critC, critM
     };

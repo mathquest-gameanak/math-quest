@@ -3,9 +3,10 @@
    Setelah mengubah: naikkan VERSION di sw.js agar HP yang sudah menginstal ikut memperbarui.
 
    Cara membaca rumus:
-     HP pemain       = player.baseHp + player.hpPerLevel × level + player.hpPerPoint × poin HP + bonus equipment
-     Serangan pemain = (player.baseAtk + player.atkPerLevel × level + player.atkPerPoint × poin ATK + equipment)
-                       sampai + player.atkSpread  (acak di antaranya)
+   ANGKA KECIL (2026-11-25): HP & damage dibuat kecil (< 100) dan damage tetap, supaya anak kelas 1 bisa ikut berhitung.
+     HP pemain       = player.baseHp + player.hpPerLevel × (level − 1) + player.hpPerPoint × poin HP + bonus equipment
+     Serangan pemain = bulat-ke-bawah(player.baseAtk + player.atkPerLevel × (level − 1)) + player.atkPerPoint × poin ATK + equipment
+                       sampai + player.atkSpread (0 = damage tetap, tidak acak)
      Level monster   = level awal area + 1 setiap monster.levelUpEvery monster dikalahkan di area itu
                        (maksimal level tertinggi area; bos = +monster.bossLevelBonus). Arena: = level pemain.
                        Level area ada di data.js ("lv: [min, maks]").
@@ -32,10 +33,10 @@ window.MQ = window.MQ || {};
 
 MQ.Balance = {
   player: {
-    baseHp: 40, hpPerLevel: 6, hpPerPoint: 8,                  // HP
-    baseAtk: 8, atkSpread: 4, atkPerLevel: 1, atkPerPoint: 1,  // Serangan
-    defPerPoint: 0.5,                                          // Pertahanan (dibulatkan ke bawah: 2 poin = −1 damage)
-    pointsPerLevel: 3                                          // poin status tiap naik level
+    baseHp: 20, hpPerLevel: 2, hpPerPoint: 3,                    // HP: Lv 1 = 20, Lv 10 = 38, Lv 20 = 58
+    baseAtk: 5, atkSpread: 0, atkPerLevel: 0.5, atkPerPoint: 1,  // Serangan: Lv 1 = 5, Lv 10 = 9, Lv 20 = 14 (tetap, tidak acak)
+    defPerPoint: 0.5,                                            // Pertahanan (dibulatkan ke bawah: 2 poin = −1 damage)
+    pointsPerLevel: 1                                            // poin status tiap naik level
   },
   xp: {
     base: 30, perLevel: 15,               // XP untuk naik level = base + perLevel × (level − 1)
@@ -45,9 +46,9 @@ MQ.Balance = {
     penaltyStep: 0.25, minFactor: 0.1     // tiap level selisih berikutnya −25%, minimal 10%
   },
   monster: {
-    hpBase: 24, hpPerLevel: 9, bossHpMul: 2, keyHpMul: 1.5,
+    hpBase: 12, hpPerLevel: 3, bossHpMul: 1.5, keyHpMul: 1.3,   // Lv 1 = 15, Lv 10 = 42, Lv 20 = 72
     hpGrowthPct: 0,              // HP tambahan berlipat: × (1 + %/100) per level di atas 1 (0 = garis lurus)
-    dmgBase: 3, dmgPerLevel: 1.5, bossDmgMul: 1.4,
+    dmgBase: 1.6, dmgPerLevel: 0.35, bossDmgMul: 1.4,           // Lv 1 ≈ 2, Lv 10 ≈ 5, Lv 20 ≈ 9
     dmgGrowthPct: 0,             // damage tambahan berlipat per level (0 = garis lurus)
     speedMul: 1,                 // pengali jeda serangan SEMUA musuh (0.5 = dua kali lebih cepat)
     startCharge: 0,              // bar serangan musuh sudah terisi sekian (0–0.9) saat muncul
@@ -58,11 +59,20 @@ MQ.Balance = {
   },
   combat: {
     critChance: 10,              // peluang kritikal dasar (%) — tambahan hanya dari equipment ("crit")
-    critMul: 1.5,                // damage kritikal dasar (×) — tambahan hanya dari equipment ("critDmg", dalam %)
+    critMul: 2,                  // damage kritikal dasar (× 2 = dobel) — tambahan hanya dari equipment ("critDmg", dalam %)
     fastCritSec: 2,              // jawab benar dalam ≤ 2 detik = pasti kritikal ("KILAT!")
     comboLabel: 3,               // kombo beruntun mulai ditampilkan dengan 🔥 (hanya hiasan & misi)
     healOnKillPct: 20            // HP pulih (%) setiap mengalahkan monster (bukan di dungeon)
   },
+  /* Tingkat dungeon ⭐/⭐⭐/⭐⭐⭐ dan Mode Pahlawan (petualangan utama setelah lulus ujian):
+     lvAdd = level monster ditambah (HP, damage & XP ikut naik), speedMul = pengali jeda serangan (< 1 = lebih cepat),
+     rewardMul = pengali koin & isi peti. */
+  tiers: [
+    {lvAdd: 0, speedMul: 1, rewardMul: 1},
+    {lvAdd: 3, speedMul: 0.85, rewardMul: 1.5},
+    {lvAdd: 6, speedMul: 0.7, rewardMul: 2}
+  ],
+  heroMode: {lvAdd: 4, speedMul: 0.8, rewardMul: 1.5},
   rewards: {
     coinsNormal: [1, 2], coinsBoss: 8,  // koin dari monster
     dropChance: 0.7,                    // peluang monster biasa menjatuhkan 1 bahan
@@ -72,6 +82,9 @@ MQ.Balance = {
 
 /** Rumus bersama (dipakai pertarungan & pratinjau Atur Angka), supaya keduanya selalu sama. */
 MQ.Calc = {
+  /** HP maks & serangan pemain (poin = poin status yang dibagi, eq = tambahan equipment). */
+  playerHp(lv, pts, eq) { const P = MQ.Balance.player; return Math.round(P.baseHp + P.hpPerLevel * (lv - 1) + P.hpPerPoint * pts + eq); },
+  playerAtk(lv, pts, eq) { const P = MQ.Balance.player; return Math.floor(P.baseAtk + P.atkPerLevel * (lv - 1)) + P.atkPerPoint * pts + eq; },
   monsterHp(lv, kind) {
     const M = MQ.Balance.monster;
     const mul = kind === 'boss' ? M.bossHpMul : kind === 'key' ? M.keyHpMul : 1;

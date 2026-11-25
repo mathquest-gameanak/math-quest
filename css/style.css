@@ -409,8 +409,15 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 #fastFill { height: 100%; width: 100%; background: linear-gradient(90deg, #ffcd75, #73eff7); }
 
 /* ===== Koleksi: Halaman Utama, Buku Monster, Medali ===== */
-.homeBtns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 12px; }
-.homeBtns .sBtn { background: var(--panel); font-size: 15px; padding: 10px 6px; }
+/* Ikon kecil di kiri halaman utama: Buku, Misi, Medali */
+.homeSide { position: absolute; left: 10px; top: 72px; z-index: 2; display: flex; flex-direction: column; gap: 8px; }
+.sideBtn { position: relative; width: 58px; padding: 4px 0 3px; display: flex; flex-direction: column; align-items: center; gap: 0;
+  background: #1a1c2cd0; border: 3px solid var(--panel-tepi); box-shadow: 0 3px 0 var(--hitam); }
+.sideBtn span { font-size: 24px; line-height: 1.1; }
+.sideBtn small { font-size: 11px; font-weight: 900; color: var(--teks); }
+.sideBtn:active { transform: translateY(3px); }
+.sideBtn .badge { top: -8px; right: -8px; margin: 0; min-width: 22px; height: 22px; line-height: 16px; font-size: 12px; border-width: 2px; }
+#scr-home .heroStage { bottom: 4%; }
 .bookDetail { padding: 10px 12px; }
 .bookHead { display: flex; gap: 12px; align-items: center; margin-bottom: 6px; }
 #bookImg { width: 88px; height: 88px; background: linear-gradient(#73eff7, #a7f070); border: 3px solid var(--panel-tepi); flex: none; }
@@ -466,3 +473,26 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 .sChips { display: flex; flex-wrap: wrap; gap: 6px; }
 .sChip { padding: 8px 10px; font-size: 14px; font-weight: 700; background: var(--hitam); border: 2px solid #566c86; min-height: 40px; }
 .sChip.on { background: var(--hijau); border-color: var(--panel-tepi); }
+
+/* ===== Dungeon ===== */
+.dCard { padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
+.dHead { display: flex; gap: 10px; align-items: center; }
+.dImg { width: 64px; height: 64px; flex: none; background: linear-gradient(#73eff7, #a7f070); border: 3px solid var(--panel-tepi); }
+.dBody { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.dBody b { font-size: 18px; }
+.dBody small { font-size: 13px; color: #94b0c2; }
+.dStory { font-size: 14px; line-height: 1.35; }
+.dLock { font-weight: 900; color: #f4a3c8; text-align: center; padding: 6px 0 2px; }
+.dCard.lock .dImg { filter: grayscale(1) brightness(.6); }
+.dTiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.dTier { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 6px 2px; font-weight: 900;
+  background: var(--hijau); border: 3px solid var(--panel-tepi); box-shadow: 0 4px 0 var(--hitam); }
+.dTier b { font-size: 14px; letter-spacing: -2px; }
+.dTier small { font-size: 11px; }
+.dTier.done { background: var(--kuning); color: var(--hitam); }
+.dTier.lock { background: #566c86; opacity: .7; box-shadow: none; }
+.dTier:active { transform: translateY(3px); }
+/* Mode Pahlawan di Peta */
+.heroToggle { margin-left: auto; font-weight: 900; font-size: 13px; padding: 6px 8px; min-height: 36px; background: #566c86; border: 3px solid var(--panel-tepi); white-space: nowrap; }
+.heroToggle.on { background: #b13e53; color: var(--kuning); }
+#scr-map.heroMode #mapCanvas { filter: saturate(1.25) hue-rotate(-12deg) brightness(.92); }

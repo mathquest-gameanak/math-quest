@@ -6,7 +6,7 @@ window.MQ = window.MQ || {};
 
 MQ.Save = (() => {
   const KEY = 'mathQuest.v1'; // nama kunci tetap; versi format ada di dalam data (field v)
-  const VERSION = 9;          // v1: level/xp/monsters/mode. v2: + area selesai, kill per field, statistik. v3: + koin, tas, equipment. v4: + kelas, ujian, misi harian. v5: + poin status (HP/ATK/DEF). v6: + catatan harian, pengaturan. v7: + penampilan pahlawan. v8: + cerita (adegan yang sudah ditonton). v9: + Buku Monster, medali, kostum
+  const VERSION = 10; // v10: + bintang dungeon, Mode Pahlawan.          // v1: level/xp/monsters/mode. v2: + area selesai, kill per field, statistik. v3: + koin, tas, equipment. v4: + kelas, ujian, misi harian. v5: + poin status (HP/ATK/DEF). v6: + catatan harian, pengaturan. v7: + penampilan pahlawan. v8: + cerita (adegan yang sudah ditonton). v9: + Buku Monster, medali, kostum
   const MODES = ['campur', 'tambah', 'kurang', 'kali'];
   const OPS = ['tambah', 'kurang', 'kali'];
   const num = (v, def, min) => (Number.isFinite(v) && v >= min ? Math.floor(v) : def);
@@ -49,7 +49,13 @@ MQ.Save = (() => {
     for (const [k, v] of Object.entries(obj(d.bestiary))) if (num(v, 0, 1) > 0) bestiary[k] = num(v, 0, 1);
     const medals = {};
     for (const [k, v] of Object.entries(obj(d.medals))) if (v === true) medals[k] = true;
+    const dungeonStars = {}; // id dungeon → tingkat tertinggi yang sudah selesai (1–3)
+    for (const [k, v] of Object.entries(obj(d.dungeonStars))) if (num(v, 0, 1) > 0) dungeonStars[k] = Math.min(3, num(v, 0, 1));
+    // Simpanan lama: dungeon yang sudah ditaklukkan = ⭐ selesai
+    for (const id of ['guaPola', 'kapalKaram', 'perpustakaan']) if (!dungeonStars[id] && Array.isArray(d.cleared) && d.cleared.includes(id)) dungeonStars[id] = 1;
+    const strList = v => (Array.isArray(v) ? v.filter(x => typeof x === 'string') : []);
     return {
+      dungeonStars, heroMode: d.heroMode === true, heroCleared: strList(d.heroCleared), // Mode Pahlawan: aktif? & area yang bosnya kalah
       bestiary, medals,
       costumes: Array.isArray(d.costumes) ? d.costumes.filter(x => typeof x === 'string') : [],
       kilat: num(d.kilat, 0, 0), crafted: num(d.crafted, 0, 0),
@@ -90,7 +96,8 @@ MQ.Save = (() => {
         cleared: s.cleared, fieldKills: s.fieldKills, bestCombo: s.bestCombo, stats: s.stats,
         coins: s.coins, inv: s.inv, equip: s.equip, grade: s.grade, examBest: s.examBest, daily: s.daily,
         alloc: s.alloc, points: s.points, settings: s.settings, days: pruneDays(s.days), hero: s.hero, story: s.story,
-        bestiary: s.bestiary, medals: s.medals, costumes: s.costumes, kilat: s.kilat, crafted: s.crafted
+        bestiary: s.bestiary, medals: s.medals, costumes: s.costumes, kilat: s.kilat, crafted: s.crafted,
+        dungeonStars: s.dungeonStars, heroMode: s.heroMode, heroCleared: s.heroCleared
       }));
     } catch (e) { /* penyimpanan tidak tersedia: game tetap jalan */ }
   }

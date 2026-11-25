@@ -1,6 +1,7 @@
 /* Math Quest — Peta Petualangan bergambar (pixel art, digulir ke atas).
    Dunia Kelas 1 dari bawah ke atas: padang → hutan → bukit → danau → lembah → menara → kastil.
-   Gua Pola (dungeon) di samping bukit, Arena Latihan di samping padang.
+   Arena Latihan di samping padang. Dungeon dibuka dari menu 🏰 Dungeon (js/dungeon.js); gambarnya tetap jadi hiasan peta.
+   Setelah lulus ujian: tombol Mode Pahlawan ⭐⭐ di atas peta (musuh lebih kuat, lihat balance.js heroMode).
    Gambar medan dibuat sekali; jalur & tombol tempat digambar ulang sesuai progress. */
 'use strict';
 window.MQ = window.MQ || {};
@@ -94,16 +95,19 @@ MQ.WorldMap = (() => {
   }
 
   /* ===== Status & jalur ===== */
-  const places = () => [...Data.fields, ...Data.dungeons, Data.arena];
+  const places = () => [...Data.fields, Data.arena];
+  const heroOn = () => S.grade > 1 && S.heroMode;
   function status(p) {
     if (p.soon) return 'soon';
     if (!State.unlocked(p)) return 'lock';
+    if (heroOn() && p.spec) return S.heroCleared.includes(p.id) ? 'done' : 'open'; // Mode Pahlawan: bintang dihitung ulang
     if (S.cleared.includes(p.id)) return 'done';
     return 'open';
   }
   /** Tempat tujuan berikutnya (area terbuka pertama yang belum selesai) — di sini pahlawan berdiri. */
   function currentPlace() {
     const main = Data.fields.filter(f => !f.soon);
+    if (heroOn()) return State.mainFields().find(f => !S.heroCleared.includes(f.id)) || main[main.length - 1];
     return main.find(f => State.unlocked(f) && !S.cleared.includes(f.id)) || main[main.length - 1];
   }
 
@@ -122,13 +126,17 @@ MQ.WorldMap = (() => {
     };
     const order = Data.fields.map(f => f.id);
     for (let i = 1; i < order.length; i++) seg(order[i - 1], order[i], State.unlocked(Data.fields[i]));
-    Data.dungeons.forEach(d => seg(d.req, d.id, State.unlocked(d)));
     seg('padang', 'arena', true);
     ctx.restore();
   }
 
   /* ===== Layar Peta ===== */
   UI.renderers.map = () => {
+    const hb = $('btnHeroMode');
+    hb.hidden = S.grade < 2;
+    hb.textContent = heroOn() ? '⭐⭐ Pahlawan' : '⭐ Normal';
+    hb.classList.toggle('on', heroOn());
+    $('scr-map').classList.toggle('heroMode', heroOn());
     if (!terrain) terrain = drawTerrain();
     const cv = $('mapCanvas');
     cv.width = W * SC; cv.height = H * SC;
@@ -174,13 +182,18 @@ MQ.WorldMap = (() => {
       return UI.overlay({icon: '📝', title: 'Ujian Naik Kelas', btn: 'Mulai Ujian', btn2: 'Nanti', cb: go,
         text: `12 soal dari semua area. Musuh tidak menyerang, jawab dengan tenang. Lulus jika benar minimal 9. Nilai terbaikmu: ${S.examBest}.`});
     }
-    if (p.dungeon) {
-      return UI.overlay({icon: '🕳️', title: p.name, btn: 'Masuk', btn2: 'Nanti', cb: go,
-        text: `${p.rooms} ruang beruntun. HP TIDAK pulih di dalam gua, bawa Ramuan Penyembuh! Kalahkan bos di ruang terakhir untuk membuka peti harta.`});
-    }
-    const lv = p.lv ? ` Level ${p.lv[0]}–${p.lv[1]}.` : '';
-    const done = S.cleared.includes(p.id) ? ' Bos sudah kamu kalahkan ⭐' : '';
-    UI.overlay({icon: p.icon, title: p.name, btn: 'Main!', btn2: 'Nanti', cb: go, text: `${p.desc}.${lv}${done}`});
+    const hero = heroOn() && p.spec, add = hero ? MQ.Balance.heroMode.lvAdd : 0;
+    const lv = p.lv ? ` Level ${p.lv[0] + add}–${p.lv[1] + add}.` : '';
+    const done = (hero ? S.heroCleared : S.cleared).includes(p.id) ? ' Bos sudah kamu kalahkan ⭐' : '';
+    UI.overlay({icon: p.icon, title: p.name + (hero ? ' ⭐⭐' : ''), btn: 'Main!', btn2: 'Nanti', cb: go,
+      text: `${p.desc}.${lv}${hero ? ' Mode Pahlawan: musuh lebih kuat & lebih cepat, koin lebih banyak!' : ''}${done}`});
+  });
+
+  /* Saklar Mode Pahlawan (hanya setelah lulus ujian) */
+  $('btnHeroMode').addEventListener('click', () => {
+    S.heroMode = !S.heroMode; State.save();
+    UI.renderers.map();
+    if (S.heroMode) UI.overlay({icon: '🦸', title: 'Mode Pahlawan ⭐⭐', text: 'Soalnya sama, tapi musuh lebih kuat dan lebih cepat. Koin lebih banyak! Kalahkan lagi keenam bos area.'});
   });
 
   return {POS};

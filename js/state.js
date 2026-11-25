@@ -16,8 +16,8 @@ MQ.State = (() => {
   const effect = key => ['senjata', 'pelindung', 'aksesori'].reduce((n, s) => n + ((gear(s) || {})[key] || 0), 0);
 
   // Rumus & angka: lihat js/balance.js
-  const maxHp = () => P.baseHp + P.hpPerLevel * S.level + P.hpPerPoint * S.alloc.hp + effect('hp');
-  const atk = () => { const b = P.baseAtk + P.atkPerLevel * S.level + P.atkPerPoint * S.alloc.atk + effect('atk'); return [b, b + P.atkSpread]; };
+  const maxHp = () => MQ.Calc.playerHp(S.level, S.alloc.hp, effect('hp'));
+  const atk = () => { const b = MQ.Calc.playerAtk(S.level, S.alloc.atk, effect('atk')); return [b, b + P.atkSpread]; };
   /** Kritikal: peluang (%) & pengali damage — dasar di balance.js, tambahan hanya dari equipment. */
   const critChance = () => MQ.Balance.combat.critChance + effect('crit');
   const critMul = () => MQ.Balance.combat.critMul + effect('critDmg') / 100;
@@ -26,13 +26,19 @@ MQ.State = (() => {
   /** Damage tambahan senjata untuk jenis soal tertentu. */
   const bonusFor = kind => { const w = gear('senjata'); return w && w.bonus && w.bonus.kinds.includes(kind) ? w.bonus.dmg : 0; };
 
+  /* Jumlah poin status harus = (level − 1) × poin per level. Bila aturan berubah (mis. angka kecil 2026-11-25),
+     semua poin dikembalikan sekali untuk dibagi ulang di halaman Karakter. */
+  if (S.points + S.alloc.hp + S.alloc.atk + S.alloc.def !== (S.level - 1) * P.pointsPerLevel) {
+    S.alloc = {hp: 0, atk: 0, def: 0}; S.points = (S.level - 1) * P.pointsPerLevel;
+  }
+
   S.hp = maxHp(); // HP saat ini tidak disimpan: penuh tiap masuk pertarungan
 
   /** Tambah XP; kembalikan true jika naik level (tiap level +3 poin status). */
   function addXp(n) {
     S.xp += n;
     let up = false;
-    while (S.xp >= xpNeed(S.level)) { S.xp -= xpNeed(S.level); S.level++; S.points += POINTS_PER_LEVEL; up = true; }
+    while (S.xp >= xpNeed(S.level)) { S.xp -= xpNeed(S.level); S.level++; S.points += P.pointsPerLevel; up = true; }
     return up;
   }
   /** Pakai 1 poin status untuk 'hp' | 'atk' | 'def'. */

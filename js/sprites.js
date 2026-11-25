@@ -201,6 +201,10 @@ MQ.Sprites = (() => {
     bag: {mirror: true, pal: {k: K, b: '#ab5236', y: '#ffcd75'}, rows: [
       '..kk', '.k..', 'kkkk', 'kbbb', 'kbyb', 'kbbb', 'kbbb', 'kkkk']},
 
+    /* Gerbang dungeon untuk bilah bawah (8×8) */
+    gate: {mirror: true, pal: {k: K, g: '#94b0c2', d: '#566c86', n: '#5d275d', y: '#ffcd75'}, rows: [
+      'kk.k', 'kgkg', 'kggg', 'kgdk', 'kgkn', 'kgkn', 'kdkn', 'kkkk']},
+
     /* Hati untuk HUD (7×6). Hati kosong = palet diganti abu-abu. */
     heart: {pal: {k: K, r: '#e43b44', w: '#f4f4f4'}, rows: [
       '.kk.kk.',

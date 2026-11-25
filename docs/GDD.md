@@ -79,13 +79,17 @@ Aturan agar level tetap seimbang:
 - **Musuh menyerang berwaktu**: bar ⚡ terisi selama soal tampil; saat penuh, musuh menyerang. Jeda acak per jenis monster (kelelawar 1,5–3 dtk, lendir 2,5–4,5, jamur 3–5, batu 4–6, naga 3,5–5,5) × *pace* area (soal yang butuh berpikir lebih lama → musuh lebih lambat). Bos sedikit lebih lambat tapi 1,5× lebih kuat.
 - Waktu musuh berhenti saat animasi, saat ada pesan, saat soal dibacakan (🔊), dan saat aplikasi tidak terlihat.
 - Jawaban salah = musuh langsung menyerang, kombo hilang, jawaban benar ditunjukkan.
-- Damage musuh = (3 + level area) × kekuatan monster − Pertahanan pemain (minimal 1). Mengalahkan monster memulihkan 20% HP (kecuali di dungeon).
+- **Angka kecil** (keputusan 2026-11-25): semua HP & damage di bawah 100 dan damage **tetap (tidak acak)**, supaya anak bisa ikut berhitung ("HP 15, pukul 5, tinggal 10"). Kritikal = **×2**.
+- Damage musuh = 1,6 + 0,35 × level monster (dibulatkan) × kekuatan monster − Pertahanan (minimal 1): Lv 1 ≈ 2, Lv 10 ≈ 5, Lv 20 ≈ 9. Mengalahkan monster memulihkan 20% HP (kecuali di dungeon).
+- HP monster = 12 + 3 × level: Lv 1 = 15, Lv 10 = 42, Lv 20 = 72 (bos ×1,5). Monster butuh ±3–5 pukulan.
 - HP habis = "Pahlawan istirahat", HP penuh lagi. **Tidak ada game over.** Di dungeon: keluar gua, hadiah tetap.
 - Ujian Naik Kelas: musuh tidak menyerang.
 
 ### Status pemain
-- HP maks = 40 + 5×level + 10×poin HP + equipment. Serangan = 8–12 + level + 2×poin ATK + equipment. Pertahanan = poin DEF + equipment.
-- Setiap naik level: **+3 poin status**, dibagi sendiri di layar Karakter (HP / Serangan / Pertahanan).
+- HP maks = 20 + 2 × (level − 1) + 3 × poin HP + equipment (Lv 1 = 20, Lv 10 = 38, Lv 20 = 58).
+- Serangan = 5 + ½ × (level − 1) (dibulatkan ke bawah) + poin ATK + equipment (Lv 1 = 5, Lv 10 = 9, Lv 20 = 14). Pertahanan = ½ × poin DEF + equipment.
+- Setiap naik level: **+1 poin status**, dibagi sendiri di layar Karakter (HP / Serangan / Pertahanan). Simpanan lama: poin dikembalikan sekali untuk dibagi ulang.
+- Semua angka di `js/balance.js`, bisa dicoba dari Orang Tua → Atur Angka.
 - Mengalahkan monster = XP + drop item.
 - **Petunjuk bergambar** (nanti): setelah salah, muncul bantuan visual (titik-titik, garis bilangan, ikatan lidi).
 - **Soal dibacakan** (nanti): tombol 🔊 memakai suara bawaan HP (Web Speech API, gratis).
@@ -120,7 +124,13 @@ Slot equipment: **senjata, pelindung, aksesori**.
 
 **Peta dunia**: jalur bertitik yang menghubungkan field. Field berikutnya terbuka setelah bos field dikalahkan.
 
-**Dungeon**: tantangan khusus tanpa isi ulang hati di tengah jalan, beberapa ruangan beruntun, hadiah peti. Contoh: *Gua Pola* (soal pola) di Bukit Bentuk.
+**Dungeon**: tantangan khusus tanpa isi ulang HP di tengah jalan, beberapa ruangan beruntun, hadiah peti. Tiap dungeon punya materi sendiri (Gua Pola: pola & bentuk; Kapal Karam: tambah & kurang s/d 20; Perpustakaan Tua: puluhan, urutan & bandingkan s/d 100).
+- Dibuka dari tombol **🏰 Dungeon** di bilah bawah (bukan dari peta). Halaman berisi satu kartu per dungeon: gambar, nama, materi, level, hadiah; yang belum terbuka tampil terkunci dengan syaratnya.
+- **Tingkat ⭐ / ⭐⭐ / ⭐⭐⭐** (seperti bintang di game anak): soal sama, musuh lebih tinggi levelnya & lebih cepat, hadiah peti lebih besar (×1 / ×1,5 / ×2). Tingkat berikutnya terbuka setelah tingkat sebelumnya selesai. Tanpa energi, timer, atau peringkat.
+
+**Mode Pahlawan ⭐⭐** (petualangan utama, terbuka setelah lulus Ujian Naik Kelas): area & soal sama, musuh +4 level dan menyerang lebih cepat, koin ×1,5. Saklar Normal/Pahlawan di atas peta. Medali "Pahlawan Sejati" untuk mengalahkan keenam bos area di Mode Pahlawan.
+
+**Halaman utama**: Buku Monster, Misi, Medali berupa ikon kecil bertumpuk di kiri di bawah kartu nama (ada tanda merah bila ada yang baru). Bilah bawah: Beranda, Karakter, Tas, Toko, Pandai Besi, Dungeon.
 
 ## 8. Laporan Orang Tua
 

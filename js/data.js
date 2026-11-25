@@ -64,24 +64,24 @@ MQ.Data = {
 
     ramuan:  {type: 'ramuan', name: 'Ramuan Penyembuh', icon: 'potion', price: 5, desc: 'Minum saat bertarung: HP penuh lagi.'},
 
-    pedangKayu:      {type: 'senjata', name: 'Pedang Kayu', icon: 'sword', pal: {w: '#d4a373'}, price: 8, atk: 2, crit: 5,
-                      desc: 'Serangan +2. Kritikal +5%.'},
-    pedangPenjumlah: {type: 'senjata', name: 'Pedang Penjumlah', icon: 'sword', pal: {w: '#73eff7', y: '#41a6f6'}, atk: 3, crit: 5, critDmg: 20,
-                      bonus: {kinds: ['tambah', 'isi', 'hitung'], dmg: 6}, recipe: {lendir: 5, spora: 3, koin: 10},
-                      desc: 'Serangan +3. Ekstra +6 di soal tambah, isi kosong & menghitung. Kritikal +5%, damage kritikal +20%.'},
-    kapakPengurang:  {type: 'senjata', name: 'Kapak Pengurang', icon: 'axe', pal: {w: '#f4a3c8'}, atk: 3, crit: 10,
-                      bonus: {kinds: ['kurang', 'isi'], dmg: 6}, recipe: {spora: 5, lendir: 3, koin: 10},
-                      desc: 'Serangan +3. Ekstra +6 di soal kurang & isi kosong. Kritikal +10%.'},
-    tongkatBentuk:   {type: 'senjata', name: 'Tongkat Bentuk', icon: 'staff', atk: 4, critDmg: 30,
-                      bonus: {kinds: ['bentuk', 'pola', 'panjang', 'ukur'], dmg: 7}, recipe: {batu: 5, mahkota: 1, koin: 15},
-                      desc: 'Serangan +4. Ekstra +7 di soal bentuk, pola & panjang. Damage kritikal +30%.'},
-    paluPuluhan:     {type: 'senjata', name: 'Palu Puluhan', icon: 'hammer', atk: 5, crit: 5, critDmg: 40,
-                      bonus: {kinds: ['puluhan', 'urutan', 'banding'], dmg: 8}, recipe: {kayu: 4, batu: 4, koin: 20},
-                      desc: 'Serangan +5. Ekstra +8 di soal puluhan, urutan & bandingkan. Kritikal +5%, damage kritikal +40%.'},
+    pedangKayu:      {type: 'senjata', name: 'Pedang Kayu', icon: 'sword', pal: {w: '#d4a373'}, price: 8, atk: 1, crit: 5,
+                      desc: 'Serangan +1. Kritikal +5%.'},
+    pedangPenjumlah: {type: 'senjata', name: 'Pedang Penjumlah', icon: 'sword', pal: {w: '#73eff7', y: '#41a6f6'}, atk: 2, crit: 5, critDmg: 20,
+                      bonus: {kinds: ['tambah', 'isi', 'hitung'], dmg: 3}, recipe: {lendir: 5, spora: 3, koin: 10},
+                      desc: 'Serangan +2. Ekstra +3 di soal tambah, isi kosong & menghitung. Kritikal +5%, damage kritikal +20%.'},
+    kapakPengurang:  {type: 'senjata', name: 'Kapak Pengurang', icon: 'axe', pal: {w: '#f4a3c8'}, atk: 2, crit: 10,
+                      bonus: {kinds: ['kurang', 'isi'], dmg: 3}, recipe: {spora: 5, lendir: 3, koin: 10},
+                      desc: 'Serangan +2. Ekstra +3 di soal kurang & isi kosong. Kritikal +10%.'},
+    tongkatBentuk:   {type: 'senjata', name: 'Tongkat Bentuk', icon: 'staff', atk: 3, critDmg: 30,
+                      bonus: {kinds: ['bentuk', 'pola', 'panjang', 'ukur'], dmg: 4}, recipe: {batu: 5, mahkota: 1, koin: 15},
+                      desc: 'Serangan +3. Ekstra +4 di soal bentuk, pola & panjang. Damage kritikal +30%.'},
+    paluPuluhan:     {type: 'senjata', name: 'Palu Puluhan', icon: 'hammer', atk: 4, crit: 5, critDmg: 40,
+                      bonus: {kinds: ['puluhan', 'urutan', 'banding'], dmg: 5}, recipe: {kayu: 4, batu: 4, koin: 20},
+                      desc: 'Serangan +4. Ekstra +5 di soal puluhan, urutan & bandingkan. Kritikal +5%, damage kritikal +40%.'},
 
-    perisaiKayu:     {type: 'pelindung', name: 'Perisai Kayu', icon: 'shield', price: 12, hp: 10, def: 1, desc: 'HP +10, Pertahanan +1.'},
-    perisaiBatu:     {type: 'pelindung', name: 'Perisai Batu', icon: 'shield', pal: {b: '#566c86', y: '#94b0c2'}, hp: 25, def: 2,
-                      recipe: {batu: 6, koin: 15}, desc: 'HP +25, Pertahanan +2.'},
+    perisaiKayu:     {type: 'pelindung', name: 'Perisai Kayu', icon: 'shield', price: 12, hp: 4, def: 1, desc: 'HP +4, Pertahanan +1.'},
+    perisaiBatu:     {type: 'pelindung', name: 'Perisai Batu', icon: 'shield', pal: {b: '#566c86', y: '#94b0c2'}, hp: 8, def: 2,
+                      recipe: {batu: 6, koin: 15}, desc: 'HP +8, Pertahanan +2.'},
 
     kalungKoin:      {type: 'aksesori', name: 'Kalung Koin', icon: 'ring', pal: {r: '#ffcd75', y: '#94b0c2'}, coins: 1,
                       recipe: {sayap: 5, koin: 10}, desc: 'Setiap monster memberi +1 koin.'},
@@ -116,19 +116,20 @@ MQ.Data = {
      desc: 'Ujian Naik Kelas: 12 soal campuran'}
   ],
 
-  /* Dungeon bercerita: rooms ruang beruntun, HP tidak pulih; ruang keyRoom = monster kunci (key), ruang terakhir = bos, lalu peti.
+  /* Dungeon bercerita (dibuka dari menu 🏰 Dungeon, js/dungeon.js; tingkat ⭐/⭐⭐/⭐⭐⭐ di balance.js "tiers"):
+     rooms ruang beruntun, HP tidak pulih; ruang keyRoom = monster kunci (key), ruang terakhir = bos, lalu peti.
      Cerita: adegan "<id>-intro", "<id>-key", "<id>-end" di story.js (tampil sekali). Bisa diulang untuk latihan & XP. */
   dungeons: [
     {id: 'guaPola', pace: 1.3, name: 'Gua Pola', icon: '🕳️', req: 'bukit', lv: [8, 12], rooms: 5, keyRoom: 3, key: 'penjagaPola',
-     dungeon: true, desc: 'Bantu Momo menyelamatkan keluarganya. HP tidak pulih!',
+     dungeon: true, desc: 'Bantu Momo menyelamatkan keluarganya.', topic: 'Pola & bentuk',
      spec: {kinds: ['pola', 'bentuk', 'pola']}, mobs: ['lendirBatu', 'jamurBatu', 'kelelawar'], boss: 'rajaBatu',
      reward: {coins: 15, items: {ramuan: 1, mahkota: 1}}},
     {id: 'kapalKaram', pace: 1.2, name: 'Kapal Karam', icon: '⛵', req: 'danau', lv: [12, 16], rooms: 6, keyRoom: 3, key: 'kepitingBesar',
-     dungeon: true, desc: 'Bantu Kapten Kumis mencari hartanya. HP tidak pulih!',
+     dungeon: true, desc: 'Bantu Kapten Kumis mencari hartanya.', topic: 'Tambah & kurang sampai 20',
      spec: {kinds: ['tambah', 'kurang', 'isi', 'hitung'], max: 20}, mobs: ['kepiting', 'lendirLaut'], boss: 'rajaKepiting',
      reward: {coins: 25, items: {ramuan: 2, mahkota: 1}}},
     {id: 'perpustakaan', pace: 1.4, name: 'Perpustakaan Tua', icon: '📚', req: 'lembah', lv: [16, 20], rooms: 7, keyRoom: 4, key: 'hantuTinta',
-     dungeon: true, desc: 'Bantu Hantu Buku merapikan nomor halaman. HP tidak pulih!',
+     dungeon: true, desc: 'Bantu Hantu Buku merapikan nomor halaman.', topic: 'Puluhan, urutan & bandingkan sampai 100',
      spec: {kinds: ['urutan', 'puluhan', 'banding'], max: 100}, mobs: ['hantuKertas', 'kelelawarBuku'], boss: 'rajaTinta',
      reward: {coins: 35, items: {ramuan: 2, mahkota: 2}}}
   ],

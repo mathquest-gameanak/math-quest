@@ -170,5 +170,12 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - `DEFAULT_PICKS` di `audio.js`: benar pizzi01, salah pizzi03, kritikal zap1, terkena plateL, monster kalah nes07, naik level nes00, tombol uiRoll1, ramuan phaserUp3. Serang, medali, peti, koin tetap suara lama.
 - Coba Suara: ★ = bawaan, chip "Suara lama" = suara buatan kode; HP hanya menyimpan yang berbeda dari bawaan. SW `mq-v14`.
 
+### 2026-11-25 — Angka kecil, halaman Dungeon, Mode Pahlawan, ikon beranda
+- **Angka kecil** (`balance.js`): HP pahlawan 20 + 2/level, serangan 5 + ½/level (tetap, tidak acak), kritikal ×2; monster HP 12 + 3×Lv, damage 1,6 + 0,35×Lv; bos HP ×1,5. 1 poin status per level (HP +3, ATK +1, DEF ½). Rumus bersama `MQ.Calc.playerHp/playerAtk`. Simpanan lama: poin dikembalikan sekali (jumlah poin ≠ (level−1)×poin per level → dibagi ulang). Equipment diperkecil (Pedang Kayu +1, Perisai Kayu HP +4, dll).
+- **Halaman Dungeon** (`js/dungeon.js`, tab 🏰 di bilah bawah menggantikan Misi): kartu per dungeon (gambar bos, materi, level, cerita), tingkat ⭐/⭐⭐/⭐⭐⭐ dari `balance.tiers` (level +0/+3/+6, jeda ×1/0,85/0,7, hadiah ×1/1,5/2). `S.dungeonStars`. Dungeon tidak lagi di peta (gambarnya tetap hiasan). Keluar dungeon → kembali ke halaman Dungeon.
+- **Mode Pahlawan ⭐⭐**: tombol di atas Peta setelah lulus ujian; area biasa level +4, jeda ×0,8, koin ×1,5; `S.heroMode`, `S.heroCleared`. Medali baru: Penakluk Dungeon (semua ⭐⭐⭐), Pahlawan Sejati (6 bos Mode Pahlawan).
+- **Beranda**: ikon kecil Buku/Misi/Medali di kiri (badge misi pindah ke sini); tombol besar Buku & Medali dihapus.
+- Atur Angka: grup baru "Tingkat dungeon & Mode Pahlawan". Simpanan v10. SW `mq-v15`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

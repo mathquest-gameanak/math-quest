@@ -24,7 +24,10 @@ MQ.Battle = (() => {
   /* Status satu pertarungan. run = nomor sesi: dinaikkan saat masuk/keluar,
      sehingga timer dari sesi lama tidak lagi menyentuh layar (lihat later()). */
   const B = {run: 0, field: null, mode: 'field', combo: 0, hp: 0, maxHp: 1, isBoss: false, last: '', q: null, locked: true,
-             room: 0, exam: null, charge: 0, interval: 3};
+             room: 0, exam: null, charge: 0, interval: 3, tier: 0, mods: null};
+  /** Pengubah kesulitan: tingkat dungeon atau Mode Pahlawan (balance.js), selain itu netral. */
+  const NONE = {lvAdd: 0, speedMul: 1, rewardMul: 1};
+  const mods = () => B.mods || NONE;
   const later = (fn, ms) => { const r = B.run; setTimeout(() => { if (r === B.run) fn(); }, ms); };
   const kills = () => S.fieldKills[B.field.id] || 0;
   const quest = (type, val) => { if (MQ.Quests) MQ.Quests.track(type, val); }; // misi harian
@@ -82,7 +85,7 @@ MQ.Battle = (() => {
   /** Jeda serangan berikutnya (detik): acak dalam rentang monster × pace tempat; bos sedikit lebih lambat. */
   function newInterval() {
     const [a, b] = style().spd;
-    return (a + Math.random() * (b - a)) * MQ.Calc.intervalMul(B.field.pace, B.isBoss);
+    return (a + Math.random() * (b - a)) * MQ.Calc.intervalMul(B.field.pace, B.isBoss) * mods().speedMul;
   }
   /** Damage serangan musuh: tergantung level tempat & kekuatan monster, dikurangi pertahanan pemain (min 1). */
   function enemyDamage() {
@@ -97,8 +100,8 @@ MQ.Battle = (() => {
     if (B.mode === 'arena') return S.level + (B.isBoss ? M.bossLevelBonus : 0);
     const [lo, hi] = B.field.lv;
     const steps = B.mode === 'dungeon' ? B.room - 1 : Math.floor(kills() / M.levelUpEvery);
-    const lv = Math.min(hi, lo + steps);
-    return B.isBoss ? Math.min(hi + M.bossLevelBonus, lv + M.bossLevelBonus) : lv;
+    const add = mods().lvAdd, lv = Math.min(hi, lo + steps) + add;
+    return B.isBoss ? Math.min(hi + add + M.bossLevelBonus, lv + M.bossLevelBonus) : lv;
   }
   /** Jenis bunyi serangan: monster kuat & lambat (batu) berdentum, selain itu mengikuti jenis tubuh. */
   function soundKind() { const m = Data.monsters[B.monId]; return style().power >= 1.4 && m.sprite !== 'dragon' ? 'rock' : m.sprite; }
@@ -162,14 +165,19 @@ MQ.Battle = (() => {
   }
 
   /* ===== Masuk & keluar ===== */
-  function start(place) {
+  /** opt.tier = tingkat dungeon (0 = ⭐). Area biasa memakai Mode Pahlawan bila dinyalakan. */
+  function start(place, opt = {}) {
     B.run++;
     B.field = place; B.combo = 0; B.q = null; B.last = ''; B.room = 0;
     B.mode = place.exam ? 'exam' : place.dungeon ? 'dungeon' : place.id === 'arena' ? 'arena' : 'field';
+    B.tier = B.mode === 'dungeon' ? (opt.tier || 0) : 0;
+    B.hero = B.mode === 'field' && heroModeOn();
+    B.mods = B.mode === 'dungeon' ? BAL.tiers[B.tier] : B.hero ? BAL.heroMode : null;
     if (B.mode === 'exam') B.exam = {i: 0, ok: 0, wrong: {}, qs: makeExam()};
     if (B.mode === 'dungeon') sfx.door(); // pintu dungeon berderit terbuka
     S.hp = State.maxHp();
-    els.fieldName.textContent = place.name;
+    els.fieldName.textContent = place.name + (B.mode === 'dungeon' ? ' ' + '⭐'.repeat(B.tier + 1) : B.hero ? ' ⭐⭐' : '');
+    els.btnExit.textContent = B.mode === 'dungeon' ? '◀ Keluar' : '◀ Peta';
     els.modes.hidden = B.mode !== 'arena'; // pilihan jenis soal hanya di Arena Latihan
     els.atkBar.hidden = B.mode === 'exam' || S.settings.santai; // ujian & Mode Santai: musuh tidak menyerang berwaktu
     els.fx.innerHTML = ''; els.slash.className = '';
@@ -183,9 +191,11 @@ MQ.Battle = (() => {
     B.run++; B.locked = true;
     if (playSecs >= 1) { State.logDay('t', Math.round(playSecs)); playSecs = 0; } // sisa waktu main yang belum tercatat
     State.save();
-    UI.show('map');
+    UI.show(B.mode === 'dungeon' ? 'dungeon' : 'map');
   }
   els.btnExit.addEventListener('click', exit);
+  /** Mode Pahlawan: terbuka setelah lulus Ujian Naik Kelas, dinyalakan dari tombol di Peta. */
+  const heroModeOn = () => S.grade > 1 && S.heroMode;
 
   /* ===== Monster ===== */
   function spawnMonster() {
@@ -331,15 +341,17 @@ MQ.Battle = (() => {
     // Hadiah: koin + bahan. Bos: lebih banyak koin, 3 bahan, dan 1 Mahkota Kecil.
     const mon = Data.monsters[B.monId];
     const R = BAL.rewards;
-    const coins = (wasBoss ? R.coinsBoss : rand(R.coinsNormal[0], R.coinsNormal[1])) + State.effect('coins');
+    const coins = Math.round(((wasBoss ? R.coinsBoss : rand(R.coinsNormal[0], R.coinsNormal[1])) + State.effect('coins')) * mods().rewardMul);
     S.coins += coins;
     showFloat(`+${coins} koin`, 'coin', 0.25);
     later(sfx.coin, 300);
     const loot = wasBoss ? [[mon.drop, R.bossDrops], ['mahkota', 1]] : Math.random() < R.dropChance ? [[mon.drop, 1]] : [];
     loot.forEach(([id, n], i) => { State.addItem(id, n); showFloat(`+${n} ${Data.items[id].name}`, 'loot', 0.5 + i * 0.25); });
     if (loot.length) later(sfx.loot, 550);
-    const firstClear = wasBoss && B.mode === 'field' && !S.cleared.includes(f.id);
+    const firstClear = wasBoss && B.mode === 'field' && !B.hero && !S.cleared.includes(f.id);
     if (firstClear) S.cleared.push(f.id);
+    const heroClear = wasBoss && B.hero && !S.heroCleared.includes(f.id); // bos area pertama kali kalah di Mode Pahlawan
+    if (heroClear) S.heroCleared.push(f.id);
     State.save(); updateHud();
 
     // Pesan yang perlu ditampilkan, satu per satu, lalu monster berikutnya
@@ -354,10 +366,16 @@ MQ.Battle = (() => {
     if (firstClear) steps.push(done => MQ.Cutscene.play(`${f.id}-shard`, done)); // cerita: kepingan kristal
     if (wasKey) steps.push(done => MQ.Cutscene.playOnce(`${f.id}-key`, done));   // cerita dungeon: setelah monster kunci
     if (firstClear) steps.push(done => {
-      const nxt = Data.fields.find(x => x.req === f.id) || Data.dungeons.find(x => x.req === f.id);
+      const nxt = Data.fields.find(x => x.req === f.id), dun = Data.dungeons.find(x => x.req === f.id);
       sfx.fanfare();
       UI.overlay({icon: '🏆', title: 'Area Selesai!', btn: 'Lanjut di sini', cb: done, btn2: 'Ke Peta', cb2: exit,
-        text: `Kamu mengalahkan ${Data.monsters[f.boss].name}! ` + (nxt ? `Tempat baru terbuka: ${nxt.name}.` : '')});
+        text: `Kamu mengalahkan ${Data.monsters[f.boss].name}! ` + (nxt ? `Tempat baru terbuka: ${nxt.name}. ` : '') +
+              (dun ? `Dungeon baru: ${dun.name} (buka menu 🏰 Dungeon).` : '')});
+    });
+    if (heroClear) steps.push(done => {
+      sfx.fanfare();
+      UI.overlay({icon: '🦸', title: 'Bos Pahlawan Kalah!', btn: 'Lanjut di sini', cb: done, btn2: 'Ke Peta', cb2: exit,
+        text: `Kamu mengalahkan ${Data.monsters[f.boss].name} di Mode Pahlawan ⭐⭐! (${S.heroCleared.length} dari ${State.mainFields().length})`});
     });
     steps.push(done => MQ.Collection.check(done)); // medali baru (jika ada)
     const run = () => {
@@ -373,20 +391,24 @@ MQ.Battle = (() => {
   function dungeonEnd(won) {
     const f = B.field;
     if (!won) {
-      return UI.overlay({icon: '🏃', title: `Keluar dari ${f.name}`, btn: 'Ke Peta', cb: exit,
+      return UI.overlay({icon: '🏃', title: `Keluar dari ${f.name}`, btn: 'Keluar', cb: exit,
         text: `HP-mu habis di ruang ${B.room}. Koin & bahan yang sudah didapat tetap milikmu. Coba lagi kapan saja!`});
     }
     if (!S.cleared.includes(f.id)) S.cleared.push(f.id);
-    const r = f.reward;
-    S.coins += r.coins;
-    Object.entries(r.items).forEach(([id, n]) => State.addItem(id, n));
+    const firstStar = (S.dungeonStars[f.id] || 0) <= B.tier;
+    MQ.Dungeon.cleared(f.id, B.tier);
+    const mul = mods().rewardMul, r = f.reward, coins = Math.round(r.coins * mul);
+    const items = Object.entries(r.items).map(([id, n]) => [id, Math.round(n * mul)]);
+    S.coins += coins;
+    items.forEach(([id, n]) => State.addItem(id, n));
     quest('dungeon');
     State.save();
     sfx.chest();
-    const list = Object.entries(r.items).map(([id, n]) => `${n} ${Data.items[id].name}`).join(', ');
+    const list = items.map(([id, n]) => `${n} ${Data.items[id].name}`).join(', ');
+    const nextTier = firstStar && B.tier < BAL.tiers.length - 1 ? ` Tingkat ${'⭐'.repeat(B.tier + 2)} terbuka!` : '';
     // cerita penutup dungeon (sekali), lalu peti harta
-    MQ.Cutscene.playOnce(`${f.id}-end`, () => UI.overlay({icon: '🎁', title: 'Peti Harta!', btn: 'Ke Peta', cb: () => MQ.Collection.check(exit),
-      text: `Kamu menaklukkan ${f.name}! Isi peti: ${r.coins} koin, ${list}.`}));
+    MQ.Cutscene.playOnce(`${f.id}-end`, () => UI.overlay({icon: '🎁', title: 'Peti Harta!', btn: 'Keluar', cb: () => MQ.Collection.check(exit),
+      text: `Kamu menaklukkan ${f.name} ${'⭐'.repeat(B.tier + 1)}! Isi peti: ${coins} koin, ${list}.${nextTier}`}));
   }
 
   /* ===== Ujian ===== */

@@ -58,7 +58,6 @@ body.skinK .card h2 {
 body.skinK .card p { color: var(--tinta); }
 
 /* ===== Halaman utama ===== */
-body.skinK .homeBtns .sBtn { border-image-source: url(../ui/btn-blue.png); }
 body.skinK .who, body.skinK .coinPill, body.skinK .parentBtn {
   background: none; border: 8px solid transparent; border-image: url(../ui/wood.png) 6 fill / 8px stretch; box-shadow: none; color: var(--kertas);
 }
@@ -177,3 +176,16 @@ body.skinK .who small { overflow: hidden; text-overflow: ellipsis; }
 body.skinK .tunOpen { border-image-source: url(../ui/btn-pink.png); color: var(--tinta); text-shadow: none; }
 body.skinK .soundOpen { border-image-source: url(../ui/btn-cyan.png); color: var(--tinta); text-shadow: none; }
 body.skinK .fileBtn { color: #fff; }
+
+/* ===== v15: ikon samping beranda, Dungeon, Mode Pahlawan ===== */
+body.skinK .sideBtn { background: none; box-shadow: none; border: 8px solid transparent; border-image: url(../ui/wood.png) 6 fill / 8px stretch; padding: 0; width: 62px; }
+body.skinK .sideBtn small { color: var(--kertas); text-shadow: 1px 1px 0 #6d4b27; }
+body.skinK .dImg { border-color: #6d4b27; }
+body.skinK .dBody b, body.skinK .dStory { color: var(--tinta); }
+body.skinK .dBody small { color: var(--tinta2); }
+body.skinK .dLock { color: #b13e53; }
+body.skinK .dTier { background: none; box-shadow: none; border: 8px solid transparent; border-image: url(../ui/btn-green.png) 6 fill / 8px stretch; color: #fff; text-shadow: 1px 1px 0 #0006; padding: 0; }
+body.skinK .dTier.done { border-image-source: url(../ui/btn-yellow.png); color: var(--tinta); text-shadow: none; }
+body.skinK .dTier.lock { border-image-source: url(../ui/steel.png); color: #dfe8f0; opacity: .8; }
+body.skinK .heroToggle { background: none; border: 8px solid transparent; border-image: url(../ui/steel-light.png) 6 fill / 8px stretch; color: #1f2a35; padding: 0 2px; min-height: 0; }
+body.skinK .heroToggle.on { border-image-source: url(../ui/btn-red.png); color: #ffe08a; text-shadow: 1px 1px 0 #0006; }

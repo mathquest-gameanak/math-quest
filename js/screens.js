@@ -10,7 +10,7 @@ MQ.UI = (() => {
 
   /* ===== Pindah layar: tiap <section class="screen" id="scr-NAMA"> ===== */
   const renderers = {};
-  const TABS = ['home', 'char', 'bag', 'shop', 'smith', 'quests']; // layar yang memakai bilah tombol bawah
+  const TABS = ['home', 'char', 'bag', 'shop', 'smith', 'dungeon']; // layar yang memakai bilah tombol bawah
   function show(name) {
     document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === 'scr-' + name));
     if (renderers[name]) renderers[name]();
@@ -82,8 +82,6 @@ MQ.UI = (() => {
     $('homeInfo').textContent = `LV ${S.level} · 💎 ${State.shards()}/6`;
     $('homeCoins').textContent = `🪙 ${S.coins}`;
     $('btnMusic').textContent = S.settings.music > 0 ? '🎵' : '🔇';
-    $('homeBook').textContent = `📖 Buku Monster ${MQ.Collection.found()}/${MQ.Collection.MONSTER_IDS.length}`;
-    $('homeMedal').textContent = `🏅 Medali ${Object.keys(S.medals).length}/${MQ.Collection.MEDALS.length}`;
     if (!MQ.Cutscene.isOpen()) MQ.Collection.check(); // medali yang terpenuhi di luar pertarungan (mis. Pandai Besi)
   };
 
@@ -103,10 +101,10 @@ MQ.UI = (() => {
       ['🎓 Kelas', S.grade > 1 ? 'Lulus Kelas 1!' : 'Kelas 1'],
       ['📝 Nilai ujian terbaik', S.examBest ? `${S.examBest} / 12` : '–'],
       ['❤️ HP maks', State.maxHp()],
-      ['⚔️ Serangan', `${lo}–${hi}`],
+      ['⚔️ Serangan', lo === hi ? lo : `${lo}–${hi}`],
       ['🛡️ Pertahanan', State.def()],
       ['🎯 Peluang kritikal', `${State.critChance()}%`],
-      ['💥 Damage kritikal', `${Math.round(State.critMul() * 100)}%`],
+      ['💥 Damage kritikal', `×${Math.round(State.critMul() * 10) / 10}`],
       [`⚡ Jawab ≤${MQ.Balance.combat.fastCritSec} detik`, 'pasti kritikal'],
       ['👾 Monster dikalahkan', S.monsters],
       ['🏆 Area selesai', `${State.mainFields().filter(f => S.cleared.includes(f.id)).length} / ${State.mainFields().length}`],
@@ -194,7 +192,7 @@ MQ.UI = (() => {
     document.addEventListener('click', e => {
       if (e.target.closest('.back')) return MQ.Audio.sfx.back();
       if (e.target.closest('[data-go="book"]')) return; // Buku Monster punya bunyi buka buku sendiri
-      if (e.target.closest('.tabbar button, .adventure, .sBtn, .pick, .mapNode, #ovBtn2, .who, .parentBtn, .musicBtn')) MQ.Audio.sfx.click();
+      if (e.target.closest('.tabbar button, .adventure, .sBtn, .pick, .mapNode, #ovBtn2, .who, .parentBtn, .musicBtn, .sideBtn, .heroToggle')) MQ.Audio.sfx.click();
     });
   }
 
