@@ -246,5 +246,10 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Pingsan: `js/learn.js` (MQ.Learn) — 14 materi bergambar + latihan tanpa waktu; `balance.knockout` (lockMin 5, mustLearn 1, practice 3); simpanan `rest`; `Learn.gate()` di awal `Battle.start`; spanduk hitung mundur di beranda; ikon 🎓 Pelajaran. Atur Angka: grup Pingsan & Peti.
 - SW `mq-v29` (+ learn.js).
 
+### 2026-11-26 — Peta digambar ulang
+- `map.js`: medan digambar di ukuran asli 160×560 (diperbesar CSS pixelated) dengan gradasi & batas berbintik; detail per wilayah (desa & pagar padang, pohon berlapis + jamur di hutan, bukit berbayang + batu bentuk + tebing gua, danau berlapis + pulau + teratai + kapal karam, tebing berlapis + kaktus + penggaris raksasa di lembah, malam + bulan + menara batu + perpustakaan, gunung berapi + kastil besar). Jalan tanah bertepi (abu-abu putus-putus bila terkunci).
+- Lapisan animasi ~15 fps (hanya saat Peta tampil): kilau air, kunang-kunang, bintang berkelip, bendera berkibar, lava, asap cerobong, kupu-kupu, awan berbayang.
+- Tombol tempat memakai potret bos piksel (siluet bila terkunci); nama tempat diberi ikon. SW `mq-v30`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

@@ -619,3 +619,8 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 .lvVis .dot { width: 20px; height: 20px; }
 .lvVis .hintCap { font-size: 18px; }
 .lvVis .hint { max-width: 340px; }
+
+/* Peta digambar ulang (ukuran asli 160×560, diperbesar tajam) & potret bos di tombol tempat */
+#mapCanvas { image-rendering: pixelated; }
+.mnArt { width: 40px; height: 40px; image-rendering: pixelated; }
+.mapNode.lock .mnArt { opacity: .85; }
