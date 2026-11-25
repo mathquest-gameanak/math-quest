@@ -183,5 +183,10 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Bahan khusus: Kristal Pola (Gua Pola → senjata), Mutiara Laut (Kapal Karam → pelindung), Tinta Bintang (Perpustakaan → aksesori). Dari peti (2/3/4 per ⭐) & monster kunci. 6 equipment baru di Pandai Besi: Pedang Kristal/Pahlawan, Perisai Mutiara/Pahlawan, Jimat Tinta, Mahkota Bijak.
 - GDD §14: rencana skala angka Kelas 1–6 (HP puluhan → ratusan → ribuan → puluhan ribu, mengikuti rentang bilangan sekolah). SW `mq-v16`.
 
+### 2026-11-25 — 🎨 Contoh grafik baru: Padang Hitung 5 titik (percobaan)
+- `contoh-padang.html` + `js/contoh-padang.js` (terpisah dari game, belum memakai simpanan): pahlawan berjalan di latar berlapis (langit bertingkat, matahari, awan, bukit jauh, pohon, jalan tanah, bunga, papan nomor, bendera bos), 5 titik: 1, 2, ⭐ mini bos, 4, 👑 bos. Kanvas 1 piksel dunia = 3 piksel layar.
+- `js/pixelart.js` (MQ.Pix): sprite dari bentuk (elips/kotak) + garis tepi otomatis. Pahlawan 30×27 (mata berkilau, pipi, kuncir berpita, animasi jalan/serang/terkena), Lendir Hijau (tunas daun), Lendir Air (tetes), Lendir Bunga (mini bos), Raja Lendir 38×34 (mahkota, kumis).
+- Dibuka dari Orang Tua → 🎨 Contoh tampilan baru. Menunggu pendapat sebelum diterapkan ke game.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
