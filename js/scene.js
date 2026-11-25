@@ -221,7 +221,7 @@ MQ.Scene = (() => {
     placeId = id; theme = THEMES[id] || THEMES.padang;
     markers = (stops || []).map((type, i) => ({x: 110 + i * STEP, type}));
     hero.x = markers.length ? 10 : 30; hero.target = null; hero.act = null; hero.strike = null; hero.kb = 0; hero.hurtT = 0; hero.pendingHurt = 0;
-    mons = [null, null]; target = 0; parts = []; fxs = []; camX = 0; shakeT = 0; flashA = 0;
+    mons = [null, null]; target = 0; parts = []; fxs = []; coinParts = []; camX = 0; shakeT = 0; flashA = 0;
     resize(true);
   }
   const fightX = i => (markers.length ? markers[i].x - 30 : 30);
@@ -298,6 +298,29 @@ MQ.Scene = (() => {
     freeze = s.crit ? 0.11 : 0.06;
     shake(s.crit ? 4 : 2, s.crit ? 0.3 : 0.18);
     if (s.crit) flash(s.fast ? '#73eff7' : '#fff3b0', 0.35);
+  }
+  /** Koin melompat keluar dari monster, memantul sebentar, lalu terbang ke pojok kanan atas (dompet). */
+  function coins(n, slot = target) {
+    const m = mons[slot], box = (m && m.box) || {sx: VW * 0.6, sy: GY - 20, w: 20, h: 20};
+    for (let i = 0; i < n; i++) coinParts.push({x: box.sx + camX + box.w / 2, y: box.sy + box.h / 2, vx: (Math.random() - 0.3) * 50, vy: -50 - Math.random() * 40,
+                                             t: -i * 0.05, home: 0.55 + i * 0.06});
+  }
+  let coinParts = [];
+  function drawCoins(dt, t) {
+    coinParts = coinParts.filter(c => {
+      c.t += dt;
+      if (c.t < 0) return true;
+      let x = c.x - camX, y = c.y;
+      if (c.t < c.home) { c.x += c.vx * dt; c.vy += 160 * dt; c.y += c.vy * dt; if (c.y > GY) { c.y = GY; c.vy *= -0.45; } x = c.x - camX; y = c.y; }
+      else { // terbang ke dompet
+        const k = Math.min(1, (c.t - c.home) / 0.35), sx = c.x - camX, tx = VW - 8, ty = 6;
+        x = sx + (tx - sx) * k * k; y = c.y + (ty - c.y) * k - Math.sin(k * Math.PI) * 10;
+        if (k >= 1) { burst(tx + camX, ty, 3, ['#fff3b0', '#ffcd75'], 20, 0); return false; }
+      }
+      const f = Math.floor(t * 10 + c.home * 10) % 4, w = [4, 3, 1, 3][f]; // koin berputar
+      R(K, x - w / 2 - 1, y - 3, w + 2, 6); R('#ffcd75', x - w / 2, y - 2, w, 4); if (w > 2) R('#fff3b0', x - w / 2, y - 2, 1, 2);
+      return true;
+    });
   }
   /** Monster mana yang diketuk (klik di kanvas)? -1 = bukan monster. */
   function hitTest(clientX, clientY) {
@@ -449,6 +472,7 @@ MQ.Scene = (() => {
     }
     drawFront(t);
     drawFx(rdt);
+    drawCoins(rdt, t);
     parts = parts.filter(p => (p.life -= rdt) > 0);
     parts.forEach(p => { p.x += p.vx * rdt; p.y += p.vy * rdt; p.vy += (p.g == null ? 60 : p.g) * rdt; R(p.c, p.x - camX, p.y, p.s || 2, p.s || 2); });
     if (flashA > 0) { ctx.globalAlpha = flashA; R(flashC, 0, 0, VW, VH); ctx.globalAlpha = 1; flashA = Math.max(0, flashA - rdt * 1.6); }
@@ -456,7 +480,7 @@ MQ.Scene = (() => {
   requestAnimationFrame(frame);
 
   return {
-    setup, walkTo, setMonster, setTarget, hitTest, act, defeat, slash, charge, walking, PIX, THEMES,
+    setup, walkTo, setMonster, setTarget, hitTest, act, defeat, slash, charge, coins, walking, PIX, THEMES,
     setHero(src) { hero.src = src; },
     start() { running = true; resize(true); },
     stop() { running = false; cv.style.transform = ''; }

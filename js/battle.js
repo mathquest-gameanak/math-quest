@@ -472,6 +472,7 @@ MQ.Battle = (() => {
     const coins = Math.round(((wasBoss ? R.coinsBoss : rand(R.coinsNormal[0], R.coinsNormal[1])) + State.effect('coins')) * mods().rewardMul);
     S.coins += coins;
     showFloat(`+${coins} koin`, 'coin', 0.25);
+    Scene.coins(Math.min(10, coins), B.slot); // koin melompat keluar lalu terbang ke pojok (dompet)
     later(sfx.coin, 300);
     const loot = wasBoss ? [[mon.drop, R.bossDrops], ['mahkota', 1]] : Math.random() < R.dropChance ? [[mon.drop, 1]] : [];
     loot.forEach(([id, n], i) => { State.addItem(id, n); showFloat(`+${n} ${Data.items[id].name}`, 'loot', 0.5 + i * 0.25); });
@@ -488,9 +489,10 @@ MQ.Battle = (() => {
     if (leveled) steps.push(done => {
       if (!dungeon) S.hp = State.maxHp(); // di dungeon HP tetap tidak pulih
       updateHud(); sfx.levelUp();
-      UI.overlay({icon: '⭐', title: `Naik ke Level ${S.level}!`, btn: 'Siap!', cb: done,
-        text: (dungeon ? 'Hebat sekali! ' : 'Hebat sekali! HP penuh lagi. ') +
-              `Kamu punya ${S.points} poin status. Atur di halaman Karakter untuk menambah HP, Serangan, atau Pertahanan!`});
+      const chips = [{icon: '⭐', text: `+${BAL.player.pointsPerLevel} poin status`}];
+      if (!dungeon) chips.unshift({icon: '❤️', text: 'HP penuh lagi'});
+      UI.overlay({fx: 'level', level: S.level, from: S.level - 1, sub: '✨ HEBAT SEKALI!', title: 'Naik Level!', btn: 'Siap!', cb: done, chips,
+        text: `Kamu punya ${S.points} poin status. Atur di Karakter untuk menambah HP, Serangan, atau Pertahanan!`});
     });
     if (firstClear) steps.push(done => MQ.Cutscene.play(`${f.id}-shard`, done)); // cerita: kepingan kristal
     if (wasKey) steps.push(done => MQ.Cutscene.playOnce(`${f.id}-key`, done));   // cerita dungeon: setelah monster kunci
@@ -537,6 +539,7 @@ MQ.Battle = (() => {
     Scene.defeat(0); Scene.act('hero', 'atk', 0.4);
     showFloat(first ? '✨ Peti terbuka!' : 'Peti terbuka!', 'loot', 0);
     showFloat(`+${coins} koin`, 'coin', 0.3);
+    Scene.coins(Math.min(10, coins), 0);
     if (first) {
       const id = Data.monsters[MQ.pick(B.field.mobs)].drop, n = C.items;
       State.addItem(id, n); showFloat(`+${n} ${Data.items[id].name}`, 'loot', 0.6);
@@ -579,8 +582,9 @@ MQ.Battle = (() => {
     const list = items.map(([id, n]) => `${n} ${Data.items[id].name}`).join(', ');
     const nextTier = firstStar && B.tier < BAL.tiers.length - 1 ? ` Tingkat ${'⭐'.repeat(B.tier + 2)} terbuka!` : '';
     // cerita penutup dungeon (sekali), lalu peti harta
-    MQ.Cutscene.playOnce(`${f.id}-end`, () => UI.overlay({icon: '🎁', title: 'Peti Harta!', btn: 'Keluar', cb: () => MQ.Collection.check(exit),
-      text: `Kamu menaklukkan ${f.name} ${'⭐'.repeat(B.tier + 1)}! Isi peti: ${coins} koin, ${list}.${nextTier}`}));
+    const chips = [{img: MQ.ItemArt.url('coin'), text: `+${coins} koin`}].concat(items.map(([id, n]) => ({img: MQ.ItemArt.url(id) || '', text: `+${n} ${Data.items[id].name}`})));
+    MQ.Cutscene.playOnce(`${f.id}-end`, () => UI.overlay({fx: 'chest', sub: `${f.name} ${'⭐'.repeat(B.tier + 1)}`, title: 'Peti Harta!', btn: 'Keluar',
+      cb: () => MQ.Collection.check(exit), chips, text: `Kamu menaklukkan ${f.name}!${nextTier}`}));
   }
 
   /* ===== Ujian ===== */

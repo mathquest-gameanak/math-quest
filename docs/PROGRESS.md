@@ -283,5 +283,10 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Monster kalah: berkedip putih & menggembung lalu pecah jadi bintang + cincin cahaya; pahlawan melompat senang (frame happy). Pahlawan bernapas saat diam.
 - battle.js: `Scene.slash(crit, slot, fast)` (efek kena diatur scene), `Scene.charge(slot, k)` dari bar serangan. SW `mq-v37`.
 
+### 2026-11-26 — Momen hadiah meriah & judul pita
+- `UI.overlay` mendukung perayaan: `fx` ('medal' | 'level' | 'chest'), `sub` (label kecil), `chips` (hadiah bergambar, muncul satu per satu), konfeti. Medali: cakram emas berpita berputar masuk + sinar; Naik Level: pahlawan melompat, angka level naik; Peti Harta dungeon: peti bergetar lalu terbuka (sprite baru `petiBuka`).
+- Koin dari monster & Peti Teka-teki melompat keluar lalu terbang ke pojok kanan atas (`Scene.coins`).
+- Perbaikan: judul panjang di pita merah (skin Kenney) keluar dari pita → judul panjang satu baris dengan huruf lebih kecil; medali sekarang berjudul nama medalinya + label "MEDALI BARU". SW `mq-v38`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

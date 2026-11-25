@@ -739,3 +739,53 @@ html.tablet #app { max-width: none; }
 .dDetail > .dStory { color: #f4f4f4; margin: 0; }
 .dFoes .dFoe { width: 64px; }
 .dFoe img { width: 44px; height: 44px; }
+
+/* ===== Jendela perayaan (2026-11-26): medali, naik level, peti harta ===== */
+.ovSub { display: block; font-weight: 900; font-size: 13px; letter-spacing: 1px; color: var(--kuning); margin-top: 2px; }
+#ovTitle.long { font-size: 20px; }
+.card.fx { position: relative; overflow: visible; }
+.bigFx { position: relative; width: 150px; height: 120px; margin: -6px auto 0; display: grid; place-items: center; }
+.bigFx .rays { position: absolute; left: 50%; top: 50%; width: 220px; height: 220px; margin: -110px 0 0 -110px; border-radius: 50%; z-index: 0;
+  background: repeating-conic-gradient(#fff3b0aa 0 10deg, transparent 10deg 24deg);
+  -webkit-mask: radial-gradient(circle, #000 25%, transparent 68%); mask: radial-gradient(circle, #000 25%, transparent 68%);
+  animation: raysSpin 8s linear infinite, raysIn .5s ease-out; }
+@keyframes raysSpin { to { transform: rotate(360deg); } }
+@keyframes raysIn { from { opacity: 0; transform: scale(.3); } }
+/* medali: cakram emas berpita, berputar masuk */
+.medalDisc { position: relative; z-index: 1; width: 86px; height: 86px; border-radius: 50%; display: grid; place-items: center;
+  background: radial-gradient(circle at 35% 30%, #fff3b0 0 18%, #ffcd75 40%, #ef7d57 100%); border: 4px solid var(--hitam);
+  box-shadow: inset 0 0 0 5px #ffcd75, inset 0 0 0 7px #d4a373, 0 4px 0 var(--hitam); animation: medalIn .9s cubic-bezier(.2, 1.6, .4, 1) both; }
+.medalDisc b { font-size: 42px; line-height: 1; filter: drop-shadow(2px 2px 0 #0006); }
+.medalDisc .tail { position: absolute; top: 70px; width: 22px; height: 40px; background: #e43b44; border: 3px solid var(--hitam); z-index: -1;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%); }
+.medalDisc .tail.l { left: 14px; transform: rotate(14deg); background: #41a6f6; }
+.medalDisc .tail.r { right: 14px; transform: rotate(-14deg); }
+@keyframes medalIn { 0% { transform: scale(0) rotateY(0); } 60% { transform: scale(1.15) rotateY(540deg); } 100% { transform: scale(1) rotateY(720deg); } }
+/* naik level: pahlawan melompat, angka level membesar */
+.lvHero { position: relative; z-index: 1; width: 96px; height: 96px; image-rendering: pixelated; animation: lvJump .7s steps(6) 2; }
+@keyframes lvJump { 50% { transform: translateY(-16px); } }
+.lvNum { position: absolute; z-index: 2; bottom: -6px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 26px; font-weight: 900;
+  color: var(--kuning); text-shadow: 2px 2px 0 var(--hitam), -2px -2px 0 var(--hitam), 2px -2px 0 var(--hitam), -2px 2px 0 var(--hitam); }
+.lvNum span { display: inline-block; }
+.lvNum span.bump { animation: lvBump .5s cubic-bezier(.2, 1.8, .4, 1); color: #a7f070; }
+@keyframes lvBump { 0% { transform: scale(2.4); } 100% { transform: scale(1); } }
+/* peti: bergetar, lalu terbuka dengan kilatan */
+.chestImg { position: relative; z-index: 1; width: 120px; image-rendering: pixelated; }
+.chestImg.shake { animation: chestShake .85s steps(8); }
+.chestImg.opened { animation: chestPop .45s cubic-bezier(.2, 1.8, .4, 1); }
+@keyframes chestShake { 0%, 100% { transform: none; } 20% { transform: rotate(-6deg); } 40% { transform: rotate(6deg) translateY(-3px); }
+  60% { transform: rotate(-8deg); } 80% { transform: rotate(8deg) translateY(-6px); } }
+@keyframes chestPop { 0% { transform: scale(1.4); filter: brightness(2.5); } 100% { transform: scale(1); filter: none; } }
+.fx-chest:not(.open) .rays { opacity: 0; }
+/* hadiah muncul satu per satu */
+.ovChips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 6px 0 10px; }
+.ovChips[hidden] { display: none; }
+.ovChip { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px 4px 4px; font-weight: 900; font-size: 15px;
+  background: #1a1c2c; color: #fff3b0; border: 3px solid var(--kuning); animation: chipIn .45s cubic-bezier(.2, 1.7, .4, 1) both; }
+.ovChip img { width: 30px; height: 30px; image-rendering: pixelated; }
+.ovChip b { font-size: 20px; padding: 0 2px; }
+@keyframes chipIn { 0% { transform: translateY(-40px) scale(.3); opacity: 0; } 100% { transform: none; opacity: 1; } }
+/* konfeti */
+.confetti { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.confetti i { position: absolute; top: -12px; width: 8px; height: 12px; animation: confFall linear both; }
+@keyframes confFall { to { transform: translate(var(--x), 105vh) rotate(var(--r)); } }

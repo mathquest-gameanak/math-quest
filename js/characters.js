@@ -201,5 +201,20 @@ window.MQ = window.MQ || {};
     return P.outline();
   }
 
-  Object.assign(MQ.Pix.MONSTERS, {kakek, kakekTunjuk, kiki, penyihir, momo, kapten, hantuBuku, crystal, shard, peti});
+  /** Peti harta TERBUKA: tutup terangkat ke belakang, isi berkilau emas. */
+  function petiBuka() {
+    const P = grid(28, 24), Y = '#ffcd75', YD = '#d4a373', WD = '#8a5a3c', WL = '#b86f50';
+    P.rect(3, 1, 22, 5, WL).rect(3, 1, 22, 1, '#d4886a');                  // tutup terbuka (terlihat dalamnya)
+    P.rect(3, 5, 22, 2, '#5d3a28');
+    [6, 19].forEach(x => P.rect(x, 1, 3, 6, Y));
+    P.ell(14, 12, 11, 4, '#fff3b0'); P.ell(14, 12, 9, 3, Y);                // tumpukan emas berkilau
+    P.px(9, 11, W).px(16, 10, W).px(20, 12, W).px(12, 13, '#ef7d57');
+    P.rect(2, 13, 24, 9, WD); P.recolor(WD, '#5d3a28', (x, y) => x > 21);   // badan
+    [5, 20].forEach(x => P.rect(x, 13, 3, 9, Y).rect(x + 2, 13, 1, 9, YD));
+    P.rect(2, 20, 24, 2, '#5d3a28');
+    P.rect(11, 14, 6, 5, Y).rect(13, 16, 2, 2, K);                          // gembok terbuka
+    return P.outline();
+  }
+
+  Object.assign(MQ.Pix.MONSTERS, {kakek, kakekTunjuk, kiki, penyihir, momo, kapten, hantuBuku, crystal, shard, peti, petiBuka});
 })();

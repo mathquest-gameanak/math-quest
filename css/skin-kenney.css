@@ -54,7 +54,12 @@ body.skinK .card h2 {
   display: inline-block; min-height: 60px; line-height: 30px; padding: 12px 6px 18px; margin: 4px 0 8px;
   border: solid transparent; border-width: 0 40px; border-image: url(../ui/ribbon.png) 0 28 fill / 0 40px stretch;
   color: var(--kertas); text-shadow: 2px 2px 0 #8e3f38; font-size: 24px;
+  max-width: 100%; box-sizing: border-box;
 }
+/* judul panjang: huruf lebih kecil supaya tetap di dalam pita (2026-11-26) */
+body.skinK .card h2.long { font-size: 18px; white-space: nowrap; }
+body.skinK .card .rays { background: repeating-conic-gradient(#ef7d5760 0 10deg, transparent 10deg 24deg); }
+body.skinK .ovSub { color: #8e3f38; }
 body.skinK .card p { color: var(--tinta); }
 
 /* ===== Halaman utama ===== */

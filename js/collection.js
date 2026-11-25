@@ -136,8 +136,11 @@ MQ.Collection = (() => {
       const m = fresh.shift();
       if (!m) { if (done) done(); return; }
       MQ.Audio.sfx.fanfare();
-      UI.overlay({icon: m.icon, title: `Medali Baru: ${m.name}!`, btn: 'Hore!', cb: next,
-        text: `${m.desc}. Hadiah: ${rewardText(m.reward)}.` + (m.reward.costume ? ' Pakai di Karakter → Ubah penampilan.' : '')});
+      const r = m.reward, chip = r.costume
+        ? {img: Hero.url(Object.assign({}, S.hero, {costume: r.costume}), S.equip, 'happy'), text: `Kostum ${Hero.COSTUMES[r.costume].name}`}
+        : {img: MQ.ItemArt.url('coin'), text: `+${r.coins} koin`};
+      UI.overlay({fx: 'medal', icon: m.icon, sub: '🏅 MEDALI BARU', title: m.name, btn: 'Hore!', cb: next, chips: [chip],
+        text: m.desc + '.' + (r.costume ? ' Pakai kostumnya di Karakter → Ubah penampilan.' : '')});
     };
     next();
   }

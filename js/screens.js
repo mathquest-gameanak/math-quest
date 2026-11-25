@@ -39,10 +39,50 @@ MQ.UI = (() => {
   /* ===== Jendela pesan =====
      overlay({icon | img, title, text, btn, cb, btn2, cb2})  — 1 atau 2 tombol
      quiz({icon | img, title, text, speak, ans, onCorrect})  — soal pilihan ganda; salah → tombol itu mati, coba lagi */
-  let cb1 = null, cb2 = null;
+  let cb1 = null, cb2 = null, fxTimers = [];
+  /* Perayaan (o.fx): 'medal' = medali berputar masuk, 'level' = angka level naik, 'chest' = peti bergetar lalu terbuka.
+     o.sub = label kecil di atas judul, o.chips = [{img | icon, text}] hadiah (muncul satu per satu). */
+  function confetti(n = 28) {
+    const cols = ['#ffcd75', '#e43b44', '#73eff7', '#a7f070', '#f4a3c8', '#b06fd0'];
+    $('confetti').innerHTML = Array.from({length: n}, (_, i) =>
+      `<i style="left:${Math.random() * 100}%;background:${cols[i % cols.length]};animation-delay:${(Math.random() * 0.8).toFixed(2)}s;` +
+      `animation-duration:${(1.6 + Math.random() * 1.4).toFixed(2)}s;--r:${Math.round(Math.random() * 720 - 360)}deg;--x:${Math.round(Math.random() * 80 - 40)}px"></i>`).join('');
+  }
+  function celebrate(o) {
+    const card = document.querySelector('#overlay .card'), icon = $('ovIcon');
+    card.className = 'card panel' + (o.fx ? ' fx fx-' + o.fx : '');
+    fxTimers.forEach(clearTimeout); fxTimers = [];
+    $('confetti').innerHTML = '';
+    const chips = $('ovChips');
+    chips.hidden = !(o.chips && o.chips.length);
+    chips.innerHTML = (o.chips || []).map((c, i) => `<span class="ovChip" style="animation-delay:${(o.fx === 'chest' ? 1.0 : 0.5) + i * 0.18}s">` +
+      `${c.img ? `<img src="${c.img}" alt="">` : `<b>${c.icon || ''}</b>`}${c.text}</span>`).join('');
+    $('ovSub').hidden = !o.sub; $('ovSub').textContent = o.sub || '';
+    if (!o.fx) return;
+    if (o.fx === 'medal') {
+      icon.innerHTML = `<div class="bigFx"><span class="rays"></span><span class="medalDisc"><i class="tail l"></i><i class="tail r"></i><b>${o.icon}</b></span></div>`;
+      confetti();
+    } else if (o.fx === 'level') {
+      icon.innerHTML = `<div class="bigFx"><span class="rays"></span><img class="lvHero" src="${MQ.Hero.url(S.hero, S.equip, 'happy')}" alt="">` +
+        `<b class="lvNum">Lv <span id="ovLvNum">${o.from || o.level}</span></b></div>`;
+      confetti(20);
+      fxTimers.push(setTimeout(() => { const n = $('ovLvNum'); if (n) { n.textContent = o.level; n.classList.add('bump'); } }, 650));
+    } else if (o.fx === 'chest') {
+      icon.innerHTML = `<div class="bigFx"><span class="rays"></span><img id="ovChest" class="chestImg shake" src="${MQ.Pix.url('peti', 5)}" alt=""></div>`;
+      fxTimers.push(setTimeout(() => {
+        const c = $('ovChest'); if (!c) return;
+        c.src = MQ.Pix.url('petiBuka', 5); c.classList.remove('shake'); c.classList.add('opened');
+        card.classList.add('open'); confetti(24); MQ.Audio.sfx.coin();
+      }, 850));
+    }
+  }
   function overlay(o) {
     if (o.img) $('ovIcon').innerHTML = o.img; else $('ovIcon').textContent = o.icon || '';
-    $('ovTitle').textContent = o.title; $('ovText').textContent = o.text;
+    $('ovTitle').textContent = o.title; $('ovText').textContent = o.text || '';
+    $('ovText').hidden = !o.text;
+    $('ovTitle').classList.toggle('long', (o.title || '').length > 12);
+    $('ovTitle').style.fontSize = (o.title || '').length > 20 ? '15px' : '';
+    celebrate(o);
     $('ovChoices').innerHTML = ''; $('ovChoices').hidden = true;
     $('ovBtn').textContent = o.btn || 'Oke'; cb1 = o.cb || null;
     $('ovBtn2').hidden = !o.btn2; $('ovBtn2').textContent = o.btn2 || ''; cb2 = o.cb2 || null;
@@ -64,7 +104,7 @@ MQ.UI = (() => {
     if (o.speak) MQ.Audio.speak(o.speak);
   }
   function closeOverlay(cb) { // tutup dulu, baru jalankan callback (callback boleh membuka pesan baru)
-    $('overlay').hidden = true; cb1 = cb2 = null;
+    $('overlay').hidden = true; cb1 = cb2 = null; fxTimers.forEach(clearTimeout); fxTimers = []; $('confetti').innerHTML = '';
     if (cb) cb();
   }
   $('ovBtn').addEventListener('click', () => closeOverlay(cb1));
