@@ -241,7 +241,7 @@ MQ.Battle = (() => {
     if (!B.stops.length) { els.mTop.hidden = false; spawnMonster(); nextQuestion(); return; }
     const n = B.stage + 1, type = B.stops[B.stage];
     els.question.classList.add('walking'); els.answers.classList.add('walking');
-    els.qView.hidden = true; els.fastBar.hidden = true;
+    els.qView.hidden = true; els.fastBar.hidden = true; els.thinkTag.hidden = true;
     els.qText.classList.remove('long');
     els.qText.textContent = type === 'boss' ? '👑 Menuju bos...' : type === 'mini' ? '⭐ Menuju mini bos...' :
       B.mode === 'dungeon' ? `Masuk ruang ${n}...` : `Berjalan ke titik ${n}...`;
@@ -345,6 +345,7 @@ MQ.Battle = (() => {
     els.thinkTag.hidden = B.mode === 'exam' || !q.think;
     els.qText.textContent = q.text;
     els.qText.classList.toggle('long', q.text.length > 12); // kalimat panjang → huruf sedikit lebih kecil
+    els.qText.classList.toggle('story', !!q.story);          // soal cerita: kalimat, huruf biasa
     els.qView.innerHTML = q.view || '';  // gambar buatan visuals.js (bukan masukan pengguna)
     els.qView.hidden = !q.view;
     els.answers.className = 'cols' + q.cols + (q.choices[0].html.startsWith('<svg') ? ' pics' : ''); // pilihan bergambar → latar netral
@@ -358,7 +359,7 @@ MQ.Battle = (() => {
     });
     updateHud();
     B.locked = false;
-    if (S.settings.autoSpeak) Audio.speak(q.speak); // pengaturan orang tua: bacakan setiap soal
+    if (S.settings.autoSpeak || (q.story && BAL.think.storySpeak)) Audio.speak(q.speak); // pengaturan orang tua: bacakan setiap soal
   }
 
   /* Ganti sasaran: ketuk monster di arena atau panel monster kedua */

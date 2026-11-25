@@ -105,6 +105,61 @@ MQ.Vis = (() => {
   }
   const hintRuler = n => hintBox(ruler(n), `Hitung kotak di bawah pensil: ${n}`);
 
-  return {count, SHAPES, shape, COLORS, token, patternRow, pencils, ruler, lidi,
-          hintAdd, hintSub, hintCompare, hintCount, hintTens, hintLine, hintRuler};
+  /* ===== Soal cerita: wajah tokoh + gambar benda ===== */
+  function story(who, sprite) {
+    const face = MQ.Pix && MQ.Pix.has(who) ? `<img class="stFace" src="${MQ.Pix.url(who, 3)}" alt="">` : '';
+    return `<div class="stView">${face}<img class="stItem" src="${MQ.Sprites.url(sprite)}" alt=""></div>`;
+  }
+  /** Model batang (bar model, cara Singapore Math). parts = [{n, label, c}], total = label di bawah. */
+  function bar(parts, total) {
+    const sum = parts.reduce((t, p) => t + p.n, 0) || 1, W = 180;
+    let x = 10, inner = '';
+    parts.forEach(p => {
+      const w = Math.max(18, Math.round(p.n / sum * W));
+      inner += `<rect x="${x}" y="4" width="${w}" height="20" fill="${p.c}" stroke="${K}" stroke-width="2"/>` +
+               `<text x="${x + w / 2}" y="19" font-size="12" font-weight="900" text-anchor="middle" fill="${K}">${p.label}</text>`;
+      x += w;
+    });
+    inner += `<path d="M10 30 V35 H${x} V30" fill="none" stroke="${K}" stroke-width="2"/>` +
+             `<text x="${(10 + x) / 2}" y="50" font-size="13" font-weight="900" text-anchor="middle" fill="${K}">${total}</text>`;
+    return svg(`0 0 ${x + 10} 56`, inner, 'wide');
+  }
+  /** Dua batang untuk membandingkan (selisih diberi garis putus-putus). */
+  function bar2(a, b, la, lb, diff) {
+    const u = 170 / Math.max(a, b), wa = Math.max(18, a * u), wb = Math.max(18, b * u);
+    const row = (y, w, c, l, n) => `<text x="2" y="${y + 15}" font-size="10" font-weight="900" fill="${K}">${l}</text>` +
+      `<rect x="44" y="${y}" width="${w}" height="20" fill="${c}" stroke="${K}" stroke-width="2"/>` +
+      `<text x="${44 + w / 2}" y="${y + 15}" font-size="12" font-weight="900" text-anchor="middle" fill="${K}">${n}</text>`;
+    const d = `<rect x="${44 + wb}" y="30" width="${Math.max(4, wa - wb)}" height="20" fill="none" stroke="#e43b44" stroke-width="2" stroke-dasharray="4 3"/>` +
+      `<text x="${44 + wb + (wa - wb) / 2}" y="45" font-size="12" font-weight="900" text-anchor="middle" fill="#e43b44">${diff}</text>`;
+    return svg(`0 0 ${54 + Math.max(wa, wb)} 54`, row(4, wa, '#ffcd75', la, a) + row(30, wb, '#73eff7', lb, b) + d, 'wide');
+  }
+
+  /* ===== Pasangan bilangan (number bond): keseluruhan di atas, dua bagian di bawah ===== */
+  function bond(whole, a, b) {
+    const c = (x, y, v, top) => `<line x1="60" y1="18" x2="${x}" y2="${y}" stroke="#f4f4f4" stroke-width="3"/>` +
+      `<circle cx="${x}" cy="${y}" r="15" fill="${v === '?' ? '#1a1c2c' : top ? '#ffcd75' : '#73eff7'}" stroke="${v === '?' ? '#ffcd75' : K}" stroke-width="3"/>` +
+      `<text x="${x}" y="${y + 6}" font-size="17" font-weight="900" text-anchor="middle" fill="${v === '?' ? '#ffcd75' : K}">${v}</text>`;
+    // garis dulu, lingkaran menutupinya
+    return svg('0 0 120 76', c(26, 58, a) + c(94, 58, b) + c(60, 18, whole, true), 'bond');
+  }
+  /** Bingkai sepuluh (ten frame): n terisi, sisanya kosong. mark = kosongnya ditandai (petunjuk). */
+  function tenFrame(n, mark) {
+    let inner = '';
+    for (let i = 0; i < 10; i++) {
+      const x = 4 + (i % 5) * 22, y = 4 + Math.floor(i / 5) * 22;
+      inner += `<rect x="${x}" y="${y}" width="22" height="22" fill="#29366f" stroke="#94b0c2" stroke-width="2"/>`;
+      if (i < n) inner += `<circle cx="${x + 11}" cy="${y + 11}" r="7" fill="#ffcd75" stroke="${K}" stroke-width="2"/>`;
+      else if (mark) inner += `<circle cx="${x + 11}" cy="${y + 11}" r="7" fill="none" stroke="#73eff7" stroke-width="2" stroke-dasharray="3 2"/>`;
+    }
+    return svg('0 0 118 52', inner, 'frame10');
+  }
+  const hintBond = (w, a, b) => hintBox(`<div class="dots">${dot('#ffcd75').repeat(a)}<b class="gap"></b>${dot('#73eff7').repeat(b)}</div>`,
+    `${a} dan ${b} jadi ${w}`);
+  const hintTen = n => hintBox(tenFrame(n, true), `${n} + ${10 - n} = 10 (hitung kotak kosong)`);
+  const hintBar = (parts, total, cap) => hintBox(bar(parts, total), cap);
+  const hintBar2 = (a, b, la, lb, cap) => hintBox(bar2(a, b, la, lb, a - b), cap);
+
+  return {count, SHAPES, shape, COLORS, token, patternRow, pencils, ruler, lidi, story, bar, bond, tenFrame,
+          hintAdd, hintSub, hintCompare, hintCount, hintTens, hintLine, hintRuler, hintBond, hintTen, hintBar, hintBar2};
 })();

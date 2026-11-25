@@ -88,10 +88,11 @@ MQ.Balance = {
      Jenis dengan pengali ≥ from = soal PIKIR: tanpa KILAT; jawaban benar = serangan TELITI! (damage × telitiMul),
      supaya anak dihargai karena teliti, bukan karena cepat. */
   think: {
-    time: {tambah: 1, kurang: 1, kali: 1, banding: 1, hitung: 1.3, urutan: 1.3, bentuk: 1.3, isi: 1.5, panjang: 1.5,
+    time: {tambah: 1, kurang: 1, kali: 1, banding: 1, hitung: 1.3, urutan: 1.3, bentuk: 1.3, isi: 1.5, panjang: 1.5, pasangan: 1.5,
            puluhan: 1.6, pola: 2, ukur: 2, cerita: 3},
     from: 2,
-    telitiMul: 1.5
+    telitiMul: 1.5,
+    storySpeak: 1     // 1 = soal cerita selalu dibacakan otomatis (anak kelas 1 belum tentu lancar membaca)
   },
   rewards: {
     coinsNormal: [1, 2], coinsBoss: 8,  // koin dari monster

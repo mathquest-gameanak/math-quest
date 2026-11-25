@@ -151,8 +151,58 @@ MQ.Questions = (() => {
       if (type === 0) return hint(numQ('urutan', `${n}, ?`, `Bilangan sesudah ${n} adalah?`, n + 1, [n + 10, n - 1]), line(n + 1));
       if (type === 1) return hint(numQ('urutan', `?, ${n}`, `Bilangan sebelum ${n} adalah?`, n - 1, [n - 10, n + 1].filter(v => v >= 0)), line(n - 1));
       return hint(numQ('urutan', `${n - 1}, ?, ${n + 1}`, `Bilangan di antara ${n - 1} dan ${n + 1} adalah?`, n, [n + 10, n - 10].filter(v => v >= 0)), line(n));
+    },
+    /** Pasangan bilangan: 7 dipecah jadi 3 dan □, atau "berapa lagi supaya jadi 10" (bingkai sepuluh). */
+    pasangan(s) {
+      const M = Math.max(5, Math.min(10, s.max || 10));
+      if (M >= 10 && rand(0, 2) === 0) {
+        const n = rand(1, 9);
+        return hint(numQ('pasangan', 'Berapa lagi jadi 10?', `Ada ${n}. Berapa lagi supaya jadi sepuluh?`, 10 - n, [n], 0, V().tenFrame(n)),
+                    () => V().hintTen(n));
+      }
+      const w = rand(3, M), a = rand(1, w - 1), b = w - a, left = rand(0, 1);
+      const q = numQ('pasangan', 'Pasangan bilangan', `${w} dipecah jadi ${left ? a : b} dan berapa?`, left ? b : a, [w], 0,
+                     left ? V().bond(w, a, '?') : V().bond(w, '?', b));
+      return hint(q, () => V().hintBond(w, a, b));
+    },
+    /** Soal cerita pendek bertokoh (dibacakan otomatis). Petunjuk = model batang. */
+    cerita(s) {
+      const M = Math.max(5, Math.min(20, s.max || 10));
+      const who = pick(PEOPLE), oth = pick(PEOPLE.filter(p => p !== who)), it = pick(THINGS), A = who.n, B = oth.n, X = it.n;
+      const P = (n, l, c) => ({n, label: l, c}), Y = '#ffcd75', C = '#73eff7';
+      const type = pick(['gabung', 'gabung', 'sisa', 'sisa', 'dua', 'beda', 'ubah']);
+      let text, ans, hf, extra = [];
+      if (type === 'gabung' || type === 'dua' || type === 'ubah') {
+        const c = rand(3, M), a = rand(1, c - 1), b = c - a;
+        if (type === 'gabung') {
+          text = `${A} punya ${a} ${X}. ${B} memberi ${b} ${X} lagi. Berapa ${X} ${A} sekarang?`; ans = c; extra = [a, b];
+          hf = () => V().hintBar([P(a, a, Y), P(b, b, C)], `semua = ${c}`, `${a} + ${b} = ${c}`);
+        } else if (type === 'dua') {
+          text = `${A} punya ${a} ${X}. ${B} punya ${b} ${X}. Berapa ${X} mereka semuanya?`; ans = c; extra = [a, b];
+          hf = () => V().hintBar([P(a, A, Y), P(b, B, C)], `semua = ${c}`, `${a} + ${b} = ${c}`);
+        } else {
+          text = `${A} punya ${a} ${X}. ${B} memberi lagi. Sekarang ada ${c} ${X}. Berapa ${X} dari ${B}?`; ans = b; extra = [c, a];
+          hf = () => V().hintBar([P(a, a, Y), P(b, b, C)], `semua = ${c}`, `${c} − ${a} = ${b}`);
+        }
+      } else if (type === 'sisa') {
+        const a = rand(3, M), b = rand(1, a - 1), c = a - b;
+        text = `${A} punya ${a} ${X}. ${b} ${X} ${it.gone}. Berapa sisa ${X} ${A}?`; ans = c; extra = [a, a + b];
+        hf = () => V().hintBar([P(c, c, Y), P(b, b, '#566c86')], `mula-mula = ${a}`, `${a} − ${b} = ${c}`);
+      } else {
+        const a = rand(3, M), b = rand(1, a - 1), d = a - b;
+        text = `${A} punya ${a} ${X}. ${B} punya ${b} ${X}. Berapa lebih banyak ${X} ${A}?`; ans = d; extra = [a + b, a];
+        hf = () => V().hintBar2(a, b, A, B, `${a} − ${b} = ${d}`);
+      }
+      const q = numQ('cerita', text, text, ans, extra, 0, V().story(who.id, it.s));
+      q.story = true;
+      return hint(q, hf);
     }
   };
+  /** Tokoh & benda untuk soal cerita (id = gambar MQ.Pix / MQ.Sprites). */
+  const PEOPLE = [{id: 'kiki', n: 'Kiki'}, {id: 'momo', n: 'Momo'}, {id: 'kakek', n: 'Kakek'}, {id: 'kapten', n: 'Kapten'}];
+  const THINGS = [{s: 'apple', n: 'apel', gone: 'dimakan'}, {s: 'star', n: 'bintang', gone: 'terbang'},
+                  {s: 'coin', n: 'koin', gone: 'dipakai jajan'}, {s: 'rock', n: 'batu', gone: 'jatuh ke sungai'},
+                  {s: 'cap', n: 'jamur', gone: 'dimasak'}, {s: 'potion', n: 'ramuan', gone: 'diminum'}];
 
   /** Membuat satu soal dari spesifikasi { kinds[], max, mulA?, mulB? }. */
   /** Buat soal; q.time = pengali waktu jenisnya (balance.js think.time), q.think = soal pikir (tanpa buru-buru). */
@@ -165,7 +215,8 @@ MQ.Questions = (() => {
 
   /** Nama jenis soal untuk tampilan (statistik kemampuan). */
   const NAMES = {tambah: 'Tambah +', kurang: 'Kurang −', kali: 'Kali ×', isi: 'Isi kosong', hitung: 'Menghitung', banding: 'Bandingkan',
-                 bentuk: 'Bentuk', pola: 'Pola', panjang: 'Panjang', ukur: 'Mengukur', puluhan: 'Puluhan', urutan: 'Urutan'};
+                 bentuk: 'Bentuk', pola: 'Pola', panjang: 'Panjang', ukur: 'Mengukur', puluhan: 'Puluhan', urutan: 'Urutan',
+                 pasangan: 'Pasangan bilangan', cerita: 'Soal cerita'};
 
   return {make, GEN, NAMES, maxFor, specForLevel, nearChoices};
 })();

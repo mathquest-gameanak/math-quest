@@ -41,9 +41,9 @@ Sumber: Capaian Pembelajaran Matematika Fase A. **Perlu dicocokkan dengan daftar
 | # | Field | Rek. level | Materi | Musuh (usulan) |
 |---|---|---|---|---|
 | 1 | Padang Hitung | 1–4 | Membilang benda s/d 10, membandingkan bilangan (> < =) | Lendir Hijau, Lendir Air · bos Raja Lendir |
-| 2 | Hutan Tambah-Kurang | 4–8 | Tambah & kurang s/d 10, kalimat matematika (`3 + □ = 5`) | Jamur Nakal, Jamur Ungu · bos Raja Jamur |
+| 2 | Hutan Tambah-Kurang | 4–8 | Tambah & kurang s/d 10, kalimat matematika (`3 + □ = 5`), pasangan bilangan & membuat 10, soal cerita | Jamur Nakal, Jamur Ungu · bos Raja Jamur |
 | 3 | Bukit Bentuk | 7–11 | Bangun datar & ruang, pola (warna/bentuk) | Lendir Batu, Jamur Batu · bos Raja Batu |
-| 4 | Danau Dua Puluh | 10–15 | Tambah, kurang & isi kosong s/d 20 | Lendir Air, Kelelawar Ungu · bos Raja Kelelawar |
+| 4 | Danau Dua Puluh | 10–15 | Tambah, kurang & isi kosong s/d 20, soal cerita s/d 20 | Lendir Air, Kelelawar Ungu · bos Raja Kelelawar |
 | 5 | Lembah Ukur | 13–17 | Membandingkan & mengukur panjang (satuan kotak). Nanti: berat, waktu, data | Kelelawar Daun, Jamur Kayu · bos Raja Jamur Kayu |
 | 6 | Menara Seratus | 16–20 | Puluhan & satuan (ikatan lidi), urutan & membandingkan s/d 100 | Kelelawar Malam, Lendir Ungu · bos Raja Malam |
 | ★ | Kastil Ujian | 18+ | **Ujian Naik Kelas**: campuran semua materi | Bos: Raja Naga Api |
@@ -58,6 +58,8 @@ Setiap area = **jalur 5 titik**: 1 → 2 → ⭐ mini bos → 4 → 👑 bos are
 - **Kenali bentuk**: "Mana yang segitiga?" (4 gambar).
 - **Puluhan & satuan**: ikatan 10 lidi + lidi lepas → berapa?
 - **Lebih panjang**: dua benda, pilih yang lebih panjang.
+- **Pasangan bilangan** (2026-11-26): diagram number bond (keseluruhan di atas, dua bagian di bawah, satu "?") dan "Berapa lagi jadi 10?" dengan bingkai sepuluh. Petunjuk: titik dua warna / kotak kosong bingkai sepuluh.
+- **Soal cerita** (2026-11-26): 1–3 kalimat pendek dengan tokoh cerita (Kiki, Momo, Kakek, Kapten) dan benda (apel, bintang, koin, batu, jamur, ramuan). Jenis: digabung, sisa, punya berdua, selisih "lebih banyak", dan perubahan yang tidak diketahui. Selalu dibacakan otomatis (`think.storySpeak`), termasuk soal pikir (pengali 3). Petunjuk setelah salah = **model batang** (cara Singapore Math).
 
 ## 4. Sistem level & kelas
 
@@ -79,7 +81,7 @@ Aturan agar level tetap seimbang:
 - **Musuh menyerang berwaktu**: bar ⚡ terisi selama soal tampil; saat penuh, musuh menyerang. Jeda acak per jenis monster (kelelawar 1,5–3 dtk, lendir 2,5–4,5, jamur 3–5, batu 4–6, naga 3,5–5,5) × *pace* area (soal yang butuh berpikir lebih lama → musuh lebih lambat). Bos sedikit lebih lambat tapi 1,5× lebih kuat.
 - Waktu musuh berhenti saat animasi, saat ada pesan, saat soal dibacakan (🔊), dan saat aplikasi tidak terlihat.
 - Jawaban salah = musuh langsung menyerang, kombo hilang, jawaban benar ditunjukkan.
-- **Soal cepat vs soal pikir** (2026-11-26): tiap jenis soal punya pengali waktu (`balance.think.time`). Fakta dasar (tambah/kurang/bandingkan) = 1: bar musuh normal, KILAT ≤ 2 detik. Soal yang perlu dipikir lebih lama (isi kosong, puluhan, panjang ±1,5) membuat musuh lebih sabar dan batas KILAT lebih panjang. **Soal pikir** (pola, ukur, nanti soal cerita; pengali ≥ 2): tanpa bar KILAT, muncul tanda "🧠 santai saja, yang penting teliti", dan jawaban benar selalu menjadi serangan **TELITI!** (damage ×1,5). Tujuannya: anak dihargai karena teliti, tidak didorong menebak cepat. Kelas lanjutan akan punya lebih banyak soal pikir.
+- **Soal cepat vs soal pikir** (2026-11-26): tiap jenis soal punya pengali waktu (`balance.think.time`). Fakta dasar (tambah/kurang/bandingkan) = 1: bar musuh normal, KILAT ≤ 2 detik. Soal yang perlu dipikir lebih lama (isi kosong, puluhan, panjang ±1,5) membuat musuh lebih sabar dan batas KILAT lebih panjang. **Soal pikir** (pola, ukur, soal cerita; pengali ≥ 2): tanpa bar KILAT, muncul tanda "🧠 santai saja, yang penting teliti", dan jawaban benar selalu menjadi serangan **TELITI!** (damage ×1,5). Tujuannya: anak dihargai karena teliti, tidak didorong menebak cepat. Kelas lanjutan akan punya lebih banyak soal pikir.
 - **Angka kecil** (keputusan 2026-11-25): semua HP & damage di bawah 100 dan damage **tetap (tidak acak)**, supaya anak bisa ikut berhitung ("HP 15, pukul 5, tinggal 10"). Kritikal = **×2**.
 - Damage musuh = 1,6 + 0,35 × level monster (dibulatkan) × kekuatan monster − Pertahanan (minimal 1): Lv 1 ≈ 2, Lv 10 ≈ 5, Lv 20 ≈ 9. Mengalahkan monster memulihkan 20% HP (kecuali di dungeon).
 - HP monster = 12 + 3 × level: Lv 1 = 15, Lv 10 = 42, Lv 20 = 72 (bos ×1,5). Monster butuh ±3–5 pukulan.

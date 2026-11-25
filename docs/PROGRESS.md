@@ -230,5 +230,10 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Pertarungan: bar serangan musuh (kedua monster) terisi `dt / q.time`; batas KILAT = 2 detik × q.time. Soal pikir (≥ 2): bar KILAT diganti tanda "🧠 Soal pikir: santai saja, yang penting teliti!", jawaban benar = serangan 🧠 TELITI! (damage ×1,5).
 - Halaman Karakter & Atur Angka ikut menampilkan/mengatur angka ini. SW `mq-v26`.
 
+### 2026-11-26 — Soal cerita & pasangan bilangan
+- Jenis soal baru `cerita` (soal cerita bertokoh, wajah tokoh + gambar benda, dibacakan otomatis, petunjuk model batang) dan `pasangan` (number bond & membuat 10 dengan bingkai sepuluh). Gambar & petunjuk di `visuals.js` (story, bar, bar2, bond, tenFrame, hintBar, hintBar2, hintBond, hintTen).
+- Masuk ke Hutan Tambah-Kurang (s/d 10), Danau Dua Puluh (s/d 20) dan dungeon Kapal Karam; ikut bonus senjata. Pengali waktu pasangan 1,5.
+- Perbaikan: gaya `.dots` penanda titik jalur ikut mengenai titik petunjuk (sekarang `#dots`); petunjuk tidak lagi terpotong 92px; tanda soal pikir disembunyikan saat berjalan. SW `mq-v27`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
