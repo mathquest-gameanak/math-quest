@@ -187,6 +187,7 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - `contoh-padang.html` + `js/contoh-padang.js` (terpisah dari game, belum memakai simpanan): pahlawan berjalan di latar berlapis (langit bertingkat, matahari, awan, bukit jauh, pohon, jalan tanah, bunga, papan nomor, bendera bos), 5 titik: 1, 2, ⭐ mini bos, 4, 👑 bos. Kanvas 1 piksel dunia = 3 piksel layar.
 - `js/pixelart.js` (MQ.Pix): sprite dari bentuk (elips/kotak) + garis tepi otomatis. Pahlawan 30×27 (mata berkilau, pipi, kuncir berpita, animasi jalan/serang/terkena), Lendir Hijau (tunas daun), Lendir Air (tetes), Lendir Bunga (mini bos), Raja Lendir 38×34 (mahkota, kumis).
 - Dibuka dari Orang Tua → 🎨 Contoh tampilan baru. Menunggu pendapat sebelum diterapkan ke game.
+- Orang tua suka (2026-11-25). Arena diperluas: mengisi sisa tinggi layar (HUD, soal & tombol diringkas, bar 5 titik pindah ke dalam arena), skala piksel 3–5× mengikuti tinggi arena (±4× di HP biasa) sehingga tokoh ikut membesar.
 
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

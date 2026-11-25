@@ -10,15 +10,29 @@
 <style>
   /* Halaman contoh grafik baru: Padang Hitung dengan 5 titik */
   #scr-contoh { height: 100vh; height: 100dvh; }
-  .dots { display: flex; gap: 4px; align-items: center; justify-content: center; margin-top: 4px; }
-  .dot5 { width: 26px; height: 26px; display: grid; place-items: center; font-size: 13px; font-weight: 900; border: 2px solid #1a1c2c; background: #566c86; color: #fff; }
+  /* Kemajuan 5 titik: di bawah arena, menempel di atas tanah */
+  .dots { position: absolute; left: 0; right: 0; bottom: 4px; z-index: 2; display: flex; gap: 3px; align-items: center; justify-content: center; pointer-events: none; }
+  .dot5 { width: 22px; height: 22px; display: grid; place-items: center; font-size: 11px; font-weight: 900; border: 2px solid #1a1c2c; background: #566c86; color: #fff; }
   .dot5.done { background: #ffcd75; color: #1a1c2c; }
   .dot5.now { background: #38b764; animation: bob 1s steps(1) infinite; }
-  .dotLine { width: 10px; height: 3px; background: #1a1c2c; }
+  .dotLine { width: 8px; height: 3px; background: #1a1c2c; }
+  /* Layar penuh: arena mengisi sisa tinggi, bagian lain diringkas */
+  #scr-contoh { gap: 6px; padding: 6px 6px 8px; }
+  #scr-contoh .hud { padding: 0 2px; }
+  #scr-contoh .hud .back { min-height: 32px; padding: 0 6px; font-size: 14px; }
+  #scr-contoh .hud .row + .row { margin-top: 2px; }
+  #scr-contoh #arena { flex: 1; min-height: 200px; }
+  #scr-contoh #mTop { top: 4px; left: 6px; right: 6px; padding: 0 2px; font-size: 14px; }
+  #scr-contoh #mTop .bar { height: 12px; margin-top: 1px; }
+  #scr-contoh #question { flex: none; min-height: 128px; display: flex; flex-direction: column; justify-content: center; padding: 2px 4px; }
+  #scr-contoh .qLine { min-height: 44px; }
+  #scr-contoh #qText { font-size: clamp(26px, 8vw, 36px); }
+  #scr-contoh #qView svg, #scr-contoh #qView .cntBox { max-height: 76px; }
+  #scr-contoh #answers { flex: none; min-height: 136px; gap: 8px; padding: 0 2px; align-content: start; }
+  #scr-contoh .ans { min-height: 62px; font-size: 32px; padding: 2px 0; }
   #question.walking #qText { font-size: 22px; }
   #answers.walking .ans { visibility: hidden; }
   #mTop[hidden] { display: none !important; }
-  #scr-contoh #arena { flex: none; height: max(220px, calc(100dvh - 530px)); }
   #scr-contoh #stage, #scr-contoh #mTop { z-index: 2; }
 </style>
 </head>
@@ -28,13 +42,13 @@
     <header class="panel hud">
       <div class="row"><a class="back" href="./" style="text-decoration:none;display:inline-flex;align-items:center">◀ Game</a><b class="fieldName">🌼 Padang Hitung</b><span id="lvl">LV 3</span></div>
       <div class="row"><span class="hpIcon">❤️</span><div class="bar heroHp"><div id="heroHpFill"></div><span id="heroHpText"></span></div></div>
-      <div id="dots" class="dots"></div>
     </header>
     <section id="arena">
       <canvas id="scene"></canvas>
       <div id="mTop" class="panel" hidden><div id="mName"></div><div class="bar"><div id="hpFill"></div><span id="hpText"></span></div>
         <div class="atkBar"><span>⚡</span><div class="atkTrack"><div id="atkFill"></div></div></div></div>
       <div id="fx"></div>
+      <div id="dots" class="dots"></div>
     </section>
     <div id="question" class="panel">
       <div class="fastBar"><span>⚡</span><div class="fastTrack"><div id="fastFill"></div></div></div>

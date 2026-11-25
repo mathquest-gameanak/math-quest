@@ -28,13 +28,17 @@
   let VW = 180, VH = 120, GY = 96, camX = 0;
   let stage = 0, phase = 'walk', mon = null, q = null, locked = true, answerTime = 0, parts = [];
 
-  /* ===== Ukuran kanvas: 1 piksel dunia = 3 piksel layar ===== */
+  /* ===== Ukuran kanvas: 1 piksel dunia = 3–5 piksel layar ===== */
   function resize() {
     const a = $('arena');
-    VW = Math.max(100, Math.round(a.clientWidth / 3)); VH = Math.max(70, Math.round(a.clientHeight / 3));
-    cv.width = VW; cv.height = VH; GY = VH - 15;
+    // Skala piksel mengikuti tinggi arena (±100 piksel dunia tingginya): arena lebih tinggi → tokoh lebih besar
+    const sc = Math.max(3, Math.min(5, Math.round(a.clientHeight / 100)));
+    VW = Math.max(90, Math.round(a.clientWidth / sc)); VH = Math.max(70, Math.round(a.clientHeight / sc));
+    if (cv.width !== VW || cv.height !== VH) { cv.width = VW; cv.height = VH; }
+    GY = VH - 17; // sisakan tempat untuk bar 5 titik di bawah
   }
   addEventListener('resize', resize);
+  if (window.ResizeObserver) new ResizeObserver(resize).observe($('arena')); // arena mengisi sisa layar
 
   /* ===== Latar berlapis ===== */
   const hash = n => { const x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); };
@@ -47,6 +51,7 @@
   function drawBackground(t) {
     // Langit bergradasi bertingkat (khas pixel art), garis batas diberi pola titik
     const SKY = ['#4fb8f0', '#62c6f4', '#78d4f6', '#92e2f7', '#b4eef6'], band = Math.ceil((GY - 30) / SKY.length);
+    R(SKY[SKY.length - 1], 0, 0, VW, VH); // dasar: tidak ada celah yang menyisakan gambar lama
     SKY.forEach((c, i) => R(c, 0, i * band, VW, band + 1));
     for (let i = 1; i < SKY.length; i++) for (let x = (i % 2); x < VW; x += 2) R(SKY[i], x, i * band - 1, 1, 1);
     // Matahari & awan (bergerak pelan)
