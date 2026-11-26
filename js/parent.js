@@ -191,6 +191,22 @@ MQ.Parent = (() => {
       text: `Progress yang sekarang akan diganti dengan isi file "${f.name}".`}));
     e.target.value = '';
   });
+  /* Mulai langsung di Kelas 2 (anak yang sudah kelas 2 saat baru main): level awal Kelas 2, poin status level yang dilompati,
+     perlengkapan dasar Kelas 2 gratis, Kelas 2 terbuka. Kelas 1 tetap bisa dimainkan (GDD §15). */
+  $('btnSkipKelas').addEventListener('click', () => {
+    if (S.grade >= 2) return msg('Petualangan Kelas 2 sudah terbuka. Pilih 🎒 Kelas di Peta.');
+    const L = MQ.Balance.kelasLv[2][0][0];
+    UI.overlay({icon: '🎒', title: 'Mulai di Kelas 2?', btn: 'Ya, mulai Kelas 2', btn2: 'Batal',
+      text: `Untuk anak yang sudah duduk di kelas 2. Level naik ke ${L} (poin status ikut bertambah), dapat Pedang Besi & Perisai Besi gratis, ` +
+            'dan petualangan Kelas 2 langsung terbuka. Kelas 1 tetap bisa dimainkan untuk mengulang.',
+      cb: () => {
+        if (S.level < L) { S.points += (L - S.level) * State.POINTS_PER_LEVEL; S.level = L; S.xp = 0; }
+        S.grade = Math.max(S.grade, 2); S.kelas = 2;
+        ['pedangBesi', 'perisaiBesi'].forEach(id => { State.addItem(id, 1); State.equip(id); });
+        S.hp = State.maxHp(); State.save();
+        msg(`Selamat datang di Kelas 2! Level ${S.level}. Jangan lupa bagi poin status di Karakter.`);
+      }});
+  });
   /* Kembalikan semua poin status yang sudah dibagi, supaya bisa dibagi ulang */
   $('btnRespec').addEventListener('click', () => {
     const used = S.alloc.hp + S.alloc.atk + S.alloc.def;

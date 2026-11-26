@@ -435,5 +435,8 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Toko: Pedang Besi (🪙150) & Perisai Besi (🪙180). Pandai Besi: Pedang Robot, Tombak Kali, Pedang Petir, Pedang Salju, Perisai Cangkang, Perisai Waktu, Perisai Es, Kalung Embun, Jam Saku Ajaib, Mahkota Salju. Dasar ≈ equipment Kelas 1 +10. Tingkatkan memakai `upMat` (bahan khusus Kelas 2). Ikon baru di itemart.js (+ `recol`).
 - Fashion: Topi Salju (800), Helm Robot (1500), Mahkota Petir (2000). Barang `kelas: 2` (Toko, Pandai Besi, Fashion) baru muncul setelah lulus Kelas 1 (`S.grade`). SW `mq-v76`.
 
+### 2026-11-27 — Mulai langsung di Kelas 2
+- Orang Tua → **🎒 Mulai langsung di Kelas 2**: level naik ke awal Kelas 2 (Lv 16, `kelasLv[2]`), poin status level yang dilompati diberikan, Pedang Besi & Perisai Besi gratis dan langsung dipakai, `S.grade` = 2, `S.kelas` = 2. Kelas 1 tetap bisa dimainkan. Hanya lewat menu Orang Tua (gerbang soal), supaya anak tidak melompat sendiri. SW `mq-v77`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
