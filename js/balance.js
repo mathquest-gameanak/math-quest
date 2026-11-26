@@ -35,7 +35,7 @@ MQ.Balance = {
   player: {
     baseHp: 20, hpPerLevel: 2, hpPerPoint: 3,                    // HP: Lv 1 = 20, Lv 10 = 38, Lv 20 = 58
     baseAtk: 5, atkSpread: 0, atkPerLevel: 0.5, atkPerPoint: 1,  // Serangan: Lv 1 = 5, Lv 10 = 9, Lv 20 = 14 (tetap, tidak acak)
-    defPerPoint: 0.5,                                            // Pertahanan (dibulatkan ke bawah: 2 poin = −1 damage)
+    defPerPoint: 1,                                              // Pertahanan: 1 poin = −1 damage musuh
     pointsPerLevel: 1                                            // poin status tiap naik level
   },
   /* KURVA LEVEL (2026-11-26, hasil main orang tua): Normal ≈ Lv 1–15, Pahlawan ≈ Lv 16–30, Legenda ≈ Lv 31–40.

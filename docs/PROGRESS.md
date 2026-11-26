@@ -376,5 +376,8 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Ramuan Penyembuh 10 koin, paling banyak 5× per pertarungan (`combat.potionLimit`); tombol ramuan menunjukkan "×punya · sisa/5", habis = tombol mati + pesan.
 - Tukar Bintang pindah ke Toko (tab ⭐ Bintang; `MQ.Quests.renderStars`, `MQ.Shop.openTab`); layar Misi menampilkan jumlah ⭐ + tautan "Tukar di Toko". SW `mq-v58`.
 
+### 2026-11-27 — Pertahanan monster & poin Pertahanan
+- 1 poin Pertahanan = −1 damage (dulu 2 poin). Monster batu: `tahan` 0,7 (damage diterima), `hpMul` 0,85, power 1,5; teks "🛡️ Keras!". SW `mq-v59`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

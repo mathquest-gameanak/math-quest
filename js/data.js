@@ -6,7 +6,8 @@ window.MQ = window.MQ || {};
 MQ.Data = {
   /* Gaya menyerang bawaan per jenis tubuh:
      spd   = jeda antar serangan dalam detik [min, maks] (acak di antaranya); besar = lambat
-     power = pengali damage. Monster boleh menimpa nilainya sendiri (lihat monster batu). */
+     power = pengali damage. Monster boleh menimpa nilainya sendiri (lihat monster batu).
+     Per monster juga: tahan = pengali damage yang DITERIMA (batu 0,7 = keras), hpMul = pengali HP. */
   styles: {
     bat:      {spd: [1.5, 3], power: 0.8},   // kelelawar: cepat tapi lemah
     slime:    {spd: [2.5, 4.5], power: 1},
@@ -27,9 +28,9 @@ MQ.Data = {
     rajaJamur:      {name: 'Raja Jamur', lore: 'Raja Jamur memakai topi terbesar di hutan dan bangga bisa menghitung semua bintik di topinya.', sprite: 'mushroom', drop: 'spora', pal: {r: '#ef7d57', w: '#ffcd75', c: '#fff3b0'}},
     kelelawar:      {name: 'Kelelawar Ungu', lore: 'Kelelawar Ungu terbang sangat cepat sambil menghitung putarannya sendiri.', sprite: 'bat', drop: 'sayap'},
     rajaKelelawar:  {name: 'Raja Kelelawar', lore: 'Raja Kelelawar tinggal di gua tepi Danau Dua Puluh. Sayapnya merah seperti langit senja.', sprite: 'bat', drop: 'sayap', pal: {p: '#b13e53', P: '#ef7d57'}},
-    lendirBatu:     {name: 'Lendir Batu', lore: 'Lendir Batu keras seperti kerikil. Ia suka berguling membentuk lingkaran sempurna.', sprite: 'slime', drop: 'batu', spd: [4, 6], power: 1.4, pal: {g: '#94b0c2', G: '#f4f4f4', d: '#566c86'}},
-    jamurBatu:      {name: 'Jamur Batu', lore: 'Jamur Batu tidak pernah bergerak... kecuali ada yang salah menyebut nama bentuk!', sprite: 'mushroom', drop: 'batu', spd: [4, 6], power: 1.4, pal: {r: '#566c86', c: '#94b0c2', C: '#566c86'}},
-    rajaBatu:       {name: 'Raja Batu', lore: 'Raja Batu yang tua dan bijak menjaga semua bentuk di Bukit Bentuk.', sprite: 'slime', drop: 'batu', spd: [4, 6], power: 1.4, pal: {g: '#566c86', G: '#94b0c2', d: '#333c57'}},
+    lendirBatu:     {name: 'Lendir Batu', lore: 'Lendir Batu keras seperti kerikil. Ia suka berguling membentuk lingkaran sempurna.', sprite: 'slime', drop: 'batu', spd: [4, 6], power: 1.5, tahan: 0.7, hpMul: 0.85, pal: {g: '#94b0c2', G: '#f4f4f4', d: '#566c86'}},
+    jamurBatu:      {name: 'Jamur Batu', lore: 'Jamur Batu tidak pernah bergerak... kecuali ada yang salah menyebut nama bentuk!', sprite: 'mushroom', drop: 'batu', spd: [4, 6], power: 1.5, tahan: 0.7, hpMul: 0.85, pal: {r: '#566c86', c: '#94b0c2', C: '#566c86'}},
+    rajaBatu:       {name: 'Raja Batu', lore: 'Raja Batu yang tua dan bijak menjaga semua bentuk di Bukit Bentuk.', sprite: 'slime', drop: 'batu', spd: [4, 6], power: 1.5, tahan: 0.7, hpMul: 0.85, pal: {g: '#566c86', G: '#94b0c2', d: '#333c57'}},
     kelelawarDaun:  {name: 'Kelelawar Daun', lore: 'Kelelawar Daun bersembunyi di pepohonan Lembah Ukur. Sayapnya sepanjang tiga daun!', sprite: 'bat', drop: 'sayap', pal: {p: '#257179', P: '#a7f070'}},
     jamurKayu:      {name: 'Jamur Kayu', lore: 'Jamur Kayu tumbuh di batang pohon tumbang dan suka mengukur apa saja dengan jengkalnya.', sprite: 'mushroom', drop: 'kayu', pal: {r: '#ab5236', c: '#ffcd75'}},
     rajaJamurKayu:  {name: 'Raja Jamur Kayu', lore: 'Raja Jamur Kayu punya penggaris ajaib dari kulit kayu. Tidak ada yang lebih teliti darinya.', sprite: 'mushroom', drop: 'kayu', pal: {r: '#5d275d', w: '#ffcd75', c: '#ef7d57'}},
