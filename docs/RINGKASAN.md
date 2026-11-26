@@ -36,3 +36,6 @@ Game RPG matematika pixel art 2D (PWA, Bahasa Indonesia) untuk anak SD, dimulai 
 - Pengguna sering main di tab preview port **8125**; untuk tes pakai **`math-quest-test` (port 8126)** di `C:\proyek\.claude\launch.json` supaya simpanannya tidak tersentuh.
 - Cache browser/SW sering basi saat tes: unregister SW + hapus caches, lalu reload 1–2×.
 - Skrip edit Python: **jangan** `open(f,'w').write(open(f).read()...)` dalam satu baris (pernah mengosongkan sw.js); baca dulu, baru tulis.
+
+## Rencana lanjutan
+Lihat `docs/RENCANA.md` (telur teman, Kelas 1–6 per bab, Kelas 2+, level per kelas, fast leveling).
