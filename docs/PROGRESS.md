@@ -406,5 +406,8 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 ### 2026-11-27 — Kelas 2 Peta 4: Ukur & Data
 - Soal `cm` (penggaris 1 kotak = 1 cm, 1 m = 100 cm, selisih panjang, banding m/cm) dan `air` (1 L = 10 dL, L+dL → dL, jumlah/sisa dL, banding L/dL), plus `data` & `turus` (tabel & grafik). Peta 4 dibuka (monster sementara). Materi Kelas 2 Bab 4. SW `mq-v68`.
 
+### 2026-11-27 — Kelas 2 Peta 5: Waktu & Uang
+- Gambar jam `V().clock(h, m)` (visuals.js). Soal `jam` (tepat, setengah, kelipatan 5 menit), `durasi` (lama jam, 1 jam = 60 menit, waktu sesudah), `uang` (jumlah rupiah, kembalian, menukar uang). Pilihan berbentuk teks lewat `textQ`. Peta 5 dibuka (monster sementara). Materi Kelas 2 Bab 5. SW `mq-v69`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

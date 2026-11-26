@@ -470,6 +470,45 @@ MQ.Questions = (() => {
     return signQ('air', `1 L ○ ${d} dL`, `1 liter dan ${d} desiliter. Pilih tanda yang benar.`, 10, d, `1 L = 10 dL. Bandingkan 10 dengan ${d}.`);
   };
 
+  /* ===== KELAS 2 — Bab 5: Waktu, durasi & uang ===== */
+  const jamTxt = (h, m) => `${h}.${String(m).padStart(2, '0')}`;
+  /** Pilihan jawaban berupa teks (mis. jam "3.30" atau "Rp500"). */
+  const textQ = (kind, text, speak, ans, wrong, view) =>
+    ({kind, text, speak, view, ans, cols: 2, choices: shuffle([ans, ...wrong.filter((v, i, a) => v !== ans && a.indexOf(v) === i).slice(0, 3)]).map(v => ({v, html: v}))});
+  /** Membaca jam: tepat, setengah, dan kelipatan 5 menit. */
+  GEN.jam = () => {
+    const h = rand(1, 12), m = pick([0, 0, 30, 30, 15, 45, rand(1, 11) * 5]), ans = jamTxt(h, m), h2 = h % 12 + 1;
+    const wrong = [jamTxt(h, (m + 30) % 60), jamTxt(h2, m), jamTxt(m ? Math.min(12, Math.max(1, m / 5)) : h2, h * 5 % 60), jamTxt(h === 1 ? 12 : h - 1, m)];
+    return hint(textQ('jam', 'Pukul berapa?', 'Lihat jamnya. Pukul berapa sekarang?', ans, wrong, V().clock(h, m)),
+      () => V().hintNote(`Jarum pendek (merah) menunjuk jam ${h}. Jarum panjang (biru) di angka ${m / 5 || 12} = ${m} menit. Jadi pukul ${ans}.`));
+  };
+  /** Durasi: lama waktu dalam jam, 1 jam = 60 menit, waktu sesudah. */
+  GEN.durasi = () => {
+    const t = rand(0, 2);
+    if (t === 0) { const a = rand(6, 10), d = rand(1, 4), b = a + d;
+      return hint(numQ('durasi', `Pukul ${a}.00 sampai ${b}.00. Berapa jam?`, `Dari pukul ${a} sampai pukul ${b}. Lamanya berapa jam?`, d, [a + b, b], 1), () => V().hintNote(`Hitung loncat jam: ${a} → ${b}, ada ${d} jam.`)); }
+    if (t === 1) { const j = rand(1, 3), c = j * 60;
+      return hint(numQ('durasi', `${j} jam = ? menit`, `${j} jam sama dengan berapa menit?`, c, [j * 100, j * 10, c + 10], 1), () => V().hintNote(`1 jam = 60 menit. Jadi ${j} jam = ${c} menit.`)); }
+    const h = rand(6, 10), add = pick([30, 15, 60]), m = pick([0, 15, 30].filter(x => x + add < 60 || add === 60)), tot = h * 60 + m + add, ans = jamTxt(Math.floor(tot / 60), tot % 60);
+    return hint(textQ('durasi', `${add === 60 ? '1 jam' : add + ' menit'} setelah ${jamTxt(h, m)}?`, `${add === 60 ? 'Satu jam' : add + ' menit'} setelah pukul ${jamTxt(h, m)}, pukul berapa?`,
+      ans, [jamTxt(h, m), jamTxt(h + 1, (m + add) % 60), jamTxt(Math.floor(tot / 60) + 1, tot % 60), jamTxt(h, (m + 10) % 60)], V().clock(h, m)),
+      () => V().hintNote(`Mulai ${jamTxt(h, m)}, tambah ${add} menit → ${ans}.`));
+  };
+  /** Uang rupiah: menjumlah koin/uang kertas, kembalian, menukar. */
+  const rp = n => 'Rp' + n.toLocaleString('id-ID');
+  GEN.uang = () => {
+    const t = rand(0, 2);
+    if (t === 0) { const a = pick([100, 200, 500]) * rand(1, 3), b = pick([100, 200, 500, 1000]), c = a + b;
+      return hint(textQ('uang', `${rp(a)} + ${rp(b)} = ?`, `${a} rupiah ditambah ${b} rupiah, jadi berapa rupiah?`, rp(c), [rp(c + 100), rp(c - 100), rp(c + 1000), rp(a * b > 9999 ? c + 500 : c + 200)]),
+        () => V().hintNote(`${a} + ${b} = ${c}. Jadi ${rp(c)}.`)); }
+    if (t === 1) { const bayar = pick([1000, 2000, 5000]), harga = rand(1, bayar / 100 - 1) * 100, c = bayar - harga;
+      return hint(textQ('uang', `Harga ${rp(harga)}, bayar ${rp(bayar)}. Kembalian?`, `Harganya ${harga} rupiah. Kamu bayar ${bayar} rupiah. Kembaliannya berapa?`, rp(c), [rp(c + 100), rp(c - 100 || 50), rp(harga), rp(bayar + harga)]),
+        () => V().hintNote(`Kembalian = uang dibayar − harga: ${bayar} − ${harga} = ${c}. Jadi ${rp(c)}.`)); }
+    const [besar, kecil] = pick([[1000, 500], [1000, 100], [2000, 1000], [5000, 1000], [500, 100]]), n = besar / kecil;
+    return hint(numQ('uang', `${rp(besar)} = berapa uang ${rp(kecil)}?`, `${besar} rupiah sama dengan berapa uang ${kecil} rupiah?`, n, [n * 10, n + 5].filter(v => v !== n), 1),
+      () => V().hintNote(`${besar} : ${kecil} = ${n}. Jadi ${rp(besar)} = ${n} × ${rp(kecil)}.`));
+  };
+
   /** Tokoh & benda untuk soal cerita (id = gambar MQ.Pix / MQ.Sprites). */
   const PEOPLE = [{id: 'kiki', n: 'Kiki'}, {id: 'momo', n: 'Momo'}, {id: 'kakek', n: 'Kakek'}, {id: 'kapten', n: 'Kapten'}];
   const THINGS = [{s: 'apple', n: 'apel', gone: 'dimakan'}, {s: 'star', n: 'bintang', gone: 'terbang'},
@@ -491,7 +530,7 @@ MQ.Questions = (() => {
                  pasangan: 'Pasangan bilangan', cerita: 'Soal cerita', teka: 'Teka-teki',
                  posisi: 'Bilangan urutan', berulang: 'Tambah berulang', keluarga: 'Hubungan + dan −', kelompok: 'Mengelompokkan bentuk',
                  susun: 'Menyusun bangun', belasan: 'Bilangan 11–20', dobel: 'Dobel', data: 'Diagram gambar', turus: 'Tabel turus',
-                 ratusan: 'Ratusan', nilai: 'Nilai tempat', lompat: 'Loncat 10 & 100', bersusun: 'Tambah bersusun', hitungCepat: 'Berhitung cepat', kurangSusun: 'Kurang bersusun', kurangCepat: 'Mengurang cepat', cm: 'Panjang (cm & m)', air: 'Banyaknya air (L & dL)'};
+                 ratusan: 'Ratusan', nilai: 'Nilai tempat', lompat: 'Loncat 10 & 100', bersusun: 'Tambah bersusun', hitungCepat: 'Berhitung cepat', kurangSusun: 'Kurang bersusun', kurangCepat: 'Mengurang cepat', cm: 'Panjang (cm & m)', air: 'Banyaknya air (L & dL)', jam: 'Membaca jam', durasi: 'Lama waktu', uang: 'Uang'};
 
   return {make, GEN, NAMES, maxFor, specForLevel, nearChoices};
 })();

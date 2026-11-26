@@ -253,7 +253,17 @@ MQ.Vis = (() => {
   /** Tabel turus: buah | turus. */
   const tallyTable = data => `<div class="tTable">${data.map(([id, n]) => `<div class="tRow"><span class="pcLbl">${fruit(id)}</span>${tally(n)}</div>`).join('')}</div>`;
 
-  return {queue, groups, frameMix, tens20, hintMake10, shapeC, shapeRow, split, pieces, FRUITS, fruit, picto, tally, tallyTable,
+  /** Jam dinding (Kelas 2): jarum pendek = jam, jarum panjang = menit. */
+  function clock(h, m) {
+    const P = (deg, r) => [30 + r * Math.sin(deg * Math.PI / 180), 30 - r * Math.cos(deg * Math.PI / 180)].map(v => v.toFixed(1));
+    const nums = [...Array(12)].map((_, i) => { const [x, y] = P((i + 1) * 30, 21); return `<text x="${x}" y="${(+y + 3).toFixed(1)}" text-anchor="middle" font-size="7" font-weight="900" fill="#1a1c2c">${i + 1}</text>`; }).join('');
+    const [hx, hy] = P((h % 12) * 30 + m / 2, 13), [mx, my] = P(m * 6, 22);
+    return svg('0 0 60 60', `<g shape-rendering="auto"><circle cx="30" cy="30" r="28" fill="#f4f4f4" stroke="#1a1c2c" stroke-width="3"/>${nums}` +
+      `<line x1="30" y1="30" x2="${mx}" y2="${my}" stroke="#3b5dc9" stroke-width="2.5" stroke-linecap="round"/>` +
+      `<line x1="30" y1="30" x2="${hx}" y2="${hy}" stroke="#e43b44" stroke-width="4" stroke-linecap="round"/><circle cx="30" cy="30" r="2.5" fill="#1a1c2c"/></g>`, 'clock');
+  }
+
+  return {clock, queue, groups, frameMix, tens20, hintMake10, shapeC, shapeRow, split, pieces, FRUITS, fruit, picto, tally, tallyTable,
           count, SHAPES, shape, COLORS, token, patternRow, pencils, ruler, lidi, story, bar, bond, tenFrame,
           hintAdd, hintSub, hintCompare, hintCount, hintTens, hintLine, hintRuler, hintBond, hintTen, hintBar, hintBar2, hintSeq, hintNote, hintEqual};
 })();

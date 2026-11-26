@@ -120,6 +120,15 @@ MQ.Learn = (() => {
     air: {title: 'Liter & Desiliter', icon: '🥛', cards: [
       {t: 'Banyaknya air diukur dengan LITER (L) dan DESILITER (dL). 1 L = 10 dL.', v: () => V().hintNote('1 L = 10 dL')},
       {t: '2 L 5 dL = 20 dL + 5 dL = 25 dL.', v: () => V().hintNote('2 L 5 dL = 25 dL')}]},
+    jam: {title: 'Membaca Jam', icon: '🕒', cards: [
+      {t: 'Jarum PENDEK menunjuk jam. Jarum PANJANG menunjuk menit. Jarum panjang di 12 = tepat. Ini pukul 3.00.', v: () => V().clock(3, 0)},
+      {t: 'Jarum panjang di 6 = setengah jam (30 menit). Ini pukul 4.30. Setiap angka = 5 menit.', v: () => V().clock(4, 30)}]},
+    durasi: {title: 'Lama Waktu', icon: '⏳', cards: [
+      {t: '1 jam = 60 menit. Dari pukul 7.00 sampai 9.00 lamanya 2 jam.', v: () => V().hintNote('7.00 → 8.00 → 9.00 = 2 jam')},
+      {t: '30 menit setelah pukul 8.00 adalah pukul 8.30.', v: () => V().clock(8, 30)}]},
+    uang: {title: 'Uang & Berbelanja', icon: '🪙', cards: [
+      {t: 'Rp500 + Rp200 = Rp700. Jumlahkan angkanya seperti biasa.', v: () => V().hintNote('500 + 200 = 700')},
+      {t: 'Kembalian = uang yang dibayar − harga. Bayar Rp1.000, harga Rp700 → kembali Rp300.', v: () => V().hintNote('1.000 − 700 = 300')}]},
     teka: {title: 'Teka-teki Bilangan', icon: '📜', cards: [
       {t: '"Aku lebih dari 5 dan kurang dari 7." Bilangan yang ada di antara 5 dan 7 adalah 6.', v: () => V().hintLine(6, 6)},
       {t: 'Pola loncat: lihat berapa yang ditambah setiap kali. 2, 4, 6, 8 → loncat 2.', v: () => V().hintSeq([2, 4, 6, 8], 10, 'Setiap kali +2')}]}
@@ -140,7 +149,8 @@ MQ.Learn = (() => {
         {t: 'Penjumlahan Bersusun', k: ['hitungCepat', 'bersusun'], max: 100},
         {t: 'Pengurangan Bersusun', k: ['kurangCepat', 'kurangSusun'], max: 100},
         {t: 'Panjang, Air & Grafik', k: ['cm', 'air', 'data', 'turus'], max: 20},
-        ...['Waktu & Uang', 'Perkalian 1', 'Perkalian 2',
+        {t: 'Waktu & Uang', k: ['jam', 'durasi', 'uang'], max: 20},
+        ...['Perkalian 1', 'Perkalian 2',
             'Bangun Datar & Ruang', 'Bilangan 10.000 & Pecahan'].map(t => ({t}))] // Kelas 2: 9 bab = 9 peta (GDD §15)
   };
   let nav = {kelas: 0, bab: -1}; // posisi di daftar: kelas 0 = pilih kelas, bab -1 = pilih bab

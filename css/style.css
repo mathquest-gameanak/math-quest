@@ -1208,3 +1208,4 @@ body.skinK .panel b .pwTag, body.skinK .pwTag { color: #1a1c2c; }
 .susun { display: grid; grid-template-columns: auto auto; column-gap: 6px; justify-items: end; font-weight: 900; font-size: 20px; line-height: 1.05;
          font-variant-numeric: tabular-nums; color: var(--hitam); background: #f4f4f4; border: 3px solid var(--hitam); padding: 3px 10px; }
 .susun i { grid-column: 1 / 3; width: 100%; border-top: 3px solid var(--hitam); margin: 2px 0; }
+svg.clock { width: 84px; height: 84px; }
