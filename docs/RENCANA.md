@@ -62,3 +62,10 @@ _Dicatat 2026-11-27. Konten Kelas 1 sudah dianggap cukup. Sebelum dikodekan, pin
 ## 7. Catatan keseimbangan
 - Hasil uji: Lv 42 dengan senjata +6, perisai +2, dan mahkota +2 menghasilkan HP 151, damage 71, pertahanan 8. Tingkat Legenda Kelas 1 terasa cukup mudah.
 - Nanti cek `balance.js`: HP/damage monster Legenda, atau batasi kenaikan damage dari Pandai Besi.
+
+## 8. Poin status per level (usulan, untuk Kelas 2)
+- **Level tidak di-reset** saat naik kelas. Satu level yang terus naik lebih mudah dipahami anak, tidak terasa kehilangan, dan cocok dengan fast leveling (Kelas 2 = Lv 16).
+- Supaya kenaikan terasa, **poin status per naik level bertambah menurut rentang level**: Lv 2–15 = 1 poin, 16–30 = 2, 31–45 = 3, 46–60 = 4, 61+ = 5. Satu poin tetap bernilai +1 Serangan / +1 Pertahanan / +3 HP, jadi layar Karakter tidak berubah.
+- Akibatnya Kelas 1 Pahlawan/Legenda (Lv 16–40) ikut lebih mudah. HP/damage monster Lv 16+ di `balance.js` perlu diseimbangkan ulang bersamaan.
+- Fast leveling: poin untuk level yang dilompati diberikan sekaligus, dan anak membaginya sendiri.
+- Simpanan lama: hitung ulang total poin dari level, kembalikan semua poin untuk dibagi ulang (migrasi `save.js`).
