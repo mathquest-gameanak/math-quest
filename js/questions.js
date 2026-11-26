@@ -409,6 +409,30 @@ MQ.Questions = (() => {
       () => V().hintNote(`${p} + ${q} = ${p + q} (genap puluhan), lalu + ${b - q} = ${c}.`));
   };
 
+  /* ===== KELAS 2 — Bab 3: Pengurangan bersusun ===== */
+  /** Pengurangan bersusun 2 angka, sebagian dengan meminjam. */
+  GEN.kurangSusun = () => {
+    let a, b;
+    do { a = rand(30, 99); b = rand(11, a - 5); } while (b < 10);
+    const c = a - b, pinjam = a % 10 < b % 10;
+    const salah = pinjam ? [Math.abs((a % 10) - (b % 10)) + (Math.floor(a / 10) - Math.floor(b / 10)) * 10, c + 10] : [c + 10, c - 10]; // lupa meminjam: satuan dibalik
+    const sa = a % 10, sb = b % 10, pa = Math.floor(a / 10), pb = Math.floor(b / 10);
+    return hint(numQ('kurangSusun', `${a} − ${b} = ?`, `${a} dikurangi ${b}. Hitung bersusun, mulai dari satuan.`, c, salah.filter(v => v >= 0 && v !== c), 0, susunView(a, b, '−')),
+      () => V().hintNote(pinjam ? `Satuan ${sa} kurang dari ${sb}: pinjam 1 puluhan → ${sa + 10} − ${sb} = ${sa + 10 - sb}. Puluhan tinggal ${pa - 1} − ${pb} = ${pa - 1 - pb}. Jadi ${c}.`
+                                : `Satuan: ${sa} − ${sb} = ${sa - sb}. Puluhan: ${pa} − ${pb} = ${pa - pb}. Jadi ${c}.`));
+  };
+  /** Mengurang cepat: kurang puluhan, kurang 9 (= −10 +1), atau mengecek dengan penjumlahan. */
+  GEN.kurangCepat = () => {
+    const t = rand(0, 2);
+    if (t === 0) { const a = rand(35, 99), p = rand(1, Math.min(3, Math.floor(a / 10) - 1)) * 10, c = a - p;
+      return hint(numQ('kurangCepat', `${a} − ${p} = ?`, `${a} kurang ${p}. Cukup kurangi puluhannya!`, c, [a - p / 10, c - 1]), () => V().hintNote(`Kurangi ${p / 10} puluhan: ${a} → ${c}. Satuannya tetap ${a % 10}.`)); }
+    if (t === 1) { const a = rand(20, 90), c = a - 9;
+      return hint(numQ('kurangCepat', `${a} − 9 = ?`, `${a} kurang 9. Kurangi 10 lalu tambah 1.`, c, [a - 10, a - 8]), () => V().hintNote(`${a} − 10 = ${a - 10}, lalu tambah 1 = ${c}.`)); }
+    const b = rand(11, 40), c = rand(10, 50), a = b + c;
+    return hint(numQ('kurangCepat', `${a} − ${b} = ${c}. Cek: ${c} + ${b} = ?`, `Untuk mengecek pengurangan, jumlahkan lagi. ${c} tambah ${b} sama dengan?`, a, [a + 10, a - 10]),
+      () => V().hintNote(`Hasil + pengurang = bilangan awal: ${c} + ${b} = ${a}. Jadi pengurangannya benar.`));
+  };
+
   /** Tokoh & benda untuk soal cerita (id = gambar MQ.Pix / MQ.Sprites). */
   const PEOPLE = [{id: 'kiki', n: 'Kiki'}, {id: 'momo', n: 'Momo'}, {id: 'kakek', n: 'Kakek'}, {id: 'kapten', n: 'Kapten'}];
   const THINGS = [{s: 'apple', n: 'apel', gone: 'dimakan'}, {s: 'star', n: 'bintang', gone: 'terbang'},
@@ -430,7 +454,7 @@ MQ.Questions = (() => {
                  pasangan: 'Pasangan bilangan', cerita: 'Soal cerita', teka: 'Teka-teki',
                  posisi: 'Bilangan urutan', berulang: 'Tambah berulang', keluarga: 'Hubungan + dan −', kelompok: 'Mengelompokkan bentuk',
                  susun: 'Menyusun bangun', belasan: 'Bilangan 11–20', dobel: 'Dobel', data: 'Diagram gambar', turus: 'Tabel turus',
-                 ratusan: 'Ratusan', nilai: 'Nilai tempat', lompat: 'Loncat 10 & 100', bersusun: 'Tambah bersusun', hitungCepat: 'Berhitung cepat'};
+                 ratusan: 'Ratusan', nilai: 'Nilai tempat', lompat: 'Loncat 10 & 100', bersusun: 'Tambah bersusun', hitungCepat: 'Berhitung cepat', kurangSusun: 'Kurang bersusun', kurangCepat: 'Mengurang cepat'};
 
   return {make, GEN, NAMES, maxFor, specForLevel, nearChoices};
 })();

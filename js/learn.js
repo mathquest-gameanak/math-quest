@@ -107,6 +107,13 @@ MQ.Learn = (() => {
     hitungCepat: {title: 'Berhitung Cepat', icon: '⚡', cards: [
       {t: 'Tambah puluhan: satuannya tetap, puluhannya yang naik. 34 + 20 = 54.', v: () => V().hintNote('34 → 44 → 54')},
       {t: 'Tambah 9 = tambah 10, lalu kurang 1. 46 + 9 = 56 − 1 = 55.', v: () => V().hintNote('46 + 10 − 1 = 55')}]},
+    kurangSusun: {title: 'Pengurangan Bersusun', icon: '🧱', cards: [
+      {t: 'Tulis bersusun, mulai dari SATUAN. 58 − 23: satuan 8 − 3 = 5, puluhan 5 − 2 = 3. Jadi 35.', v: () => V().hintNote('58 − 23 = 35')},
+      {t: 'Satuan atas lebih kecil? PINJAM 1 puluhan. 52 − 17: 2 kurang dari 7, pinjam → 12 − 7 = 5. Puluhan tinggal 4 − 1 = 3. Jadi 35.', v: () => V().hintNote('52 − 17 = 35')}]},
+    kurangCepat: {title: 'Mengurang Cepat', icon: '⚡', cards: [
+      {t: 'Kurang puluhan: satuannya tetap. 74 − 30 = 44.', v: () => V().hintNote('74 → 64 → 54 → 44')},
+      {t: 'Kurang 9 = kurang 10, lalu tambah 1. 53 − 9 = 43 + 1 = 44.', v: () => V().hintNote('53 − 10 + 1 = 44')},
+      {t: 'Cek pengurangan dengan penjumlahan: 44 + 9 = 53. Benar!', v: () => V().hintNote('44 + 9 = 53 ✔')}]},
     teka: {title: 'Teka-teki Bilangan', icon: '📜', cards: [
       {t: '"Aku lebih dari 5 dan kurang dari 7." Bilangan yang ada di antara 5 dan 7 adalah 6.', v: () => V().hintLine(6, 6)},
       {t: 'Pola loncat: lihat berapa yang ditambah setiap kali. 2, 4, 6, 8 → loncat 2.', v: () => V().hintSeq([2, 4, 6, 8], 10, 'Setiap kali +2')}]}
@@ -125,7 +132,8 @@ MQ.Learn = (() => {
         {t: 'Diagram', k: ['data', 'turus'], max: 20}],
     2: [{t: 'Bilangan sampai 1.000', k: ['ratusan', 'nilai', 'lompat'], max: 1000},
         {t: 'Penjumlahan Bersusun', k: ['hitungCepat', 'bersusun'], max: 100},
-        ...['Pengurangan Bersusun', 'Panjang, Air & Grafik', 'Waktu & Uang', 'Perkalian 1', 'Perkalian 2',
+        {t: 'Pengurangan Bersusun', k: ['kurangCepat', 'kurangSusun'], max: 100},
+        ...[ 'Panjang, Air & Grafik', 'Waktu & Uang', 'Perkalian 1', 'Perkalian 2',
             'Bangun Datar & Ruang', 'Bilangan 10.000 & Pecahan'].map(t => ({t}))] // Kelas 2: 9 bab = 9 peta (GDD §15)
   };
   let nav = {kelas: 0, bab: -1}; // posisi di daftar: kelas 0 = pilih kelas, bab -1 = pilih bab

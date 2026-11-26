@@ -400,5 +400,8 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 ### 2026-11-27 — Kelas 2 Peta 2: Penjumlahan Bersusun
 - Soal `bersusun` (2 angka + 2 angka sampai 99, ±40% menyimpan; gambar bersusun `.susun`; pengecoh "lupa menyimpan") dan `hitungCepat` (tambah puluhan, +9 = +10−1, genapkan puluhan). Peta 2 dibuka (monster sementara: jamur). Materi Kelas 2 Bab 2. SW `mq-v66`.
 
+### 2026-11-27 — Kelas 2 Peta 3: Pengurangan Bersusun
+- Soal `kurangSusun` (2 angka, ±45% meminjam, pengecoh "lupa meminjam") dan `kurangCepat` (kurang puluhan, −9 = −10+1, cek dengan penjumlahan). Peta 3 dibuka (monster sementara). Materi Kelas 2 Bab 3. GDD: monster tiap kelas minimal setengahnya baru. SW `mq-v67`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
