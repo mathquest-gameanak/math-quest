@@ -118,9 +118,8 @@ MQ.Learn = (() => {
         {t: 'Panjang', k: ['panjang', 'ukur'], max: 20},
         {t: 'Diagram', k: ['data', 'turus'], max: 20}],
     2: [{t: 'Bilangan sampai 1.000', k: ['ratusan', 'nilai', 'lompat'], max: 1000},
-        ...['Cara Berhitung', 'Waktu & Durasi', 'Penjumlahan Bersusun', 'Pengurangan Bersusun', 'Panjang', 'Tabel & Grafik',
-            'Banyaknya Air', 'Penjumlahan & Pengurangan', 'Perkalian (1)', 'Perkalian (2)', 'Perkalian (3)', 'Perkalian (4)',
-            'Segitiga & Segiempat', 'Bilangan sampai 10.000', 'Pecahan', 'Bentuk-bentuk Kotak'].map(t => ({t}))]
+        ...['Penjumlahan Bersusun', 'Pengurangan Bersusun', 'Panjang, Air & Grafik', 'Waktu & Uang', 'Perkalian 1', 'Perkalian 2',
+            'Bangun Datar & Ruang', 'Bilangan 10.000 & Pecahan'].map(t => ({t}))] // Kelas 2: 9 bab = 9 peta (GDD §15)
   };
   let nav = {kelas: 0, bab: -1}; // posisi di daftar: kelas 0 = pilih kelas, bab -1 = pilih bab
   /** Batas angka latihan untuk jenis pelajaran (dari bab pertama yang memuatnya). */
