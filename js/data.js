@@ -71,7 +71,7 @@ MQ.Data = {
     tinta:       {type: 'bahan', name: 'Tinta Bintang', icon: 'star', pal: {y: '#73eff7'}, from: 'perpustakaan',
                   desc: 'Bahan khusus AKSESORI. Dari Perpustakaan Tua (makin banyak di ⭐⭐⭐).'},
 
-    ramuan:  {type: 'ramuan', name: 'Ramuan Penyembuh', icon: 'potion', price: 5, desc: 'Minum saat bertarung: HP penuh lagi.'},
+    ramuan:  {type: 'ramuan', name: 'Ramuan Penyembuh', icon: 'potion', price: 15, desc: 'Minum saat bertarung: HP penuh lagi.'},
 
     pedangKayu:      {type: 'senjata', name: 'Pedang Kayu', icon: 'sword', pal: {w: '#d4a373'}, price: 8, atk: 1, crit: 5,
                       desc: 'Serangan +1. Kritikal +5%.'},

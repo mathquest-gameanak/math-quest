@@ -292,6 +292,14 @@ MQ.Battle = (() => {
     UI.show(B.mode === 'dungeon' ? 'dungeon' : 'map');
   }
   els.btnExit.addEventListener('click', exit);
+  /* Jeda: memakai jendela pesan (waktu musuh & KILAT otomatis berhenti selama pesan terbuka); soal & jawaban diburamkan
+     supaya tidak bisa dipikirkan diam-diam saat jeda. */
+  document.getElementById('btnPause').addEventListener('click', () => {
+    if (!els['scr-battle'].classList.contains('on') || !els.overlay.hidden) return;
+    els['scr-battle'].classList.add('paused'); sfx.click();
+    UI.overlay({icon: '⏸️', title: 'Jeda', text: 'Pertarungan berhenti sebentar. Monster juga menunggu!', btn: '▶ Lanjut',
+      cb: () => els['scr-battle'].classList.remove('paused')});
+  });
   /** Mode cerita yang berlaku (dipilih di Peta): Pahlawan setelah lulus ujian, Legenda setelah 6 bos Pahlawan. */
   const storyMode = () => State.storyMode();
   /** Di titik/ruang ini muncul dua monster? (balance.js pairs; tidak untuk bos, mini bos, monster kunci) */

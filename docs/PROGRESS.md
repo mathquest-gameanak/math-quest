@@ -367,5 +367,10 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - **Tukar Bintang** (di layar Misi, tanpa undian): Fragmen Bintang 3⭐ (10 + 2 Mahkota + 100 koin = **Pedang Bintang** di Pandai Besi: Serangan +9, ekstra +2 di semua soal, krit +15%, damage krit +50%), Ramuan 2⭐, Mahkota Kecil 4⭐, bahan khusus 3⭐, kostum eksklusif **Mahkota Bintang** 20⭐, telur teman spesial **Kristalin** 30⭐ (`S.starBuys`). Ikon baru fragmenBintang & pedangBintang. Medali "semua teman" jadi 9.
 - Tes memakai server terpisah `math-quest-test` (port 8126, simpanan terpisah) supaya tidak mengganggu simpanan yang sedang dimainkan di port 8125. SW `mq-v56`.
 
+### 2026-11-26 — Tombol jeda, kotak soal saat berjalan, harga ramuan
+- Saat berjalan ke titik/ruang berikutnya seluruh kotak soal disembunyikan (bukan hanya isinya).
+- ⏸ Tombol jeda di HUD pertarungan: membuka jendela "Jeda" (waktu musuh & KILAT berhenti karena jendela pesan terbuka), soal & jawaban diburamkan (`#scr-battle.paused #qa`).
+- Ramuan Penyembuh 5 → 15 koin (anak membeli banyak & minum tiap hampir kalah). SW `mq-v57`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
