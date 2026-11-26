@@ -1174,6 +1174,8 @@ body.skinK .panel b .pwTag, body.skinK .pwTag { color: #1a1c2c; }
 /* ===== Tombol info (i) di Peta & kartu dungeon ===== */
 .infoBtn.mapInfo { margin-left: 4px; width: 30px; height: 30px; font-size: 16px; flex: none; }
 #scr-map .heroToggle { margin-left: auto; }
+#scr-map .kelasToggle + .heroToggle { margin-left: 4px; }
+.kelasToggle { background: #3b5dc9; }
 .dInfoBtn { margin-left: 6px; width: 22px; height: 22px; padding: 0; line-height: 1; border-radius: 50%; font: italic 900 13px Georgia, serif;
   background: #41a6f6; color: #fff; border: 2px solid #1a1c2c; vertical-align: middle; }
 #scr-dungeon .dInfo { gap: 4px; padding: 6px 10px 8px; }

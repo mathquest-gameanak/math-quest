@@ -386,5 +386,9 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 ### 2026-11-27 — Menu Kelas per kelas & bab (tahap 2)
 - Kelas: pilih Kelas 1–6 → Bab → materi (`KELAS` di learn.js, menggantikan `ORDER`). Batas angka latihan per bab (`maxOf`). Pelajaran wajib setelah pingsan tampil paling atas. Pelajaran baru Kelas 2: Ratusan, Nilai Tempat, Loncat 10 & 100. SW `mq-v61`.
 
+### 2026-11-27 — Peta Kelas 2 (tahap 3, bagian 1)
+- Tombol **🎒 Kelas 1/2** di Peta (terbuka setelah lulus Ujian Kelas 1 atau Lv 16). `S.kelas` memilih dunia: `MQ.Data.useKelas` (hanya peta; dungeon tetap Kelas 1), `POS2`/`BANDS2`/`drawTerrain2` di map.js (9 wilayah warna + hiasan sederhana).
+- Kelas 2 sementara hanya tingkat Normal (`State.storyMode` = 0). Padang Seribu bisa dimainkan (monster Kelas 1 sementara, Lv 16–17), peta 2–9 🚧. `Data.allFields()` untuk syarat dungeon. SW `mq-v63`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

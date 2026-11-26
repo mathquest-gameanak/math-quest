@@ -13,11 +13,21 @@ MQ.WorldMap = (() => {
   const W = 160, H = 560; // ukuran peta dalam piksel (diperbesar CSS)
 
   /* Posisi tiap tempat di peta (x, y dalam piksel peta) */
-  const POS = {padang: [44, 515], hutan: [112, 432], bukit: [44, 350], danau: [108, 268], lembah: [46, 188],
+  const POS1 = {padang: [44, 515], hutan: [112, 432], bukit: [44, 350], danau: [108, 268], lembah: [46, 188],
                menara: [106, 112], kastil: [80, 40], guaPola: [134, 350], arena: [128, 532],
                kapalKaram: [36, 262], perpustakaan: [30, 120]};
   /* Wilayah warna dari atas ke bawah: [batas bawah y, nama] */
-  const BANDS = [[78, 'kastil'], [156, 'menara'], [236, 'lembah'], [314, 'danau'], [392, 'bukit'], [472, 'hutan'], [H, 'padang']];
+  const BANDS1 = [[78, 'kastil'], [156, 'menara'], [236, 'lembah'], [314, 'danau'], [392, 'bukit'], [472, 'hutan'], [H, 'padang']];
+  /* Dunia Kelas 2 (GDD §15): 9 tempat zig-zag dari bawah ke atas, tiap tempat satu wilayah warna. */
+  const POS2 = {k2ribu: [44, 520], k2susun: [112, 462], k2kurang: [44, 404], k2ukur: [112, 346], k2waktu: [44, 288],
+                k2kali1: [112, 230], k2kali2: [44, 172], k2bangun: [112, 114], k2pecahan: [72, 50], arena: [126, 536]};
+  const BANDS2 = [[82, 'k2pecahan'], [143, 'k2bangun'], [201, 'k2kali2'], [259, 'k2kali1'], [317, 'k2waktu'], [375, 'k2ukur'],
+                  [433, 'k2kurang'], [491, 'k2susun'], [H, 'k2ribu']];
+  let POS = POS1, BANDS = BANDS1;
+  const k2 = () => S.kelas === 2;
+  /** Pilih dunia sesuai kelas yang dimainkan (S.kelas). */
+  function setWorld() { S.kelas = Data.useKelas(S.kelas || 1); POS = k2() ? POS2 : POS1; BANDS = k2() ? BANDS2 : BANDS1; }
+  setWorld();
 
   let terrain = null; // kanvas medan + jalan (dibuat ulang bila progress berubah)
   let terrainKey = '';
@@ -46,9 +56,10 @@ MQ.WorldMap = (() => {
     }
     return pts;
   }
-  const ROUTES = () => { const o = Data.fields.map(f => f.id), r = []; for (let i = 1; i < o.length; i++) r.push([o[i - 1], o[i], i]); r.push(['padang', 'arena', -1]); return r; };
+  const ROUTES = () => { const o = Data.fields.map(f => f.id), r = []; for (let i = 1; i < o.length; i++) r.push([o[i - 1], o[i], i]); r.push([o[0], 'arena', -1]); return r; };
 
   function drawTerrain() {
+    if (k2()) return drawTerrain2();
     const c = document.createElement('canvas');
     c.width = W; c.height = H;
     const {R, ell, circle} = painter(c);
@@ -177,6 +188,50 @@ MQ.WorldMap = (() => {
     return c;
   }
 
+  /** Medan Kelas 2: wilayah warna per tempat + hiasan sederhana (pohon, batu, bunga, salju). */
+  function drawTerrain2() {
+    const c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    const {R, ell, circle} = painter(c);
+    let seed = 23;
+    const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647, ri = (a, b) => a + Math.floor(rnd() * (b - a + 1));
+    const road = ROUTES().flatMap(([a, b]) => curve(a, b, 3));
+    const free = (px, py, pad = 0) => !Object.values(POS).some(([x, y]) => Math.abs(px - x) < 17 + pad && py - y > -16 - pad && py - y < 26 + pad) &&
+                                      !road.some(([x, y]) => Math.abs(px - x) < 6 + pad && Math.abs(py - y) < 6 + pad);
+    const PAL = {k2ribu: ['#9ad45a', '#88c84e', '#76bb44'], k2susun: ['#f0c070', '#e3b05f', '#d29e50'], k2kurang: ['#5cc0a8', '#4cb098', '#3e9f88'],
+                 k2ukur: ['#e8d09a', '#dcc088', '#ceb078'], k2waktu: ['#c8a0d8', '#b890c8', '#a880b8'], k2kali1: ['#3f8f5a', '#358050', '#2c7246'],
+                 k2kali2: ['#d07a5a', '#c06a4c', '#b05c40'], k2bangun: ['#a0aab8', '#909aa8', '#808a98'], k2pecahan: ['#e8f0f8', '#d8e4f0', '#c8d8e8']};
+    const tops = {};
+    for (let px = 0; px < W; px++) {
+      let top = 0;
+      BANDS.forEach(([, name], i) => {
+        const bottom = i === BANDS.length - 1 ? H : border(i, px), pal = PAL[name], h = bottom - top;
+        if (px === 80) tops[name] = [top, bottom];
+        for (let k = 0; k < 3; k++) R(pal[k], px, top + Math.floor(h * k / 3), 1, Math.ceil(h / 3) + 1);
+        if (i > 0) { const prev = PAL[BANDS[i - 1][1]][2]; for (let d = 0; d < 3; d++) if ((px + d) % 2 === 0) R(prev, px, top + d, 1, 1); }
+        top = bottom;
+      });
+    }
+    const tree = (tx, ty, s, a, b) => { R('#5d3a28', tx - 1, ty + s - 2, 2, 5); circle(tx, ty, s + 1, K); circle(tx, ty, s, a); circle(tx - 1, ty - 1, s - 2, b); };
+    const rock = (bx, by, a, b) => { R(K, bx - 1, by - 1, 7, 5); R(a, bx, by, 5, 3); R(b, bx, by, 3, 1); };
+    const flower = (a, b, f) => { R(f, a, b, 1, 1); R(f, a - 1, b + 1, 3, 1); R(f, a, b + 2, 1, 1); R('#ffcd75', a, b + 1, 1, 1); };
+    const DECO = {k2ribu: 'flower', k2susun: 'flower', k2kurang: 'tree', k2ukur: 'rock', k2waktu: 'flower', k2kali1: 'tree', k2kali2: 'rock', k2bangun: 'rock', k2pecahan: 'snow'};
+    Object.entries(tops).forEach(([name, [t, b]]) => {
+      for (let i = 0; i < 26; i++) {
+        const x = ri(3, W - 4), y = ri(t + 6, b - 4), d = DECO[name];
+        if (!free(x, y, d === 'tree' ? 2 : -6)) continue;
+        if (d === 'tree') tree(x, y, ri(4, 6), name === 'k2kali1' ? '#257179' : '#38b764', name === 'k2kali1' ? '#38b764' : '#a7f070');
+        else if (d === 'rock') rock(x, y, name === 'k2kali2' ? '#8a4a3a' : '#94b0c2', '#c7d3de');
+        else if (d === 'snow') { R('#f4f4f4', x, y, 2, 1); R('#94b0c2', x, y + 1, 2, 1); }
+        else flower(x, y, ['#e43b44', '#f4f4f4', '#f4a3c8', '#3b5dc9'][i % 4]);
+      }
+    });
+    const [ax, ay] = POS.arena;
+    ell(ax, ay + 2, 15, 10, K); ell(ax, ay + 2, 14, 9, '#94b0c2'); ell(ax, ay + 2, 12, 7, '#ffcd75'); ell(ax, ay + 3, 9, 4, '#e8c49a');
+    drawRoads(c);
+    return c;
+  }
+
   /** Jalan: tanah terang bila tempat tujuannya terbuka, abu-abu putus-putus bila masih terkunci. */
   function drawRoads(c) {
     const {R} = painter(c);
@@ -191,6 +246,7 @@ MQ.WorldMap = (() => {
   const hash = n => { const v = Math.sin(n * 127.1) * 43758.5453; return v - Math.floor(v); };
   function drawAnim(ctx, t, m = 0) {
     const R = (col, a, b, w, h) => { ctx.fillStyle = col; ctx.fillRect(Math.round(a), Math.round(b), w, h); };
+    if (k2()) return drawClouds(ctx, t, m);
     // kilau & riak air danau
     for (let i = 0; i < 14; i++) {
       const on = Math.floor(t * 2 + i * 0.7) % 3 === 0, x = 30 + hash(i) * 100, y = 262 + hash(i + 9) * 24;
@@ -218,7 +274,10 @@ MQ.WorldMap = (() => {
       const bx = ((hash(i + 70) * 200 + t * (5 + i * 2)) % (W + 20)) - 10, by = 490 + i * 18 + Math.sin(t * 3 + i) * 4, o = Math.floor(t * 8 + i) % 2;
       const cc = ['#ffcd75', '#f4a3c8', '#73eff7'][i]; R(cc, bx - (o ? 2 : 1), by, o ? 2 : 1, 2); R(cc, bx + 1, by, o ? 2 : 1, 2); R(K, bx, by, 1, 2);
     }
-    // awan (dengan bayangan di tanah) melayang pelan dari kiri ke kanan
+    drawClouds(ctx, t, m);
+  }
+  /** Awan (dengan bayangan di tanah) melayang pelan dari kiri ke kanan. */
+  function drawClouds(ctx, t, m) {
     for (let i = 0; i < 4; i++) {
       const span = W + 60, cx = ((hash(i + 80) * span + t * (3 + i)) % span) - 30, cy = 60 + i * 130 + hash(i + 90) * 40;
       ctx.fillStyle = 'rgba(26,28,44,0.12)'; ctx.fillRect(Math.round(cx) + 4, Math.round(cy) + 14, 24, 4);
@@ -250,8 +309,10 @@ MQ.WorldMap = (() => {
   /* ===== Layar Peta ===== */
   UI.renderers.map = () => {
     if (MQ.Daily) setTimeout(() => MQ.Daily.celebrate(), 300); // stempel hari ini (bila baru tercapai di pertarungan)
+    setWorld();
+    $('btnKelas').textContent = `🎒 Kelas ${S.kelas}`;
     const hb = $('btnHeroMode');
-    hb.hidden = false;
+    hb.hidden = k2(); // Kelas 2: sementara hanya tingkat Normal
     hb.textContent = MODES[mode()].name + ' ▾';
     $('modeMenu').hidden = true;
     hb.classList.toggle('on', heroOn());
@@ -259,7 +320,7 @@ MQ.WorldMap = (() => {
     $('scr-map').classList.toggle('heroMode', mode() === 1);
     $('scr-map').classList.toggle('legendMode', mode() === 2);
     // medan + jalan dibuat ulang hanya bila tingkat / tempat terbuka berubah
-    const key = mode() + '|' + Data.fields.map(f => (isOpen(f) ? 1 : 0)).join('');
+    const key = S.kelas + '|' + mode() + '|' + Data.fields.map(f => (isOpen(f) ? 1 : 0)).join('');
     if (!terrain || key !== terrainKey) { terrain = drawTerrain(); terrainKey = key; }
     const cv = $('mapCanvas');
     if (cv.width !== W) { cv.width = W; cv.height = H; }
@@ -364,6 +425,18 @@ MQ.WorldMap = (() => {
     const done = (hero ? modeList() : S.cleared).includes(p.id) ? ' Bos sudah kamu kalahkan ⭐' : '';
     UI.overlay({icon: p.icon, title: p.name + (hero ? ' ' + M.name.split(' ')[0] : ''), btn: 'Main!', btn2: 'Nanti', cb: go,
       text: `${p.desc}.${lv}${hero ? ` Mode ${M.name.split(' ')[1]}: musuh lebih kuat & cepat, kadang DUA monster sekaligus. Koin lebih banyak!` : ''}${done}`});
+  });
+
+  /* Pindah dunia Kelas 1 ⇄ Kelas 2 (Kelas 2 terbuka setelah lulus Ujian Kelas 1 atau Level 16) */
+  $('btnKelas').addEventListener('click', e => {
+    e.stopPropagation();
+    if (!k2() && S.grade < 2 && S.level < 16) {
+      MQ.Audio.sfx.wrong();
+      return UI.overlay({icon: '🔒', title: 'Kelas 2 masih terkunci', text: 'Lulus Ujian Naik Kelas di Kastil (atau capai Level 16) untuk membuka petualangan Kelas 2!'});
+    }
+    S.kelas = k2() ? 1 : 2; State.save();
+    MQ.Audio.sfx.toggle();
+    UI.renderers.map();
   });
 
   /* Pilihan tingkat kesulitan (dropdown): tingkat yang belum terbuka tetap terlihat dengan gembok & syaratnya */

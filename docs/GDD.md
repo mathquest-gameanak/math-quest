@@ -231,6 +231,7 @@ Cara membuatnya (nanti, saat Kelas 2 dikerjakan):
 ## 15. Kelas 2 (rancangan disetujui 2026-11-27, belum dikodekan)
 - **Materi:** buku Kemdikbud *Matematika SD Kelas II* (Kurikulum Merdeka) + metode ala Singapura. Isinya 17 bab + 2 bab tambahan. Rincian bab ada di `docs/RENCANA.md` §3.
 - **Dunia:** cerita, peta, monster, equipment, fashion, dan item baru. **9 peta**: Bilangan 1.000 · Berhitung & Jumlah Bersusun · Kurang Bersusun · Ukur & Data · Waktu & Uang · Perkalian 1–2 · Perkalian 3–4 · Bangun · Bilangan 10.000 & Pecahan. **4 dungeon**: peta 1–3, 4–5, 6–7, 8–9. Lalu Kastil Ujian.
+- **Peta (dibuat 2026-11-27):** tombol 🎒 Kelas di Peta untuk pindah dunia (Kelas 2 terbuka setelah lulus Kelas 1 atau Lv 16). Sementara hanya tingkat Normal di Kelas 2.
 - **Level:** satu level terus naik, tidak di-reset. Kelas 2 Normal Lv 16–30, Pahlawan 31–45, Legenda 46–55. Monster Kelas 2 = maks(level area, level anak − 3).
 - **Poin status:** Lv 1–40 = 1 poin per level. Mulai Lv 41 bertambah (sementara 41–55 = 2, 56–70 = 3).
 - **Mulai di Kelas 2:** level langsung jadi Lv 16, poin level yang dilompati diberikan, plus equipment standar gratis. Kelas 1 tetap bisa dibuka.

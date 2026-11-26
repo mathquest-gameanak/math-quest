@@ -105,7 +105,7 @@ MQ.State = (() => {
      Ujian yang lulus di Pahlawan/Legenda dicatat sebagai 'kastil' di heroCleared/legendCleared. */
   const modeList = m => (m === 2 ? S.legendCleared : m === 1 ? S.heroCleared : S.cleared);
   const modeOpen = m => (m === 0 ? true : m === 1 ? S.grade >= 2 : S.grade >= 2 && S.heroCleared.includes('kastil'));
-  const storyMode = () => (modeOpen(S.storyMode) ? S.storyMode : modeOpen(1) && S.storyMode === 2 ? 1 : 0);
+  const storyMode = () => (S.kelas >= 2 ? 0 : modeOpen(S.storyMode) ? S.storyMode : modeOpen(1) && S.storyMode === 2 ? 1 : 0);
   /** Tempat terbuka di tingkat m (arena & dungeon mengikuti Normal). */
   const unlockedIn = (place, m) => {
     if (!m || !(place.spec || place.exam)) return unlocked(place);

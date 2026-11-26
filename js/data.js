@@ -190,5 +190,7 @@ MQ.Data = {
 
 /* Dunia per kelas: fields/dungeons yang aktif mengikuti kelas yang sedang dimainkan (S.kelas). */
 MQ.Data.byKelas = {1: {fields: MQ.Data.fields, dungeons: MQ.Data.dungeons}, 2: {fields: MQ.Data.fieldsKelas2, dungeons: []}};
-/** Ganti dunia aktif. Kelas yang belum ada → Kelas 1. */
-MQ.Data.useKelas = k => { const w = MQ.Data.byKelas[k] || MQ.Data.byKelas[1]; MQ.Data.fields = w.fields; MQ.Data.dungeons = w.dungeons; return MQ.Data.byKelas[k] ? k : 1; };
+/** Ganti dunia aktif (hanya peta; dungeon tetap Kelas 1 sampai dungeon Kelas 2 dibuat). Kelas yang belum ada → Kelas 1. */
+MQ.Data.useKelas = k => { const w = MQ.Data.byKelas[k] || MQ.Data.byKelas[1]; MQ.Data.fields = w.fields; return MQ.Data.byKelas[k] ? k : 1; };
+/** Semua area dari semua kelas (untuk mencari area syarat). */
+MQ.Data.allFields = () => [].concat(...Object.values(MQ.Data.byKelas).map(w => w.fields));

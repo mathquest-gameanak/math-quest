@@ -28,7 +28,7 @@ MQ.Dungeon = (() => {
   function card(d) {
     const lock = !State.unlocked(d), mat = specialMat(d), got = best(d);
     const starRow = [0, 1, 2].map(i => `<i class="${i < got ? 'on' : ''}">★</i>`).join('');
-    const req = lock ? Data.fields.find(f => f.id === d.req) : null;
+    const req = lock ? Data.allFields().find(f => f.id === d.req) : null;
     return `<div class="dCard panel${lock ? ' lock' : ''}" data-d="${d.id}" role="button">` +
       `<div class="dArt"><canvas class="dScene" data-out="${d.id}"></canvas>` +
         `<span class="dName">${d.icon} ${d.name}${mat ? `<button class="dInfoBtn" data-info="${d.id}" aria-label="Info bahan khusus">i</button>` : ''}</span><span class="dStars">${starRow}</span>` +
@@ -89,7 +89,7 @@ MQ.Dungeon = (() => {
     if (!c) return;
     const d = Data.dungeons.find(x => x.id === c.dataset.d);
     if (!State.unlocked(d)) {
-      const req = Data.fields.find(f => f.id === d.req);
+      const req = Data.allFields().find(f => f.id === d.req);
       return UI.overlay({icon: '🔒', title: `${d.name} masih terkunci`, text: `Kalahkan bos ${req.name} di Peta dulu untuk membuka ${d.name}.`});
     }
     MQ.Audio.sfx.door();

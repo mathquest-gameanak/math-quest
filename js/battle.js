@@ -577,7 +577,7 @@ MQ.Battle = (() => {
   /* ===== Area selesai (bos titik 5 kalah): ulangi atau ke peta ===== */
   function fieldEnd(firstClear, heroClear) {
     const f = B.field, boss = Data.monsters[f.boss].name;
-    const nxt = firstClear && Data.fields.find(x => x.req === f.id), dun = firstClear && Data.dungeons.find(x => x.req === f.id);
+    const nxt = firstClear && Data.fields.find(x => x.req === f.id && !x.soon), dun = firstClear && Data.dungeons.find(x => x.req === f.id);
     sfx.fanfare();
     const list = B.story === 2 ? S.legendCleared : S.heroCleared, modeName = B.story === 2 ? 'Legenda ⭐⭐⭐' : 'Pahlawan ⭐⭐';
     const text = heroClear ? `Kamu mengalahkan ${boss} di Mode ${modeName}! (${list.length} dari ${State.mainFields().length})`
