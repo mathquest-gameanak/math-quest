@@ -156,6 +156,7 @@ MQ.UI = (() => {
   const SLOT_ICON = {senjata: 'pedangKayu', pelindung: 'perisaiKayu', aksesori: 'cincinBintang'};
   renderers.char = () => {
     $('charLv').textContent = `Lv ${S.level}`;
+    $('charPower').textContent = `⚡ Power ${State.heroPower()}`;
     $('charName').textContent = (S.hero && S.hero.name) || 'Pahlawan';
     fillXp($('charXpFill'), $('charXpText'));
     const tot = Object.values(S.stats).reduce((a, s) => ({b: a.b + s.b, s: a.s + s.s}), {b: 0, s: 0});
@@ -248,16 +249,22 @@ MQ.UI = (() => {
     el.onclick = e => { const b = e.target.closest('[data-f]'); if (!b) return; filt[key] = b.dataset.f; MQ.Audio.sfx.click(); onChange(); };
     return id => filt[key] === 'semua' || Data.items[id].type === filt[key];
   }
+  let bagSort = 'type';
   renderers.bag = () => {
     $('bagCoins').textContent = `🪙 ${S.coins} koin`;
     const all = Object.keys(S.inv), keep = filterBar($('bagFilter'), 'bag', all, renderers.bag);
-    const ids = all.filter(keep).sort((a, b) => TYPE_ORDER.indexOf(Data.items[a].type) - TYPE_ORDER.indexOf(Data.items[b].type));
-    const cells = ids.map(id => `<button class="slot full" data-item="${id}">${itemImg(id)}` +
-      `<b class="qty">${S.inv[id]}</b>${State.isEquipped(id) ? '<b class="eq">E</b>' : ''}</button>`);
+    const byPow = bagSort === 'power';
+    const ids = all.filter(keep).sort((a, b) => (byPow ? State.itemPower(b) - State.itemPower(a) : 0) ||
+      TYPE_ORDER.indexOf(Data.items[a].type) - TYPE_ORDER.indexOf(Data.items[b].type));
+    $('bagSort').textContent = byPow ? '⚡ Urut: Power' : '🗂️ Urut: Jenis';
+    const cells = ids.map(id => { const pw = State.itemPower(id);
+      return `<button class="slot full" data-item="${id}">${itemImg(id)}` + (pw ? `<i class="pw">⚡${pw}</i>` : '') +
+        `<b class="qty">${S.inv[id]}</b>${State.isEquipped(id) ? '<b class="eq">E</b>' : ''}</button>`; });
     while (cells.length < (filt.bag === 'semua' ? 16 : 8) || cells.length % 4) cells.push('<div class="slot"></div>');
     $('bagGrid').innerHTML = cells.join('');
     $('bagNote').textContent = ids.length ? 'Ketuk item untuk melihat atau memakainya.' : 'Tas masih kosong. Kalahkan monster untuk mendapat koin & bahan!';
   };
+  $('bagSort').addEventListener('click', () => { bagSort = bagSort === 'power' ? 'type' : 'power'; MQ.Audio.sfx.click(); renderers.bag(); });
   $('bagGrid').addEventListener('click', e => {
     const b = e.target.closest('[data-item]');
     if (b) itemDetail(b.dataset.item, () => show('bag'));
@@ -266,7 +273,8 @@ MQ.UI = (() => {
   /** Keterangan item + tombol Pakai/Lepas untuk perlengkapan. after() = gambar ulang layar asal. */
   function itemDetail(id, after) {
     const it = Data.items[id], gearType = ['senjata', 'pelindung', 'aksesori'].includes(it.type);
-    const base = {img: itemImg(id, 'iconBig'), title: State.itemName(id), text: `${TYPE_NAMES[it.type]} · ${it.desc}` + (it.type === 'bahan' ? ` Kamu punya ${State.count(id)}.` : '')};
+    const pw = State.itemPower(id);
+    const base = {img: itemImg(id, 'iconBig'), title: State.itemName(id), text: `${TYPE_NAMES[it.type]}${pw ? ` · ⚡ Power ${pw}` : ''} · ${it.desc}` + (it.type === 'bahan' ? ` Kamu punya ${State.count(id)}.` : '')};
     if (!gearType) return overlay(base);
     const on = State.isEquipped(id);
     overlay(Object.assign(base, {

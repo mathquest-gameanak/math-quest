@@ -64,6 +64,8 @@ MQ.Balance = {
     critChance: 10,              // peluang kritikal dasar (%) — tambahan hanya dari equipment ("crit")
     critMul: 2,                  // damage kritikal dasar (× 2 = dobel) — tambahan hanya dari equipment ("critDmg", dalam %)
     fastCritSec: 2,              // jawab benar dalam ≤ 2 detik = pasti kritikal ("KILAT!")
+    fastCritBy: [2, 1.5, 1.2],   // batas KILAT per tingkat: [Normal / dungeon ⭐, Pahlawan / ⭐⭐, Legenda / ⭐⭐⭐] (2026-11-26)
+    critMulMax: 2.5,             // damage kritikal paling tinggi ×2,5 (walau equipment menambah lebih)
     comboLabel: 3,               // kombo beruntun mulai ditampilkan dengan 🔥 (hanya hiasan & misi)
     healOnKillPct: 20            // HP pulih (%) setiap mengalahkan monster (bukan di dungeon)
   },
@@ -79,7 +81,7 @@ MQ.Balance = {
     {lvAdd: 16, hpMul: 1.15, dmgMul: 1.15, speedMul: 0.7, rewardMul: 2}
   ],
   heroMode: {lv: [16, 30], hpMul: 1.15, dmgMul: 1.15, speedMul: 0.8, rewardMul: 2},
-  legendMode: {lv: [31, 40], hpMul: 1.3, dmgMul: 1.4, speedMul: 0.65, rewardMul: 3},  // Legenda: setelah lulus Ujian Pahlawan
+  legendMode: {lv: [31, 40], hpMul: 1.5, dmgMul: 1.4, speedMul: 0.65, rewardMul: 3},  // Legenda: setelah lulus Ujian Pahlawan
   /* Dua monster sekaligus: titik (0-based) di area per mode cerita (1 = Pahlawan, 2 = Legenda),
      dan ruang di dungeon per tingkat (⭐⭐: ruang sebelum bos; ⭐⭐⭐: ruang genap). */
   pairs: {story: {1: [3], 2: [1, 3]}},
@@ -122,6 +124,8 @@ MQ.Balance = {
     mustLearn: 1,    // 1 = wajib menyelesaikan pelajaran dulu
     practice: 3      // jumlah jawaban benar di latihan pelajaran
   },
+  /* ⚡ Power = jumlah status × bobot ini (perlengkapan & pahlawan). Hanya angka pembanding, tidak mengubah pertarungan. */
+  power: {atk: 10, hp: 2, def: 15, crit: 2, critDmg: 1, bonus: 4, coins: 8, xp: 1},
   rewards: {
     coinsNormal: [1, 2], coinsBoss: 8,  // koin dari monster
     dropChance: 0.7,                    // peluang monster biasa menjatuhkan 1 bahan

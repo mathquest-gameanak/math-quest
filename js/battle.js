@@ -54,7 +54,11 @@ MQ.Battle = (() => {
   const STORY_STARS = ['', ' ⭐⭐', ' ⭐⭐⭐'];
   /** Pengali waktu soal sekarang (soal pikir → musuh lebih sabar, batas KILAT lebih panjang). */
   const qTime = () => (B.q ? B.q.time || 1 : 1);
-  const kilatSec = () => BAL.combat.fastCritSec * qTime();
+  /** Batas KILAT: Normal 2 dtk, makin singkat di Pahlawan/Legenda & dungeon ⭐⭐/⭐⭐⭐ (balance.combat.fastCritBy). */
+  const kilatSec = () => {
+    const by = BAL.combat.fastCritBy, i = B.mode === 'dungeon' ? B.tier : B.story || 0;
+    return ((by && by[i]) || BAL.combat.fastCritSec) * qTime();
+  };
   const mods = () => B.mods || NONE;
   const later = (fn, ms) => { const r = B.run; setTimeout(() => { if (r === B.run) fn(); }, ms); };
   const kills = () => S.fieldKills[B.field.id] || 0;
@@ -100,13 +104,21 @@ MQ.Battle = (() => {
   }
 
   /** Teks melayang. side 'hero' = di atas pahlawan (damage yang diterima). */
+  /* Teks melayang bertumpuk rapi per sisi (tidak saling tindih), berlatar gelap supaya terbaca, & dijaga tetap di dalam layar. */
+  const floatSlots = {hero: [], monster: []};
   function showFloat(text, cls, delay = 0, side = 'monster') {
     const s = document.createElement('span');
     s.className = 'float ' + cls; s.textContent = text;
-    s.style.left = (side === 'hero' ? rand(22, 30) : rand(44, 56)) + '%'; // dekat tengah supaya teks panjang tidak terpotong
+    const slots = floatSlots[side === 'hero' ? 'hero' : 'monster'];
+    let i = 0; while (slots[i]) i++;           // baris kosong pertama
+    slots[i] = s;
+    s.style.top = `calc(${side === 'hero' ? 46 : 34}% - ${i * 34}px)`;
     s.style.animationDelay = delay + 's';
-    s.addEventListener('animationend', () => s.remove());
+    s.addEventListener('animationend', () => { s.remove(); if (slots[i] === s) slots[i] = null; });
     els.fx.appendChild(s);
+    // tengah teks di atas pahlawan / monster, digeser bila kepanjangan supaya tidak keluar layar
+    const W = els.fx.clientWidth || 300, w = s.offsetWidth, want = W * (side === 'hero' ? 0.27 : 0.62);
+    s.style.left = Math.round(Math.max(w / 2 + 6, Math.min(W - w / 2 - 6, want))) + 'px';
   }
 
   /* ===== Serangan musuh berwaktu ===== */
@@ -260,8 +272,7 @@ MQ.Battle = (() => {
     els.question.classList.add('walking'); els.answers.classList.add('walking');
     els.qView.hidden = true; els.fastBar.hidden = true; els.thinkTag.hidden = true;
     els.qText.classList.remove('long');
-    els.qText.textContent = type === 'boss' ? '👑 Menuju bos...' : type === 'mini' ? '⭐ Menuju mini bos...' :
-      B.mode === 'dungeon' ? `Masuk ruang ${n}...` : `Berjalan ke titik ${n}...`;
+    els.qText.textContent = ''; // kotak soal & jawaban disembunyikan sampai bertemu monster (2026-11-26)
     els.answers.className = 'walking';
     els.answers.innerHTML = '<button class="ans">.</button><button class="ans">.</button><button class="ans">.</button><button class="ans">.</button>';
     renderDots();

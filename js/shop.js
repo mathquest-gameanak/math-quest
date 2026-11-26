@@ -24,7 +24,8 @@ MQ.Shop = (() => {
 
   /** Kartu barang (dipakai Toko & Pandai Besi). right = HTML harga/resep. */
   const card = (id, right, btn, done) =>
-    `<div class="panel shopItem">${UI.itemImg(id, 'iconBig')}<div class="sBody"><b>${items[id].name}</b><small>${items[id].desc}</small>${right}</div>` +
+    `<div class="panel shopItem">${UI.itemImg(id, 'iconBig')}<div class="sBody"><b>${items[id].name}${State.itemPower(id) ? ` <i class="pwTag">⚡${State.itemPower(id)}</i>` : ''}</b>` +
+    `<small>${items[id].desc}</small>${right}</div>` +
     `<button class="sBtn" data-id="${id}" ${done ? 'disabled' : ''}>${done ? 'Sudah punya' : btn}</button></div>`;
 
   /* ===== Toko ===== */
@@ -171,7 +172,7 @@ MQ.Shop = (() => {
       const L = State.upLevel(id), max = L >= U().max;
       const need = max ? '<small>Sudah tingkat tertinggi! ✨</small>' : `<div class="needs">${Object.entries(upCost(id, L + 1)).map(([k, n]) =>
         `<span class="need ${have(k) >= n ? 'ok' : ''}">${iconOf(k)}${Math.min(have(k), n)}/${n}</span>`).join('')}</div>`;
-      return `<div class="panel shopItem">${UI.itemImg(id, 'iconBig')}<div class="sBody"><b>${items[id].name} <span class="upLv">${L ? '+' + L : ''}</span></b>` +
+      return `<div class="panel shopItem">${UI.itemImg(id, 'iconBig')}<div class="sBody"><b>${items[id].name} <span class="upLv">${L ? '+' + L : ''}</span> <i class="pwTag">⚡${State.itemPower(id)}</i></b>` +
         `<small>${max ? `Maks +${U().max}` : `+${L} → +${L + 1}: ${upText(items[id].type, L + 1)}${L + 1 >= U().strongFrom ? ' 🔥' : ''}`}</small>${need}</div>` +
         `<button class="sBtn" data-up="${id}" ${max ? 'disabled' : ''}>${max ? 'Maks' : 'Tingkatkan'}</button></div>`;
     }).join('') : '<p class="note">Belum punya perlengkapan. Beli di Toko atau buat di tab Buat dulu.</p>';

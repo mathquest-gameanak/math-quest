@@ -350,5 +350,11 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Pandai Besi → Tingkatkan tidak bisa dibuka: tab Toko (baru) memakai kelas `.smithTabs` juga & ada lebih dulu di halaman, sehingga `querySelector('.smithTabs')` memasang tombol ke Toko. Sekarang `#scr-smith .smithTabs`.
 - Jalur titik (urutan musuh) tertutup HUD saat baris KOMBO muncul: baris kecil HUD selalu setinggi 16px + `refitTop()` (ResizeObserver HUD) memperbarui `--freeTop`. SW `mq-v53`.
 
+### 2026-11-26 — Teks pertarungan, Power, keseimbangan KILAT
+- Teks melayang pertarungan: kotak gelap membulat (lebih terbaca), bertumpuk per sisi tanpa saling tindih (slot baris), posisi dijaga di dalam layar (teks panjang seperti "+1 Sayap Kelelawar" tidak keluar ke kanan).
+- Saat berjalan ke titik/ruang berikutnya kotak soal kosong (tanpa tulisan "Masuk ruang 2..."), muncul saat bertemu monster.
+- ⚡ **Power** (`State.itemPower`, `State.heroPower`, bobot di `balance.power`): angka di Tas (lencana + tombol "Urut: Jenis / Power"), detail item, Toko, Pandai Besi (Buat & Tingkatkan, termasuk +N), dan Karakter (Power pahlawan). Hanya angka pembanding.
+- KILAT per tingkat `combat.fastCritBy` [2, 1,5, 1,2] detik (Normal/⭐, Pahlawan/⭐⭐, Legenda/⭐⭐⭐); damage kritikal dibatasi `combat.critMulMax` ×2,5; HP musuh Legenda ×1,3 → ×1,5. SW `mq-v54`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

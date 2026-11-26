@@ -26,7 +26,21 @@ MQ.State = (() => {
   const atk = () => { const b = MQ.Calc.playerAtk(S.level, S.alloc.atk, effect('atk')); return [b, b + P.atkSpread]; };
   /** Kritikal: peluang (%) & pengali damage — dasar di balance.js, tambahan hanya dari equipment. */
   const critChance = () => MQ.Balance.combat.critChance + effect('crit');
-  const critMul = () => MQ.Balance.combat.critMul + effect('critDmg') / 100;
+  // damage kritikal dibatasi critMulMax supaya equipment terbaik tidak membuat musuh selalu kalah sekali pukul
+  const critMul = () => Math.min(MQ.Balance.combat.critMulMax || 99, MQ.Balance.combat.critMul + effect('critDmg') / 100);
+  /* ===== ⚡ Power (2026-11-26): satu angka dari semua status, untuk membandingkan & mengurutkan perlengkapan.
+     Item: efek item + tingkatan (+N). Pahlawan: dari HP, serangan, pertahanan, kritikal. Rumus di balance.power. */
+  function itemPower(id) {
+    const it = items[id], W = MQ.Balance.power;
+    if (!it || !['senjata', 'pelindung', 'aksesori'].includes(it.type)) return 0;
+    const v = k => (it[k] || 0) + upBonus(id, k);
+    return Math.round(v('atk') * W.atk + v('hp') * W.hp + v('def') * W.def + v('crit') * W.crit + v('critDmg') * W.critDmg +
+      (it.bonus ? it.bonus.dmg * W.bonus : 0) + (it.coins || 0) * W.coins + (it.xp || 0) * W.xp);
+  }
+  function heroPower() {
+    const W = MQ.Balance.power, [a] = atk();
+    return Math.round(maxHp() * W.hp + a * W.atk + def() * W.def + critChance() * W.crit + (critMul() - 1) * 100 * W.critDmg);
+  }
   const def = () => Math.floor(P.defPerPoint * S.alloc.def) + effect('def');
   const xpNeed = lv => X.base + (lv - 1) * X.perLevel; // XP untuk naik dari level lv
   /** Damage tambahan senjata untuk jenis soal tertentu. */
@@ -106,7 +120,7 @@ MQ.State = (() => {
   /** Nama item beserta tingkatnya, mis. "Pedang Kayu +2". */
   const itemName = id => items[id].name + (upLevel(id) ? ` +${upLevel(id)}` : '');
 
-  return {S, POINTS_PER_LEVEL, upLevel, upSteps, upBonus, itemName, maxHp, atk, def, critChance, critMul, xpNeed, bonusFor, effect, gear, addXp, spendPoint,
+  return {S, POINTS_PER_LEVEL, itemPower, heroPower, upLevel, upSteps, upBonus, itemName, maxHp, atk, def, critChance, critMul, xpNeed, bonusFor, effect, gear, addXp, spendPoint,
           count, addItem, removeItem, equip, unequip, isEquipped, unlocked, mainFields, shards, save, modeList, modeOpen, storyMode, unlockedIn,
           today, dateKey, logDay};
 })();
