@@ -24,17 +24,21 @@ _Dicatat 2026-11-27. Konten Kelas 1 sudah dianggap cukup. Sebelum dikodekan, pin
 - Jumlah bab mengikuti buku Matematika Kurikulum Merdeka kelas itu, dengan metode ala Singapura (bar model dan lain-lain). Jangan memakai merek "Singapore Math".
 - **Dungeon = gabungan 2 bab**, jadi jumlah dungeon = jumlah bab ÷ 2 (dibulatkan ke atas).
 - Kemungkinan ada fitur, peta, atau jenis dungeon baru di kelas tertentu (mulai Kelas 3?) agar lebih bervariasi. Belum diputuskan.
-- **Bab Kelas 2 (sementara, BELUM diverifikasi):** situs buku Kemdikbud tidak bisa diakses dari sini, dan daftar isi buku Yudhistira tidak ditemukan online. Usulan topik (Fase A Kurikulum Merdeka, hanya 1 judul yang terkonfirmasi):
-  1. Bilangan sampai 1.000 (terkonfirmasi sebagai bab 1 buku Kemdikbud)
-  2. Penjumlahan & pengurangan (bersusun, bar model)
-  3. Perkalian (penjumlahan berulang, kelompok sama)
-  4. Pembagian (bagi rata)
-  5. Pecahan sederhana (1/2, 1/4)
-  6. Pengukuran panjang & berat
-  7. Waktu (jam) & uang
-  8. Bangun datar & bangun ruang
-  9. Data & diagram gambar
-  → Kalau 9 bab dibuat 9 peta, cukup **4 dungeon** (Kelas 1: 8 bab → 6 peta, 3 dungeon). Cocokkan dengan daftar isi buku Yudhistira milik sekolah (foto daftar isi cukup) sebelum dikerjakan.
+- **Bab Kelas 2 (sumber: buku Kemdikbud *Matematika SD Kelas II*, Kurikulum Merdeka, Vol 1 & 2, daftar isi asli):**
+  1 Bilangan sampai 1.000 · 2 Cara Berhitung · 3 Waktu & Durasi · 4 Penjumlahan Bersusun · 5 Pengurangan Bersusun · 6 Panjang · 7 Tabel & Grafik · 8 Banyaknya Air · 9 Penjumlahan & Pengurangan · 10–13 Perkalian (1)–(4) · 14 Segitiga & Segiempat · 15 Bilangan sampai 10.000 · 16 Pecahan · 17 Bentuk-bentuk Kotak · Bab tambahan: Berbelanja, Menyebutkan Waktu.
+- **Usulan 9 peta + 4 dungeon:**
+  | Peta | Bab |
+  |---|---|
+  | 1 | Bilangan sampai 1.000 (1) |
+  | 2 | Cara Berhitung, Penjumlahan Bersusun (2, 4) |
+  | 3 | Pengurangan Bersusun, Penjumlahan & Pengurangan (5, 9) |
+  | 4 | Panjang, Banyaknya Air, Tabel & Grafik (6, 8, 7) |
+  | 5 | Waktu, Menyebutkan Waktu, Berbelanja/uang (3 + tambahan) |
+  | 6 | Perkalian (1)–(2) (10, 11) |
+  | 7 | Perkalian (3)–(4) (12, 13) |
+  | 8 | Segitiga & Segiempat, Bentuk-bentuk Kotak (14, 17) |
+  | 9 | Bilangan sampai 10.000, Pecahan (15, 16) |
+  - Dungeon 1 = peta 1–3 (bilangan & hitung bersusun), Dungeon 2 = peta 4–5 (ukur, waktu, uang), Dungeon 3 = peta 6–7 (perkalian), Dungeon 4 = peta 8–9 (bangun & pecahan). Lalu Kastil Ujian Kelas 2.
 
 ## 4. Level per kelas
 - Kelas 1: Normal selesai di Lv 15, Legenda di Lv 40.
