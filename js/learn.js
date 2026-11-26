@@ -129,6 +129,14 @@ MQ.Learn = (() => {
     uang: {title: 'Uang & Berbelanja', icon: '🪙', cards: [
       {t: 'Rp500 + Rp200 = Rp700. Jumlahkan angkanya seperti biasa.', v: () => V().hintNote('500 + 200 = 700')},
       {t: 'Kembalian = uang yang dibayar − harga. Bayar Rp1.000, harga Rp700 → kembali Rp300.', v: () => V().hintNote('1.000 − 700 = 300')}]},
+    kaliArti: {title: 'Arti Perkalian', icon: '🧺', cards: [
+      {t: '3 kelompok, tiap kelompok isinya 4. Ditulis 3 × 4, dibaca "tiga kali empat".', v: () => V().groups(3, 4)},
+      {t: '4 + 4 + 4 = 3 × 4 = 12. Perkalian = penjumlahan berulang.', v: () => V().hintSeq([4, 8], 12, 'Loncat 4-4')}]},
+    kaliTabel: {title: 'Perkalian 2, 5, 3, 4', icon: '✖️', cards: [
+      {t: 'Kali 2 = loncat 2: 2, 4, 6, 8, 10. Kali 5 = loncat 5: 5, 10, 15, 20.', v: () => V().hintSeq([5, 10, 15], 20, 'Loncat 5')},
+      {t: 'Urutan boleh ditukar: 3 × 4 = 4 × 3 = 12.', v: () => V().hintNote('3 × 4 = 4 × 3 = 12')}]},
+    kaliCerita: {title: 'Cerita Perkalian', icon: '📖', cards: [
+      {t: '"5 kotak, tiap kotak 3 kue." Banyak kotak × isi tiap kotak = 5 × 3 = 15 kue.', v: () => V().groups(5, 3)}]},
     teka: {title: 'Teka-teki Bilangan', icon: '📜', cards: [
       {t: '"Aku lebih dari 5 dan kurang dari 7." Bilangan yang ada di antara 5 dan 7 adalah 6.', v: () => V().hintLine(6, 6)},
       {t: 'Pola loncat: lihat berapa yang ditambah setiap kali. 2, 4, 6, 8 → loncat 2.', v: () => V().hintSeq([2, 4, 6, 8], 10, 'Setiap kali +2')}]}
@@ -150,7 +158,8 @@ MQ.Learn = (() => {
         {t: 'Pengurangan Bersusun', k: ['kurangCepat', 'kurangSusun'], max: 100},
         {t: 'Panjang, Air & Grafik', k: ['cm', 'air', 'data', 'turus'], max: 20},
         {t: 'Waktu & Uang', k: ['jam', 'durasi', 'uang'], max: 20},
-        ...['Perkalian 1', 'Perkalian 2',
+        {t: 'Perkalian 1', k: ['kaliArti', 'kaliTabel', 'kaliCerita'], max: 50},
+        ...['Perkalian 2',
             'Bangun Datar & Ruang', 'Bilangan 10.000 & Pecahan'].map(t => ({t}))] // Kelas 2: 9 bab = 9 peta (GDD §15)
   };
   let nav = {kelas: 0, bab: -1}; // posisi di daftar: kelas 0 = pilih kelas, bab -1 = pilih bab

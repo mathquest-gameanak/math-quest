@@ -246,7 +246,7 @@ MQ.WorldMap = (() => {
   const hash = n => { const v = Math.sin(n * 127.1) * 43758.5453; return v - Math.floor(v); };
   function drawAnim(ctx, t, m = 0) {
     const R = (col, a, b, w, h) => { ctx.fillStyle = col; ctx.fillRect(Math.round(a), Math.round(b), w, h); };
-    if (k2()) return drawClouds(ctx, t, m);
+    if (POS === POS2) return drawClouds(ctx, t, m); // ikut dunia yang sedang digambar (bukan S.kelas), agar tidak salah posisi
     // kilau & riak air danau
     for (let i = 0; i < 14; i++) {
       const on = Math.floor(t * 2 + i * 0.7) % 3 === 0, x = 30 + hash(i) * 100, y = 262 + hash(i + 9) * 24;

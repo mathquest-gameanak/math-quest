@@ -409,5 +409,8 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 ### 2026-11-27 — Kelas 2 Peta 5: Waktu & Uang
 - Gambar jam `V().clock(h, m)` (visuals.js). Soal `jam` (tepat, setengah, kelipatan 5 menit), `durasi` (lama jam, 1 jam = 60 menit, waktu sesudah), `uang` (jumlah rupiah, kembalian, menukar uang). Pilihan berbentuk teks lewat `textQ`. Peta 5 dibuka (monster sementara). Materi Kelas 2 Bab 5. SW `mq-v69`.
 
+### 2026-11-27 — Kelas 2 Peta 6: Perkalian 1
+- Soal `kaliArti` (gambar kelompok, penjumlahan berulang → perkalian), `kaliTabel` (tabel pilihan lewat `spec.tabel`; Peta 6: 2, 5, 3, 4; kadang urutan ditukar), `kaliCerita`. Peta 6 dibuka (monster sementara). Materi Kelas 2 Bab 6. Animasi peta mengikuti dunia yang digambar (`POS === POS2`). SW `mq-v70`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
