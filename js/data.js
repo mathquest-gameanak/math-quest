@@ -169,10 +169,11 @@ MQ.Data = {
      spec: {kinds: ['kaliTabel', 'kaliTabel', 'kaliTabel', 'kaliPola', 'kaliPola', 'kaliCerita'], tabel: [6, 7, 8, 9, 1]}, mobs: ['kelelawarDaun', 'lendirUngu'], boss: 'rajaMalam'},
     {id: 'k2bangun', kelas: 2, pace: 1.3, name: 'Bangun', icon: '🔺', lv: [27, 29], req: 'k2kali2', desc: 'Segitiga, segiempat, kubus & balok',
      spec: {kinds: ['segi', 'segi', 'segi', 'kotak', 'kotak']}, mobs: ['lendirBatu', 'jamurBatu'], boss: 'rajaBatu'},
-    {id: 'k2pecahan', kelas: 2, soon: true, name: 'Bilangan 10.000 & Pecahan', icon: '🍕', lv: [29, 30], req: 'k2bangun', desc: 'Bilangan sampai 10.000, pecahan'},
-    /* Ujian Naik Kelas 2: dibuka setelah 9 peta selesai dibuat (soon sampai saat itu). */
-    {id: 'k2kastil', kelas: 2, soon: true, name: 'Istana Ujian', icon: '🏯', lv: [30, 30], exam: true, reqAll: true, boss: 'naga',
-     desc: 'Ujian Naik Kelas 2: soal campuran dari semua peta'}
+    {id: 'k2pecahan', kelas: 2, pace: 1.4, name: 'Bilangan 10.000 & Pecahan', icon: '🍕', lv: [29, 30], req: 'k2bangun', desc: 'Bilangan sampai 10.000 & pecahan sederhana',
+     spec: {kinds: ['ribuan', 'ribuan', 'ribuan', 'pecahan', 'pecahan', 'pecahan']}, mobs: ['hantuKertas', 'kelelawarBuku'], boss: 'rajaTinta'},
+    /* Ujian Naik Kelas 2: 2 soal dari tiap peta (18 soal), lulus ≥ 75%. */
+    {id: 'k2kastil', kelas: 2, name: 'Istana Ujian', icon: '🏯', lv: [30, 30], exam: true, reqAll: true, boss: 'naga',
+     desc: 'Ujian Naik Kelas 2: 18 soal campuran dari semua peta'}
   ],
 
   /* Dungeon bercerita (dibuka dari menu 🏰 Dungeon, js/dungeon.js; tingkat ⭐/⭐⭐/⭐⭐⭐ di balance.js "tiers"):

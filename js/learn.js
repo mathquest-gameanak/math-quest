@@ -148,6 +148,13 @@ MQ.Learn = (() => {
     kotak: {title: 'Kubus & Balok', icon: '📦', cards: [
       {t: 'Kubus dan balok punya 6 sisi, 12 rusuk, dan 8 titik sudut.', v: () => V().shape('kubus')},
       {t: 'Sisi kubus berbentuk persegi. Sisi balok berbentuk persegi panjang.', v: () => V().hintNote('Kubus: persegi · Balok: persegi panjang')}]},
+    ribuan: {title: 'Bilangan sampai 10.000', icon: '🏦', cards: [
+      {t: '10 ratusan = 1 ribuan (1.000). 3 ribuan, 2 ratusan, 4 puluhan, 5 satuan = 3.245.', v: () => V().hintNote('3.000 + 200 + 40 + 5 = 3.245')},
+      {t: 'Membandingkan: lihat angka paling kiri dulu. 4.120 > 3.980 karena 4 ribuan lebih banyak dari 3 ribuan.', v: () => V().hintNote('4.120 > 3.980')}]},
+    pecahan: {title: 'Pecahan', icon: '🍕', cards: [
+      {t: 'Dibagi 2 sama besar, satu bagian = 1/2 (setengah).', v: () => V().frac(2, 1)},
+      {t: 'Dibagi 4 sama besar, satu bagian = 1/4 (seperempat). 3 bagian = 3/4.', v: () => V().frac(4, 3)},
+      {t: 'Setengah dari 10 = 10 dibagi 2 = 5. Seperempat dari 12 = 12 dibagi 4 = 3.', v: () => V().hintNote('½ dari 10 = 5')}]},
     teka: {title: 'Teka-teki Bilangan', icon: '📜', cards: [
       {t: '"Aku lebih dari 5 dan kurang dari 7." Bilangan yang ada di antara 5 dan 7 adalah 6.', v: () => V().hintLine(6, 6)},
       {t: 'Pola loncat: lihat berapa yang ditambah setiap kali. 2, 4, 6, 8 → loncat 2.', v: () => V().hintSeq([2, 4, 6, 8], 10, 'Setiap kali +2')}]}
@@ -172,7 +179,7 @@ MQ.Learn = (() => {
         {t: 'Perkalian 1', k: ['kaliArti', 'kaliTabel', 'kaliCerita'], max: 50},
         {t: 'Perkalian 2', k: ['kaliTabel', 'kaliPola', 'kaliCerita'], max: 90},
         {t: 'Bangun Datar & Ruang', k: ['segi', 'kotak'], max: 20},
-        ...['Bilangan 10.000 & Pecahan'].map(t => ({t}))] // Kelas 2: 9 bab = 9 peta (GDD §15)
+        {t: 'Bilangan 10.000 & Pecahan', k: ['ribuan', 'pecahan'], max: 20}] // Kelas 2: 9 bab = 9 peta (GDD §15)
   };
   let nav = {kelas: 0, bab: -1}; // posisi di daftar: kelas 0 = pilih kelas, bab -1 = pilih bab
   /** Batas angka latihan untuk jenis pelajaran (dari bab pertama yang memuatnya). */

@@ -418,11 +418,12 @@ MQ.WorldMap = (() => {
     // Cerita pembuka tempat ini (sekali saja), lalu bertarung
     const go = () => MQ.Cutscene.playOnce(`${p.id}-intro`, () => MQ.Battle.start(p));
     if (p.exam) {
+      const N = State.mainFields().length * 2, need = Math.ceil(N * 0.75); // sama dengan battle.js (2 soal per area, lulus 75%)
       if (heroOn()) return UI.overlay({icon: '📝', title: `Ujian ${MODES[mode()].short}`, btn: 'Mulai Ujian', btn2: 'Nanti', cb: go,
-        text: '12 soal dari semua area. Kali ini Raja Naga MENYERANG! Lulus jika benar minimal 9. ' +
-              (mode() === 1 ? 'Lulus = membuka tingkat Legenda ⭐⭐⭐.' : 'Ujian terberat di Kelas 1!')});
+        text: `${N} soal dari semua area. Kali ini Raja Naga MENYERANG! Lulus jika benar minimal ${need}. ` +
+              (mode() === 1 ? 'Lulus = membuka tingkat Legenda ⭐⭐⭐.' : `Ujian terberat di Kelas ${S.kelas}!`)});
       return UI.overlay({icon: '📝', title: 'Ujian Naik Kelas', btn: 'Mulai Ujian', btn2: 'Nanti', cb: go,
-        text: `12 soal dari semua area. Musuh tidak menyerang, jawab dengan tenang. Lulus jika benar minimal 9. Nilai terbaikmu: ${S.examBest}.`});
+        text: `${N} soal dari semua area. Musuh tidak menyerang, jawab dengan tenang. Lulus jika benar minimal ${need}.` + (S.kelas === 1 ? ` Nilai terbaikmu: ${S.examBest}.` : '')});
     }
     const hero = heroOn() && p.spec, M = MODES[hero ? mode() : 0], cfg = hero ? MQ.Calc.modeCfg(mode(), S.kelas) : null;
     const lv = p.lv ? ` Level ${MQ.Calc.storyLv(p.lv[0], cfg)}–${MQ.Calc.storyLv(p.lv[1] + 1, cfg)}.` : '';

@@ -418,5 +418,9 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 ### 2026-11-27 — Kelas 2 Peta 8: Bangun
 - Soal `segi` (sisi & titik sudut segitiga/persegi/persegi panjang, nama bangun dari gambar, ciri persegi) dan `kotak` (kubus & balok: 6 sisi, 12 rusuk, 8 titik sudut, bentuk sisinya). Peta 8 dibuka (monster sementara: monster batu). Materi Kelas 2 Bab 8. SW `mq-v72`.
 
+### 2026-11-27 — Kelas 2 Peta 9 + Istana Ujian
+- Soal `ribuan` (nilai tempat 4 angka, loncat 100/1.000, nilai angka, membandingkan) dan `pecahan` (gambar `V().frac(n, k)`; 1/2, 1/3, 1/4, 1/8 dst. tanpa pilihan senilai; setengah/seperempat dari). Peta 9 dibuka. Materi Kelas 2 Bab 9.
+- **Istana Ujian Kelas 2 dibuka**: 18 soal (2 per peta), lulus ≥ 14. Teks ujian di peta menghitung jumlah soal otomatis. `examBest` hanya untuk Ujian Kelas 1. SW `mq-v73`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

@@ -263,7 +263,15 @@ MQ.Vis = (() => {
       `<line x1="30" y1="30" x2="${hx}" y2="${hy}" stroke="#e43b44" stroke-width="4" stroke-linecap="round"/><circle cx="30" cy="30" r="2.5" fill="#1a1c2c"/></g>`, 'clock');
   }
 
-  return {clock, queue, groups, frameMix, tens20, hintMake10, shapeC, shapeRow, split, pieces, FRUITS, fruit, picto, tally, tallyTable,
+  /** Pecahan (Kelas 2): persegi panjang dibagi n bagian sama, k bagian diwarnai. */
+  function frac(n, k) {
+    const w = 60 / n;
+    let inner = '';
+    for (let i = 0; i < n; i++) inner += `<rect x="${2 + i * w}" y="2" width="${w}" height="24" fill="${i < k ? '#ef7d57' : '#f4f4f4'}" stroke="#1a1c2c" stroke-width="2"/>`;
+    return svg('0 0 64 28', inner, 'frac');
+  }
+
+  return {clock, frac, queue, groups, frameMix, tens20, hintMake10, shapeC, shapeRow, split, pieces, FRUITS, fruit, picto, tally, tallyTable,
           count, SHAPES, shape, COLORS, token, patternRow, pencils, ruler, lidi, story, bar, bond, tenFrame,
           hintAdd, hintSub, hintCompare, hintCount, hintTens, hintLine, hintRuler, hintBond, hintTen, hintBar, hintBar2, hintSeq, hintNote, hintEqual};
 })();

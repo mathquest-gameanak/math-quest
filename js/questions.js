@@ -571,6 +571,37 @@ MQ.Questions = (() => {
       () => V().hintNote(`${nama}: 6 sisi, 12 rusuk, 8 titik sudut. Sisi = bidang datar, rusuk = garis tepi, titik sudut = pojok.`));
   };
 
+  /* ===== KELAS 2 — Bab 9: Bilangan sampai 10.000 & pecahan ===== */
+  const ribu = n => n.toLocaleString('id-ID');
+  /** Bilangan 4 angka: nilai tempat ribuan, loncat 1.000/100, membandingkan. */
+  GEN.ribuan = () => {
+    const t = rand(0, 3);
+    if (t === 0) { const r = rand(1, 9), h = rand(0, 9), p = rand(0, 9), s = rand(0, 9), n = r * 1000 + h * 100 + p * 10 + s;
+      return hint(textQ('ribuan', `${r} ribuan, ${h} ratusan, ${p} puluhan, ${s} satuan`, `${r} ribuan, ${h} ratusan, ${p} puluhan, ${s} satuan. Bilangan berapa?`, ribu(n),
+        [ribu(r * 100 + h * 10 + p + s), ribu(n + 1000), ribu(r * 1000 + p * 100 + h * 10 + s), ribu(n + 100), ribu(n - 10 > 0 ? n - 10 : n + 10)]),
+        () => V().hintNote(`${r} ribuan = ${ribu(r * 1000)}, ${h} ratusan = ${h * 100}, ${p} puluhan = ${p * 10}, ${s} satuan. Jadi ${ribu(n)}.`)); }
+    if (t === 1) { const step = pick([1000, 100]), a = step === 1000 ? rand(1, 5) * 1000 : rand(10, 60) * 100, seq = [a, a + step, a + 2 * step], c = a + 3 * step;
+      return hint(textQ('ribuan', `${seq.map(ribu).join(', ')}, ?`, `Lanjutkan: ${seq.join(', ')}, lalu berapa?`, ribu(c), [ribu(c + step), ribu(c - step), ribu(c + (step === 1000 ? 100 : 1000)), ribu(c + 10)]),
+        () => V().hintNote(`Setiap kali loncat +${ribu(step)}.`)); }
+    if (t === 2) { const d = rand(1, 9), pos = rand(0, 3), n = [d * 1000 + rand(1, 999), rand(1, 9) * 1000 + d * 100 + rand(0, 99), rand(1, 9) * 1000 + rand(0, 9) * 100 + d * 10 + rand(0, 9), rand(1, 9) * 1000 + rand(0, 99) * 10 + d][pos];
+      const val = [1000, 100, 10, 1][pos] * d, digits = String(n);
+      if (digits.split('').filter(c => c === String(d)).length > 1) return GEN.ribuan();
+      return hint(textQ('ribuan', `Angka ${d} pada ${ribu(n)} bernilai?`, `Pada bilangan ${n}, angka ${d} bernilai berapa?`, ribu(val), [d, d * 10, d * 100, d * 1000].map(ribu)),
+        () => V().hintNote(`Angka ${d} ada di tempat ${['ribuan', 'ratusan', 'puluhan', 'satuan'][pos]}, jadi nilainya ${ribu(val)}.`)); }
+    const a = rand(1000, 9999), b = rand(0, 2) ? rand(1000, 9999) : a - (a % 1000) + rand(0, 999);
+    return signQ('ribuan', `${ribu(a)} ○ ${ribu(b)}`, `${a} dan ${b}. Pilih tanda yang benar.`, a, b, 'Bandingkan dari angka paling kiri (ribuan). Kalau sama, lihat ratusan, lalu puluhan.');
+  };
+  /** Pecahan sederhana: membaca gambar (½, ¼, ⅓, ⅛ ...) dan "setengah/seperempat dari". */
+  GEN.pecahan = () => {
+    const t = rand(0, 2);
+    if (t < 2) { const n = pick([2, 3, 4, 8]), k = n === 2 ? 1 : rand(1, n - 1), ans = `${k}/${n}`;
+      return hint(textQ('pecahan', 'Bagian berwarna?', `Gambar dibagi ${n} bagian sama besar. Yang berwarna berapa bagian?`, ans, [`${n}/${k}`, `${k}/${n + 1}`, `1/${n === 2 ? 4 : 2}`, `${n - k}/${n}`, `${k}/${n * 2}`].filter(f => { const [x, y] = f.split('/'); return x / y !== k / n; }), V().frac(n, k)), // tanpa pecahan senilai (2/4 = 1/2)
+        () => V().hintNote(`Dibagi ${n} bagian sama besar, yang berwarna ${k} bagian → ${k}/${n}.`)); }
+    const [nm, n] = pick([['Setengah', 2], ['Seperempat', 4]]), x = n * rand(1, n === 2 ? 9 : 5), c = x / n;
+    return hint(numQ('pecahan', `${nm} dari ${x} = ?`, `${nm} dari ${x} sama dengan berapa?`, c, [x - c, c * 2, c + 1].filter(v => v !== c), 1),
+      () => V().hintNote(`${nm} = dibagi ${n} sama banyak. ${x} dibagi ${n} = ${c}.`));
+  };
+
   /** Tokoh & benda untuk soal cerita (id = gambar MQ.Pix / MQ.Sprites). */
   const PEOPLE = [{id: 'kiki', n: 'Kiki'}, {id: 'momo', n: 'Momo'}, {id: 'kakek', n: 'Kakek'}, {id: 'kapten', n: 'Kapten'}];
   const THINGS = [{s: 'apple', n: 'apel', gone: 'dimakan'}, {s: 'star', n: 'bintang', gone: 'terbang'},
@@ -592,7 +623,7 @@ MQ.Questions = (() => {
                  pasangan: 'Pasangan bilangan', cerita: 'Soal cerita', teka: 'Teka-teki',
                  posisi: 'Bilangan urutan', berulang: 'Tambah berulang', keluarga: 'Hubungan + dan −', kelompok: 'Mengelompokkan bentuk',
                  susun: 'Menyusun bangun', belasan: 'Bilangan 11–20', dobel: 'Dobel', data: 'Diagram gambar', turus: 'Tabel turus',
-                 ratusan: 'Ratusan', nilai: 'Nilai tempat', lompat: 'Loncat 10 & 100', bersusun: 'Tambah bersusun', hitungCepat: 'Berhitung cepat', kurangSusun: 'Kurang bersusun', kurangCepat: 'Mengurang cepat', cm: 'Panjang (cm & m)', air: 'Banyaknya air (L & dL)', jam: 'Membaca jam', durasi: 'Lama waktu', uang: 'Uang', kaliArti: 'Arti perkalian', kaliTabel: 'Perkalian', kaliCerita: 'Cerita perkalian', kaliPola: 'Pola perkalian', segi: 'Segitiga & segiempat', kotak: 'Kubus & balok'};
+                 ratusan: 'Ratusan', nilai: 'Nilai tempat', lompat: 'Loncat 10 & 100', bersusun: 'Tambah bersusun', hitungCepat: 'Berhitung cepat', kurangSusun: 'Kurang bersusun', kurangCepat: 'Mengurang cepat', cm: 'Panjang (cm & m)', air: 'Banyaknya air (L & dL)', jam: 'Membaca jam', durasi: 'Lama waktu', uang: 'Uang', kaliArti: 'Arti perkalian', kaliTabel: 'Perkalian', kaliCerita: 'Cerita perkalian', kaliPola: 'Pola perkalian', segi: 'Segitiga & segiempat', kotak: 'Kubus & balok', ribuan: 'Bilangan sampai 10.000', pecahan: 'Pecahan'};
 
   return {make, GEN, NAMES, maxFor, specForLevel, nearChoices};
 })();

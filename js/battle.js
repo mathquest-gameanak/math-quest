@@ -362,7 +362,7 @@ MQ.Battle = (() => {
   }
 
   /* ===== Soal ===== */
-  /** Soal ujian: 2 soal dari setiap area Kelas 1, berurutan dari yang termudah. */
+  /** Soal ujian: 2 soal dari setiap area kelas yang sedang dimainkan, berurutan dari yang termudah. */
   function makeExam() {
     return Data.fields.filter(f => f.spec).flatMap(f => [Questions.make(f.spec), Questions.make(f.spec)]);
   }
@@ -618,7 +618,7 @@ MQ.Battle = (() => {
     if (B.exam.i < B.exam.qs.length) return nextQuestion();
     const {ok, qs, wrong} = B.exam, N = qs.length, need = Math.ceil(N * 0.75);
     const pass = ok >= need;
-    S.examBest = Math.max(S.examBest, ok);
+    if (!B.field.kelas) S.examBest = Math.max(S.examBest, ok); // nilai terbaik Ujian Kelas 1
     if (!pass) {
       State.save();
       const weak = Object.entries(wrong).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k]) => Questions.NAMES[k] || k).join(', ');
