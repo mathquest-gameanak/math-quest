@@ -75,8 +75,9 @@ MQ.Battle = (() => {
     UI.fillXp(els.xpFill, els.xpText);
     const pots = State.count('ramuan'); // tombol ramuan: tampil jika punya (bukan saat ujian), aktif jika HP belum penuh
     els.btnPotion.hidden = pots === 0 || B.mode === 'exam';
-    els.potionCount.textContent = '×' + pots;
-    els.btnPotion.disabled = S.hp >= max;
+    const left = Math.max(0, BAL.combat.potionLimit - (B.potUsed || 0));
+    els.potionCount.textContent = `×${pots} · ${left}/${BAL.combat.potionLimit}`; // punya × · sisa boleh diminum
+    els.btnPotion.disabled = S.hp >= max || left <= 0;
     els.combo.textContent = B.combo >= BAL.combat.comboLabel ? `🔥 KOMBO x${B.combo}!` : B.combo > 0 ? `Beruntun ${B.combo}` : '';
     if (B.mode === 'exam') {
       els.count.textContent = `📝 Soal ${Math.min(B.exam.i + 1, B.exam.qs.length)} dari ${B.exam.qs.length} · Benar ${B.exam.ok}`;
@@ -234,7 +235,7 @@ MQ.Battle = (() => {
   function start(place, opt = {}) {
     if (MQ.Learn && !MQ.Learn.gate()) return; // pahlawan masih istirahat setelah pingsan
     if (MQ.Daily && !MQ.Daily.gate()) return; // batas main harian / jam tidur dari orang tua
-    B.run++; B.wrongs = {};
+    B.run++; B.wrongs = {}; B.potUsed = 0; // ramuan yang sudah diminum di pertarungan ini
     B.field = place; B.combo = 0; B.q = null; B.last = ''; B.room = 0;
     B.mode = place.exam ? 'exam' : place.dungeon ? 'dungeon' : place.id === 'arena' ? 'arena' : 'field';
     B.tier = B.mode === 'dungeon' ? (opt.tier || 0) : 0;
@@ -650,6 +651,8 @@ MQ.Battle = (() => {
   /* ===== Ramuan Penyembuh: HP penuh ===== */
   els.btnPotion.addEventListener('click', () => {
     if (!State.count('ramuan') || S.hp >= State.maxHp() || S.hp <= 0) return;
+    if ((B.potUsed || 0) >= BAL.combat.potionLimit) { showFloat(`Batas ${BAL.combat.potionLimit} ramuan per pertarungan`, 'loot', 0, 'hero'); return; }
+    B.potUsed = (B.potUsed || 0) + 1;
     State.removeItem('ramuan');
     const heal = State.maxHp() - S.hp;
     S.hp = State.maxHp();

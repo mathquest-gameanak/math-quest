@@ -108,13 +108,18 @@ MQ.Quests = (() => {
     $('questBonus').innerHTML = `<div class="panel bonusBox${ready ? ' ready' : ''}"><img src="${MQ.Pix.url(S.daily.bonus ? 'petiBuka' : 'peti', 3)}" alt="">` +
       `<div class="sBody"><b>Peti Bonus Harian</b><small>${S.daily.bonus ? 'Sudah dibuka. Datang lagi besok!' : `Ambil hadiah ketiga misi (${n}/3): ⭐ ${BONUS.stars} + ${Data.items[bonusMat()].name} + 🪙 ${BONUS.coins}`}</small></div>` +
       `<button class="sBtn" id="qBonus" ${ready ? '' : 'disabled'}>${S.daily.bonus ? '✓' : 'Buka'}</button></div>`;
-    $('starNow').textContent = `Punya ⭐ ${S.starTokens}`;
+    $('questToStar').innerHTML = `⭐ Kamu punya <b>${S.starTokens}</b> Bintang Misi · <u>Tukar di Toko ▶</u>`;
+  };
+  /** Daftar Tukar Bintang (tab ⭐ Bintang di Toko). */
+  function renderStars() {
+    $('starNow').textContent = `Kamu punya ⭐ ${S.starTokens}`;
     $('starShop').innerHTML = STAR_SHOP.map(s => {
       const own = s.once && owned(s), can = !own && S.starTokens >= s.price;
       return `<div class="panel shopItem starItem">${starImg(s)}<div class="sBody"><b>${starName(s)}</b><small>${s.text}</small></div>` +
         `<button class="sBtn" data-star="${s.id}" ${can ? '' : 'disabled'}>${own ? '✓ Punya' : `⭐ ${s.price}`}</button></div>`;
     }).join('');
-  };
+  }
+  $('questToStar').addEventListener('click', () => { MQ.Audio.sfx.click(); MQ.Shop.openTab('star'); });
   $('questList').addEventListener('click', e => {
     const b = e.target.closest('[data-q]');
     if (!b) return;
@@ -148,10 +153,10 @@ MQ.Quests = (() => {
     if (s.item) State.addItem(s.item, 1);
     if (s.costume) { S.costumes.push(s.costume); S.hero.costume = s.costume; }
     if (s.pet || s.once) S.starBuys.push(s.id);
-    State.save(); MQ.Audio.sfx.buy(); UI.renderers.quests();
+    State.save(); MQ.Audio.sfx.buy(); renderStars(); UI.renderers.shop();
     const extra = s.item === 'fragmenBintang' ? ` Kamu punya ${State.count('fragmenBintang')} dari 10 fragmen.` : s.pet ? ' Lihat di 🐾 Koleksi Teman: adopsi saat semua temanmu sudah dewasa.' : s.costume ? ' Langsung dipakai!' : '';
     UI.overlay({img: starImg(s).replace('stImg', 'iconBig'), title: `${starName(s)}!`, text: `Ditukar dengan ⭐ ${s.price}.${extra}`});
   });
 
-  return {ensure, track, claimable};
+  return {ensure, track, claimable, renderStars};
 })();

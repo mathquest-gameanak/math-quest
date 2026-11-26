@@ -67,8 +67,11 @@ MQ.Shop = (() => {
   UI.renderers.shop = () => {
     $('shopCoins').textContent = `🪙 ${S.coins} koin`;
     document.querySelectorAll('.shopTabs [data-sh]').forEach(b => b.classList.toggle('on', b.dataset.sh === shopTab));
-    $('fashionList').hidden = shopTab !== 'fashion'; $('shopList').hidden = shopTab === 'fashion'; $('shopFilter').hidden = shopTab === 'fashion';
+    $('fashionList').hidden = shopTab !== 'fashion'; $('starPanel').hidden = shopTab !== 'star';
+    $('shopList').hidden = shopTab !== 'item'; $('shopFilter').hidden = shopTab !== 'item';
+    document.querySelector('#scr-shop > .note').hidden = shopTab === 'star';
     if (shopTab === 'fashion') return renderFashion();
+    if (shopTab === 'star') return MQ.Quests.renderStars();
     const keep = UI.filterBar($('shopFilter'), 'shop', Data.shop, UI.renderers.shop);
     $('shopList').innerHTML = Data.shop.filter(keep).map(id => card(id, `<span class="price">🪙 ${items[id].price}</span>`, 'Beli',
       isGear(items[id]) && State.count(id) > 0)).join('');
@@ -197,5 +200,5 @@ MQ.Shop = (() => {
     }});
   });
 
-  return {};
+  return {openTab(t) { shopTab = t; UI.show('shop'); }};
 })();

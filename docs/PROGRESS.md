@@ -372,5 +372,9 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - ⏸ Tombol jeda di HUD pertarungan: membuka jendela "Jeda" (waktu musuh & KILAT berhenti karena jendela pesan terbuka), soal & jawaban diburamkan (`#scr-battle.paused #qa`).
 - Ramuan Penyembuh 5 → 15 koin (anak membeli banyak & minum tiap hampir kalah). SW `mq-v57`.
 
+### 2026-11-26 — Batas ramuan & Tukar Bintang di Toko
+- Ramuan Penyembuh 10 koin, paling banyak 5× per pertarungan (`combat.potionLimit`); tombol ramuan menunjukkan "×punya · sisa/5", habis = tombol mati + pesan.
+- Tukar Bintang pindah ke Toko (tab ⭐ Bintang; `MQ.Quests.renderStars`, `MQ.Shop.openTab`); layar Misi menampilkan jumlah ⭐ + tautan "Tukar di Toko". SW `mq-v58`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

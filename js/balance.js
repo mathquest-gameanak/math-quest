@@ -65,7 +65,8 @@ MQ.Balance = {
     critMul: 2,                  // damage kritikal dasar (× 2 = dobel) — tambahan hanya dari equipment ("critDmg", dalam %)
     fastCritSec: 2,              // jawab benar dalam ≤ 2 detik = pasti kritikal ("KILAT!")
     fastCritBy: [2, 1.5, 1.2],   // batas KILAT per tingkat: [Normal / dungeon ⭐, Pahlawan / ⭐⭐, Legenda / ⭐⭐⭐] (2026-11-26)
-    critMulMax: 2.5,             // damage kritikal paling tinggi ×2,5 (walau equipment menambah lebih)
+    critMulMax: 2.5,
+    potionLimit: 5,              // Ramuan Penyembuh paling banyak 5× per pertarungan (satu jalan area / dungeon / ujian)             // damage kritikal paling tinggi ×2,5 (walau equipment menambah lebih)
     comboLabel: 3,               // kombo beruntun mulai ditampilkan dengan 🔥 (hanya hiasan & misi)
     healOnKillPct: 20            // HP pulih (%) setiap mengalahkan monster (bukan di dungeon)
   },

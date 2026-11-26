@@ -249,19 +249,19 @@
     <p class="note">Setiap misi memberi koin & ⭐ Bintang Misi. Selesaikan ketiganya untuk Peti Bonus! Misi baru setiap hari.</p>
     <div id="questList" class="list"></div>
     <div id="questBonus"></div>
-    <div class="panel box"><h3>⭐ Tukar Bintang <small id="starNow" class="pts"></small></h3>
-      <p class="note">Hadiah istimewa yang tidak dijual di Toko. Tanpa undian: yang kamu pilih, itu yang kamu dapat.</p>
-      <div id="starShop" class="list"></div></div>
+    <button id="questToStar" class="panel starLink"></button>
   </section>
 
   <!-- ===== TOKO ===== -->
   <section id="scr-shop" class="screen">
     <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Toko</h2><span id="shopCoins" class="coins"></span></header>
     <p class="note">Bayar dengan menjawab soal uang kembalian!</p>
-    <div class="smithTabs shopTabs"><button class="sBtn small on" data-sh="item">🧪 Barang</button><button class="sBtn small" data-sh="fashion">👗 Fashion</button></div>
+    <div class="smithTabs shopTabs"><button class="sBtn small on" data-sh="item">🧪 Barang</button><button class="sBtn small" data-sh="fashion">👗 Fashion</button><button class="sBtn small" data-sh="star">⭐ Bintang</button></div>
     <div id="shopFilter" class="filterBar"></div>
     <div id="shopList" class="list"></div>
     <div id="fashionList" class="fashionGrid" hidden></div>
+    <div id="starPanel" hidden><p class="note starNote">Tukar ⭐ Bintang Misi dengan hadiah istimewa. Tanpa undian: yang kamu pilih, itu yang kamu dapat.
+      <b id="starNow"></b></p><div id="starShop" class="list"></div></div>
   </section>
 
   <!-- ===== PANDAI BESI ===== -->
