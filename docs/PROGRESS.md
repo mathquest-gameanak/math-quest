@@ -346,5 +346,9 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 ### 2026-11-26 — Istirahat pingsan 2 menit
 - `knockout.lockMin` 5 → 2 menit (tetap wajib menyelesaikan pelajaran tentang soal yang salah). Spanduk istirahat di beranda dipindah ke atas papan Bangun Desa (sebelumnya bertumpuk). SW `mq-v52`.
 
+### 2026-11-26 — Perbaikan tab Tingkatkan & jalur titik
+- Pandai Besi → Tingkatkan tidak bisa dibuka: tab Toko (baru) memakai kelas `.smithTabs` juga & ada lebih dulu di halaman, sehingga `querySelector('.smithTabs')` memasang tombol ke Toko. Sekarang `#scr-smith .smithTabs`.
+- Jalur titik (urutan musuh) tertutup HUD saat baris KOMBO muncul: baris kecil HUD selalu setinggi 16px + `refitTop()` (ResizeObserver HUD) memperbarui `--freeTop`. SW `mq-v53`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

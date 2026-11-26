@@ -2,7 +2,7 @@
    Strategi: ambil dari simpanan dulu (cepat & offline), sambil diam-diam mengambil versi terbaru dari internet
    untuk dipakai saat game dibuka berikutnya.
    PENTING: naikkan VERSION setiap kali file game diubah, supaya HP mengganti simpanan lama. */
-const VERSION = 'mq-v52';
+const VERSION = 'mq-v53';
 const FILES = [
   './', './index.html', './manifest.webmanifest', './css/style.css', './css/skin-kenney.css',
   './js/questions.js', './js/save.js', './js/audio.js', './js/sprites.js', './js/visuals.js', './js/data.js',

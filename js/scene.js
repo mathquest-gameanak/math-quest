@@ -88,7 +88,16 @@ MQ.Scene = (() => {
     GYt = groundFor(bot);
   }
   addEventListener('resize', () => resize(true));
-  if (window.ResizeObserver) { new ResizeObserver(() => resize(false)).observe($('arena')); new ResizeObserver(() => refit()).observe($('qa') || $('question')); }
+  /** HUD atas berubah tinggi (mis. baris KOMBO muncul): batas atas ruang dunia ikut turun → jalur titik & papan nama tidak tertutup. */
+  function refitTop() {
+    const a = $('arena'), hud = document.querySelector('#scr-battle .hud');
+    if (!freeBot || !a.clientHeight || !hud || !hud.offsetHeight) return;
+    const md = $('modes'), top = Math.max(hud.getBoundingClientRect().bottom, md && md.offsetHeight ? md.getBoundingClientRect().bottom : 0) - a.getBoundingClientRect().top;
+    if (Math.abs(top - freeTop) < 2) return;
+    freeTop = top; a.style.setProperty('--freeTop', Math.round(top) + 'px');
+  }
+  if (window.ResizeObserver) { new ResizeObserver(() => resize(false)).observe($('arena')); new ResizeObserver(() => refit()).observe($('qa') || $('question'));
+    new ResizeObserver(() => refitTop()).observe(document.querySelector('#scr-battle .hud')); }
 
   /* ===== Gambar dasar ===== */
   const hash = n => { const x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); };

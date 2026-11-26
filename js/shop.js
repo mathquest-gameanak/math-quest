@@ -134,7 +134,7 @@ MQ.Shop = (() => {
   /* ===== Pandai Besi: Tingkatkan (+1 sampai +10; mulai +6 efeknya dobel) =====
      Biaya & efek di balance.js "upgrade". Soal: nilai efek utama sekarang + tambahan = ? */
   let smithTab = 'make';
-  document.querySelector('.smithTabs').addEventListener('click', e => {
+  document.querySelector('#scr-smith .smithTabs').addEventListener('click', e => { // (Toko juga punya .smithTabs)
     const b = e.target.closest('[data-st]');
     if (!b) return;
     smithTab = b.dataset.st; MQ.Audio.sfx.click(); UI.renderers.smith();
