@@ -150,6 +150,21 @@ MQ.Data = {
      desc: 'Ujian Naik Kelas: 12 soal campuran'}
   ],
 
+  /* Dunia Kelas 2 (GDD §15). Belum aktif: dipakai lewat MQ.Data.useKelas(2) setelah peta Kelas 2 dibuat.
+     Monster masih sementara (pakai monster Kelas 1) sampai monster Kelas 2 dibuat. */
+  fieldsKelas2: [
+    {id: 'k2ribu', kelas: 2, pace: 1.3, name: 'Padang Seribu', icon: '💯', lv: [16, 17], desc: 'Bilangan sampai 1.000: ratusan, nilai tempat, loncat & urutan',
+     spec: {kinds: ['ratusan', 'ratusan', 'nilai', 'lompat', 'banding', 'urutan'], max: 1000}, mobs: ['lendir', 'lendirAir'], mini: 'lendirBunga', boss: 'rajaLendir'},
+    {id: 'k2susun', kelas: 2, soon: true, name: 'Berhitung & Jumlah Bersusun', icon: '➕', lv: [17, 19], req: 'k2ribu', desc: 'Cara berhitung, penjumlahan bersusun'},
+    {id: 'k2kurang', kelas: 2, soon: true, name: 'Kurang Bersusun', icon: '➖', lv: [19, 21], req: 'k2susun', desc: 'Pengurangan bersusun, tambah & kurang'},
+    {id: 'k2ukur', kelas: 2, soon: true, name: 'Ukur & Data', icon: '📏', lv: [21, 23], req: 'k2kurang', desc: 'Panjang, banyaknya air, tabel & grafik'},
+    {id: 'k2waktu', kelas: 2, soon: true, name: 'Waktu & Uang', icon: '⏰', lv: [23, 24], req: 'k2ukur', desc: 'Waktu, durasi, berbelanja'},
+    {id: 'k2kali1', kelas: 2, soon: true, name: 'Perkalian 1', icon: '✖️', lv: [24, 26], req: 'k2waktu', desc: 'Perkalian (1)–(2)'},
+    {id: 'k2kali2', kelas: 2, soon: true, name: 'Perkalian 2', icon: '✖️', lv: [26, 27], req: 'k2kali1', desc: 'Perkalian (3)–(4)'},
+    {id: 'k2bangun', kelas: 2, soon: true, name: 'Bangun', icon: '🔺', lv: [27, 29], req: 'k2kali2', desc: 'Segitiga, segiempat, bentuk kotak'},
+    {id: 'k2pecahan', kelas: 2, soon: true, name: 'Bilangan 10.000 & Pecahan', icon: '🍕', lv: [29, 30], req: 'k2bangun', desc: 'Bilangan sampai 10.000, pecahan'}
+  ],
+
   /* Dungeon bercerita (dibuka dari menu 🏰 Dungeon, js/dungeon.js; tingkat ⭐/⭐⭐/⭐⭐⭐ di balance.js "tiers"):
      rooms ruang beruntun, HP tidak pulih; ruang keyRoom = monster kunci (key), ruang terakhir = bos, lalu peti.
      Cerita: adegan "<id>-intro", "<id>-key", "<id>-end" di story.js (tampil sekali). Bisa diulang untuk latihan & XP. */
@@ -172,3 +187,8 @@ MQ.Data = {
   arena: {id: 'arena', name: 'Arena Latihan', icon: '🎯', desc: 'Latihan bebas: pilih jenis soal',
           mobs: ['lendir', 'kelelawar', 'jamur'], boss: 'naga'}
 };
+
+/* Dunia per kelas: fields/dungeons yang aktif mengikuti kelas yang sedang dimainkan (S.kelas). */
+MQ.Data.byKelas = {1: {fields: MQ.Data.fields, dungeons: MQ.Data.dungeons}, 2: {fields: MQ.Data.fieldsKelas2, dungeons: []}};
+/** Ganti dunia aktif. Kelas yang belum ada → Kelas 1. */
+MQ.Data.useKelas = k => { const w = MQ.Data.byKelas[k] || MQ.Data.byKelas[1]; MQ.Data.fields = w.fields; MQ.Data.dungeons = w.dungeons; return MQ.Data.byKelas[k] ? k : 1; };

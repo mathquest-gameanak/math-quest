@@ -6,8 +6,8 @@ window.MQ = window.MQ || {};
 
 MQ.Save = (() => {
   const KEY = 'mathQuest.v1'; // nama kunci tetap; versi format ada di dalam data (field v)
-  const VERSION = 11; // v11: + Mode Legenda (storyMode), tingkat equipment. v10: + bintang dungeon, Mode Pahlawan.          // v1: level/xp/monsters/mode. v2: + area selesai, kill per field, statistik. v3: + koin, tas, equipment. v4: + kelas, ujian, misi harian. v5: + poin status (HP/ATK/DEF). v6: + catatan harian, pengaturan. v7: + penampilan pahlawan. v8: + cerita (adegan yang sudah ditonton). v9: + Buku Monster, medali, kostum
-  const MODES = ['campur', 'tambah', 'kurang', 'kali'];
+  const VERSION = 12; // v12: + kelas (dunia kelas yang sedang dimainkan). v11: + Mode Legenda (storyMode), tingkat equipment. v10: + bintang dungeon, Mode Pahlawan.          // v1: level/xp/monsters/mode. v2: + area selesai, kill per field, statistik. v3: + koin, tas, equipment. v4: + kelas, ujian, misi harian. v5: + poin status (HP/ATK/DEF). v6: + catatan harian, pengaturan. v7: + penampilan pahlawan. v8: + cerita (adegan yang sudah ditonton). v9: + Buku Monster, medali, kostum
+  const MODES = ['campur', 'tambah', 'kurang', 'kali', 'seribu'];
   const OPS = ['tambah', 'kurang', 'kali'];
   const num = (v, def, min) => (Number.isFinite(v) && v >= min ? Math.floor(v) : def);
   const vol01 = (v, def) => (Number.isFinite(v) && v >= 0 && v <= 1 ? v : def);
@@ -96,7 +96,8 @@ MQ.Save = (() => {
         return {bricks: d.village ? num(v.bricks, 0, 0) : start, built: Array.isArray(v.built) ? v.built.filter(x => typeof x === 'string') : []}; })(),
       extra: d.extra && typeof d.extra === 'object' && typeof d.extra.date === 'string' ? {date: d.extra.date, min: num(d.extra.min, 0, 0)} : null,
       alloc, points,
-      grade: num(d.grade, 1, 1),         // kelas saat ini (2 = lulus Kelas 1)
+      grade: num(d.grade, 1, 1),         // kelas tertinggi yang terbuka (2 = lulus Kelas 1)
+      kelas: Math.min(num(d.kelas, 1, 1), 6), // dunia kelas yang sedang dimainkan (peta/dungeon)
       examBest: num(d.examBest, 0, 0),   // jawaban benar terbanyak di ujian
       daily: d.daily && typeof d.daily === 'object' ? d.daily : null, // misi harian (divalidasi di quests.js)
       coins: num(d.coins, 0, 0),
@@ -125,7 +126,7 @@ MQ.Save = (() => {
       localStorage.setItem(KEY, JSON.stringify({
         v: VERSION, level: s.level, xp: s.xp, monsters: s.monsters, mode: s.mode,
         cleared: s.cleared, fieldKills: s.fieldKills, bestCombo: s.bestCombo, stats: s.stats,
-        coins: s.coins, inv: s.inv, equip: s.equip, grade: s.grade, examBest: s.examBest, daily: s.daily,
+        coins: s.coins, inv: s.inv, equip: s.equip, grade: s.grade, kelas: s.kelas, examBest: s.examBest, daily: s.daily,
         alloc: s.alloc, points: s.points, settings: s.settings, stamps: s.stamps, weekClaims: s.weekClaims, outfits: s.outfits, lessonsDone: s.lessonsDone, starTokens: s.starTokens, starBuys: s.starBuys, allowance: s.allowance, allowancePending: s.allowancePending, pets: s.pets, village: s.village, dayParty: s.dayParty, extra: s.extra, days: pruneDays(s.days), hero: s.hero, story: s.story,
         bestiary: s.bestiary, medals: s.medals, costumes: s.costumes, kilat: s.kilat, crafted: s.crafted,
         dungeonStars: s.dungeonStars, storyMode: s.storyMode, heroCleared: s.heroCleared, legendCleared: s.legendCleared, upgrades: s.upgrades, rest: s.rest

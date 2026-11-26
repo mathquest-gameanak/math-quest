@@ -35,6 +35,7 @@ MQ.Questions = (() => {
 
   /** Spesifikasi Arena Latihan: mengikuti level pemain & mode. mode: campur | tambah | kurang | kali */
   function specForLevel(level, mode) {
+    if (mode === 'seribu') return {kinds: ['ratusan', 'nilai', 'lompat', 'banding', 'urutan'], max: 1000}; // Kelas 2 Bab 1
     const kinds = mode !== 'campur' ? [mode] : level >= 3 ? ['tambah', 'kurang', 'kali'] : ['tambah', 'kurang'];
     return {kinds, max: maxFor(level), mulA: Math.min(10, level + 1), mulB: level < 3 ? 5 : 10};
   }
@@ -153,8 +154,8 @@ MQ.Questions = (() => {
     },
     /** Urutan bilangan: sesudah, sebelum, di antara */
     urutan(s) {
-      const n = rand(2, Math.min(99, s.max) - 1), type = rand(0, 2);
-      const line = ans => () => V().hintLine(n, ans);
+      const n = rand(2, Math.min(s.max > 100 ? 999 : 99, s.max) - 1), type = rand(0, 2);
+      const line = ans => (n > 100 ? false : () => V().hintLine(n, ans));
       if (type === 0) return hint(numQ('urutan', `${n}, ?`, `Bilangan sesudah ${n} adalah?`, n + 1, [n + 10, n - 1]), line(n + 1));
       if (type === 1) return hint(numQ('urutan', `?, ${n}`, `Bilangan sebelum ${n} adalah?`, n - 1, [n - 10, n + 1].filter(v => v >= 0)), line(n - 1));
       return hint(numQ('urutan', `${n - 1}, ?, ${n + 1}`, `Bilangan di antara ${n - 1} dan ${n + 1} adalah?`, n, [n + 10, n - 10].filter(v => v >= 0)), line(n));
@@ -353,6 +354,34 @@ MQ.Questions = (() => {
       () => V().hintNote(`Satu ikat turus = 5. ${N}: ${n}`));
   };
 
+  /* ===== KELAS 2 — Bab 1: Bilangan sampai 1.000 ===== */
+  /** Ratusan, puluhan, satuan → bilangan (blok 100 / 10 / 1). */
+  GEN.ratusan = () => {
+    const r = rand(1, 9), p = rand(0, 9), s = rand(0, 9), n = r * 100 + p * 10 + s;
+    const salah = [r * 100 + s * 10 + p, r * 10 + p + s, n + 100, n - 10].filter(v => v !== n && v > 0);
+    return hint(numQ('ratusan', `${r} ratusan, ${p} puluhan, ${s} satuan`, `${r} ratusan, ${p} puluhan, dan ${s} satuan. Bilangan berapa?`, n, salah, 1),
+      () => V().hintNote(`${r} ratusan = ${r * 100}, ${p} puluhan = ${p * 10}, ${s} satuan = ${s}. Jadi ${r * 100} + ${p * 10} + ${s} = ${n}`));
+  };
+  /** Nilai tempat: angka yang diberi tanda bernilai berapa? */
+  GEN.nilai = () => {
+    let r = rand(1, 9), p = rand(1, 9), s = rand(1, 9);
+    while (p === r) p = rand(1, 9);
+    while (s === r || s === p) s = rand(1, 9);
+    const n = r * 100 + p * 10 + s, pos = rand(0, 2), d = [r, p, s][pos], ans = d * [100, 10, 1][pos];
+    const nama = ['ratusan', 'puluhan', 'satuan'][pos]; // angka dibuat berbeda semua, jadi tidak ambigu
+    const choices = shuffle([d, d * 10, d * 100, n].filter((v, i, a) => a.indexOf(v) === i)).map(v => ({v: String(v), html: String(v)}));
+    return hint({kind: 'nilai', text: `Angka ${d} pada ${n} bernilai?`, speak: `Pada bilangan ${n}, angka ${d} bernilai berapa?`, ans: String(ans), choices, cols: 2},
+      () => V().hintNote(`Angka ${d} ada di tempat ${nama}, jadi nilainya ${ans}.`));
+  };
+  /** Loncat 10 atau 100 (maju/mundur) sampai 1.000. */
+  GEN.lompat = s => {
+    const step = pick([10, 100, 10, 5, 2]), back = rand(0, 2) === 0, max = s.max || 1000;
+    const a = step === 100 ? rand(1, 5) * 100 + pick([0, 0, rand(1, 9) * 10]) : rand(10, Math.floor((max - 5 * step) / step)) * step;
+    const seq = [0, 1, 2].map(i => (back ? a + (3 - i) * step : a + i * step)), ans = back ? a : a + 3 * step;
+    return hint(numQ('lompat', `${seq.join(', ')}, ?`, `Lanjutkan: ${seq.join(', ')}, lalu berapa?`, ans, [ans + (back ? step : -step), ans + 1, ans - 1], 0),
+      () => V().hintSeq(seq, ans, `Setiap kali ${back ? 'mundur −' : 'loncat +'}${step}`));
+  };
+
   /** Tokoh & benda untuk soal cerita (id = gambar MQ.Pix / MQ.Sprites). */
   const PEOPLE = [{id: 'kiki', n: 'Kiki'}, {id: 'momo', n: 'Momo'}, {id: 'kakek', n: 'Kakek'}, {id: 'kapten', n: 'Kapten'}];
   const THINGS = [{s: 'apple', n: 'apel', gone: 'dimakan'}, {s: 'star', n: 'bintang', gone: 'terbang'},
@@ -373,7 +402,8 @@ MQ.Questions = (() => {
                  bentuk: 'Bentuk', pola: 'Pola', panjang: 'Panjang', ukur: 'Mengukur', puluhan: 'Puluhan', urutan: 'Urutan',
                  pasangan: 'Pasangan bilangan', cerita: 'Soal cerita', teka: 'Teka-teki',
                  posisi: 'Bilangan urutan', berulang: 'Tambah berulang', keluarga: 'Hubungan + dan −', kelompok: 'Mengelompokkan bentuk',
-                 susun: 'Menyusun bangun', belasan: 'Bilangan 11–20', dobel: 'Dobel', data: 'Diagram gambar', turus: 'Tabel turus'};
+                 susun: 'Menyusun bangun', belasan: 'Bilangan 11–20', dobel: 'Dobel', data: 'Diagram gambar', turus: 'Tabel turus',
+                 ratusan: 'Ratusan', nilai: 'Nilai tempat', lompat: 'Loncat 10 & 100'};
 
   return {make, GEN, NAMES, maxFor, specForLevel, nearChoices};
 })();

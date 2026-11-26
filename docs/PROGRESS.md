@@ -379,5 +379,9 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 ### 2026-11-27 — Pertahanan monster & poin Pertahanan
 - 1 poin Pertahanan = −1 damage (dulu 2 poin). Monster batu: `tahan` 0,7 (damage diterima), `hpMul` 0,85, power 1,5; teks "🛡️ Keras!". SW `mq-v59`.
 
+### 2026-11-27 — Fondasi Kelas 2 (tahap 1)
+- Soal Kelas 2 Bab 1 (Bilangan sampai 1.000): `ratusan`, `nilai` (nilai tempat), `lompat` (loncat 2/5/10/100). `urutan` & `banding` sampai 1.000. Bisa dicoba di Arena Latihan, tombol **1.000** (mode `seribu`).
+- `S.kelas` (dunia kelas yang dimainkan, save v12). `Data.fieldsKelas2` (9 peta, peta 1 berisi, sisanya `soon`), `Data.byKelas` + `Data.useKelas(k)` belum dipanggil: menunggu peta Kelas 2 (tahap 3). SW `mq-v60`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
