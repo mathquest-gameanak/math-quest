@@ -312,5 +312,9 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 ### 2026-11-26 — Filter kategori item
 - `UI.filterBar` (screens.js): bilah tombol Semua / Senjata / Pelindung / Aksesori / Ramuan / Bahan (ikon item), hanya kategori yang ada; pilihan diingat per layar. Dipakai di Tas, Toko, Pandai Besi (Buat & Tingkatkan terpisah). Catatan Tingkatkan sekarang "+10". SW `mq-v45`.
 
+### 2026-11-26 — Tombol Petualangan & halaman Karakter baru
+- Beranda: tombol "AYO BERTUALANG!" merah menyala (kilau menyapu, memantul, panah bergerak) dengan potret bos tujuan berikutnya + "Lanjut: <area> ⭐" (`MQ.WorldMap.nextGoal()`).
+- Karakter ala RPG: kartu pahlawan (sinar berputar, pahlawan bernapas) dengan slot perlengkapan di sekelilingnya (senjata kiri bawah, pelindung kanan bawah, aksesori kanan atas; tingkat +N; slot kosong = ikon pudar), nama + lencana Lv + tombol Ubah + XP. Spanduk poin tersisa, tiga lencana besar ❤️ HP / ⚔️ Serangan / 🛡️ Pertahanan dengan tombol + bulat. Tab Status (kritikal, KILAT, TELITI, bonus koin/XP, poin dibagi) / Kemampuan (bar berwarna, yang perlu dilatih di atas) / Catatan (kelas, ujian, area, monster, kombo, ketepatan). SW `mq-v46`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

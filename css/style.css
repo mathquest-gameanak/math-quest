@@ -915,3 +915,78 @@ html.tablet .cutscene { max-width: none; }
 .filterBar { flex-wrap: wrap; overflow: visible; }
 .fBtn { font-size: 12px; padding: 2px 6px 2px 2px; min-height: 32px; }
 .fBtn img { width: 22px; height: 22px; }
+
+/* ===== Tombol Petualangan baru (2026-11-26): merah menyala, potret bos tujuan, kilau menyapu, memantul ===== */
+#scr-home .adventure, body.skinK #scr-home .adventure {
+  position: relative; overflow: hidden; display: flex; align-items: center; gap: 10px; margin: 0 10px; padding: 8px 12px 10px 8px;
+  border: 4px solid #1a1c2c; border-image: none; background: linear-gradient(#ff8a5c, #e43b44 55%, #b13e53);
+  box-shadow: inset 0 4px 0 #ffb48a, inset 0 -6px 0 #7a2333, 0 6px 0 #1a1c2c; color: #fff3b0; text-shadow: 2px 2px 0 #1a1c2c;
+  animation: advBounce 2.2s ease-in-out infinite; }
+#scr-home .adventure::after { content: ''; position: absolute; top: -20%; bottom: -20%; width: 40px; left: -60px; transform: skewX(-20deg);
+  background: linear-gradient(90deg, transparent, #fff8, transparent); animation: advShine 3.2s ease-in-out infinite; pointer-events: none; }
+@keyframes advShine { 0%, 55% { left: -60px; } 85%, 100% { left: 110%; } }
+@keyframes advBounce { 0%, 80%, 100% { transform: none; } 88% { transform: translateY(-4px); } 94% { transform: translateY(1px); } }
+#scr-home .adventure:active { transform: translateY(4px); box-shadow: inset 0 4px 0 #ffb48a, inset 0 -6px 0 #7a2333, 0 2px 0 #1a1c2c; animation: none; }
+.advPic { flex: none; width: 56px; height: 56px; display: grid; place-items: center; background: radial-gradient(circle, #fff3b0, #ffcd75 60%, #ef7d57);
+  border: 3px solid #1a1c2c; border-radius: 50%; box-shadow: 0 0 0 3px #fff3b0; overflow: hidden; }
+.advPic img { width: 50px; height: 50px; image-rendering: pixelated; }
+.advTxt { flex: 1; display: flex; flex-direction: column; align-items: flex-start; min-width: 0; text-align: left; }
+.advTxt b { font-size: 24px; letter-spacing: 1px; line-height: 1.1; }
+.advTxt small { font-size: 13px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.advGo { flex: none; font-size: 26px; color: #fff3b0; animation: advArrow .8s steps(2) infinite; }
+@keyframes advArrow { 50% { transform: translateX(4px); } }
+
+/* ===== Halaman Karakter ala RPG (2026-11-26) ===== */
+.charCard { padding: 10px 10px 8px; display: flex; flex-direction: column; gap: 6px; }
+.charStage { position: relative; height: 196px; display: grid; place-items: center; overflow: hidden;
+  background: radial-gradient(ellipse at 50% 78%, #a7f07055 0 18%, transparent 19%), linear-gradient(#73eff7, #41a6f6 70%, #38b764 70%, #257179);
+  border: 3px solid #1a1c2c; }
+.charRays { position: absolute; left: 50%; top: 45%; width: 260px; height: 260px; margin: -130px 0 0 -130px;
+  background: repeating-conic-gradient(#ffffff30 0 10deg, transparent 10deg 24deg); border-radius: 50%; animation: raysSpin 14s linear infinite; }
+#charHero { position: relative; width: 140px; height: 140px; image-rendering: pixelated; margin-top: 10px; animation: csBreath 2.4s ease-in-out infinite; transform-origin: 50% 100%; }
+.eqSlot { position: absolute; width: 70px; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 3px 2px;
+  background: #1a1c2cd0; border: 2px solid #ffcd75; color: #f4f4f4; }
+.eqSlot img { width: 40px; height: 40px; image-rendering: pixelated; }
+.eqSlot img.ghost { opacity: .35; filter: grayscale(1); }
+.eqSlot:not(.full) { border-style: dashed; border-color: #94b0c2; }
+.eqSlot small { font-size: 10px; font-weight: 800; line-height: 1.1; text-align: center; }
+.eqSlot.senjata { left: 6px; top: 50%; transform: translateY(-50%); }
+.eqSlot.pelindung { right: 6px; top: 50%; transform: translateY(-50%); }
+.eqSlot.aksesori { left: 50%; top: 6px; transform: translateX(-50%); width: 64px; flex-direction: row; gap: 3px; padding: 2px 6px 2px 2px; display: none; }
+.eqSlot.aksesori { display: flex; left: auto; right: 6px; top: 6px; transform: none; }
+.eqSlot.pelindung { top: auto; bottom: 6px; transform: none; }
+.eqSlot.senjata { top: auto; bottom: 6px; transform: none; }
+.eqSlot.aksesori img { width: 28px; height: 28px; }
+.eqSlot.aksesori small { text-align: left; }
+.eqUp { position: absolute; top: 2px; right: 2px; font-style: normal; font-size: 11px; font-weight: 900; color: #1a1c2c; background: #ffcd75; padding: 0 3px; }
+.charId { display: flex; align-items: center; gap: 8px; }
+.charId .charName { font-size: 20px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.charLvTag { font-size: 16px; padding: 2px 8px; background: #1a1c2c; color: #ffcd75; }
+.ptsBanner { text-align: center; font-weight: 900; font-size: 15px; padding: 6px; background: #ffcd75; color: #1a1c2c; border: 3px solid #1a1c2c;
+  box-shadow: 0 3px 0 #1a1c2c; animation: bob 1s steps(1) infinite; }
+.ptsBanner[hidden] { display: none; }
+.statBadges { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.sBadge { position: relative; display: flex; flex-direction: column; align-items: center; padding: 6px 4px 8px; border: 3px solid #1a1c2c; color: #f4f4f4;
+  box-shadow: inset 0 3px 0 #fff4, 0 3px 0 #1a1c2c; }
+.sBadge.hp { background: linear-gradient(#ef7d57, #b13e53); }
+.sBadge.atk { background: linear-gradient(#ffcd75, #d4882c); color: #1a1c2c; }
+.sBadge.def { background: linear-gradient(#73a8f6, #3b5dc9); }
+.sbIco { font-size: 22px; line-height: 1; }
+.sBadge b { font-size: 26px; line-height: 1.1; text-shadow: 2px 2px 0 #0006; }
+.sBadge small { font-size: 12px; font-weight: 900; }
+.sBadge em { font-style: normal; font-size: 10px; opacity: .85; text-align: center; line-height: 1.1; }
+.sBadge .plus { position: absolute; top: -10px; right: -6px; width: 30px; height: 30px; min-height: 0; padding: 0; font-size: 20px; line-height: 1;
+  background: #38b764; color: #fff; border: 3px solid #1a1c2c; border-image: none; border-radius: 50%; box-shadow: 0 2px 0 #1a1c2c; animation: bob .8s steps(1) infinite; }
+.charTabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.charTabs button { font-weight: 900; font-size: 14px; padding: 8px 2px; background: #333c57; color: #c7d3de; border: 3px solid #1a1c2c; }
+.charTabs button.on { background: #ffcd75; color: #1a1c2c; box-shadow: 0 3px 0 #1a1c2c; }
+.charTabBody { margin-top: -4px; }
+#charHero { background: none; border: 0; }
+body.skinK #charHero { border: 0; }
+body.skinK .eqSlot small, body.skinK .sBadge small, body.skinK .sBadge em { color: inherit; }
+body.skinK .sBadge b { color: inherit; }
+body.skinK .charLvTag { color: #ffcd75; }
+body.skinK .sBadge .plus { border: 3px solid #1a1c2c; border-image: none; background: #38b764; padding: 0; }
+body.skinK .charStage .eqSlot, body.skinK .charStage .eqSlot small { color: #f4f4f4; }
+body.skinK .charCard .charId .charLvTag { color: #ffcd75; }
+.eqSlot.aksesori { width: auto; max-width: 110px; }

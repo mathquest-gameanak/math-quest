@@ -398,5 +398,10 @@ MQ.WorldMap = (() => {
     if (S.storyMode === 2) UI.overlay({icon: '🐉', title: 'Mode Legenda ⭐⭐⭐', text: 'Tantangan tersulit! Musuh sangat kuat dan cepat. Hanya pahlawan dengan perlengkapan +4 atau +5 yang bisa menang. Koin tiga kali lipat!'});
   });
 
-  return {POS};
+  /** Tujuan berikutnya untuk tombol Petualangan di beranda: {place, mode, done}. */
+  function nextGoal() {
+    const p = currentPlace(), done = modeList().includes(p.id);
+    return {place: p, mode: MODES[mode()].short, stars: mode() + 1, done};
+  }
+  return {POS, nextGoal};
 })();

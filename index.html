@@ -61,7 +61,9 @@
       <div class="heroStage"><img id="homeHero" class="homeHero" alt="Pahlawan"></div>
       <button id="restBanner" class="restBanner" hidden></button>
     </div>
-    <button class="adventure" data-go="map">⚔️ PETUALANGAN</button>
+    <!-- Tombol Petualangan: potret bos tujuan berikutnya + judul + tujuan, berkilau & memantul -->
+    <button class="adventure" data-go="map"><span class="advPic"><img id="advBoss" alt=""></span>
+      <span class="advTxt"><b>AYO BERTUALANG!</b><small id="advNext"></small></span><span class="advGo">▶</span></button>
   </section>
 
   <!-- ===== PELAJARAN (materi bergambar + latihan tanpa waktu; wajib setelah pingsan) ===== -->
@@ -241,16 +243,19 @@
   <!-- ===== KARAKTER ===== -->
   <section id="scr-char" class="screen">
     <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Karakter</h2></header>
-    <div class="panel charTop">
-      <img id="charHero" alt="Pahlawan">
-      <div class="charLv"><b id="charName" class="charName"></b><b id="charLv"></b><button id="btnEditLook" class="sBtn small">✏️ Ubah penampilan</button><div class="bar"><div id="charXpFill" class="xpFill"></div><span id="charXpText"></span></div></div>
+    <!-- Kartu pahlawan: pahlawan di tengah, slot perlengkapan di sekelilingnya (ketuk untuk melihat/mengganti) -->
+    <div class="panel charCard">
+      <div id="charEquip" class="charStage"><img id="charHero" alt="Pahlawan"></div>
+      <div class="charId"><b id="charName" class="charName"></b><b id="charLv" class="charLvTag"></b>
+        <button id="btnEditLook" class="sBtn small" aria-label="Ubah penampilan">✏️ Ubah</button></div>
+      <div class="bar"><div id="charXpFill" class="xpFill"></div><span id="charXpText"></span></div>
     </div>
-    <div class="panel box"><h3>Bagi Poin Status <small id="charPoints" class="pts"></small></h3><div id="charAlloc"></div></div>
-    <div class="panel box"><h3>Statistik</h3><div id="charStats"></div></div>
-    <div class="panel box"><h3>Kemampuan</h3><div id="charSkills"></div></div>
-    <div class="panel box"><h3>Perlengkapan</h3>
-      <div id="charEquip" class="equip"></div>
-    </div>
+    <!-- Tiga angka utama + tombol tambah poin -->
+    <div id="charPoints" class="ptsBanner" hidden></div>
+    <div id="charAlloc" class="statBadges"></div>
+    <!-- Sisanya per tab -->
+    <div class="charTabs"><button class="on" data-ct="status">⚔️ Status</button><button data-ct="skill">📊 Kemampuan</button><button data-ct="log">📜 Catatan</button></div>
+    <div class="panel box charTabBody"><div id="charStats"></div><div id="charSkills" hidden></div></div>
   </section>
 
   <!-- ===== TAS ===== -->

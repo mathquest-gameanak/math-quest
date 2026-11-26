@@ -124,6 +124,12 @@ MQ.UI = (() => {
     $('homeInfo').textContent = `LV ${S.level} · 💎 ${State.shards()}/6`;
     $('homeCoins').textContent = `🪙 ${S.coins}`;
     $('musicIco').src = MQ.ItemArt.url(S.settings.music > 0 ? 'ui_music' : 'ui_mute', 3);
+    // tombol Petualangan: potret bos tujuan berikutnya
+    if (MQ.WorldMap && MQ.WorldMap.nextGoal) {
+      const g = MQ.WorldMap.nextGoal(), p = g.place;
+      $('advBoss').src = p.boss && MQ.Pix.has(p.boss) ? MQ.Pix.url(p.boss, 3) : MQ.ItemArt.url('ui_dungeon', 3);
+      $('advNext').textContent = g.done ? `Semua area ${g.mode} selesai! Main lagi?` : `Lanjut: ${p.icon} ${p.name} ${'⭐'.repeat(g.stars)}`;
+    }
     if (MQ.HomeScene) MQ.HomeScene.start(); // latar desa bergerak
     if (!MQ.Cutscene.isOpen()) MQ.Collection.check(); // medali yang terpenuhi di luar pertarungan (mis. Pandai Besi)
   };
@@ -132,46 +138,68 @@ MQ.UI = (() => {
 
   /* ===== Karakter ===== */
   const OP_NAMES = MQ.Questions.NAMES;
+  /* Halaman Karakter ala RPG (2026-11-26): kartu pahlawan dengan slot perlengkapan di sekelilingnya,
+     tiga lencana status (HP, Serangan, Pertahanan) dengan tombol +, lalu tab Status / Kemampuan / Catatan. */
+  let charTab = 'status';
+  const SLOT_ICON = {senjata: 'pedangKayu', pelindung: 'perisaiKayu', aksesori: 'cincinBintang'};
   renderers.char = () => {
-    $('charLv').textContent = `Level ${S.level}`;
+    $('charLv').textContent = `Lv ${S.level}`;
     $('charName').textContent = (S.hero && S.hero.name) || 'Pahlawan';
-    $('charHero').src = MQ.Hero.current(); // ikut berubah sesuai equipment
     fillXp($('charXpFill'), $('charXpText'));
     const tot = Object.values(S.stats).reduce((a, s) => ({b: a.b + s.b, s: a.s + s.s}), {b: 0, s: 0});
     const pct = s => (s.b + s.s ? Math.round(s.b / (s.b + s.s) * 100) : 0);
     const [lo, hi] = State.atk();
-    const rows = [
-      ['🎓 Kelas', S.grade > 1 ? 'Lulus Kelas 1!' : 'Kelas 1'],
-      ['📝 Nilai ujian terbaik', S.examBest ? `${S.examBest} / 12` : '–'],
-      ['❤️ HP maks', State.maxHp()],
-      ['⚔️ Serangan', lo === hi ? lo : `${lo}–${hi}`],
-      ['🛡️ Pertahanan', State.def()],
+    // kartu pahlawan + slot perlengkapan (aksesori di atas, senjata kiri, pelindung kanan)
+    $('charEquip').innerHTML = `<span class="charRays"></span><img id="charHero" src="${MQ.Hero.current()}" alt="Pahlawan">` +
+      SLOTS.map(([slot, label]) => {
+        const id = S.equip[slot], up = id ? State.upLevel(id) : 0;
+        return `<button class="eqSlot ${slot}${id ? ' full' : ''}" data-slot="${slot}">` +
+          (id ? `${itemImg(id)}${up ? `<i class="eqUp">+${up}</i>` : ''}` : `<img class="icon ghost" src="${MQ.ItemArt.url(SLOT_ICON[slot], 2)}" alt="">`) +
+          `<small>${id ? items(id).name : label}</small></button>`;
+      }).join('');
+    // tiga lencana status
+    const val = {hp: State.maxHp(), atk: lo === hi ? lo : `${lo}–${hi}`, def: State.def()};
+    $('charPoints').hidden = !S.points;
+    $('charPoints').textContent = `✨ ${S.points} poin status! Ketuk + untuk membagi`;
+    $('charAlloc').innerHTML = ALLOC.map(([k, label, effect]) =>
+      `<div class="sBadge ${k}"><span class="sbIco">${label.split(' ')[0]}</span><b>${val[k]}</b><small>${label.split(' ').slice(1).join(' ')}</small>` +
+      `<em>${effect()}</em>${S.points ? `<button class="plus" data-stat="${k}" aria-label="Tambah ${label}">+</button>` : ''}</div>`).join('');
+    // tab
+    document.querySelectorAll('.charTabs [data-ct]').forEach(b => b.classList.toggle('on', b.dataset.ct === charTab));
+    const statusRows = [
       ['🎯 Peluang kritikal', `${State.critChance()}%`],
       ['💥 Damage kritikal', `×${Math.round(State.critMul() * 10) / 10}`],
-      [`⚡ Soal cepat ≤${MQ.Balance.combat.fastCritSec} detik`, 'pasti kritikal'],
+      [`⚡ Jawab ≤${MQ.Balance.combat.fastCritSec} detik`, 'pasti KILAT!'],
       ['🧠 Soal pikir benar', `TELITI! ×${MQ.Balance.think.telitiMul}`],
-      ['👾 Monster dikalahkan', S.monsters],
+      ['🪙 Koin tambahan', State.effect('coins') ? `+${State.effect('coins')} / monster` : '–'],
+      ['✨ XP tambahan', State.effect('xp') ? `+${State.effect('xp')}%` : '–'],
+      ['📦 Poin dibagi', `❤️ ${S.alloc.hp} · ⚔️ ${S.alloc.atk} · 🛡️ ${S.alloc.def}`]
+    ];
+    const logRows = [
+      ['🎓 Kelas', S.grade > 1 ? 'Lulus Kelas 1!' : 'Kelas 1'],
+      ['📝 Nilai ujian terbaik', S.examBest ? `${S.examBest} / 12` : '–'],
       ['🏆 Area selesai', `${State.mainFields().filter(f => S.cleared.includes(f.id)).length} / ${State.mainFields().length}`],
+      ['👾 Monster dikalahkan', S.monsters],
       ['🔥 Kombo terbaik', S.bestCombo],
       ['✅ Soal benar', tot.b],
       ['🎯 Ketepatan', tot.b + tot.s ? pct(tot) + '%' : '–']
     ];
+    const rows = charTab === 'log' ? logRows : statusRows;
+    $('charStats').hidden = charTab === 'skill'; $('charSkills').hidden = charTab !== 'skill';
     $('charStats').innerHTML = rows.map(([k, v]) => `<div class="stat"><span>${k}</span><b>${v}</b></div>`).join('');
-    // Bagi poin status: tiap baris punya tombol "+"
-    $('charPoints').textContent = S.points ? `Poin tersisa: ${S.points}` : 'Naik level untuk dapat poin';
-    $('charAlloc').innerHTML = ALLOC.map(([k, label, effect]) =>
-      `<div class="alloc"><span><b>${label}</b><small>${effect()} · sudah ${S.alloc[k]} poin</small></span>` +
-      `<button class="plus" data-stat="${k}" ${S.points ? '' : 'disabled'} aria-label="Tambah ${label}">+</button></div>`).join('');
-    const skills = Object.entries(S.stats).filter(([, s]) => s.b + s.s > 0);
+    const skills = Object.entries(S.stats).filter(([, s]) => s.b + s.s > 0).sort((a, b) => pct(a[1]) - pct(b[1])); // yang perlu dilatih di atas
+    const col = p => (p >= 90 ? '#38b764' : p >= 75 ? '#ffcd75' : '#ef7d57');
     $('charSkills').innerHTML = skills.length
-      ? skills.map(([op, s]) => `<div class="skill"><span>${OP_NAMES[op] || op}</span><div class="bar"><div style="width:${pct(s)}%"></div><span>${pct(s)}% benar</span></div></div>`).join('')
+      ? skills.map(([op, s]) => `<div class="skill"><span>${OP_NAMES[op] || op}</span><div class="bar"><div style="width:${pct(s)}%;background:${col(pct(s))}"></div>` +
+                                 `<span>${pct(s)}%</span></div></div>`).join('') + '<p class="note">Yang paling atas paling perlu dilatih. Coba di 🎓 Kelas!</p>'
       : '<p class="note">Ayo bertarung dulu!</p>';
-    // Slot perlengkapan: ketuk untuk melihat / melepas
-    $('charEquip').innerHTML = SLOTS.map(([slot, label]) => {
-      const id = S.equip[slot];
-      return `<button class="slot${id ? ' full' : ''}" data-slot="${slot}">${id ? itemImg(id) + `<small>${State.itemName(id)}</small>` : `<span>${label}</span>`}</button>`;
-    }).join('');
   };
+  const items = id => Data.items[id];
+  document.querySelector('.charTabs').addEventListener('click', e => {
+    const b = e.target.closest('[data-ct]');
+    if (!b) return;
+    charTab = b.dataset.ct; MQ.Audio.sfx.click(); renderers.char();
+  });
   const SLOTS = [['senjata', 'Senjata'], ['pelindung', 'Pelindung'], ['aksesori', 'Aksesori']];
   // Keterangan efek tiap poin mengikuti balance.js (juga bila diubah di Atur Angka)
   const P = () => MQ.Balance.player;
@@ -182,11 +210,12 @@ MQ.UI = (() => {
     if (b && State.spendPoint(b.dataset.stat)) { State.save(); MQ.Audio.sfx.confirm(); renderers.char(); }
   });
   $('charEquip').addEventListener('click', e => {
-    const b = e.target.closest('.slot');
+    const b = e.target.closest('.eqSlot');
     if (!b) return;
     const id = S.equip[b.dataset.slot];
     if (id) itemDetail(id, () => show('char'));
-    else overlay({icon: '🎒', title: 'Slot kosong', text: 'Beli perlengkapan di Toko atau buat di Pandai Besi, lalu pakai dari Tas.'});
+    else overlay({img: `<img class="iconBig" src="${MQ.ItemArt.url(SLOT_ICON[b.dataset.slot], 4)}" alt="">`, title: 'Slot kosong',
+                  text: 'Beli perlengkapan di Toko atau buat di Pandai Besi, lalu pakai dari Tas.'});
   });
 
   /* ===== Tas ===== */
