@@ -77,6 +77,10 @@ MQ.Save = (() => {
       stamps: Array.isArray(d.stamps) ? d.stamps.filter(k => typeof k === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(k)).slice(-120) : [],
       weekClaims: Array.isArray(d.weekClaims) ? d.weekClaims.filter(k => typeof k === 'string').slice(-20) : [],
       dayParty: typeof d.dayParty === 'string' ? d.dayParty : '',
+      // Kiki teman yang tumbuh (kiki.js): hari diberi makan, tanggal terakhir, kapan tiap jenis soal terakhir dilatih
+      kiki: (() => { const k = obj(d.kiki), seen = {};
+        for (const [a, b] of Object.entries(obj(k.seen))) if (typeof b === 'string') seen[a] = b;
+        return {days: num(k.days, 0, 0), last: typeof k.last === 'string' ? k.last : '', seen}; })(),
       extra: d.extra && typeof d.extra === 'object' && typeof d.extra.date === 'string' ? {date: d.extra.date, min: num(d.extra.min, 0, 0)} : null,
       alloc, points,
       grade: num(d.grade, 1, 1),         // kelas saat ini (2 = lulus Kelas 1)
@@ -109,7 +113,7 @@ MQ.Save = (() => {
         v: VERSION, level: s.level, xp: s.xp, monsters: s.monsters, mode: s.mode,
         cleared: s.cleared, fieldKills: s.fieldKills, bestCombo: s.bestCombo, stats: s.stats,
         coins: s.coins, inv: s.inv, equip: s.equip, grade: s.grade, examBest: s.examBest, daily: s.daily,
-        alloc: s.alloc, points: s.points, settings: s.settings, stamps: s.stamps, weekClaims: s.weekClaims, dayParty: s.dayParty, extra: s.extra, days: pruneDays(s.days), hero: s.hero, story: s.story,
+        alloc: s.alloc, points: s.points, settings: s.settings, stamps: s.stamps, weekClaims: s.weekClaims, kiki: s.kiki, dayParty: s.dayParty, extra: s.extra, days: pruneDays(s.days), hero: s.hero, story: s.story,
         bestiary: s.bestiary, medals: s.medals, costumes: s.costumes, kilat: s.kilat, crafted: s.crafted,
         dungeonStars: s.dungeonStars, storyMode: s.storyMode, heroCleared: s.heroCleared, legendCleared: s.legendCleared, upgrades: s.upgrades, rest: s.rest
       }));

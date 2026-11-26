@@ -328,5 +328,11 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Ikon baru ui_cal & ui_stamp. Simpanan: settings.goal/limit/bed, stamps, weekClaims, dayParty, extra (tambahan, tanpa naik versi).
 - **Perbaikan:** sw.js sempat kosong di mq-v47 (skrip edit membuka file untuk ditulis sebelum membaca) → dipulihkan dari git. SW `mq-v48` (+ daily.js).
 
+### 2026-11-26 — Kiki teman yang tumbuh
+- `js/kiki.js` (baru, MQ.Kiki) + layar `scr-kiki`: sekali sehari **Latihan Kiki** 5 soal tanpa waktu, dipilih dari 3 kemampuan terlemah + 2 yang paling lama tidak dilatih (pengulangan berjarak, `S.kiki.seen`). Benar = buah beri terbang ke Kiki & Kiki mengunyah; salah = petunjuk, coba lagi. Selesai = +1 hari (`S.kiki.days`). Jawaban ikut dihitung untuk target harian.
+- 5 tahap (characters.js `kiki1..kiki5`): Kecil (0) → Pelajar/syal (2 hari, 20 koin) → Penjelajah/topi & ransel (5, 30 koin + Ramuan) → Bijak/kacamata, buku & toga (9, 40 koin + Mahkota) → Agung/mahkota & bintang (14, 60 koin + Mahkota). Naik tahap = jendela perayaan (fx level dengan gambar Kiki).
+- Sapaan pribadi: nama anak, waktu (pagi/siang/sore/malam), jumlah benar kemarin atau jenis soal yang masih sulit.
+- Kiki bertengger di samping pahlawan di beranda (tanda 🍓 bila belum diberi makan hari ini; ketuk → layar Kiki) dan terbang di atas kepala pahlawan saat bertarung. SW `mq-v49` (+ kiki.js).
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

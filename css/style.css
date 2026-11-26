@@ -1054,3 +1054,44 @@ svg.tally { height: 26px; width: auto; }
   background: #1a1c2cee; color: #ffcd75; border: 3px solid #ffcd75; transition: transform .3s; pointer-events: none; }
 #toast.show { animation: toastIn 4s ease forwards; }
 @keyframes toastIn { 0% { transform: translate(-50%, -150%); } 8%, 85% { transform: translate(-50%, 0); } 100% { transform: translate(-50%, -150%); } }
+
+/* ===== 🦉 Kiki teman yang tumbuh (2026-11-26) ===== */
+.homeKikiBtn { position: absolute; left: calc(50% + 58px); bottom: 70px; z-index: 2; background: none; border: 0; padding: 0; }
+.homeKiki { width: 60px; height: 60px; image-rendering: pixelated; animation: kikiPerch 2.2s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes kikiPerch { 0%, 100% { transform: none; } 50% { transform: translateY(-4px) scale(1.02, .98); } }
+.kikiBubble { position: absolute; top: -12px; right: -10px; font-size: 16px; padding: 2px 4px; background: #fff; border: 2px solid #1a1c2c; border-radius: 10px;
+  animation: bob .8s steps(1) infinite; }
+.kikiBubble[hidden] { display: none; }
+.kikiCard { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px; }
+.kikiNest { position: relative; width: 100%; height: 170px; display: grid; place-items: end center; overflow: hidden; border: 3px solid #1a1c2c;
+  background: radial-gradient(ellipse at 50% 92%, #6d4b27 0 22%, transparent 23%), linear-gradient(#a6f4f9, #73eff7 60%, #38b764 60%, #257179); }
+.kikiImg { width: 150px; height: 150px; image-rendering: pixelated; margin-bottom: -6px; animation: csBreath 2.4s ease-in-out infinite; transform-origin: 50% 100%; }
+.kikiImg.agung { filter: drop-shadow(0 0 10px #ffcd75); }
+.kikiImg.munch { animation: kikiMunch .5s steps(4); }
+@keyframes kikiMunch { 25% { transform: scale(1.1, .9); } 50% { transform: scale(.95, 1.08) translateY(-6px); } 75% { transform: scale(1.06, .94); } }
+.berryFly { position: absolute; left: 50%; bottom: -20px; font-size: 26px; font-style: normal; animation: berryFly .55s ease-in forwards; }
+@keyframes berryFly { to { bottom: 90px; transform: scale(.4); opacity: .2; } }
+.kikiName { font-size: 20px; }
+.kikiGrow { width: 100%; height: 20px; }
+.kikiGrow > div { background: repeating-linear-gradient(90deg, #ef7d57 0 6px, #ffcd75 6px 8px); }
+.kikiStages { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; width: 100%; }
+.kStage { display: flex; flex-direction: column; align-items: center; padding: 2px; border: 2px dashed #94b0c2; opacity: .75; }
+.kStage img { width: 40px; height: 40px; image-rendering: pixelated; }
+.kStage small { font-size: 10px; font-weight: 800; text-align: center; line-height: 1.1; }
+.kStage.got { border-style: solid; opacity: 1; }
+.kStage.now { border-color: #ffcd75; box-shadow: 0 0 0 2px #ffcd75; }
+.kikiSpeech { position: relative; background: #fff; color: #1a1c2c; border: 3px solid #1a1c2c; padding: 8px 12px; margin-top: 4px; }
+.kikiSpeech::before { content: ''; position: absolute; top: -12px; left: 50%; margin-left: -8px; border: 8px solid transparent; border-bottom-color: #1a1c2c; border-top: 0; }
+.kikiSpeech p { margin: 0; font-weight: 800; font-size: 15px; line-height: 1.35; text-align: center; }
+.kikiGo { font-weight: 900; font-size: 20px; padding: 12px; background: #e43b44; color: #fff3b0; border: 3px solid #1a1c2c; box-shadow: 0 5px 0 #1a1c2c; }
+.kikiGo:disabled { background: #38b764; color: #fff; box-shadow: 0 3px 0 #1a1c2c; }
+.kikiGo[hidden] { display: none; }
+.kikiQ { display: flex; flex-direction: column; gap: 8px; align-items: center; padding: 10px; }
+.kikiQ[hidden] { display: none; }
+.kikiBerries { display: flex; gap: 6px; }
+.berry { font-style: normal; font-size: 22px; filter: grayscale(1) opacity(.35); }
+.berry.eaten { filter: none; animation: pop .3s steps(3); }
+.kikiText { font-size: 26px; font-weight: 900; text-align: center; margin: 0; }
+.kikiText.story { font-size: 17px; line-height: 1.3; }
+#kikiAns { width: 100%; }
+.kikiPop { width: 96px; height: 96px; image-rendering: pixelated; }

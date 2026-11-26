@@ -59,7 +59,8 @@
         <button class="sideBtn" data-go="learn"><img data-ui="ui_class" alt=""><small>Kelas</small></button>
       </div>
       <h1 class="logo">MATH<br>QUEST</h1>
-      <div class="heroStage"><img id="homeHero" class="homeHero" alt="Pahlawan"></div>
+      <div class="heroStage"><img id="homeHero" class="homeHero" alt="Pahlawan">
+        <button class="homeKikiBtn" data-go="kiki" aria-label="Kiki"><img id="homeKiki" class="homeKiki" alt="Kiki"><b id="homeKikiBubble" class="kikiBubble">🍓</b></button></div>
       <button id="restBanner" class="restBanner" hidden></button>
     </div>
     <!-- Tombol Petualangan: potret bos tujuan berikutnya + judul + tujuan, berkilau & memantul -->
@@ -94,6 +95,26 @@
   </section>
 
   <!-- ===== MEDALI ===== -->
+  <!-- ===== KIKI: teman yang tumbuh (Latihan Kiki harian) ===== -->
+  <section id="scr-kiki" class="screen">
+    <header class="panel topbar"><button class="back" id="kikiBack">◀</button><h2>🦉 Kiki</h2></header>
+    <div class="panel kikiCard">
+      <div id="kikiNest" class="kikiNest"><img id="kikiImg" class="kikiImg" alt="Kiki"></div>
+      <b id="kikiName" class="kikiName"></b>
+      <div class="bar kikiGrow"><div id="kikiGrowFill"></div><span id="kikiGrowText"></span></div>
+      <div id="kikiStages" class="kikiStages"></div>
+    </div>
+    <div class="kikiSpeech"><p id="kikiSay"></p></div>
+    <button id="kikiGo" class="kikiGo"></button>
+    <div id="kikiQ" class="panel kikiQ" hidden>
+      <div id="kikiBerries" class="kikiBerries"></div>
+      <div id="kikiView" class="lvVis"></div>
+      <p id="kikiText" class="kikiText"></p>
+      <div id="kikiHint"></div>
+      <div id="kikiAns"></div>
+    </div>
+  </section>
+
   <!-- ===== KALENDER STEMPEL (target harian) ===== -->
   <section id="scr-cal" class="screen">
     <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>📅 Hari Ini</h2></header>
@@ -377,6 +398,7 @@
 <script src="js/dungeonart.js"></script>
 <script src="js/dungeon.js"></script>
 <script src="js/daily.js"></script>
+<script src="js/kiki.js"></script>
 <script src="js/homescene.js"></script>
 <script src="js/main.js"></script>
 </body>

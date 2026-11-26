@@ -89,6 +89,23 @@ window.MQ = window.MQ || {};
     return P.outline();
   }
 
+  /* Kiki tumbuh bersama anak (kiki.js, 2026-11-26): 5 tahap, tiap tahap menambah perlengkapan.
+     1 Kiki Kecil · 2 Pelajar (syal merah) · 3 Penjelajah (+ topi hijau & ransel) · 4 Bijak (+ kacamata & buku) · 5 Agung (+ mahkota & bintang). */
+  function kikiStage(n) {
+    const P = kiki(), cx = 15;
+    if (n >= 2) { P.rect(cx - 6, 20, 12, 2, '#e43b44').rect(cx + 3, 21, 3, 5, '#e43b44').px(cx + 4, 26, '#b13e53').rect(cx - 6, 21, 12, 1, '#b13e53'); }
+    if (n === 3) { P.rect(cx - 7, 8, 14, 3, '#38b764').rect(cx - 5, 6, 10, 2, '#38b764').rect(cx - 9, 10, 5, 1, '#257179').px(cx + 1, 7, '#a7f070');
+                   P.rect(cx - 11, 18, 3, 7, '#ab5236').rect(cx - 11, 18, 3, 1, '#d4a373'); }
+    if (n >= 4) { [[cx - 3], [cx + 3]].forEach(([x]) => { P.rect(x - 3, 12, 7, 1, K).rect(x - 3, 18, 7, 1, K).rect(x - 3, 12, 1, 7, K).rect(x + 3, 12, 1, 7, K); });
+                  P.rect(cx - 1, 14, 2, 1, K);
+                  P.rect(cx + 7, 22, 6, 5, '#3b5dc9').rect(cx + 7, 22, 6, 1, '#73eff7').rect(cx + 9, 23, 1, 4, '#f4f4f4'); }
+    if (n === 4) { P.rect(cx - 6, 7, 12, 2, '#333c57').rect(cx - 8, 6, 16, 1, '#333c57').rect(cx + 6, 6, 1, 5, '#ffcd75'); }
+    if (n >= 5) { P.rect(cx - 5, 5, 10, 4, '#ffcd75').px(cx - 5, 4, '#ffcd75').px(cx, 3, '#ffcd75').px(cx, 4, '#ffcd75').px(cx + 4, 4, '#ffcd75');
+                  P.px(cx - 3, 6, '#e43b44').px(cx, 6, '#41a6f6').px(cx + 3, 6, '#38b764').rect(cx - 5, 8, 10, 1, '#ef7d57');
+                  [[2, 4], [28, 6], [3, 26], [28, 24]].forEach(([x, y]) => P.px(x, y, '#fff3b0').px(x + 1, y, '#ffcd75').px(x, y + 1, '#ffcd75')); }
+    return P.outline();
+  }
+
   /** Penyihir Kusut: topi ungu runcing berbintang, kulit hijau, jubah ungu, tongkat sihir bintang. Lucu, tidak seram. */
   function penyihir() {
     const P = grid(32, 32), cx = 14, PU = '#b06fd0', PS = '#5d275d', SK = '#a7f070';
@@ -216,5 +233,6 @@ window.MQ = window.MQ || {};
     return P.outline();
   }
 
+  Object.assign(MQ.Pix.MONSTERS, {kiki1: () => kikiStage(1), kiki2: () => kikiStage(2), kiki3: () => kikiStage(3), kiki4: () => kikiStage(4), kiki5: () => kikiStage(5)});
   Object.assign(MQ.Pix.MONSTERS, {kakek, kakekTunjuk, kiki, penyihir, momo, kapten, hantuBuku, crystal, shard, peti, petiBuka});
 })();

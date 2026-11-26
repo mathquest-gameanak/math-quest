@@ -525,6 +525,11 @@ MQ.Scene = (() => {
       drawSprite(Object.assign({}, hero.src, {frame: frm}), hero.x, {dx, dy, sx, sy,
         tint: hero.hurtT > 0.3 ? '#e43b44' : null, tintA: hero.hurtT > 0.3 && Math.floor(t * 16) % 2 ? 0.7 : 0});
     }
+    // Kiki (teman) terbang di belakang pahlawan, sesuai tahap pertumbuhannya
+    if (hero.src && MQ.Kiki && MQ.Pix.has('kiki1')) {
+      const kx = hero.x + 2 + Math.sin(t * 1.3) * 4, ky = -34 - Math.abs(Math.sin(t * 2.6)) * 4 + (hero.strike ? -6 : 0); // melayang di atas kepala pahlawan
+      drawSprite({pix: 'kiki' + (MQ.Kiki.stage() + 1)}, kx, {dy: ky, scale: 0.62, noShadow: true});
+    }
     drawFront(t);
     placeTags();
     drawFx(rdt);

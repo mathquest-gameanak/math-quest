@@ -62,8 +62,9 @@ MQ.UI = (() => {
       icon.innerHTML = `<div class="bigFx"><span class="rays"></span><span class="medalDisc"><i class="tail l"></i><i class="tail r"></i><b>${o.icon}</b></span></div>`;
       confetti();
     } else if (o.fx === 'level') {
-      icon.innerHTML = `<div class="bigFx"><span class="rays"></span><img class="lvHero" src="${MQ.Hero.url(S.hero, S.equip, 'happy')}" alt="">` +
-        `<b class="lvNum">Lv <span id="ovLvNum">${o.from || o.level}</span></b></div>`;
+      const pic = o.kiki != null ? MQ.Pix.url('kiki' + (o.kiki + 1), 4) : MQ.Hero.url(S.hero, S.equip, 'happy'); // o.kiki = Kiki naik tahap
+      icon.innerHTML = `<div class="bigFx"><span class="rays"></span><img class="lvHero" src="${pic}" alt="">` +
+        `<b class="lvNum">${o.kiki != null ? '' : 'Lv '}<span id="ovLvNum">${o.from || o.level}</span></b></div>`;
       confetti(20);
       fxTimers.push(setTimeout(() => { const n = $('ovLvNum'); if (n) { n.textContent = o.level; n.classList.add('bump'); } }, 650));
     } else if (o.fx === 'chest') {
@@ -132,6 +133,7 @@ MQ.UI = (() => {
     }
     if (MQ.HomeScene) MQ.HomeScene.start(); // latar desa bergerak
     if (MQ.Daily) MQ.Daily.renderBadge();
+    if (MQ.Kiki) MQ.Kiki.renderHome();
     // perayaan target harian (bila baru tercapai), lalu medali yang terpenuhi di luar pertarungan (mis. Pandai Besi)
     if (!MQ.Cutscene.isOpen()) { if (MQ.Daily) MQ.Daily.celebrate(() => MQ.Collection.check()); else MQ.Collection.check(); }
   };
