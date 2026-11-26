@@ -3,6 +3,7 @@
 Game RPG matematika pixel art 2D untuk anak SD (mulai kelas 1). Kelak mungkin dijual.
 
 ## Wajib dibaca di awal sesi
+- `docs/RINGKASAN.md`: ringkasan inti, tujuan, fitur yang sudah ada & rencana lanjutan (mulai dari sini)
 - `docs/GDD.md`: desain game (sumber kebenaran; ubah GDD dulu sebelum mengubah desain di kode)
 - `docs/PROGRESS.md`: tahap saat ini & log. Perbarui setelah menyelesaikan pekerjaan.
 
