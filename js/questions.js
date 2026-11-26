@@ -546,6 +546,31 @@ MQ.Questions = (() => {
       () => V().hintSeq(loncat(a, b - 1), c, `Loncat ${a}-${a} sampai ${c}: ada ${b} loncatan`));
   };
 
+  /* ===== KELAS 2 — Bab 8: Segitiga, segiempat & bentuk kotak ===== */
+  const SEGI = {segitiga: {n: 'Segitiga', sisi: 3}, persegi: {n: 'Persegi', sisi: 4}, persegiPanjang: {n: 'Persegi panjang', sisi: 4}};
+  /** Segitiga & segiempat: banyak sisi / titik sudut, nama bangun, ciri persegi. */
+  GEN.segi = () => {
+    const id = pick(Object.keys(SEGI)), B = SEGI[id], t = rand(0, 3), names = ['Segitiga', 'Persegi', 'Persegi panjang', 'Lingkaran'];
+    if (t === 0) return hint(numQ('segi', 'Ada berapa sisi?', 'Bangun ini punya berapa sisi?', B.sisi, [B.sisi === 3 ? 4 : 3, 5, 2], 1, V().shape(id)),
+      () => V().hintNote(`Sisi = garis lurus di tepi bangun. ${B.n} punya ${B.sisi} sisi.`));
+    if (t === 1) return hint(numQ('segi', 'Ada berapa titik sudut?', 'Bangun ini punya berapa titik sudut?', B.sisi, [B.sisi === 3 ? 4 : 3, 5, 2], 1, V().shape(id)),
+      () => V().hintNote(`Titik sudut = pojok tempat dua sisi bertemu. ${B.n} punya ${B.sisi} titik sudut.`));
+    if (t === 2) return hint(textQ('segi', 'Bangun apa ini?', 'Bangun ini namanya apa?', B.n, names, V().shape(id)),
+      () => V().hintNote(B.sisi === 3 ? 'Punya 3 sisi = segitiga.' : id === 'persegi' ? '4 sisi sama panjang = persegi.' : '4 sisi, dua panjang dan dua pendek = persegi panjang.'));
+    const p = rand(0, 1);
+    return hint(textQ('segi', p ? '4 sisi sama panjang. Bangun apa?' : '3 sisi, 3 titik sudut. Bangun apa?', p ? 'Bangun dengan empat sisi yang sama panjang namanya apa?' : 'Bangun dengan tiga sisi dan tiga titik sudut namanya apa?',
+      p ? 'Persegi' : 'Segitiga', names), () => V().hintNote(p ? 'Persegi: 4 sisi sama panjang, 4 sudut siku-siku.' : 'Segitiga: 3 sisi, 3 titik sudut.'));
+  };
+  /** Bentuk kotak (kubus & balok): banyak sisi, rusuk, titik sudut, bentuk sisinya. */
+  GEN.kotak = () => {
+    const kubus = rand(0, 1), nama = kubus ? 'Kubus' : 'Balok', t = rand(0, 3), view = kubus ? V().shape('kubus') : undefined;
+    if (t === 3) return hint(textQ('kotak', `Sisi ${nama.toLowerCase()} berbentuk?`, `Sisi-sisi ${nama.toLowerCase()} berbentuk apa?`, kubus ? 'Persegi' : 'Persegi panjang', ['Persegi', 'Persegi panjang', 'Segitiga', 'Lingkaran'], view),
+      () => V().hintNote(kubus ? 'Semua sisi kubus berbentuk persegi yang sama besar.' : 'Sisi balok berbentuk persegi panjang (kadang ada yang persegi).'));
+    const [kata, ans] = [['sisi', 6], ['rusuk', 12], ['titik sudut', 8]][t];
+    return hint(numQ('kotak', `${nama} punya berapa ${kata}?`, `${nama} punya berapa ${kata}?`, ans, [6, 8, 12, 4].filter(v => v !== ans), 1, view),
+      () => V().hintNote(`${nama}: 6 sisi, 12 rusuk, 8 titik sudut. Sisi = bidang datar, rusuk = garis tepi, titik sudut = pojok.`));
+  };
+
   /** Tokoh & benda untuk soal cerita (id = gambar MQ.Pix / MQ.Sprites). */
   const PEOPLE = [{id: 'kiki', n: 'Kiki'}, {id: 'momo', n: 'Momo'}, {id: 'kakek', n: 'Kakek'}, {id: 'kapten', n: 'Kapten'}];
   const THINGS = [{s: 'apple', n: 'apel', gone: 'dimakan'}, {s: 'star', n: 'bintang', gone: 'terbang'},
@@ -567,7 +592,7 @@ MQ.Questions = (() => {
                  pasangan: 'Pasangan bilangan', cerita: 'Soal cerita', teka: 'Teka-teki',
                  posisi: 'Bilangan urutan', berulang: 'Tambah berulang', keluarga: 'Hubungan + dan −', kelompok: 'Mengelompokkan bentuk',
                  susun: 'Menyusun bangun', belasan: 'Bilangan 11–20', dobel: 'Dobel', data: 'Diagram gambar', turus: 'Tabel turus',
-                 ratusan: 'Ratusan', nilai: 'Nilai tempat', lompat: 'Loncat 10 & 100', bersusun: 'Tambah bersusun', hitungCepat: 'Berhitung cepat', kurangSusun: 'Kurang bersusun', kurangCepat: 'Mengurang cepat', cm: 'Panjang (cm & m)', air: 'Banyaknya air (L & dL)', jam: 'Membaca jam', durasi: 'Lama waktu', uang: 'Uang', kaliArti: 'Arti perkalian', kaliTabel: 'Perkalian', kaliCerita: 'Cerita perkalian', kaliPola: 'Pola perkalian'};
+                 ratusan: 'Ratusan', nilai: 'Nilai tempat', lompat: 'Loncat 10 & 100', bersusun: 'Tambah bersusun', hitungCepat: 'Berhitung cepat', kurangSusun: 'Kurang bersusun', kurangCepat: 'Mengurang cepat', cm: 'Panjang (cm & m)', air: 'Banyaknya air (L & dL)', jam: 'Membaca jam', durasi: 'Lama waktu', uang: 'Uang', kaliArti: 'Arti perkalian', kaliTabel: 'Perkalian', kaliCerita: 'Cerita perkalian', kaliPola: 'Pola perkalian', segi: 'Segitiga & segiempat', kotak: 'Kubus & balok'};
 
   return {make, GEN, NAMES, maxFor, specForLevel, nearChoices};
 })();

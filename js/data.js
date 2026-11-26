@@ -167,7 +167,8 @@ MQ.Data = {
      spec: {kinds: ['kaliArti', 'kaliArti', 'kaliTabel', 'kaliTabel', 'kaliTabel', 'kaliCerita'], tabel: [2, 5, 3, 4]}, mobs: ['lendir', 'jamurUngu'], boss: 'rajaLendir'},
     {id: 'k2kali2', kelas: 2, pace: 1.3, name: 'Perkalian 2', icon: '✖️', lv: [26, 27], req: 'k2kali1', desc: 'Perkalian 6, 7, 8, 9 & 1, pola perkalian',
      spec: {kinds: ['kaliTabel', 'kaliTabel', 'kaliTabel', 'kaliPola', 'kaliPola', 'kaliCerita'], tabel: [6, 7, 8, 9, 1]}, mobs: ['kelelawarDaun', 'lendirUngu'], boss: 'rajaMalam'},
-    {id: 'k2bangun', kelas: 2, soon: true, name: 'Bangun', icon: '🔺', lv: [27, 29], req: 'k2kali2', desc: 'Segitiga, segiempat, bentuk kotak'},
+    {id: 'k2bangun', kelas: 2, pace: 1.3, name: 'Bangun', icon: '🔺', lv: [27, 29], req: 'k2kali2', desc: 'Segitiga, segiempat, kubus & balok',
+     spec: {kinds: ['segi', 'segi', 'segi', 'kotak', 'kotak']}, mobs: ['lendirBatu', 'jamurBatu'], boss: 'rajaBatu'},
     {id: 'k2pecahan', kelas: 2, soon: true, name: 'Bilangan 10.000 & Pecahan', icon: '🍕', lv: [29, 30], req: 'k2bangun', desc: 'Bilangan sampai 10.000, pecahan'},
     /* Ujian Naik Kelas 2: dibuka setelah 9 peta selesai dibuat (soon sampai saat itu). */
     {id: 'k2kastil', kelas: 2, soon: true, name: 'Istana Ujian', icon: '🏯', lv: [30, 30], exam: true, reqAll: true, boss: 'naga',

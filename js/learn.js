@@ -141,6 +141,13 @@ MQ.Learn = (() => {
     kaliPola: {title: 'Pola Perkalian', icon: '🔢', cards: [
       {t: 'Dikali bertambah 1, hasilnya bertambah satu kelompok. 6 × 4 = 24, jadi 6 × 5 = 24 + 6 = 30.', v: () => V().hintSeq([18, 24], 30, '+6')},
       {t: '? × 7 = 28: loncat 7 sampai 28 → 7, 14, 21, 28. Ada 4 loncatan, jadi 4.', v: () => V().hintSeq([7, 14, 21], 28, 'Loncat 7')}]},
+    segi: {title: 'Segitiga & Segiempat', icon: '🔺', cards: [
+      {t: 'Segitiga punya 3 sisi dan 3 titik sudut.', v: () => V().shape('segitiga')},
+      {t: 'Segiempat punya 4 sisi dan 4 titik sudut. Kalau semua sisinya sama panjang namanya PERSEGI.', v: () => V().shape('persegi')},
+      {t: 'Persegi panjang: 4 sisi, dua panjang dan dua pendek.', v: () => V().shape('persegiPanjang')}]},
+    kotak: {title: 'Kubus & Balok', icon: '📦', cards: [
+      {t: 'Kubus dan balok punya 6 sisi, 12 rusuk, dan 8 titik sudut.', v: () => V().shape('kubus')},
+      {t: 'Sisi kubus berbentuk persegi. Sisi balok berbentuk persegi panjang.', v: () => V().hintNote('Kubus: persegi · Balok: persegi panjang')}]},
     teka: {title: 'Teka-teki Bilangan', icon: '📜', cards: [
       {t: '"Aku lebih dari 5 dan kurang dari 7." Bilangan yang ada di antara 5 dan 7 adalah 6.', v: () => V().hintLine(6, 6)},
       {t: 'Pola loncat: lihat berapa yang ditambah setiap kali. 2, 4, 6, 8 → loncat 2.', v: () => V().hintSeq([2, 4, 6, 8], 10, 'Setiap kali +2')}]}
@@ -164,8 +171,8 @@ MQ.Learn = (() => {
         {t: 'Waktu & Uang', k: ['jam', 'durasi', 'uang'], max: 20},
         {t: 'Perkalian 1', k: ['kaliArti', 'kaliTabel', 'kaliCerita'], max: 50},
         {t: 'Perkalian 2', k: ['kaliTabel', 'kaliPola', 'kaliCerita'], max: 90},
-        ...[
-            'Bangun Datar & Ruang', 'Bilangan 10.000 & Pecahan'].map(t => ({t}))] // Kelas 2: 9 bab = 9 peta (GDD §15)
+        {t: 'Bangun Datar & Ruang', k: ['segi', 'kotak'], max: 20},
+        ...['Bilangan 10.000 & Pecahan'].map(t => ({t}))] // Kelas 2: 9 bab = 9 peta (GDD §15)
   };
   let nav = {kelas: 0, bab: -1}; // posisi di daftar: kelas 0 = pilih kelas, bab -1 = pilih bab
   /** Batas angka latihan untuk jenis pelajaran (dari bab pertama yang memuatnya). */
