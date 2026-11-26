@@ -863,3 +863,41 @@ body.skinK #scr-battle #mName, body.skinK #scr-battle #mName2 { color: #f4f4f4; 
 #scr-battle #mTop::after, #scr-battle #mTop2::after { content: ''; position: absolute; left: 50%; bottom: -7px; margin-left: -5px;
   border: 5px solid transparent; border-top-color: #1a1c2c; border-bottom: 0; }
 #scr-battle .fieldName { font-size: 14px; }
+
+/* ===== Ikon menu 24×24 (2026-11-26) ===== */
+img[data-ui], #musicIco { image-rendering: pixelated; }
+.sideBtn img { width: 40px; height: 40px; filter: drop-shadow(2px 2px 0 #1a1c2c88); }
+.parentBtn img { width: 30px; height: 30px; }
+.tabbar img[data-ui] { width: 34px; height: 34px; }
+.who img[data-ui] { background: #29366f; padding: 2px; }
+
+/* ===== Cutscene lebih sinematik (2026-11-26) ===== */
+html.tablet .cutscene { max-width: none; }
+.csStage { --csK: 1; }
+#csBg { image-rendering: pixelated; }
+/* bar hitam atas (film) & bayangan tepi */
+.csStage::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 5%; background: #000; z-index: 3; pointer-events: none; }
+.csStage::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background: radial-gradient(ellipse at 50% 55%, transparent 55%, #0006 100%); }
+.csStage.fadeIn #csBg { animation: csFade .7s ease-out; }
+@keyframes csFade { from { filter: brightness(0); } to { filter: none; } }
+/* tokoh: ukuran ikut skala latar, bernapas, bayangan; yang tidak bicara sedikit redup */
+.csActor { width: calc(96px * var(--csK)); height: calc(96px * var(--csK)); margin-left: calc(-48px * var(--csK)); image-rendering: pixelated;
+  transform-origin: 50% 100%; animation: csBreath 2.4s ease-in-out infinite; filter: drop-shadow(0 4px 0 #0005); }
+.csActor.heroNew { width: calc(124px * var(--csK)); height: calc(124px * var(--csK)); margin-left: calc(-62px * var(--csK)); }
+.csActor.big { width: calc(150px * var(--csK)); height: calc(150px * var(--csK)); margin-left: calc(-75px * var(--csK)); }
+.csActor.item { width: calc(56px * var(--csK)); height: calc(56px * var(--csK)); margin-left: calc(-28px * var(--csK)); animation: float 1.6s ease-in-out infinite; }
+@keyframes csBreath { 50% { transform: scale(1.02, .975); } }
+.csActor.talk { animation: csTalk .5s ease-in-out infinite; }
+@keyframes csTalk { 0%, 100% { transform: none; } 30% { transform: translateY(-5%) scale(.98, 1.03); } }
+#csActors.speaking .csActor:not(.talk):not(.item) { filter: drop-shadow(0 4px 0 #0005) brightness(.72); transition: filter .3s; }
+#csActors, #csFx { z-index: 2; }
+/* kotak bicara: papan nama melayang, potret berlatar, muncul dari bawah */
+.csBox { animation: csBoxIn .4s ease-out; }
+@keyframes csBoxIn { from { transform: translateY(100%); } }
+#csName { display: inline-block; position: absolute; top: -18px; left: 12px; padding: 3px 12px; font-size: 16px; color: #1a1c2c;
+  background: var(--kuning); border: 3px solid var(--hitam); box-shadow: 0 3px 0 var(--hitam); z-index: 3; }
+#csPortrait { image-rendering: pixelated; background: radial-gradient(circle at 50% 40%, #73eff7, #29366f); width: 72px; height: 72px; }
+.csBox.narr #csText { font-style: italic; text-align: center; }
+.csWords { padding-top: 6px; }
+.csSkip { z-index: 5; top: 4px; }

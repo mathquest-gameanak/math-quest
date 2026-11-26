@@ -200,5 +200,7 @@ MQ.SkyArt = (() => {
       }
     }
   };
+  ART.desa = {back: ART.padang.back};
+  ART.malam = {back: ART.menara.back};
   return {hasBack: id => !!(ART[id] && ART[id].back), back: (id, H) => ART[id] && ART[id].back && ART[id].back(H), over: (id, H) => ART[id] && ART[id].over && ART[id].over(H)};
 })();

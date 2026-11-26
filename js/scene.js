@@ -10,7 +10,8 @@ window.MQ = window.MQ || {};
 MQ.Scene = (() => {
   const K = '#1a1c2c';
   const $ = id => document.getElementById(id);
-  const cv = $('scene'), ctx = cv.getContext('2d');
+  const cv = $('scene');
+  let ctx = cv.getContext('2d'); // bisa dipinjam renderBg() untuk melukis latar cutscene
   let VW = 120, VH = 100, GY = 83, camX = 0, theme = null, markers = [], running = false, placeId = '';
 
   /* ===== Tema tempat ===== */
@@ -21,6 +22,10 @@ MQ.Scene = (() => {
   }, o);
   const THEMES = {
     padang: T({}),
+    // latar cutscene: desa siang & malam (rumah-rumah di backgrounds.js)
+    desa: T({trees: 0.35}),
+    malam: T({sky: ['#1a1c2c', '#222a44', '#29366f', '#333c57', '#3b4a73'], sun: '#f4f4f4', clouds: false, stars: true, far: ['#29366f', '#3b5dc9'],
+              mid: ['#257179', '#38b764'], tree: ['#1a1c2c', '#257179', '#1a1c2c'], trees: 0.35, grass: ['#257179', '#38b764'], path: ['#566c86', '#94b0c2', '#333c57']}),
     arena: T({mid: ['#c9a46a', '#e0c08a'], tree: null, deco: 'rocks', path: ['#ffcd75', '#fff3b0', '#d4a373'], grass: ['#d4a373', '#e8c49a']}),
     hutan: T({sky: ['#3d8fbf', '#4fa3c9', '#62b5d1', '#7cc6d6', '#9ad5d8'], far: ['#257179', '#3a8a7e'], mid: ['#1a4c4f', '#257179'],
               tree: ['#1a4c4f', '#257179', '#5d275d'], trees: 0.95, grass: ['#257179', '#38b764'], deco: 'mushrooms'}),
@@ -530,7 +535,22 @@ MQ.Scene = (() => {
   }
   requestAnimationFrame(frame);
 
+  /** Lukis latar sebuah tempat ke kanvas lain (cutscene): pinjam mesin latar pertarungan sebentar, lalu kembalikan.
+      o.sc = skala piksel, o.ground = posisi tanah (0..1 dari atas), o.cam = geser kamera (paralaks pelan). */
+  function renderBg(canvas, id, t, o = {}) {
+    const keep = {ctx, VW, VH, GY, camX, theme, placeId, markers, freeTop, sc};
+    try {
+      const s = o.sc || 4, w = Math.max(40, Math.round(canvas.clientWidth / s)), h = Math.max(40, Math.round(canvas.clientHeight / s));
+      if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+      ctx = canvas.getContext('2d'); ctx.imageSmoothingEnabled = false;
+      VW = w; VH = h; sc = s; GY = Math.round(h * (o.ground || 0.86)); camX = o.cam || 0; freeTop = (o.top || 0) * s;
+      theme = THEMES[id] || THEMES.padang; placeId = id; markers = [];
+      drawBackground(t); drawFront(t);
+    } finally { ({ctx, VW, VH, GY, camX, theme, placeId, markers, freeTop, sc} = keep); }
+  }
+
   return {
+    renderBg,
     setup, walkTo, setMonster, setTarget, hitTest, act, defeat, slash, charge, coins, walking, PIX, THEMES,
     setHero(src) { hero.src = src; },
     start() { running = true; resize(true); },

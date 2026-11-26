@@ -42,6 +42,29 @@ MQ.Cutscene = (() => {
     if (id === 'kastil-intro') return 'csVillain';
     return 'csCalm';                                                            // pembuka area, prolog
   }
+  /* Latar cutscene = mesin latar pertarungan (scene.js + backgrounds.js + skyart.js): bergerak & lebih detail.
+     Kamera bergeser pelan (efek film), skala piksel mengikuti lebar layar (HP 3×, iPad 5×). */
+  const BGMAP = {desa: 'desa', malam: 'malam', padang: 'padang', hutan: 'hutan', bukit: 'bukit', danau: 'danau', lembah: 'lembah',
+                 menara: 'menara', kastil: 'kastil', gua: 'guaPola', kapal: 'kapalKaram', perpus: 'perpustakaan'};
+  let bgT0 = 0, lastBg = 0;
+  const csScale = () => Math.max(3, Math.min(6, Math.round(els.stage.clientWidth / 110)));
+  function paintBg(ms) {
+    if (!bgNow || !MQ.Scene.renderBg) return;
+    const t = ms / 1000;
+    MQ.Scene.renderBg(els.bg, BGMAP[bgNow] || 'padang', t, {sc: csScale(), ground: 0.87, cam: (t - bgT0) * 3});
+  }
+  (function loop(ms) {
+    requestAnimationFrame(loop);
+    if (els.root.hidden || document.hidden || ms - lastBg < 66) return;
+    lastBg = ms; paintBg(ms);
+  })(0);
+  function setBg(kind) {
+    bgNow = kind; bgT0 = performance.now() / 1000;
+    els.stage.style.setProperty('--csK', csScale() / 3);
+    els.stage.classList.remove('fadeIn'); void els.stage.offsetWidth; els.stage.classList.add('fadeIn'); // muncul dari gelap
+    if (!MQ.Scene.renderBg) Story.drawBg(els.bg, kind); else paintBg(performance.now());
+  }
+
   function play(id, done) {
     if (!Story.SCENES[id]) { if (done) done(); return; }
     steps = Story.SCENES[id]; idx = 0; sceneId = id; onDone = done || null; bgNow = '';
@@ -54,7 +77,7 @@ MQ.Cutscene = (() => {
   /** Tampilkan satu langkah. */
   function show() {
     const st = steps[idx];
-    if (st.bg && st.bg !== bgNow) { Story.drawBg(els.bg, st.bg); bgNow = st.bg; }
+    if (st.bg && st.bg !== bgNow) setBg(st.bg);
     if (st.actors) for (const [name, pos] of Object.entries(st.actors)) setActor(name, pos);
     if (st.fx) fx(st.fx);
     if (st.music && idx > 0) Audio.music.play(st.music); // suasana berganti di tengah adegan
@@ -64,6 +87,8 @@ MQ.Cutscene = (() => {
     const pSrc = st.who === 'narator' ? '' : actorSrc(st.who);
     els.portrait.hidden = !pSrc; if (pSrc) els.portrait.src = pSrc;
     els.actors.querySelectorAll('.csActor').forEach(a => a.classList.toggle('talk', a.dataset.a === st.who));
+    els.actors.classList.toggle('speaking', !!els.actors.querySelector('.csActor.talk')); // yang tidak bicara sedikit redup
+    els.root.querySelector('.csBox').classList.toggle('narr', st.who === 'narator');
     // Teks huruf demi huruf (nama pemain dipasang lewat textContent → aman)
     fullText = st.text.replace(/\{nama\}/g, heroName());
     els.text.textContent = '';

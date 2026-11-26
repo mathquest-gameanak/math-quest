@@ -27,7 +27,26 @@ MQ.Backdrops = (() => {
   }
   const flicker = (H, k) => (Math.floor(H.t * 6 + k) % 3 ? 1 : 0);
 
+  /** Desa Bilangan (cutscene): rumah-rumah beratap warna-warni, jendela menyala saat malam, pagar. */
+  function houses(H, night) {
+    H.each(46, 0.6, (sx, k) => {
+      const roof = ['#e43b44', '#41a6f6', '#ffcd75', '#b06fd0'][k & 3], y = H.GY - 8, w = 24, h = 18;
+      H.R('#1a1c2c', sx - 1, y - h - 1, w + 2, h + 2); H.R(night ? '#8a7a9a' : '#ffe4c4', sx, y - h, w, h); H.R(night ? '#6a5a7a' : '#d4a373', sx + w - 6, y - h, 6, h);
+      for (let i = 0; i < 10; i++) { H.R('#1a1c2c', sx - 3 + i, y - h - i - 1, w + 6 - i * 2, 1); H.R(night ? '#3b2a5d' : roof, sx - 2 + i, y - h - i, w + 4 - i * 2, 1); }
+      H.R('#ab5236', sx + 9, y - 9, 6, 9);
+      const lit = night ? (Math.floor(H.t * 0.7 + k) % 5 ? '#ffcd75' : '#ef7d57') : '#73eff7';
+      H.R(lit, sx + 3, y - 14, 4, 4); H.R(lit, sx + 17, y - 14, 4, 4);
+      if (night) H.R('#ffcd7533', sx, y - 18, 24, 12);
+      if (k % 2) { H.R('#566c86', sx + 17, y - h - 10, 3, 6); const p = (H.t * 0.4 + k * 0.3) % 1; H.R('#c7d3de', sx + 18 + p * 4, y - h - 12 - p * 14, 3, 2); }
+    }, 30);
+    H.each(9, 1, (sx) => { const y = H.GY - 10; H.R('#1a1c2c', sx - 1, y - 1, 4, 10); H.R(night ? '#6d4b27' : '#ab5236', sx, y, 2, 8); H.R(night ? '#8a6a4a' : '#d4a373', sx - 7, y + 2, 9, 1); });
+  }
+
   return {
+    /* Desa (cutscene) siang & malam */
+    desa: {mid: H => houses(H, false)},
+    malam: {mid: H => houses(H, true)},
+
     /* Padang: pagar kayu & kupu-kupu */
     padang: {
       mid(H) {

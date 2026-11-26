@@ -239,7 +239,129 @@ MQ.ItemArt = (() => {
       P.ell(12, 15, 6, 6.5, '#3b5dc9').recolor('#3b5dc9', '#29366f', (x, y) => x > 13 && y > 15);
       P.ell(12, 15, 2.5, 2.5, '#73eff7').px(9, 12, W).px(10, 11, W);
     }),
-    mahkotaBijak: () => crown('#73eff7', '#41a6f6', ['#b06fd0', '#ffcd75', '#b06fd0'])
+    mahkotaBijak: () => crown('#73eff7', '#41a6f6', ['#b06fd0', '#ffcd75', '#b06fd0']),
+
+    /* ----- ikon menu (2026-11-26) ----- */
+    /** Logo pahlawan tetap: helm kesatria berjambul merah (tidak ikut berubah penampilan). */
+    ui_hero() {
+      const P = grid(N, N);
+      for (let k = 0; k < 7; k++) P.rect(13 + k, 1 + Math.round(k * 0.6), 3, 4 - Math.round(k * 0.3), k < 3 ? '#e43b44' : '#b13e53'); // jambul
+      P.ell(12, 13, 8.5, 9, '#c7d3de', (x, y) => y <= 18).rect(4, 13, 17, 6, '#c7d3de');
+      P.recolor('#c7d3de', '#94b0c2', (x, y) => x > 14);
+      P.rect(6, 11, 13, 3, '#1a1c2c').rect(11, 14, 3, 5, '#1a1c2c');                    // celah mata & hidung
+      P.px(8, 12, '#73eff7').px(15, 12, '#73eff7');                                      // mata bersinar
+      P.rect(11, 4, 2, 7, '#ffcd75').rect(3, 19, 19, 2, '#ffcd75').rect(3, 20, 19, 1, '#ef7d57'); // garis & kerah emas
+      P.px(7, 7, W).px(8, 6, W).px(6, 9, W);
+      return P.outline();
+    },
+    ui_bag() {
+      const P = grid(N, N);
+      P.ell(12, 15, 9, 7.5, '#ab5236').rect(4, 10, 17, 6, '#ab5236');
+      P.recolor('#ab5236', '#6d4b27', (x, y) => x > 15 || y > 19);
+      P.rect(8, 4, 9, 2, '#6d4b27').rect(8, 4, 2, 6, '#6d4b27').rect(15, 4, 2, 6, '#6d4b27'); // tali
+      P.rect(5, 10, 15, 4, '#d4a373').rect(11, 12, 3, 4, '#ffcd75').px(12, 14, '#1a1c2c');   // tutup & kancing
+      P.rect(7, 17, 4, 3, '#d4a373');                                                         // kantong
+      P.px(6, 11, W).px(7, 11, W);
+      return P.outline();
+    },
+    ui_home() {
+      const P = grid(N, N);
+      P.rect(4, 11, 16, 11, '#ffe4c4').rect(14, 11, 6, 11, '#d4a373');
+      for (let y = 2; y < 12; y++) { const w = (y - 2) * 1.3; P.rect(12 - w - 1, y, w * 2 + 3, 1, '#e43b44'); }
+      P.recolor('#e43b44', '#b13e53', (x, y) => x > 13);
+      P.rect(10, 15, 4, 7, '#ab5236').px(13, 18, '#ffcd75');                                  // pintu
+      P.rect(5, 13, 3, 3, '#73eff7').rect(16, 13, 3, 3, '#73eff7');                           // jendela
+      P.rect(16, 3, 3, 5, '#566c86');                                                         // cerobong
+      P.px(9, 5, W).px(10, 4, W);
+      return P.outline();
+    },
+    ui_dungeon() {
+      const P = grid(N, N);
+      P.rect(2, 6, 20, 17, '#94b0c2');
+      for (let y = 6; y < 23; y += 4) for (let x = 2 + ((y / 4) % 2) * 3; x < 22; x += 6) P.rect(x, y, 1, 4, '#566c86');
+      for (let y = 6; y < 23; y += 4) P.rect(2, y, 20, 1, '#566c86');
+      [2, 8, 14, 20].forEach(x => P.rect(x, 3, 2, 3, '#94b0c2'));                             // gerigi
+      P.ell(12, 16, 5, 7, '#1a1c2c', (x, y) => y >= 9).rect(7, 16, 10, 7, '#1a1c2c');           // pintu gelap
+      P.px(10, 15, '#ffcd75').px(13, 15, '#ffcd75');                                          // mata mengintip
+      P.recolor('#94b0c2', '#7a92a8', (x, y) => x > 16);
+      P.px(3, 7, W).px(4, 7, W);
+      return P.outline();
+    },
+    ui_shop() {
+      const P = grid(N, N);
+      for (let x = 2; x < 22; x++) P.rect(x, 4, 1, 6, Math.floor((x - 2) / 3) % 2 ? '#f4f4f4' : '#e43b44');  // tenda bergaris
+      for (let x = 2; x < 22; x += 3) P.ell(x + 1.5, 10, 1.6, 1.6, Math.floor((x - 2) / 3) % 2 ? '#f4f4f4' : '#e43b44');
+      P.rect(3, 12, 18, 10, '#d4a373').rect(3, 12, 18, 2, '#ab5236').rect(15, 14, 6, 8, '#ab5236');
+      P.ell(9, 17, 3, 3, '#ffcd75').px(8, 16, '#fff3b0');                                     // koin di meja
+      P.rect(13, 16, 3, 4, '#e43b44').rect(13, 15, 3, 1, '#c7f0ff');                          // ramuan
+      return P.outline();
+    },
+    ui_book() {
+      const P = grid(N, N);
+      P.rect(4, 3, 16, 19, '#3b5dc9').rect(4, 3, 3, 19, '#29366f').rect(18, 4, 3, 17, '#f4f4f4');
+      P.ell(13, 12, 4.5, 4, '#38b764', (x, y) => y <= 14).rect(9, 13, 9, 3, '#38b764');      // lendir di sampul
+      P.px(11, 12, '#1a1c2c').px(15, 12, '#1a1c2c').px(11, 11, W).px(15, 11, W);
+      P.rect(9, 18, 8, 1, '#ffcd75');
+      P.px(8, 5, W).px(9, 5, W);
+      return P.outline();
+    },
+    ui_quest() {
+      const P = grid(N, N);
+      P.rect(5, 4, 14, 16, '#ffe4c4').ell(5, 12, 2, 8, '#d4a373').ell(19, 12, 2, 8, '#d4a373');
+      P.rect(3, 4, 4, 2, '#ab5236').rect(17, 18, 4, 2, '#ab5236');
+      for (let y = 8; y < 17; y += 3) P.rect(8, y, 6, 1, '#d4a373');
+      // bintang
+      [[16, 7], [15, 8], [16, 8], [17, 8], [14, 9], [15, 9], [16, 9], [17, 9], [18, 9], [15, 10], [16, 10], [17, 10], [15, 11], [17, 11]].forEach(([x, y]) => P.px(x, y, '#ffcd75'));
+      return P.outline();
+    },
+    ui_medal() {
+      const P = grid(N, N);
+      for (let k = 0; k < 8; k++) { P.rect(5 + k * 0.5, k, 4, 1, '#41a6f6'); P.rect(15 - k * 0.5, k, 4, 1, '#e43b44'); } // pita
+      P.ell(12, 15, 7.5, 7.5, '#ffcd75').recolor('#ffcd75', '#ef7d57', (x, y) => x + y > 28);
+      P.ell(12, 15, 4.5, 4.5, '#fff3b0').ell(12, 15, 3, 3, '#ffcd75');
+      P.px(12, 13, '#ef7d57').px(11, 15, '#ef7d57').px(13, 15, '#ef7d57').px(12, 16, '#ef7d57');
+      P.px(7, 11, W).px(8, 10, W);
+      return P.outline();
+    },
+    ui_smith() {
+      const P = grid(N, N);
+      P.rect(3, 13, 18, 4, '#566c86').rect(2, 12, 6, 3, '#566c86').rect(8, 17, 8, 3, '#333c57').rect(6, 20, 12, 3, '#566c86'); // landasan
+      P.rect(3, 13, 18, 1, '#94b0c2');
+      for (let k = 0; k < 9; k++) P.px(9 + k, 11 - k, '#ab5236').px(10 + k, 11 - k, '#6d4b27');   // gagang palu
+      P.rect(14, 1, 7, 5, '#94b0c2').rect(14, 4, 7, 2, '#566c86');                                 // kepala palu
+      [[5, 9], [3, 7], [7, 7], [20, 10]].forEach(([x, y]) => P.px(x, y, '#ffcd75'));               // percikan
+      return P.outline();
+    },
+    ui_class() {
+      const P = grid(N, N);
+      for (let y = 4; y < 12; y++) { const hw = y < 8 ? (y - 4) * 2.5 + 1 : (12 - y) * 2.5 + 1; P.rect(12 - hw, y, hw * 2, 1, '#333c57'); } // topi toga
+      P.recolor('#333c57', '#566c86', (x, y) => y < 7);
+      P.rect(7, 11, 10, 5, '#29366f').ell(12, 16, 5, 2, '#29366f');
+      P.rect(18, 8, 1, 8, '#ffcd75').rect(17, 16, 3, 3, '#ffcd75');                                // rumbai
+      P.rect(4, 19, 16, 3, '#f4f4f4').rect(4, 21, 16, 1, '#c7d3de').rect(3, 19, 1, 3, '#e43b44');  // buku
+      return P.outline();
+    },
+    ui_music() {
+      const P = grid(N, N);
+      P.rect(8, 4, 2, 14, '#ffcd75').rect(17, 2, 2, 14, '#ffcd75').rect(8, 2, 11, 3, '#ef7d57');
+      P.ell(6.5, 18, 3.5, 2.8, '#ffcd75').ell(15.5, 16, 3.5, 2.8, '#ffcd75').px(5, 17, W).px(14, 15, W);
+      P.recolor('#ffcd75', '#ef7d57', (x, y) => y > 18);
+      return P.outline();
+    },
+    ui_mute() {
+      const P = DRAW.ui_music();
+      for (let k = 0; k < 20; k++) P.px(2 + k, 2 + k, '#e43b44').px(3 + k, 2 + k, '#e43b44');
+      return P;
+    },
+    ui_parent() {
+      const P = grid(N, N);
+      P.ell(8, 6, 3.5, 3.5, '#ffd8b0').ell(8, 16, 5.5, 7, '#41a6f6', (x, y) => y >= 11);           // orang tua
+      P.ell(17, 11, 2.8, 2.8, '#ffd8b0').ell(17, 18, 4, 5, '#e43b44', (x, y) => y >= 15);          // anak
+      P.rect(6, 3, 5, 2, '#6d4b27').rect(15, 8, 4, 2, '#ab5236');
+      P.px(7, 6, '#1a1c2c').px(9, 6, '#1a1c2c').px(16, 11, '#1a1c2c').px(18, 11, '#1a1c2c');
+      P.ell(13, 3, 2, 1.6, '#e43b44').px(12, 4, '#e43b44');                                         // hati
+      return P.outline();
+    }
   };
 
   const urls = {};

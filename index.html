@@ -44,18 +44,18 @@
       <canvas id="homeScene"></canvas>
       <!-- Bilah atas: profil pahlawan, koin, tombol kecil orang tua -->
       <div class="homeTop">
-        <button class="who" data-go="char"><img id="homeAvatar" alt=""><span><b id="homeName"></b><small id="homeInfo"></small></span></button>
+        <button class="who" data-go="char"><img id="homeAvatar" data-ui="ui_hero" alt=""><span><b id="homeName"></b><small id="homeInfo"></small></span></button>
         <span id="homeCoins" class="coinPill"></span>
-        <button id="btnMusic" class="parentBtn musicBtn" aria-label="Musik nyala/mati">🎵</button>
-        <button class="parentBtn" data-go="parent" aria-label="Untuk Orang Tua">👪</button>
+        <button id="btnMusic" class="parentBtn musicBtn" aria-label="Musik nyala/mati"><img id="musicIco" alt=""></button>
+        <button class="parentBtn" data-go="parent" aria-label="Untuk Orang Tua"><img data-ui="ui_parent" alt=""></button>
       </div>
       <!-- Ikon kecil di kiri: Buku Monster, Misi, Medali -->
       <div class="homeSide">
-        <button class="sideBtn" data-go="book"><span>📖</span><small>Buku</small></button>
-        <button class="sideBtn" data-go="quests"><span>⭐</span><small>Misi</small><b id="questBadge" class="badge" hidden></b></button>
-        <button class="sideBtn" data-go="medals"><span>🏅</span><small>Medali</small></button>
-        <button class="sideBtn" data-go="smith"><span>🔨</span><small>Pandai Besi</small></button>
-        <button class="sideBtn" data-go="learn"><span>🎓</span><small>Kelas</small></button>
+        <button class="sideBtn" data-go="book"><img data-ui="ui_book" alt=""><small>Buku</small></button>
+        <button class="sideBtn" data-go="quests"><img data-ui="ui_quest" alt=""><small>Misi</small><b id="questBadge" class="badge" hidden></b></button>
+        <button class="sideBtn" data-go="medals"><img data-ui="ui_medal" alt=""><small>Medali</small></button>
+        <button class="sideBtn" data-go="smith"><img data-ui="ui_smith" alt=""><small>Pandai Besi</small></button>
+        <button class="sideBtn" data-go="learn"><img data-ui="ui_class" alt=""><small>Kelas</small></button>
       </div>
       <h1 class="logo">MATH<br>QUEST</h1>
       <div class="heroStage"><img id="homeHero" class="homeHero" alt="Pahlawan"></div>
@@ -311,11 +311,11 @@
 
 <!-- Bilah tombol bawah (tampil di layar utama & menu) -->
 <nav id="tabbar" class="tabbar" hidden>
-  <button data-go="bag" data-tab="bag"><img data-icon="bag" alt=""><span>Tas</span></button>
-  <button data-go="char" data-tab="char"><img id="tabHero" alt=""><span>Karakter</span><b id="charBadge" class="badge" hidden></b></button>
-  <button data-go="home" data-tab="home" class="tabHome"><img data-icon="crown" alt=""><span>Beranda</span></button>
-  <button data-go="dungeon" data-tab="dungeon"><img data-icon="gate" alt=""><span>Dungeon</span></button>
-  <button data-go="shop" data-tab="shop"><img data-icon="coin" alt=""><span>Toko</span></button>
+  <button data-go="bag" data-tab="bag"><img data-ui="ui_bag" alt=""><span>Tas</span></button>
+  <button data-go="char" data-tab="char"><img id="tabHero" data-ui="ui_hero" alt=""><span>Karakter</span><b id="charBadge" class="badge" hidden></b></button>
+  <button data-go="home" data-tab="home" class="tabHome"><img data-ui="ui_home" alt=""><span>Beranda</span></button>
+  <button data-go="dungeon" data-tab="dungeon"><img data-ui="ui_dungeon" alt=""><span>Dungeon</span></button>
+  <button data-go="shop" data-tab="shop"><img data-ui="ui_shop" alt=""><span>Toko</span></button>
 </nav>
 
 <!-- Jendela pesan -->

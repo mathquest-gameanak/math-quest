@@ -25,7 +25,6 @@ MQ.UI = (() => {
   /** Bilah tombol bawah: tombol aktif, gambar pahlawan, dan tanda angka (misi & poin status). */
   function updateTabs(active) {
     document.querySelectorAll('#tabbar [data-tab]').forEach(b => b.classList.toggle('on', b.dataset.tab === active));
-    $('tabHero').src = MQ.Hero.current();
     const n = MQ.Quests.claimable();
     $('questBadge').hidden = !n; $('questBadge').textContent = n;
     $('charBadge').hidden = !S.points; $('charBadge').textContent = S.points;
@@ -120,11 +119,11 @@ MQ.UI = (() => {
   /* ===== Layar Utama ===== */
   renderers.home = () => {
     const hero = MQ.Hero.current();
-    $('homeHero').src = hero; $('homeAvatar').src = hero;
+    $('homeHero').src = hero; // logo di kiri atas & bilah bawah = ikon helm tetap (ui_hero), bukan penampilan pahlawan
     $('homeName').textContent = (S.hero && S.hero.name) || 'Pahlawan'; // nama dari pemain → textContent
     $('homeInfo').textContent = `LV ${S.level} · 💎 ${State.shards()}/6`;
     $('homeCoins').textContent = `🪙 ${S.coins}`;
-    $('btnMusic').textContent = S.settings.music > 0 ? '🎵' : '🔇';
+    $('musicIco').src = MQ.ItemArt.url(S.settings.music > 0 ? 'ui_music' : 'ui_mute', 3);
     if (MQ.HomeScene) MQ.HomeScene.start(); // latar desa bergerak
     if (!MQ.Cutscene.isOpen()) MQ.Collection.check(); // medali yang terpenuhi di luar pertarungan (mis. Pandai Besi)
   };
@@ -221,7 +220,8 @@ MQ.UI = (() => {
 
   /* ===== Mulai ===== */
   function init() {
-    document.querySelectorAll('#tabbar [data-icon]').forEach(img => (img.src = Sprites.url(img.dataset.icon)));
+    // ikon menu 24×24 (itemart.js): bilah bawah, tombol samping beranda, logo pahlawan, tombol orang tua
+    document.querySelectorAll('img[data-ui]').forEach(img => (img.src = MQ.ItemArt.url(img.dataset.ui, 3)));
     $('btnEditLook').addEventListener('click', () => MQ.Create.open('char'));
     // Tombol 🎵 di Halaman Utama: musik nyala/mati cepat (volume terakhir diingat)
     let lastMusic = S.settings.music || 0.6;
