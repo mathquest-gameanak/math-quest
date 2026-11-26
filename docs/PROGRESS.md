@@ -397,5 +397,8 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - `modeOpen` mengikuti kelas aktif (`S.grade > S.kelas`, ujian `State.examId()`). `Calc.modeCfg(m, kelas)`: Kelas 2 Pahlawan Lv 31–45, Legenda 46–55 (`kelasLv`). Kelas 1 tidak berubah (tetap heroMode/legendMode.lv).
 - Lulus ujian Normal kelas K → `S.grade = K+1`. Istana Ujian Kelas 2 (`k2kastil`, masih `soon`). SW `mq-v65`.
 
+### 2026-11-27 — Kelas 2 Peta 2: Penjumlahan Bersusun
+- Soal `bersusun` (2 angka + 2 angka sampai 99, ±40% menyimpan; gambar bersusun `.susun`; pengecoh "lupa menyimpan") dan `hitungCepat` (tambah puluhan, +9 = +10−1, genapkan puluhan). Peta 2 dibuka (monster sementara: jamur). Materi Kelas 2 Bab 2. SW `mq-v66`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

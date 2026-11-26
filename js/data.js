@@ -155,7 +155,8 @@ MQ.Data = {
   fieldsKelas2: [
     {id: 'k2ribu', kelas: 2, pace: 1.3, name: 'Padang Seribu', icon: '💯', lv: [16, 17], desc: 'Bilangan sampai 1.000: ratusan, nilai tempat, loncat & urutan',
      spec: {kinds: ['ratusan', 'ratusan', 'nilai', 'lompat', 'banding', 'urutan'], max: 1000}, mobs: ['lendir', 'lendirAir'], mini: 'lendirBunga', boss: 'rajaLendir'},
-    {id: 'k2susun', kelas: 2, soon: true, name: 'Penjumlahan Bersusun', icon: '➕', lv: [17, 19], req: 'k2ribu', desc: 'Cara berhitung, penjumlahan bersusun'},
+    {id: 'k2susun', kelas: 2, pace: 1.4, name: 'Penjumlahan Bersusun', icon: '➕', lv: [17, 19], req: 'k2ribu', desc: 'Cara berhitung cepat & penjumlahan bersusun',
+     spec: {kinds: ['bersusun', 'bersusun', 'bersusun', 'hitungCepat', 'hitungCepat'], max: 100}, mobs: ['jamur', 'jamurUngu'], boss: 'rajaJamur'},
     {id: 'k2kurang', kelas: 2, soon: true, name: 'Kurang Bersusun', icon: '➖', lv: [19, 21], req: 'k2susun', desc: 'Pengurangan bersusun, tambah & kurang'},
     {id: 'k2ukur', kelas: 2, soon: true, name: 'Ukur & Data', icon: '📏', lv: [21, 23], req: 'k2kurang', desc: 'Panjang, banyaknya air, tabel & grafik'},
     {id: 'k2waktu', kelas: 2, soon: true, name: 'Waktu & Uang', icon: '⏰', lv: [23, 24], req: 'k2ukur', desc: 'Waktu, durasi, berbelanja'},

@@ -382,6 +382,33 @@ MQ.Questions = (() => {
       () => V().hintSeq(seq, ans, `Setiap kali ${back ? 'mundur −' : 'loncat +'}${step}`));
   };
 
+  /* ===== KELAS 2 — Bab 2: Cara berhitung & penjumlahan bersusun ===== */
+  /** Susunan bersusun (angka rata kanan) untuk gambar soal & petunjuk. */
+  const susunView = (a, b, op, ans = '?') => `<div class="susun"><span></span><span>${a}</span><span>${op}</span><span>${b}</span>` +
+    `<i></i><span></span><span>${ans}</span></div>`;
+  /** Penjumlahan bersusun 2 angka (kadang 3 angka), sebagian dengan menyimpan. */
+  GEN.bersusun = s => {
+    const big = (s.max || 100) > 100 && rand(0, 2) === 0;
+    let a, b;
+    do { a = big ? rand(100, 600) : rand(11, 79); b = big ? rand(10, 300) : rand(11, 99 - a); } while (a + b > (big ? 999 : 99) || b < 10);
+    const c = a + b, carry = (a % 10) + (b % 10) >= 10, lupa = carry ? c - 10 : c + 10; // lupa menyimpan: kesalahan umum
+    const sa = a % 10, sb = b % 10, pa = Math.floor(a / 10) % 10, pb = Math.floor(b / 10) % 10;
+    return hint(numQ('bersusun', `${a} + ${b} = ?`, `${a} ditambah ${b}. Hitung bersusun, mulai dari satuan.`, c, [lupa], 0, susunView(a, b, '+')),
+      () => V().hintNote(`Satuan dulu: ${sa} + ${sb} = ${sa + sb}` + (carry ? `, tulis ${(sa + sb) % 10} simpan 1.` : '.') +
+        ` Puluhan: ${pa} + ${pb}${carry ? ' + 1' : ''} = ${pa + pb + (carry ? 1 : 0)}. Jadi ${c}.`));
+  };
+  /** Cara berhitung cepat: tambah puluhan, tambah 9 (= +10 −1), atau buat puluhan genap. */
+  GEN.hitungCepat = () => {
+    const t = rand(0, 2);
+    if (t === 0) { const a = rand(12, 69), p = rand(1, 3) * 10, c = a + p;
+      return hint(numQ('hitungCepat', `${a} + ${p} = ?`, `${a} tambah ${p}. Cukup tambah puluhannya!`, c, [a + p / 10, c + 1]), () => V().hintNote(`Tambah ${p / 10} puluhan: ${a} → ${c}. Satuannya tetap ${a % 10}.`)); }
+    if (t === 1) { const a = rand(15, 80), c = a + 9;
+      return hint(numQ('hitungCepat', `${a} + 9 = ?`, `${a} tambah 9. Tambah 10 lalu kurang 1.`, c, [a + 10, a + 8]), () => V().hintNote(`${a} + 10 = ${a + 10}, lalu kurang 1 = ${c}.`)); }
+    const p = rand(2, 7) * 10 + rand(1, 9), q = 10 - (p % 10), c = p + q + rand(1, 2) * 10, b = c - p;
+    return hint(numQ('hitungCepat', `${p} + ${b} = ?`, `${p} tambah ${b}. Coba genapkan ke puluhan dulu.`, c, [c - 10, c + 10]),
+      () => V().hintNote(`${p} + ${q} = ${p + q} (genap puluhan), lalu + ${b - q} = ${c}.`));
+  };
+
   /** Tokoh & benda untuk soal cerita (id = gambar MQ.Pix / MQ.Sprites). */
   const PEOPLE = [{id: 'kiki', n: 'Kiki'}, {id: 'momo', n: 'Momo'}, {id: 'kakek', n: 'Kakek'}, {id: 'kapten', n: 'Kapten'}];
   const THINGS = [{s: 'apple', n: 'apel', gone: 'dimakan'}, {s: 'star', n: 'bintang', gone: 'terbang'},
@@ -403,7 +430,7 @@ MQ.Questions = (() => {
                  pasangan: 'Pasangan bilangan', cerita: 'Soal cerita', teka: 'Teka-teki',
                  posisi: 'Bilangan urutan', berulang: 'Tambah berulang', keluarga: 'Hubungan + dan −', kelompok: 'Mengelompokkan bentuk',
                  susun: 'Menyusun bangun', belasan: 'Bilangan 11–20', dobel: 'Dobel', data: 'Diagram gambar', turus: 'Tabel turus',
-                 ratusan: 'Ratusan', nilai: 'Nilai tempat', lompat: 'Loncat 10 & 100'};
+                 ratusan: 'Ratusan', nilai: 'Nilai tempat', lompat: 'Loncat 10 & 100', bersusun: 'Tambah bersusun', hitungCepat: 'Berhitung cepat'};
 
   return {make, GEN, NAMES, maxFor, specForLevel, nearChoices};
 })();
