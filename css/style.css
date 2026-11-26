@@ -1135,3 +1135,10 @@ svg.tally { height: 26px; width: auto; }
 .bCard.next { box-shadow: 0 0 0 3px #ffcd75; }
 .bOk { font-style: normal; font-weight: 900; color: #38b764; }
 .bBtn { white-space: nowrap; }
+
+/* ===== Beranda lebih simetris (2026-11-26) ===== */
+.homeSide.right { left: auto; right: 10px; }
+#scr-home .logo { top: calc(64px + 5%); }
+/* gambar pahlawan 32 piksel berpusat di kolom ke-13 (senjata di kanan) → geser agar badannya tepat di tengah */
+#scr-home .homeHero { left: 16px; }
+.homeKikiBtn { left: calc(50% + 74px); }

@@ -340,5 +340,8 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - **Toko Fashion** (tab di Toko): kostum kepala Topi Koboi / Bando Kelinci / Topi Koki (500), Helm Ksatria / Helm Astronot (1000), Mahkota Pelangi (1500); pakaian Jubah Pahlawan (1000) & Zirah Ksatria (1500). Hanya tampilan (bukan pay-to-win), bayar dengan soal sisa koin, langsung dipakai; bisa diganti di ✏️ Ubah. Simpanan `S.outfits`.
 - **Uang saku** (Orang Tua → Waktu Belajar): orang tua memberi 500 koin dalam game, paling sering seminggu sekali (jumlah tetap supaya tidak jadi cheat); anak melihat "Uang Saku dari Ayah/Bunda!" saat kembali ke beranda. SW `mq-v50` (+ village.js).
 
+### 2026-11-26 — Beranda lebih simetris
+- Pahlawan digeser 16px agar badannya tepat di tengah (gambar 32 piksel berpusat di kolom 13); logo MATH QUEST sedikit lebih ke bawah; ikon samping maks 4 per sisi: kiri Hari Ini/Misi/Medali/Pandai Besi, kanan Buku/Kelas. SW `mq-v51`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
