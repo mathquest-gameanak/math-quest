@@ -249,6 +249,7 @@ MQ.WorldMap = (() => {
 
   /* ===== Layar Peta ===== */
   UI.renderers.map = () => {
+    if (MQ.Daily) setTimeout(() => MQ.Daily.celebrate(), 300); // stempel hari ini (bila baru tercapai di pertarungan)
     const hb = $('btnHeroMode');
     hb.hidden = false;
     hb.textContent = MODES[mode()].name + ' ▾';

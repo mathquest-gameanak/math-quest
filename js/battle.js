@@ -221,6 +221,7 @@ MQ.Battle = (() => {
   /** opt.tier = tingkat dungeon (0 = ⭐). Area biasa memakai Mode Pahlawan bila dinyalakan. */
   function start(place, opt = {}) {
     if (MQ.Learn && !MQ.Learn.gate()) return; // pahlawan masih istirahat setelah pingsan
+    if (MQ.Daily && !MQ.Daily.gate()) return; // batas main harian / jam tidur dari orang tua
     B.run++; B.wrongs = {};
     B.field = place; B.combo = 0; B.q = null; B.last = ''; B.room = 0;
     B.mode = place.exam ? 'exam' : place.dungeon ? 'dungeon' : place.id === 'arena' ? 'arena' : 'field';
@@ -405,6 +406,7 @@ MQ.Battle = (() => {
     if (val === q.ans) {
       // BENAR → pahlawan menyerang; 3+ beruntun = kritis (2×). Ujian: tiap benar = -10 HP tetap.
       stat.b++; State.logDay('b', 1);
+      if (MQ.Daily && MQ.Daily.onCorrect()) showFloat('🌟 Target hari ini tercapai!', 'xp', 0.5); // stempel kalender
       btn.classList.add('benar');
       B.combo++; S.bestCombo = Math.max(S.bestCombo, B.combo);
       quest('correct', q.kind); quest('combo', B.combo);
@@ -531,7 +533,7 @@ MQ.Battle = (() => {
       B.locked = false;
       return;
     }
-    stat.b++; State.logDay('b', 1);
+    stat.b++; State.logDay('b', 1); if (MQ.Daily) MQ.Daily.onCorrect();
     btn.classList.add('benar'); sfx.correct();
     const first = ch.tries === 0, mul = mods().rewardMul;
     const coins = Math.round((first ? C.coins[0] : C.coins[1]) * mul);

@@ -321,5 +321,12 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Jenis soal baru (questions.js `GEN`, gambar di visuals.js): `posisi` (bilangan urutan dari bendera), `berulang` (2+2+2, kelompok titik), `keluarga` (hubungan + dan −, number bond), `kelompok` (mana yang beda / hitung satu bentuk), `susun` (bangun dibagi jadi segitiga/persegi kecil, 2 potong jadi bangun apa), `belasan` (dua bingkai sepuluh, 1 puluhan + satuan, 14 = 10 dan ?, nilai angka 1), `dobel` (dobel & hampir dobel), `data` (diagram gambar buah: berapa, paling banyak/sedikit, selisih), `turus` (membaca turus & tabel turus). Tambah/kurang kadang dengan 0; tambah yang melewati 10 memakai petunjuk "buat 10" (dua bingkai). `puluhan` mengikuti batas area (sampai 20).
 - Pengali waktu baru di balance.think.time; bonus senjata diperluas; materi Kelas untuk semua jenis baru + kartu "buat 10" & nol; urutan materi mengikuti bab buku. Diuji 300 soal/jenis tanpa error & jawaban selalu ada di pilihan. SW `mq-v47`.
 
+### 2026-11-26 — Target harian, Kalender Stempel, batas waktu orang tua
+- `js/daily.js` (baru, MQ.Daily): target harian = jawab benar `settings.goal` soal (bawaan 20) → stempel (`S.stamps`), +10 koin, perayaan "Tugas hari ini selesai, sampai besok!" di beranda/peta (bukan di tengah pertarungan; di pertarungan cukup tulisan melayang). Hitungan per minggu Senin–Minggu: 5 stempel = hadiah mingguan 30 koin + Ramuan (`S.weekClaims`); tidak ada rentetan beruntun yang hangus.
+- Beranda: tombol "Hari Ini" (ikon kalender) dengan lencana kemajuan 12/20 → ✔. Layar Kalender: Kiki + bar target, 7 hari minggu ini dengan stempel, kalender bulan ini.
+- Orang Tua → ⏰ Waktu Belajar: target harian (10–40 soal), batas main per hari (tanpa batas / 15–90 menit), jam tidur (19.00–22.00 sampai 06.00), tombol +15 menit untuk hari ini. Habis/jam tidur → pertarungan baru tidak bisa dimulai (Kelas tetap boleh); peringatan kecil (toast) saat sisa 2 menit / habis ketika sedang bertarung.
+- Ikon baru ui_cal & ui_stamp. Simpanan: settings.goal/limit/bed, stamps, weekClaims, dayParty, extra (tambahan, tanpa naik versi).
+- **Perbaikan:** sw.js sempat kosong di mq-v47 (skrip edit membuka file untuk ditulis sebelum membaca) → dipulihkan dari git. SW `mq-v48` (+ daily.js).
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

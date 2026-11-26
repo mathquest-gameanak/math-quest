@@ -69,7 +69,15 @@ MQ.Save = (() => {
       hero: MQ.Hero ? MQ.Hero.sanitize(d.hero) : null, // penampilan pahlawan; null = belum dibuat → layar Buat Karakter
       days,
       settings: {santai: st.santai === true, autoSpeak: st.autoSpeak === true, // diatur di layar Orang Tua
-                 music: vol01(st.music, 0.6), sfx: vol01(st.sfx, 0.8)},      // volume 0..1
+                 music: vol01(st.music, 0.6), sfx: vol01(st.sfx, 0.8),       // volume 0..1
+                 goal: [10, 15, 20, 30, 40].includes(st.goal) ? st.goal : 20, // target harian (soal benar)
+                 limit: [0, 15, 20, 30, 45, 60, 90].includes(st.limit) ? st.limit : 0, // batas main per hari (menit), 0 = tanpa batas
+                 bed: [-1, 19, 20, 21, 22].includes(st.bed) ? st.bed : -1},  // jam tidur (sampai jam 6), -1 = mati
+      // Kalender stempel (daily.js): tanggal yang target hariannya tercapai, minggu yang hadiahnya sudah diambil
+      stamps: Array.isArray(d.stamps) ? d.stamps.filter(k => typeof k === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(k)).slice(-120) : [],
+      weekClaims: Array.isArray(d.weekClaims) ? d.weekClaims.filter(k => typeof k === 'string').slice(-20) : [],
+      dayParty: typeof d.dayParty === 'string' ? d.dayParty : '',
+      extra: d.extra && typeof d.extra === 'object' && typeof d.extra.date === 'string' ? {date: d.extra.date, min: num(d.extra.min, 0, 0)} : null,
       alloc, points,
       grade: num(d.grade, 1, 1),         // kelas saat ini (2 = lulus Kelas 1)
       examBest: num(d.examBest, 0, 0),   // jawaban benar terbanyak di ujian
@@ -101,7 +109,7 @@ MQ.Save = (() => {
         v: VERSION, level: s.level, xp: s.xp, monsters: s.monsters, mode: s.mode,
         cleared: s.cleared, fieldKills: s.fieldKills, bestCombo: s.bestCombo, stats: s.stats,
         coins: s.coins, inv: s.inv, equip: s.equip, grade: s.grade, examBest: s.examBest, daily: s.daily,
-        alloc: s.alloc, points: s.points, settings: s.settings, days: pruneDays(s.days), hero: s.hero, story: s.story,
+        alloc: s.alloc, points: s.points, settings: s.settings, stamps: s.stamps, weekClaims: s.weekClaims, dayParty: s.dayParty, extra: s.extra, days: pruneDays(s.days), hero: s.hero, story: s.story,
         bestiary: s.bestiary, medals: s.medals, costumes: s.costumes, kilat: s.kilat, crafted: s.crafted,
         dungeonStars: s.dungeonStars, storyMode: s.storyMode, heroCleared: s.heroCleared, legendCleared: s.legendCleared, upgrades: s.upgrades, rest: s.rest
       }));

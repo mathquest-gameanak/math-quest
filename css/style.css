@@ -1024,3 +1024,33 @@ svg.tally { height: 26px; width: auto; }
 #scr-battle #qView .picto svg.fruit { width: 20px; height: 20px; }
 #scr-battle #qView .qItem img { width: 28px; height: 28px; }
 .lvVis .frames svg.frame10 { width: 48%; max-width: 160px; }
+
+/* ===== 📅 Target harian & Kalender Stempel (2026-11-26) ===== */
+.sideBtn { position: relative; }
+.dayBadge { position: absolute; top: 26px; right: -4px; font-size: 10px; font-weight: 900; padding: 1px 4px; background: #1a1c2c; color: #ffcd75; border: 2px solid #ffcd75; }
+.dayBadge.done { background: #38b764; color: #fff; border-color: #1a1c2c; }
+.calToday { display: flex; gap: 10px; align-items: center; padding: 10px; }
+.calKiki { width: 72px; height: 72px; image-rendering: pixelated; flex: none; animation: csBreath 2.4s ease-in-out infinite; transform-origin: 50% 100%; }
+.calTxt { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.calTxt b { font-size: 16px; }
+.calTxt small { font-size: 12px; }
+.calBar { height: 20px; }
+.calBar > div { background: repeating-linear-gradient(90deg, #38b764 0 6px, #a7f070 6px 8px); }
+.calWeek { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.calDay { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px 0; border: 2px solid #94b0c2; background: #1a1c2c22; min-height: 58px; }
+.calDay small { font-size: 11px; font-weight: 900; }
+.calDay.today { border-color: #ffcd75; box-shadow: 0 0 0 2px #ffcd75; }
+.calDay.future { opacity: .5; }
+.calDot { font-weight: 900; font-size: 15px; margin-top: 6px; }
+.stampImg { width: 34px; height: 34px; image-rendering: pixelated; animation: pop .3s steps(3); }
+.calInfo { margin: 6px 0 0; font-size: 13px; text-align: center; }
+.calMonth { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; text-align: center; }
+.calHead { font-weight: 900; font-size: 11px; opacity: .8; }
+.calCell { display: grid; place-items: center; height: 36px; font-weight: 800; font-size: 13px; border: 1px solid #94b0c288; }
+.calCell.today { border: 2px solid #ffcd75; }
+.calCell .stampImg { width: 28px; height: 28px; }
+#repLimits select { font: inherit; font-weight: 900; padding: 6px; min-width: 110px; }
+#toast { position: fixed; left: 50%; top: 10px; transform: translate(-50%, -150%); z-index: 50; max-width: 92%; padding: 8px 14px; font-weight: 900; font-size: 14px;
+  background: #1a1c2cee; color: #ffcd75; border: 3px solid #ffcd75; transition: transform .3s; pointer-events: none; }
+#toast.show { animation: toastIn 4s ease forwards; }
+@keyframes toastIn { 0% { transform: translate(-50%, -150%); } 8%, 85% { transform: translate(-50%, 0); } 100% { transform: translate(-50%, -150%); } }

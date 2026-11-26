@@ -197,7 +197,7 @@ MQ.Learn = (() => {
         if (b.disabled) return;
         const st = S.stats[q.kind] || (S.stats[q.kind] = {b: 0, s: 0});
         if (c.v === q.ans) {
-          st.b++; State.logDay('b', 1); sfx.correct(); b.classList.add('benar'); cheer();
+          st.b++; State.logDay('b', 1); if (MQ.Daily) MQ.Daily.onCorrect(); sfx.correct(); b.classList.add('benar'); cheer();
           box.querySelectorAll('button').forEach(x => (x.disabled = true));
           L.ok++; L.q = null;
           setTimeout(() => {

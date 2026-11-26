@@ -131,7 +131,9 @@ MQ.UI = (() => {
       $('advNext').textContent = g.done ? `Semua area ${g.mode} selesai! Main lagi?` : `Lanjut: ${p.icon} ${p.name} ${'⭐'.repeat(g.stars)}`;
     }
     if (MQ.HomeScene) MQ.HomeScene.start(); // latar desa bergerak
-    if (!MQ.Cutscene.isOpen()) MQ.Collection.check(); // medali yang terpenuhi di luar pertarungan (mis. Pandai Besi)
+    if (MQ.Daily) MQ.Daily.renderBadge();
+    // perayaan target harian (bila baru tercapai), lalu medali yang terpenuhi di luar pertarungan (mis. Pandai Besi)
+    if (!MQ.Cutscene.isOpen()) { if (MQ.Daily) MQ.Daily.celebrate(() => MQ.Collection.check()); else MQ.Collection.check(); }
   };
 
   /* Peta petualangan: lihat js/map.js */

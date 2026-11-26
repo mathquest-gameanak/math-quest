@@ -51,6 +51,7 @@
       </div>
       <!-- Ikon kecil di kiri: Buku Monster, Misi, Medali -->
       <div class="homeSide">
+        <button class="sideBtn" data-go="cal"><img data-ui="ui_cal" alt=""><small>Hari Ini</small><b id="calBadge" class="dayBadge"></b></button>
         <button class="sideBtn" data-go="book"><img data-ui="ui_book" alt=""><small>Buku</small></button>
         <button class="sideBtn" data-go="quests"><img data-ui="ui_quest" alt=""><small>Misi</small><b id="questBadge" class="badge" hidden></b></button>
         <button class="sideBtn" data-go="medals"><img data-ui="ui_medal" alt=""><small>Medali</small></button>
@@ -93,6 +94,14 @@
   </section>
 
   <!-- ===== MEDALI ===== -->
+  <!-- ===== KALENDER STEMPEL (target harian) ===== -->
+  <section id="scr-cal" class="screen">
+    <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>📅 Hari Ini</h2></header>
+    <div id="calToday" class="panel calToday"></div>
+    <div class="panel box"><h3>Minggu Ini</h3><div id="calWeek" class="calWeek"></div><p id="calWeekInfo" class="calInfo"></p></div>
+    <div class="panel box"><h3 id="calMonthTitle"></h3><div id="calMonth" class="calMonth"></div></div>
+  </section>
+
   <section id="scr-medals" class="screen">
     <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Medali</h2><span id="medalProgress" class="coins"></span></header>
     <div id="medalList" class="list"></div>
@@ -130,6 +139,7 @@
       <div class="panel box"><h3>Kemampuan per Jenis Soal</h3><div id="repSkills"></div></div>
       <div class="panel box"><h3>Saran</h3><p id="repAdvice" class="advice"></p></div>
       <div class="panel box"><h3>Pengaturan</h3><div id="repVolumes"></div><div id="repSettings"></div></div>
+      <div class="panel box"><h3>⏰ Waktu Belajar</h3><div id="repLimits"></div></div>
       <div class="panel box"><h3>Data Permainan</h3>
         <p class="note left">Untuk eksperimen: simpan progress sekarang, lalu kembalikan kapan saja (juga untuk pindah HP).</p>
         <div class="dataBtns">
@@ -366,6 +376,7 @@
 <script src="js/learn.js"></script>
 <script src="js/dungeonart.js"></script>
 <script src="js/dungeon.js"></script>
+<script src="js/daily.js"></script>
 <script src="js/homescene.js"></script>
 <script src="js/main.js"></script>
 </body>
