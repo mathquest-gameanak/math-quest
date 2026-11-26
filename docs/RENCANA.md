@@ -24,12 +24,26 @@ _Dicatat 2026-11-27. Konten Kelas 1 sudah dianggap cukup. Sebelum dikodekan, pin
 - Jumlah bab mengikuti buku Matematika Kurikulum Merdeka kelas itu, dengan metode ala Singapura (bar model dan lain-lain). Jangan memakai merek "Singapore Math".
 - **Dungeon = gabungan 2 bab**, jadi jumlah dungeon = jumlah bab ÷ 2 (dibulatkan ke atas).
 - Kemungkinan ada fitur, peta, atau jenis dungeon baru di kelas tertentu (mulai Kelas 3?) agar lebih bervariasi. Belum diputuskan.
-- Perlu dicek: daftar bab Kelas 2 dari buku *Matematika SD/MI Kelas II* Kurikulum Merdeka.
+- **Bab Kelas 2 (sementara, BELUM diverifikasi):** situs buku Kemdikbud tidak bisa diakses dari sini, dan daftar isi buku Yudhistira tidak ditemukan online. Usulan topik (Fase A Kurikulum Merdeka, hanya 1 judul yang terkonfirmasi):
+  1. Bilangan sampai 1.000 (terkonfirmasi sebagai bab 1 buku Kemdikbud)
+  2. Penjumlahan & pengurangan (bersusun, bar model)
+  3. Perkalian (penjumlahan berulang, kelompok sama)
+  4. Pembagian (bagi rata)
+  5. Pecahan sederhana (1/2, 1/4)
+  6. Pengukuran panjang & berat
+  7. Waktu (jam) & uang
+  8. Bangun datar & bangun ruang
+  9. Data & diagram gambar
+  → Sekitar 9 bab, jadi 5 dungeon. Cocokkan dengan daftar isi buku Yudhistira milik sekolah (foto daftar isi cukup) sebelum dikerjakan.
 
 ## 4. Level per kelas
 - Kelas 1: Normal selesai di Lv 15, Legenda di Lv 40.
 - Kelas 2 Normal mulai **Lv 16**.
-- Perlu diputuskan: rentang level Pahlawan/Legenda di Kelas 2 dan kelas berikutnya. Usul: tiap kelas naik ±15 level per tingkat.
+- **Rentang Kelas 2 (usulan):** Normal Lv 16–30, Pahlawan 31–45, Legenda 46–55. Kelas berikutnya mengikuti pola yang sama: awal Normal = akhir Normal kelas sebelumnya + 1, dan Legenda bertambah ±15 level.
+- **Agar anak berlevel tinggi (misal Lv 40) tidak terlalu mudah menang di Kelas 2 Normal:**
+  - Monster Kelas 2 menyesuaikan level: level monster = maks(level area, level anak − 3). Batas atasnya level tertinggi tingkat itu.
+  - Equipment Kelas 2 punya stat dasar lebih tinggi, jadi equipment Kelas 1 +10 kira-kira setara equipment dasar Kelas 2.
+  - Tantangan utama tetap materi baru. Menang agak cepat di Normal masih wajar.
 
 ## 5. Mulai langsung di kelas lebih tinggi (fast leveling)
 - Untuk anak yang baru main saat sudah Kelas 2–6: saat profil baru dibuat (atau lewat menu Orang Tua), pilih kelas.
