@@ -430,5 +430,10 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - `Data.dungeonsKelas2`: Pabrik Angka 🏭 (peta 1–3, Lv 19–22), Menara Jam 🕰️ (peta 4–5, Lv 22–25), Gua Petir ⚡ (peta 6–7, Lv 26–28), Istana Salju ❄️ (peta 8–9, Lv 29–31). Monster kunci & bos dari monster baru Kelas 2. Hadiah: bahan khusus yang sama dengan Kelas 1 (kristal/mutiara/tinta).
 - Menu Dungeon mengikuti kelas aktif (`useKelas` menukar `Data.dungeons`; `Data.allDungeons()` untuk Buku Monster & Toko). Gambar luar baru `k2Out` di dungeonart.js (pabrik berasap & roda gigi, menara jam berdetak, gua petir, istana es bersalju; monster kunci mengintip dari pintu). Lorong dalam & suasana pertarungan memakai tema yang mirip. SW `mq-v75`.
 
+### 2026-11-27 — Equipment, bahan, item & fashion Kelas 2
+- Bahan baru: Baut Robot, Cangkang Siput, Tetes Embun (dari monster Kelas 2), plus bahan khusus dungeon Roda Gigi Emas (senjata), Pasir Waktu (pelindung), Kristal Petir (aksesori), dan Es Abadi (terkuat). Hadiah dungeon Kelas 2 memakai bahan ini.
+- Toko: Pedang Besi (🪙150) & Perisai Besi (🪙180). Pandai Besi: Pedang Robot, Tombak Kali, Pedang Petir, Pedang Salju, Perisai Cangkang, Perisai Waktu, Perisai Es, Kalung Embun, Jam Saku Ajaib, Mahkota Salju. Dasar ≈ equipment Kelas 1 +10. Tingkatkan memakai `upMat` (bahan khusus Kelas 2). Ikon baru di itemart.js (+ `recol`).
+- Fashion: Topi Salju (800), Helm Robot (1500), Mahkota Petir (2000). Barang `kelas: 2` (Toko, Pandai Besi, Fashion) baru muncul setelah lulus Kelas 1 (`S.grade`). SW `mq-v76`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

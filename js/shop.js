@@ -37,7 +37,7 @@ MQ.Shop = (() => {
     if (!b) return;
     shopTab = b.dataset.sh; MQ.Audio.sfx.click(); UI.renderers.shop();
   });
-  const FASHION = () => [...Object.entries(MQ.Hero.COSTUMES).filter(([, c]) => c.price).map(([id, c]) => ({id, kind: 'costume', name: c.name, price: c.price})),
+  const FASHION = () => [...Object.entries(MQ.Hero.COSTUMES).filter(([, c]) => c.price && (c.kelas || 1) <= S.grade).map(([id, c]) => ({id, kind: 'costume', name: c.name, price: c.price})),
                          ...Object.entries(MQ.Hero.OUTFITS).map(([id, c]) => ({id, kind: 'outfit', name: c.name, price: c.price}))].sort((a, b) => a.price - b.price);
   const ownsF = f => (f.kind === 'costume' ? S.costumes : S.outfits).includes(f.id);
   function renderFashion() {
@@ -73,7 +73,7 @@ MQ.Shop = (() => {
     if (shopTab === 'fashion') return renderFashion();
     if (shopTab === 'star') return MQ.Quests.renderStars();
     const keep = UI.filterBar($('shopFilter'), 'shop', Data.shop, UI.renderers.shop);
-    $('shopList').innerHTML = Data.shop.filter(keep).map(id => card(id, `<span class="price">🪙 ${items[id].price}</span>`, 'Beli',
+    $('shopList').innerHTML = Data.shop.filter(id => (items[id].kelas || 1) <= S.grade).filter(keep).map(id => card(id, `<span class="price">🪙 ${items[id].price}</span>`, 'Beli',
       isGear(items[id]) && State.count(id) > 0)).join('');
   };
   $('shopList').addEventListener('click', e => {
@@ -105,7 +105,7 @@ MQ.Shop = (() => {
       : `Tingkatkan perlengkapan sampai +${U().max} dengan bahan khusus dungeon. Senjata: Kristal Pola, pelindung: Mutiara Laut, aksesori: Tinta Bintang.`;
     if (smithTab === 'up') return renderUp();
     const keep = UI.filterBar($('smithFilter'), 'smith', Data.smith, UI.renderers.smith);
-    $('smithList').innerHTML = Data.smith.filter(keep).map(id => {
+    $('smithList').innerHTML = Data.smith.filter(id => (items[id].kelas || 1) <= S.grade).filter(keep).map(id => { // barang Kelas 2 muncul setelah lulus Kelas 1
       const need = Object.entries(items[id].recipe).map(([k, n]) =>
         `<span class="need ${have(k) >= n ? 'ok' : ''}">${iconOf(k)}${Math.min(have(k), n)}/${n}</span>`).join('');
       return card(id, `<div class="needs">${need}</div>`, 'Buat', State.count(id) > 0);
@@ -146,7 +146,7 @@ MQ.Shop = (() => {
   const U = () => MQ.Balance.upgrade;
   /** Biaya naik ke tingkat L: {bahan: n, mahkota?: 1, koin: n}. */
   function upCost(id, L) {
-    const u = U(), i = Math.min(L, u.max) - 1, c = {[u.mat[items[id].type]]: u.mats[i]};
+    const u = U(), i = Math.min(L, u.max) - 1, c = {[items[id].upMat || u.mat[items[id].type]]: u.mats[i]}; // Kelas 2: bahan khusus sendiri
     if (u.crowns[i] > 0) c.mahkota = u.crowns[i];
     c.koin = u.coins[i];
     return c;

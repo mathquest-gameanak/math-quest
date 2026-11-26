@@ -42,7 +42,9 @@ MQ.Hero = (() => {
     // Toko Fashion (dibeli dengan koin, 2026-11-26)
     topiKoboi: {name: 'Topi Koboi', price: 500}, bandoKelinci: {name: 'Bando Kelinci', price: 500}, topiChef: {name: 'Topi Koki', price: 500},
     helmKsatria: {name: 'Helm Ksatria', price: 1000}, helmAstronot: {name: 'Helm Astronot', price: 1000}, mahkotaPelangi: {name: 'Mahkota Pelangi', price: 1500},
-    mahkotaBintang: {name: 'Mahkota Bintang', stars: 20} // hanya dari Tukar Bintang Misi
+    mahkotaBintang: {name: 'Mahkota Bintang', stars: 20}, // hanya dari Tukar Bintang Misi
+    // Toko Fashion Kelas 2 (muncul setelah lulus Kelas 1)
+    topiSalju: {name: 'Topi Salju', price: 800, kelas: 2}, helmRobot: {name: 'Helm Robot', price: 1500, kelas: 2}, mahkotaPetir: {name: 'Mahkota Petir', price: 2000, kelas: 2}
   };
   /** Pakaian Toko Fashion. */
   const OUTFITS = {jubah: {name: 'Jubah Pahlawan', price: 1000}, zirah: {name: 'Zirah Ksatria', price: 1500}};
@@ -192,6 +194,20 @@ MQ.Hero = (() => {
         P.rect(cx - 5, Y(3), 11, 1, '#ffcd75'); P.px(cx, Y(-1), '#fff3b0').px(cx - 3, Y(0), '#fff3b0').px(cx + 3, Y(0), '#fff3b0');
         break;
       }
+      case 'topiSalju':
+        P.ell(cx, Y(1), 7, 4, '#41a6f6', (x, y) => y <= Y(2)); P.rect(cx - 7, Y(2), 14, 2, '#f4f4f4');
+        for (let x = cx - 5; x < cx + 5; x += 3) P.px(x, Y(0), '#f4f4f4');
+        P.ell(cx, Y(-3.5), 2, 2, '#f4f4f4');
+        break;
+      case 'helmRobot':
+        P.rect(cx - 6, Y(-1), 12, 4, '#94b0c2').rect(cx - 6, Y(2), 12, 1, '#566c86'); P.recolor('#94b0c2', '#566c86', (x, y) => x >= cx + 3);
+        P.rect(cx, Y(-4), 1, 3, '#566c86').ell(cx + 0.5, Y(-4.5), 1.3, 1.3, '#e43b44');
+        P.rect(cx - 4, Y(0), 2, 1, '#73eff7').rect(cx + 2, Y(0), 2, 1, '#73eff7');
+        break;
+      case 'mahkotaPetir':
+        P.rect(cx - 4, Y(1), 8, 3, '#333c57').rect(cx - 4, Y(3), 8, 1, '#1a1c2c');
+        [[cx - 3, 0], [cx, -2], [cx + 3, 0]].forEach(([x, t]) => { P.rect(x, Y(t - 2), 2, 2, '#ffcd75').rect(x - 1, Y(t), 2, 1, '#ffcd75').px(x - 1, Y(t + 1), '#fff3b0'); });
+        break;
       case 'mahkotaBintang': {
         P.rect(cx - 4, Y(1), 8, 3, '#73eff7').rect(cx - 4, Y(3), 8, 1, '#41a6f6');
         [[cx - 1, Y(-3)], [cx, Y(-3)], [cx - 2, Y(-2)], [cx - 1, Y(-2)], [cx, Y(-2)], [cx + 1, Y(-2)], [cx - 1, Y(-1)], [cx, Y(-1)], [cx - 1, Y(0)], [cx, Y(0)]].forEach(([x, y]) => P.px(x, y, '#ffcd75'));

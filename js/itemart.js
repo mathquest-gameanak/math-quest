@@ -253,6 +253,44 @@ MQ.ItemArt = (() => {
       P.ell(12, 15, 6, 6.5, '#3b5dc9').recolor('#3b5dc9', '#29366f', (x, y) => x > 13 && y > 15);
       P.ell(12, 15, 2.5, 2.5, '#73eff7').px(9, 12, W).px(10, 11, W);
     }),
+    // ===== Kelas 2 =====
+    baut: () => recol('batu', {'#c7d3de': '#f4f4f4', '#94b0c2': '#c7d3de', '#566c86': '#94b0c2', '#333c57': '#566c86'}),
+    embun: () => recol('lendir', {'#38b764': '#73eff7', '#257179': '#41a6f6', '#a7f070': '#c7f0ff'}),
+    kristalPetir: () => recol('kristalPola', {'#b06fd0': '#ffcd75', '#f4a3c8': '#fff3b0', '#5d275d': '#ef7d57'}),
+    esAbadi: () => recol('kristalPola', {'#b06fd0': '#73eff7', '#f4a3c8': '#c7f0ff', '#5d275d': '#41a6f6'}),
+    cangkang() {
+      const P = grid(N, N);
+      P.ell(12, 13, 9, 8.5, '#ef7d57').ell(11.5, 13.5, 6, 5.8, '#b13e53').ell(11, 14, 4.4, 4.2, '#ef7d57').ell(11.5, 13.5, 2.4, 2.4, '#b13e53').ell(12, 13, 1, 1, '#ffcd75');
+      P.px(7, 7, W).px(8, 6, W);
+      return P.outline();
+    },
+    rodaGigi() {
+      const P = grid(N, N);
+      for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4; P.rect(12 + Math.cos(a) * 9 - 1.5, 12 + Math.sin(a) * 9 - 1.5, 3, 3, '#ef7d57'); }
+      P.ell(12, 12, 8, 8, '#ffcd75').ell(12, 12, 3, 3, '#5d3a28').recolor('#ffcd75', '#ef7d57', (x, y) => x > 13 && y > 13);
+      P.px(7, 7, W).px(8, 6, W);
+      return P.outline();
+    },
+    pasirWaktu() {
+      const P = grid(N, N);
+      P.rect(5, 2, 14, 2, '#ab5236').rect(5, 20, 14, 2, '#ab5236');
+      for (let y = 4; y < 20; y++) { const hw = Math.max(1, Math.round(Math.abs(y - 12) * 0.75)); P.rect(12 - hw, y, hw * 2, 1, '#c7f0ff'); }
+      for (let y = 15; y < 20; y++) { const hw = Math.max(1, Math.round(Math.abs(y - 12) * 0.75)) - 1; P.rect(12 - hw, y, hw * 2, 1, '#ffcd75'); }
+      P.rect(11, 9, 2, 6, '#ffcd75').px(8, 5, W);
+      return P.outline();
+    },
+    pedangBesi: () => sword(['#f4f4f4', '#c7d3de', '#94b0c2'], '#566c86', '#333c57', '#ab5236'),
+    pedangRobot: () => sword(['#c7f0ff', '#94b0c2', '#566c86'], '#41a6f6', '#3b5dc9', '#333c57', '#73eff7'),
+    pedangPetir: () => sword(['#fff3b0', '#ffcd75', '#ef7d57'], '#3b5dc9', '#29366f', '#333c57', '#fff3b0'),
+    pedangSalju: () => sword(['#f4f4f4', '#c7f0ff', '#73eff7'], '#41a6f6', '#3b5dc9', '#5d275d', '#f4f4f4'),
+    perisaiBesi: () => kite('#333c57', ['#c7d3de', '#94b0c2']),
+    perisaiCangkang: () => kite('#5d275d', ['#ef7d57', '#b13e53'], P => { P.ell(12, 11, 4, 4, '#ffcd75').ell(12, 11, 2.5, 2.5, '#ef7d57').ell(12, 11, 1, 1, '#ffcd75'); }),
+    zirahWaktu: () => kite('#5d3a28', ['#ffcd75', '#d4a373'], P => { P.ell(12, 11, 4.5, 4.5, '#f4f4f4'); P.rect(12, 8, 1, 4, '#1a1c2c').rect(12, 11, 3, 1, '#1a1c2c'); }),
+    perisaiEs: () => kite('#3b5dc9', ['#f4f4f4', '#73eff7'], P => { P.rect(11, 6, 2, 11, '#41a6f6').rect(7, 10, 10, 2, '#41a6f6'); }),
+    kalungEmbun: () => pendant('#94b0c2', P => { P.ell(12, 15, 4, 5, '#73eff7').ell(11, 13, 1.5, 2, '#f4f4f4'); P.px(12, 9, '#73eff7'); }),
+    jamSaku: () => pendant('#ffcd75', P => { P.ell(12, 15, 5.5, 5.5, '#ffcd75').ell(12, 15, 4, 4, '#f4f4f4'); P.rect(12, 12, 1, 4, '#1a1c2c').rect(12, 15, 3, 1, '#1a1c2c'); }),
+    mahkotaSalju: () => crown('#f4f4f4', '#c7f0ff', ['#73eff7', '#41a6f6', '#73eff7']),
+    tombakKali: () => { const P = grid(N, N); for (let k = 0; k < 17; k++) P.px(3 + k, 21 - k, '#ab5236').px(4 + k, 21 - k, '#5d3a28'); P.ell(20, 4, 3.5, 3.5, '#b06fd0'); for (let i = -2; i <= 2; i++) P.px(20 + i, 4 + i, '#f4f4f4').px(20 + i, 4 - i, '#f4f4f4'); return P.outline(); },
     mahkotaBijak: () => crown('#73eff7', '#41a6f6', ['#b06fd0', '#ffcd75', '#b06fd0']),
 
     /* ----- ikon menu (2026-11-26) ----- */
@@ -404,6 +442,8 @@ MQ.ItemArt = (() => {
     }
   };
 
+  /** Gambar item lain dengan warna diganti (untuk bahan Kelas 2). */
+  function recol(id, map) { const P = DRAW[id](); Object.entries(map).forEach(([f, t]) => P.recolor(f, t)); return P; }
   const urls = {};
   /** Data-URL ikon item (null bila belum ada gambar baru). */
   function url(id, scale = 4) {
