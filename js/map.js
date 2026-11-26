@@ -303,6 +303,7 @@ MQ.WorldMap = (() => {
   /** Tempat tujuan berikutnya (area terbuka pertama yang belum selesai) — di sini pahlawan berdiri. */
   function currentPlace() {
     const main = Data.fields.filter(f => !f.soon);
+    if (S.grade < S.kelas) return main[0]; // hanya mengintip kelas atas: pahlawan menunggu di tempat pertama
     return main.find(f => isOpen(f) && !modeList().includes(f.id)) || main[main.length - 1];
   }
 
@@ -399,6 +400,9 @@ MQ.WorldMap = (() => {
     if (!b) return;
     const p = places().find(x => x.id === b.dataset.place);
     if (p.soon) return UI.overlay({icon: '🚧', title: p.name, text: 'Tempat ini sedang dibangun. Segera hadir!'});
+    if (p.kelas && S.grade < p.kelas) {
+      return UI.overlay({icon: '👀', title: `Kelas ${p.kelas} (mengintip)`, text: `${p.desc}. Lulus Ujian Naik Kelas ${p.kelas - 1} di Kastil dulu untuk memulai petualangan Kelas ${p.kelas}!`});
+    }
     if (!isOpen(p)) {
       const lst = modeList(), lvl = heroOn() ? ` di tingkat ${MODES[mode()].short}` : '';
       if (p.reqAll && !State.mainFields().every(f => lst.includes(f.id))) {
@@ -427,14 +431,29 @@ MQ.WorldMap = (() => {
       text: `${p.desc}.${lv}${hero ? ` Mode ${M.name.split(' ')[1]}: musuh lebih kuat & cepat, kadang DUA monster sekaligus. Koin lebih banyak!` : ''}${done}`});
   });
 
-  /* Pindah dunia Kelas 1 ⇄ Kelas 2 (Kelas 2 terbuka setelah lulus Ujian Kelas 1 atau Level 16) */
+  /* Pilih peta Kelas 1–6. Kelas atas boleh diintip; tempatnya baru bisa dimainkan setelah lulus kelas sebelumnya (state.js unlocked). */
+  function renderKelasMenu() {
+    $('kelasMenu').innerHTML = [1, 2, 3, 4, 5, 6].map(k => {
+      const ada = !!Data.byKelas[k], sub = !ada ? '🚧 Segera' : S.grade >= k ? 'Bisa dimainkan' : `👀 Intip · lulus Kelas ${k - 1} untuk mulai`;
+      return `<button class="modeOpt${k === S.kelas ? ' on' : ''}${ada ? '' : ' locked'}" data-k="${k}"><b>🎒 Kelas ${k}</b><small>${sub}</small></button>`;
+    }).join('');
+  }
   $('btnKelas').addEventListener('click', e => {
     e.stopPropagation();
-    if (!k2() && S.grade < 2 && S.level < 16) {
-      MQ.Audio.sfx.wrong();
-      return UI.overlay({icon: '🔒', title: 'Kelas 2 masih terkunci', text: 'Lulus Ujian Naik Kelas di Kastil (atau capai Level 16) untuk membuka petualangan Kelas 2!'});
-    }
-    S.kelas = k2() ? 1 : 2; State.save();
+    const menu = $('kelasMenu');
+    if (menu.hidden) renderKelasMenu();
+    menu.hidden = !menu.hidden;
+    $('modeMenu').hidden = true;
+  });
+  document.addEventListener('click', e => { if (!e.target.closest('#kelasMenu')) $('kelasMenu').hidden = true; });
+  $('kelasMenu').addEventListener('click', e => {
+    const b = e.target.closest('.modeOpt');
+    if (!b) return;
+    const k = +b.dataset.k;
+    $('kelasMenu').hidden = true;
+    if (!Data.byKelas[k]) return UI.overlay({icon: '🚧', title: `Kelas ${k}`, text: 'Petualangan kelas ini sedang dibuat. Segera hadir!'});
+    if (k === S.kelas) return;
+    S.kelas = k; State.save();
     MQ.Audio.sfx.toggle();
     UI.renderers.map();
   });

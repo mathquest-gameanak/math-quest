@@ -99,7 +99,8 @@ MQ.State = (() => {
   /** Field/dungeon/ujian bisa dimasuki? reqAll = semua area biasa harus selesai. */
   const unlocked = place => !place.soon && (!place.req || S.cleared.includes(place.req)) &&
                             (!place.reqAll || mainFields().every(f => S.cleared.includes(f.id))) &&
-                            (!place.minLevel || S.level >= place.minLevel);
+                            (!place.minLevel || S.level >= place.minLevel) &&
+                            (!place.kelas || S.grade >= place.kelas); // kelas atas: boleh diintip, dimainkan setelah lulus kelas sebelumnya
   /* Tingkat cerita: 0 Normal, 1 Pahlawan, 2 Legenda. Pahlawan terbuka setelah lulus Ujian Normal (naik Kelas 2);
      Legenda terbuka setelah lulus Ujian Pahlawan. Di tiap tingkat area terbuka berurutan lagi dari awal.
      Ujian yang lulus di Pahlawan/Legenda dicatat sebagai 'kastil' di heroCleared/legendCleared. */

@@ -390,5 +390,8 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Tombol **🎒 Kelas 1/2** di Peta (terbuka setelah lulus Ujian Kelas 1 atau Lv 16). `S.kelas` memilih dunia: `MQ.Data.useKelas` (hanya peta; dungeon tetap Kelas 1), `POS2`/`BANDS2`/`drawTerrain2` di map.js (9 wilayah warna + hiasan sederhana).
 - Kelas 2 sementara hanya tingkat Normal (`State.storyMode` = 0). Padang Seribu bisa dimainkan (monster Kelas 1 sementara, Lv 16–17), peta 2–9 🚧. `Data.allFields()` untuk syarat dungeon. SW `mq-v63`.
 
+### 2026-11-27 — Intip peta kelas atas
+- Tombol 🎒 Kelas di Peta jadi menu Kelas 1–6 (`#kelasMenu`). Kelas atas bisa diintip, dan saat tempat diketuk muncul pesan "lulus Kelas N dulu". Syarat Lv 16 dihapus: mulai kelas berikutnya harus lulus kelas sebelumnya (`S.grade`). SW `mq-v64`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
