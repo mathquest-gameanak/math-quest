@@ -1,8 +1,9 @@
 /* Math Quest — 🐾 Teman peliharaan yang tumbuh bersama anak (Kiki dulu, lalu koleksi teman lain; 2026-11-26).
    - Sekali sehari "Latihan Teman": 5 soal TANPA waktu, dipilih dari kemampuan yang paling lemah & yang paling lama tidak dilatih
      (pengulangan berjarak). Tiap jawaban benar = memberi buah beri. Salah = petunjuk, coba lagi (tanpa hukuman).
-   - Selesai = teman yang sedang dirawat (aktif) +1 hari tumbuh. 5 tahap; naik tahap = hadiah. Hanya SATU teman yang ikut bertualang.
-   - Teman baru (telur) bisa diadopsi bila semua teman yang dimiliki sudah dewasa (tahap 5) & syarat telurnya terpenuhi
+   - Selesai = KIKI +1 hari tumbuh. 5 tahap; naik tahap = hadiah. Hanya SATU teman yang ikut bertualang.
+   - Teman lain (2026-11-27): telur menetas & tumbuh dari Makanan Teman (1/hari dari Peti Bonus Misi Harian), balance.js pets.food.
+     Hanya satu telur/teman yang sedang tumbuh; teman baru bisa diadopsi bila teman lain sudah dewasa (tahap 5) & syarat telurnya terpenuhi
      (mengalahkan monster sejenis 10×, atau lulus Kelas 1) → selalu ada yang dirawat, tanpa undian/gacha.
    - Kiki punya gambar khusus kiki1..kiki5; teman lain dibuat dari gambar monsternya: telur → bayi → kecil (+syal) → remaja (+topi) → agung (+mahkota).
    Simpanan: S.pets = {active, own: {id: {days}}, last, seen: {jenis: tanggal}}. Nama modul tetap MQ.Kiki (dipakai beranda & scene). */
@@ -15,7 +16,9 @@ MQ.Kiki = (() => {
   const $ = id => document.getElementById(id);
   const sfx = () => MQ.Audio.sfx;
   const N_Q = 5;
-  const NEED = [0, 2, 5, 9, 14]; // hari diberi makan untuk tiap tahap
+  const NEED_K = [0, 2, 5, 9, 14]; // Kiki: hari Latihan Teman untuk tiap tahap
+  const needOf = id => (PETS[id].kiki ? NEED_K : MQ.Balance.pets.food); // teman lain: jumlah Makanan Teman
+  const NEED = NEED_K; // jumlah tahap (5)
   const STAGE_NAME = ['Telur', 'Bayi', 'Kecil', 'Remaja', 'Agung'];
   const SIZE = [0.8, 0.6, 0.78, 0.9, 1]; // ukuran gambar tiap tahap (teman selain Kiki)
   const REWARD = [null, {coins: 20}, {coins: 30, item: 'ramuan'}, {coins: 40, item: 'mahkota'}, {coins: 60, item: 'mahkota'}];
@@ -36,7 +39,9 @@ MQ.Kiki = (() => {
   const today = () => State.today();
   const fed = () => P().last === today();
   const days = id => (P().own[id] ? P().own[id].days : 0);
-  const stageOf = id => { let i = 0; NEED.forEach((n, j) => { if (days(id) >= n) i = j; }); return i; };
+  const stageOf = id => { let i = 0; needOf(id).forEach((n, j) => { if (days(id) >= n) i = j; }); return i; };
+  /** Teman selain Kiki yang sedang tumbuh (paling banyak satu). */
+  const grower = () => Object.keys(P().own).find(id => !PETS[id].kiki && !maxed(id));
   const active = () => (P().own[P().active] ? P().active : 'kiki');
   const stage = () => stageOf(active());
   const maxed = id => stageOf(id) === NEED.length - 1;
@@ -83,12 +88,13 @@ MQ.Kiki = (() => {
     return (S.bestiary[u.mon] || 0) >= u.n;
   }
   const reqText = id => { const u = PETS[id].unlock; return u.stars ? 'Tukar di ⭐ Misi Harian' : u.grade ? 'Lulus Kelas 1' : `Kalahkan ${Data.monsters[u.mon].name} ${u.n}× (${Math.min(u.n, S.bestiary[u.mon] || 0)}/${u.n})`; };
-  const allMaxed = () => Object.keys(P().own).every(maxed);
+  const canAdopt = () => !grower();
 
   /* ===== Memilih soal: kemampuan terlemah + paling lama tidak dilatih ===== */
   function pool() {
     const m = {};
-    Data.fields.filter(f => f.spec && State.unlocked(f)).forEach(f => f.spec.kinds.forEach(k => { m[k] = Math.min(m[k] || 99, f.spec.max || 20); }));
+    Data.allFields().filter(f => f.spec && State.unlocked(f)).forEach(f => f.spec.kinds.forEach(k => { m[k] = Math.min(m[k] || 99, f.spec.max || 20); })); // semua kelas yang terbuka (bukan hanya peta yang sedang dilihat)
+    if (!Object.keys(m).length) Data.byKelas[1].fields[0].spec.kinds.forEach(k => { m[k] = 10; });
     return m;
   }
   function chooseKinds() {
@@ -106,7 +112,8 @@ MQ.Kiki = (() => {
   function greet() {
     const id = active(), nm = PETS[id].name;
     const h = new Date().getHours(), waktu = h < 11 ? 'pagi' : h < 15 ? 'siang' : h < 18 ? 'sore' : 'malam';
-    if (stageOf(id) === 0 && !PETS[id].kiki) return fed() ? `(Telur ${nm} bergoyang senang. Besok mungkin menetas!)` : `(Telur ${nm} hangat... Latihan bersama supaya cepat menetas!)`;
+    if (stageOf(id) === 0 && !PETS[id].kiki) return `(Telur ${nm} hangat... Beri 🍓 Makanan Teman dari Misi Harian supaya menetas!)`;
+    if (!PETS[id].kiki && !fed()) return `${nm}: "Halo, ${heroName()}! Ayo latihan bareng Kiki, lalu beri aku Makanan Teman ya!"`;
     if (fed()) return `${nm}: "Nyam! Terima kasih, ${heroName()}. Aku sudah kenyang. Sampai besok ya!"`;
     const y = new Date(); y.setDate(y.getDate() - 1);
     const yd = S.days[State.dateKey(y)];
@@ -121,33 +128,37 @@ MQ.Kiki = (() => {
   /* ===== Layar teman ===== */
   let run = null; // {list, i, ok, q}
   function render() {
-    const id = active(), st = stageOf(id), next = NEED[st + 1];
+    const id = active(), st = stageOf(id), ND = needOf(id), next = ND[st + 1], unit = PETS[id].kiki ? 'hari' : 'makanan';
     $('kikiTitle').textContent = `🐾 ${PETS[id].name}`;
     $('kikiImg').src = img(5);
     $('kikiImg').classList.toggle('agung', st === NEED.length - 1);
     $('kikiName').textContent = petLabel(id);
-    const have = days(id) - NEED[st], need = next != null ? next - NEED[st] : 1;
+    const have = days(id) - ND[st], need = next != null ? next - ND[st] : 1;
     $('kikiGrowFill').style.width = (next != null ? Math.min(100, have / need * 100) : 100) + '%';
-    $('kikiGrowText').textContent = next != null ? `${have} / ${need} hari menuju tahap berikutnya` : 'Sudah dewasa! 👑';
-    $('kikiStages').innerHTML = NEED.map((n, i) => `<span class="kStage${i <= st ? ' got' : ''}${i === st ? ' now' : ''}">` +
-      `<img src="${img(2, id, i, i > st)}" alt=""><small>${i > st ? `${n} hari` : PETS[id].kiki ? ['Kecil', 'Pelajar', 'Penjelajah', 'Bijak', 'Agung'][i] : STAGE_NAME[i]}</small></span>`).join('');
+    $('kikiGrowText').textContent = next != null ? `${have} / ${need} ${unit} menuju tahap berikutnya` : 'Sudah dewasa! 👑';
+    $('kikiStages').innerHTML = ND.map((n, i) => `<span class="kStage${i <= st ? ' got' : ''}${i === st ? ' now' : ''}">` +
+      `<img src="${img(2, id, i, i > st)}" alt=""><small>${i > st ? `${n} ${unit}` : PETS[id].kiki ? ['Kecil', 'Pelajar', 'Penjelajah', 'Bijak', 'Agung'][i] : STAGE_NAME[i]}</small></span>`).join('');
     renderCollection();
     if (run) return renderQ();
     $('kikiSay').textContent = greet();
     $('kikiQ').hidden = true;
     const b = $('kikiGo');
     b.hidden = false; b.disabled = fed();
-    b.textContent = fed() ? `✔ Latihan hari ini selesai` : `🍓 Latihan Teman (${N_Q} soal)`;
+    b.textContent = fed() ? `✔ Latihan hari ini selesai` : `🍓 Latihan Teman bersama Kiki (${N_Q} soal)`;
+    // Makanan Teman untuk teman yang sedang tumbuh (selain Kiki)
+    const g = grower(), f = $('kikiFeed'), n = State.count('makananTeman');
+    f.hidden = !g;
+    if (g) { f.disabled = !n; f.textContent = n ? `🍖 Beri makan ${PETS[g].name} (punya ${n} Makanan Teman)` : `🍖 Makanan Teman habis · dapat lagi dari Misi Harian`; }
   }
   /** Koleksi: teman yang dimiliki (ketuk = ikut bertualang), telur yang bisa diadopsi, dan yang masih terkunci. */
   function renderCollection() {
-    const canAdopt = allMaxed();
+    const adopt = canAdopt();
     $('petList').innerHTML = IDS.map(id => {
       const own = !!P().own[id], open = unlocked(id);
       if (own) return `<button class="petCard own${id === active() ? ' on' : ''}" data-pet="${id}"><img src="${img(2, id)}" alt="">` +
         `<b>${PETS[id].name}</b><small>${id === active() ? '⭐ Ikut bertualang' : STAGE_NAME[stageOf(id)]}</small></button>`;
       if (open) return `<button class="petCard egg" data-adopt="${id}"><img src="${img(2, id, 0)}" alt=""><b>${PETS[id].name}</b>` +
-        `<small>${canAdopt ? '🥚 Adopsi!' : 'Rawat temanmu sampai dewasa dulu'}</small></button>`;
+        `<small>${adopt ? '🥚 Adopsi!' : 'Besarkan temanmu sampai dewasa dulu'}</small></button>`;
       return `<div class="petCard lock"><img src="${img(2, id, 0, true)}" alt=""><b>???</b><small>${reqText(id)}</small></div>`;
     }).join('');
   }
@@ -156,11 +167,11 @@ MQ.Kiki = (() => {
     if (o && !run) { P().active = o.dataset.pet; State.save(); sfx().equip(); render(); renderHome(); return; }
     if (!a || run) return;
     const id = a.dataset.adopt;
-    if (!allMaxed()) return UI.overlay({img: `<img class="iconBig kikiPop" src="${img(4, active())}" alt="">`, title: 'Belum bisa adopsi',
-      text: `Rawat ${PETS[active()].name} sampai dewasa (Agung) dulu, baru adopsi teman baru. Teman yang dirawat setiap hari pasti tumbuh!`});
+    if (!canAdopt()) { const g = grower(); return UI.overlay({img: `<img class="iconBig kikiPop" src="${img(4, g)}" alt="">`, title: 'Belum bisa adopsi',
+      text: `Besarkan ${PETS[g].name} sampai dewasa (Agung) dulu dengan Makanan Teman, baru adopsi teman baru.`}); }
     P().own[id] = {days: 0}; P().active = id; State.save(); sfx().chest();
     UI.overlay({fx: 'chest', sub: 'TEMAN BARU', title: `Telur ${PETS[id].name}!`, chips: [{img: img(3, id, 0), text: 'Rawat setiap hari'}],
-      text: `Latihan bersama setiap hari supaya telurnya menetas & ${PETS[id].name} tumbuh besar!`});
+      text: `Beri 🍓 Makanan Teman (dari Peti Bonus Misi Harian) supaya telurnya menetas & ${PETS[id].name} tumbuh besar! Butuh ${MQ.Balance.pets.food[1]} makanan untuk menetas.`});
     render(); renderHome();
   });
   function start() {
@@ -204,13 +215,27 @@ MQ.Kiki = (() => {
     setTimeout(() => { run.i++; run.q = null; if (run.i < N_Q) return render(); finish(); }, 1100);
   }
   function finish() {
-    const id = active(), before = stageOf(id), grows = !maxed(id);
+    const id = 'kiki', before = stageOf(id), grows = !maxed(id); // Latihan Teman membesarkan Kiki
     if (grows) P().own[id].days++;
     P().last = today(); run = null;
     if (MQ.Village) MQ.Village.addBrick(1, 'Latihan Teman');
     if (MQ.Quests) MQ.Quests.track('pet');
     if (!grows) S.coins += 5;
     State.save(); render(); renderHome();
+    if (!grown(id, before)) fullUp(id, grows);
+  }
+  /** Beri satu Makanan Teman ke teman yang sedang tumbuh (selain Kiki). */
+  $('kikiFeed').addEventListener('click', () => {
+    const id = grower();
+    if (!id || run || !State.count('makananTeman')) return;
+    const before = stageOf(id);
+    State.removeItem('makananTeman', 1); P().own[id].days++;
+    State.save(); sfx().potion(); render(); renderHome();
+    if (!grown(id, before)) UI.overlay({img: `<img class="iconBig kikiPop" src="${img(4, id)}" alt="">`, title: 'Nyam!',
+      text: `${PETS[id].name}: "Enak! Terima kasih, ${heroName()}!" (${days(id) - needOf(id)[stageOf(id)]} / ${needOf(id)[stageOf(id) + 1] - needOf(id)[stageOf(id)]} makanan menuju tahap berikutnya)`});
+  });
+  /** Bila teman naik tahap: hadiah & pesan. true = sudah ditampilkan. */
+  function grown(id, before) {
     const after = stageOf(id);
     if (after > before) {
       const r = REWARD[after] || {};
@@ -221,12 +246,17 @@ MQ.Kiki = (() => {
       if (r.coins) chips.push({img: MQ.ItemArt.url('coin'), text: `+${r.coins} koin`});
       if (r.item) chips.push({img: MQ.ItemArt.url(r.item), text: `+1 ${Data.items[r.item].name}`});
       const say = PETS[id].kiki ? PETS[id].say[after - 1] : after === 1 ? 'Krak! Aku menetas! Halo!' : after === 4 ? 'Mahkota! Aku sudah dewasa. Terima kasih!' : 'Aku tumbuh! Lihat penampilan baruku!';
-      return UI.overlay({fx: 'level', level: petLabel(id), from: STAGE_NAME[before], sub: '🐾 TEMANMU TUMBUH!', title: petLabel(id), btn: 'Hore!', chips,
-        text: `${PETS[id].name}: "${say}"` + (after === 4 && IDS.some(x => !P().own[x] && unlocked(x)) ? ' Sekarang kamu bisa adopsi teman baru!' : ''), pet: {id, n: after}});
+      UI.overlay({fx: 'level', level: petLabel(id), from: STAGE_NAME[before], sub: '🐾 TEMANMU TUMBUH!', title: petLabel(id), btn: 'Hore!', chips,
+        text: `${PETS[id].name}: "${say}"` + (after === 4 && !PETS[id].kiki && IDS.some(x => !P().own[x] && unlocked(x)) ? ' Sekarang kamu bisa adopsi teman baru!' : ''), pet: {id, n: after}});
+      return true;
     }
+    return false;
+  }
+  /** Pesan selesai Latihan Teman (tanpa naik tahap). */
+  function fullUp(id, grows) {
     sfx().fanfare();
     UI.overlay({img: `<img class="iconBig kikiPop" src="${img(4)}" alt="">`, title: grows ? `${PETS[id].name} kenyang!` : 'Latihan selesai!',
-      text: grows ? `${PETS[id].name}: "Nyam nyam! Terima kasih, ${heroName()}! Sampai besok ya."` : `${PETS[id].name} sudah dewasa. Kamu dapat 5 koin. Adopsi atau rawat teman yang masih kecil supaya ada yang tumbuh!`});
+      text: grows ? `${PETS[id].name}: "Nyam nyam! Terima kasih, ${heroName()}! Sampai besok ya."` : `${PETS[id].name} sudah dewasa. Kamu dapat 5 koin. Teman lain tumbuh dari Makanan Teman.`});
   }
   $('kikiGo').addEventListener('click', start);
   $('kikiBack').addEventListener('click', () => { run = null; sfx().back(); UI.show('home'); });

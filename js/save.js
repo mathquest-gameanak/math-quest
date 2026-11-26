@@ -6,7 +6,7 @@ window.MQ = window.MQ || {};
 
 MQ.Save = (() => {
   const KEY = 'mathQuest.v1'; // nama kunci tetap; versi format ada di dalam data (field v)
-  const VERSION = 12; // v12: + kelas (dunia kelas yang sedang dimainkan). v11: + Mode Legenda (storyMode), tingkat equipment. v10: + bintang dungeon, Mode Pahlawan.          // v1: level/xp/monsters/mode. v2: + area selesai, kill per field, statistik. v3: + koin, tas, equipment. v4: + kelas, ujian, misi harian. v5: + poin status (HP/ATK/DEF). v6: + catatan harian, pengaturan. v7: + penampilan pahlawan. v8: + cerita (adegan yang sudah ditonton). v9: + Buku Monster, medali, kostum
+  const VERSION = 13; // v13: teman selain Kiki tumbuh dari Makanan Teman (days = jumlah makanan). v12: + kelas (dunia kelas yang sedang dimainkan). v11: + Mode Legenda (storyMode), tingkat equipment. v10: + bintang dungeon, Mode Pahlawan.          // v1: level/xp/monsters/mode. v2: + area selesai, kill per field, statistik. v3: + koin, tas, equipment. v4: + kelas, ujian, misi harian. v5: + poin status (HP/ATK/DEF). v6: + catatan harian, pengaturan. v7: + penampilan pahlawan. v8: + cerita (adegan yang sudah ditonton). v9: + Buku Monster, medali, kostum
   const MODES = ['campur', 'tambah', 'kurang', 'kali', 'seribu'];
   const OPS = ['tambah', 'kurang', 'kali'];
   const num = (v, def, min) => (Number.isFinite(v) && v >= min ? Math.floor(v) : def);
@@ -87,7 +87,9 @@ MQ.Save = (() => {
       // Simpanan lama {kiki: {days, last, seen}} → pets.own.kiki
       pets: (() => { const p = obj(d.pets), old = obj(d.kiki), seen = {}, own = {};
         for (const [a, b] of Object.entries(obj(p.seen || old.seen))) if (typeof b === 'string') seen[a] = b;
-        for (const [a, b] of Object.entries(obj(p.own))) if (/^[a-z]+$/i.test(a)) own[a] = {days: num(obj(b).days, 0, 0)};
+        const OLD = [0, 2, 5, 9, 14], FOOD = [0, 2, 7, 15, 30]; // < v13: teman lain tumbuh per hari latihan → sekarang per makanan (tahap tetap)
+        const conv = n => { let st = 0; OLD.forEach((x, i) => { if (n >= x) st = i; }); return FOOD[st]; };
+        for (const [a, b] of Object.entries(obj(p.own))) if (/^[a-z]+$/i.test(a)) { const n = num(obj(b).days, 0, 0); own[a] = {days: a !== 'kiki' && num(d.v, 0, 0) < 13 ? conv(n) : n}; }
         if (!own.kiki) own.kiki = {days: num(old.days, 0, 0)};
         const last = typeof p.last === 'string' ? p.last : typeof old.last === 'string' ? old.last : '';
         return {active: typeof p.active === 'string' && own[p.active] ? p.active : 'kiki', own, last, seen}; })(),

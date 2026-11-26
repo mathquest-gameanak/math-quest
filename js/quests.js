@@ -36,7 +36,7 @@ MQ.Quests = (() => {
     const valid = d && d.date === today() && Array.isArray(d.list) && d.list.length === 3 &&
       d.list.every(m => m && TYPES[m.t] && Number.isFinite(m.n) && Number.isFinite(m.p) && m.reward && m.reward.stars);
     if (valid) return;
-    const kinds = [...new Set(Data.fields.filter(f => f.spec && State.unlocked(f)).flatMap(f => f.spec.kinds))];
+    const kinds = [...new Set(Data.allFields().filter(f => f.spec && State.unlocked(f)).flatMap(f => f.spec.kinds))];
     const learn = pick(['pet', 'pet', 'learn', 'goal']);
     const pool = ['kill', 'correct', 'boss', 'combo', 'kilat', 'chest'];
     if (Data.dungeons.some(x => State.unlocked(x))) pool.push('dungeon');
@@ -106,7 +106,7 @@ MQ.Quests = (() => {
     }).join('');
     const n = S.daily.list.filter(m => m.claimed).length, ready = bonusReady();
     $('questBonus').innerHTML = `<div class="panel bonusBox${ready ? ' ready' : ''}"><img src="${MQ.Pix.url(S.daily.bonus ? 'petiBuka' : 'peti', 3)}" alt="">` +
-      `<div class="sBody"><b>Peti Bonus Harian</b><small>${S.daily.bonus ? 'Sudah dibuka. Datang lagi besok!' : `Ambil hadiah ketiga misi (${n}/3): ⭐ ${BONUS.stars} + ${Data.items[bonusMat()].name} + 🪙 ${BONUS.coins}`}</small></div>` +
+      `<div class="sBody"><b>Peti Bonus Harian</b><small>${S.daily.bonus ? 'Sudah dibuka. Datang lagi besok!' : `Ambil hadiah ketiga misi (${n}/3): ⭐ ${BONUS.stars} + ${Data.items[bonusMat()].name} + Makanan Teman + 🪙 ${BONUS.coins}`}</small></div>` +
       `<button class="sBtn" id="qBonus" ${ready ? '' : 'disabled'}>${S.daily.bonus ? '✓' : 'Buka'}</button></div>`;
     $('questToStar').innerHTML = `⭐ Kamu punya <b>${S.starTokens}</b> Bintang Misi · <u>Tukar di Toko ▶</u>`;
   };
@@ -138,10 +138,10 @@ MQ.Quests = (() => {
   });
   $('questBonus').addEventListener('click', e => {
     if (!e.target.closest('#qBonus') || !bonusReady()) return;
-    S.daily.bonus = true; S.starTokens += BONUS.stars; S.coins += BONUS.coins; State.addItem(bonusMat(), 1);
+    S.daily.bonus = true; S.starTokens += BONUS.stars; S.coins += BONUS.coins; State.addItem(bonusMat(), 1); State.addItem('makananTeman', 1); // telur teman
     State.save(); MQ.Audio.sfx.chest(); UI.renderers.quests();
     UI.overlay({fx: 'chest', sub: 'SEMUA MISI SELESAI', title: 'Peti Bonus!', chips: [{icon: '⭐', text: `+${BONUS.stars} Bintang Misi`},
-      {img: MQ.ItemArt.url(bonusMat()), text: `+1 ${Data.items[bonusMat()].name}`}, {img: MQ.ItemArt.url('coin'), text: `+${BONUS.coins} koin`}],
+      {img: MQ.ItemArt.url(bonusMat()), text: `+1 ${Data.items[bonusMat()].name}`}, {img: MQ.ItemArt.url('makananTeman'), text: '+1 Makanan Teman'}, {img: MQ.ItemArt.url('coin'), text: `+${BONUS.coins} koin`}],
       text: 'Hebat! Tukarkan ⭐ dengan hadiah istimewa di Tukar Bintang.'});
   });
   $('starShop').addEventListener('click', e => {

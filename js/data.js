@@ -88,6 +88,7 @@ MQ.Data = {
     tinta:       {type: 'bahan', name: 'Tinta Bintang', icon: 'star', pal: {y: '#73eff7'}, from: 'perpustakaan',
                   desc: 'Bahan khusus AKSESORI. Dari Perpustakaan Tua (makin banyak di ⭐⭐⭐).'},
 
+    makananTeman: {type: 'bahan', name: 'Makanan Teman', icon: 'apple', desc: 'Untuk menetaskan & membesarkan teman (selain Kiki). Dapat 1 tiap hari dari Peti Bonus Misi Harian.'},
     ramuan:  {type: 'ramuan', name: 'Ramuan Penyembuh', icon: 'potion', price: 10, desc: 'Minum saat bertarung: HP penuh lagi.'},
 
     pedangKayu:      {type: 'senjata', name: 'Pedang Kayu', icon: 'sword', pal: {w: '#d4a373'}, price: 8, atk: 1, crit: 5,

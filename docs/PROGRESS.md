@@ -438,5 +438,11 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 ### 2026-11-27 — Mulai langsung di Kelas 2
 - Orang Tua → **🎒 Mulai langsung di Kelas 2**: level naik ke awal Kelas 2 (Lv 16, `kelasLv[2]`), poin status level yang dilompati diberikan, Pedang Besi & Perisai Besi gratis dan langsung dipakai, `S.grade` = 2, `S.kelas` = 2. Kelas 1 tetap bisa dimainkan. Hanya lewat menu Orang Tua (gerbang soal), supaya anak tidak melompat sendiri. SW `mq-v77`.
 
+### 2026-11-27 — Telur teman dari Makanan Teman
+- Kiki tidak berubah: tumbuh dari Latihan Teman harian (Latihan selalu membesarkan Kiki, siapa pun teman yang ikut bertualang).
+- Teman lain: telur menetas & tumbuh dari item **Makanan Teman** (+1 dari Peti Bonus Misi Harian setiap hari). Butuh 2 / 5 / 8 / 15 = 30 makanan (`balance.js pets.food`). Tombol "🍖 Beri makan" di layar Teman. Hanya satu teman (selain Kiki) yang tumbuh; adopsi telur baru setelah teman itu dewasa.
+- Simpanan v13: hari lama teman selain Kiki dikonversi ke jumlah makanan pada tahap yang sama.
+- Perbaikan: Latihan Teman & Misi Harian memilih soal dari semua kelas yang terbuka (`Data.allFields()`). Sebelumnya macet bila Peta sedang mengintip kelas atas. SW `mq-v78`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

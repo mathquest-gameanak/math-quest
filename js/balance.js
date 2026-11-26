@@ -82,6 +82,8 @@ MQ.Balance = {
     {lvAdd: 16, hpMul: 1.15, dmgMul: 1.15, speedMul: 0.7, rewardMul: 2}
   ],
   heroMode: {lv: [16, 30], hpMul: 1.15, dmgMul: 1.15, speedMul: 0.8, rewardMul: 2},
+  /* Teman selain Kiki: jumlah Makanan Teman (kumulatif) untuk tiap tahap Telur→Bayi→Kecil→Remaja→Agung (2/5/8/15 = 30). */
+  pets: {food: [0, 2, 7, 15, 30]},
   /* Rentang level per kelas: [Normal, Pahlawan, Legenda] (GDD §15). Monster Pahlawan/Legenda = level Normal dipetakan ke rentangnya. */
   kelasLv: {2: [[16, 30], [31, 45], [46, 55]]}, // Kelas 1 memakai heroMode.lv / legendMode.lv (Normal 1–15)
   legendMode: {lv: [31, 40], hpMul: 1.5, dmgMul: 1.4, speedMul: 0.65, rewardMul: 3},  // Legenda: setelah lulus Ujian Pahlawan
