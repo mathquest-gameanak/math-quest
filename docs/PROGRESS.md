@@ -393,5 +393,9 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 ### 2026-11-27 — Intip peta kelas atas
 - Tombol 🎒 Kelas di Peta jadi menu Kelas 1–6 (`#kelasMenu`). Kelas atas bisa diintip, dan saat tempat diketuk muncul pesan "lulus Kelas N dulu". Syarat Lv 16 dihapus: mulai kelas berikutnya harus lulus kelas sebelumnya (`S.grade`). SW `mq-v64`.
 
+### 2026-11-27 — Tingkat Normal/Pahlawan/Legenda per kelas
+- `modeOpen` mengikuti kelas aktif (`S.grade > S.kelas`, ujian `State.examId()`). `Calc.modeCfg(m, kelas)`: Kelas 2 Pahlawan Lv 31–45, Legenda 46–55 (`kelasLv`). Kelas 1 tidak berubah (tetap heroMode/legendMode.lv).
+- Lulus ujian Normal kelas K → `S.grade = K+1`. Istana Ujian Kelas 2 (`k2kastil`, masih `soon`). SW `mq-v65`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

@@ -82,6 +82,8 @@ MQ.Balance = {
     {lvAdd: 16, hpMul: 1.15, dmgMul: 1.15, speedMul: 0.7, rewardMul: 2}
   ],
   heroMode: {lv: [16, 30], hpMul: 1.15, dmgMul: 1.15, speedMul: 0.8, rewardMul: 2},
+  /* Rentang level per kelas: [Normal, Pahlawan, Legenda] (GDD §15). Monster Pahlawan/Legenda = level Normal dipetakan ke rentangnya. */
+  kelasLv: {2: [[16, 30], [31, 45], [46, 55]]}, // Kelas 1 memakai heroMode.lv / legendMode.lv (Normal 1–15)
   legendMode: {lv: [31, 40], hpMul: 1.5, dmgMul: 1.4, speedMul: 0.65, rewardMul: 3},  // Legenda: setelah lulus Ujian Pahlawan
   /* Dua monster sekaligus: titik (0-based) di area per mode cerita (1 = Pahlawan, 2 = Legenda),
      dan ruang di dungeon per tingkat (⭐⭐: ruang sebelum bos; ⭐⭐⭐: ruang genap). */
@@ -140,8 +142,13 @@ MQ.Calc = {
   storyLv(L, cfg) {
     if (!cfg) return L;
     if (!cfg.lv) return L + (cfg.lvAdd || 0);
-    const [a, b] = cfg.lv;
-    return Math.min(b, a + Math.round((L - 1) * (b - a) / 14));
+    const [a, b] = cfg.lv, [n0, n1] = cfg.from || [1, 15];
+    return Math.min(b, a + Math.round((L - n0) * (b - a) / (n1 - n0)));
+  },
+  /** Pengaturan tingkat cerita m (1 Pahlawan, 2 Legenda) untuk kelas k: rentang level ikut kelas (kelasLv). */
+  modeCfg(m, k) {
+    const B = MQ.Balance, base = m === 2 ? B.legendMode : m === 1 ? B.heroMode : null, R = B.kelasLv[k];
+    return base && R ? Object.assign({}, base, {lv: R[m], from: R[0]}) : base;
   },
   /** HP maks & serangan pemain (poin = poin status yang dibagi, eq = tambahan equipment). */
   playerHp(lv, pts, eq) { const P = MQ.Balance.player; return Math.round(P.baseHp + P.hpPerLevel * (lv - 1) + P.hpPerPoint * pts + eq); },

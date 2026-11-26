@@ -162,7 +162,10 @@ MQ.Data = {
     {id: 'k2kali1', kelas: 2, soon: true, name: 'Perkalian 1', icon: '✖️', lv: [24, 26], req: 'k2waktu', desc: 'Perkalian (1)–(2)'},
     {id: 'k2kali2', kelas: 2, soon: true, name: 'Perkalian 2', icon: '✖️', lv: [26, 27], req: 'k2kali1', desc: 'Perkalian (3)–(4)'},
     {id: 'k2bangun', kelas: 2, soon: true, name: 'Bangun', icon: '🔺', lv: [27, 29], req: 'k2kali2', desc: 'Segitiga, segiempat, bentuk kotak'},
-    {id: 'k2pecahan', kelas: 2, soon: true, name: 'Bilangan 10.000 & Pecahan', icon: '🍕', lv: [29, 30], req: 'k2bangun', desc: 'Bilangan sampai 10.000, pecahan'}
+    {id: 'k2pecahan', kelas: 2, soon: true, name: 'Bilangan 10.000 & Pecahan', icon: '🍕', lv: [29, 30], req: 'k2bangun', desc: 'Bilangan sampai 10.000, pecahan'},
+    /* Ujian Naik Kelas 2: dibuka setelah 9 peta selesai dibuat (soon sampai saat itu). */
+    {id: 'k2kastil', kelas: 2, soon: true, name: 'Istana Ujian', icon: '🏯', lv: [30, 30], exam: true, reqAll: true, boss: 'naga',
+     desc: 'Ujian Naik Kelas 2: soal campuran dari semua peta'}
   ],
 
   /* Dungeon bercerita (dibuka dari menu 🏰 Dungeon, js/dungeon.js; tingkat ⭐/⭐⭐/⭐⭐⭐ di balance.js "tiers"):

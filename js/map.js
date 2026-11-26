@@ -20,7 +20,7 @@ MQ.WorldMap = (() => {
   const BANDS1 = [[78, 'kastil'], [156, 'menara'], [236, 'lembah'], [314, 'danau'], [392, 'bukit'], [472, 'hutan'], [H, 'padang']];
   /* Dunia Kelas 2 (GDD §15): 9 tempat zig-zag dari bawah ke atas, tiap tempat satu wilayah warna. */
   const POS2 = {k2ribu: [44, 520], k2susun: [112, 462], k2kurang: [44, 404], k2ukur: [112, 346], k2waktu: [44, 288],
-                k2kali1: [112, 230], k2kali2: [44, 172], k2bangun: [112, 114], k2pecahan: [72, 50], arena: [126, 536]};
+                k2kali1: [112, 230], k2kali2: [44, 172], k2bangun: [112, 114], k2pecahan: [40, 62], k2kastil: [112, 34], arena: [126, 536]};
   const BANDS2 = [[82, 'k2pecahan'], [143, 'k2bangun'], [201, 'k2kali2'], [259, 'k2kali1'], [317, 'k2waktu'], [375, 'k2ukur'],
                   [433, 'k2kurang'], [491, 'k2susun'], [H, 'k2ribu']];
   let POS = POS1, BANDS = BANDS1;
@@ -313,7 +313,7 @@ MQ.WorldMap = (() => {
     setWorld();
     $('btnKelas').textContent = `🎒 Kelas ${S.kelas}`;
     const hb = $('btnHeroMode');
-    hb.hidden = k2(); // Kelas 2: sementara hanya tingkat Normal
+    hb.hidden = false;
     hb.textContent = MODES[mode()].name + ' ▾';
     $('modeMenu').hidden = true;
     hb.classList.toggle('on', heroOn());
@@ -407,7 +407,7 @@ MQ.WorldMap = (() => {
       const lst = modeList(), lvl = heroOn() ? ` di tingkat ${MODES[mode()].short}` : '';
       if (p.reqAll && !State.mainFields().every(f => lst.includes(f.id))) {
         const all = State.mainFields(), done = all.filter(f => lst.includes(f.id)).length;
-        return UI.overlay({icon: '🔒', title: 'Masih Terkunci', text: `Selesaikan semua area Kelas 1${lvl} dulu (${done} dari ${all.length} selesai), lalu ikuti ujiannya!`});
+        return UI.overlay({icon: '🔒', title: 'Masih Terkunci', text: `Selesaikan semua area Kelas ${S.kelas}${lvl} dulu (${done} dari ${all.length} selesai), lalu ikuti ujiannya!`});
       }
       if (p.minLevel && S.level < p.minLevel) {
         return UI.overlay({icon: '💪', title: 'Belum Cukup Kuat', text: `Kastil Ujian butuh Level ${p.minLevel} (sekarang Level ${S.level}). Latihan di area dan dungeon untuk naik level!`});
@@ -424,7 +424,7 @@ MQ.WorldMap = (() => {
       return UI.overlay({icon: '📝', title: 'Ujian Naik Kelas', btn: 'Mulai Ujian', btn2: 'Nanti', cb: go,
         text: `12 soal dari semua area. Musuh tidak menyerang, jawab dengan tenang. Lulus jika benar minimal 9. Nilai terbaikmu: ${S.examBest}.`});
     }
-    const hero = heroOn() && p.spec, M = MODES[hero ? mode() : 0], cfg = hero ? MQ.Balance[M.cfg] : null;
+    const hero = heroOn() && p.spec, M = MODES[hero ? mode() : 0], cfg = hero ? MQ.Calc.modeCfg(mode(), S.kelas) : null;
     const lv = p.lv ? ` Level ${MQ.Calc.storyLv(p.lv[0], cfg)}–${MQ.Calc.storyLv(p.lv[1] + 1, cfg)}.` : '';
     const done = (hero ? modeList() : S.cleared).includes(p.id) ? ' Bos sudah kamu kalahkan ⭐' : '';
     UI.overlay({icon: p.icon, title: p.name + (hero ? ' ' + M.name.split(' ')[0] : ''), btn: 'Main!', btn2: 'Nanti', cb: go,
@@ -463,7 +463,7 @@ MQ.WorldMap = (() => {
   function renderModeMenu() {
     $('modeMenu').innerHTML = MODES.map((M, i) => {
       const open = State.modeOpen(i), list = State.modeList(i), n = State.mainFields().filter(f => list.includes(f.id)).length;
-      const sub = !open ? '🔒 ' + LOCK_TEXT[i] : `${n} dari ${State.mainFields().length} bos` + ((i === 0 ? S.grade >= 2 : list.includes('kastil')) ? ' · ujian lulus 🎓' : '');
+      const sub = !open ? '🔒 ' + LOCK_TEXT[i] : `${n} dari ${State.mainFields().length} bos` + ((i === 0 ? S.grade > S.kelas : list.includes(State.examId())) ? ' · ujian lulus 🎓' : '');
       return `<button class="modeOpt${i === mode() ? ' on' : ''}${open ? '' : ' locked'}" data-m="${i}"><b>${M.name}</b><small>${sub}</small></button>`;
     }).join('');
   }

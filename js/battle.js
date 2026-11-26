@@ -241,7 +241,7 @@ MQ.Battle = (() => {
     B.tier = B.mode === 'dungeon' ? (opt.tier || 0) : 0;
     B.story = B.mode === 'field' || B.mode === 'exam' ? storyMode() : 0; // 0 Normal, 1 Pahlawan, 2 Legenda
     B.examAtk = B.mode === 'exam' && B.story > 0; // ujian Pahlawan/Legenda: musuh tetap menyerang
-    B.mods = B.mode === 'dungeon' ? BAL.tiers[B.tier] : B.story === 2 ? BAL.legendMode : B.story === 1 ? BAL.heroMode : null;
+    B.mods = B.mode === 'dungeon' ? BAL.tiers[B.tier] : MQ.Calc.modeCfg(B.story, S.kelas);
     B.other = null;
     if (B.mode === 'exam') B.exam = {i: 0, ok: 0, wrong: {}, qs: makeExam()};
     if (B.mode === 'dungeon') sfx.door(); // pintu dungeon berderit terbuka
@@ -627,22 +627,22 @@ MQ.Battle = (() => {
     }
     Scene.defeat();
     if (B.story > 0) return storyExamPass(ok, N);
-    const first = S.grade < 2;
-    S.grade = Math.max(S.grade, 2);
+    const K = B.field.kelas || 1, first = S.grade <= K; // lulus ujian Normal kelas K → kelas K+1 terbuka
+    S.grade = Math.max(S.grade, K + 1);
     if (!S.cleared.includes(B.field.id)) S.cleared.push(B.field.id);
     if (first) { S.coins += 30; State.addItem('mahkota', 2); }
     State.save();
     sfx.fanfare();
     const stars = '⭐'.repeat(ok === N ? 3 : ok >= N - 2 ? 2 : 1);
-    const result = () => UI.overlay({icon: '🎓', title: 'Lulus Kelas 1!', btn: 'Ke Peta', cb: () => MQ.Collection.check(exit),
-      text: `${stars} Benar ${ok} dari ${N}. ` + (first ? 'Hadiah: 30 koin & 2 Mahkota Kecil. Dunia Kelas 2 segera hadir!' : 'Kamu tetap juara!')});
-    later(() => (first ? MQ.Cutscene.play('ending', result) : result()), 900); // lulus pertama kali → cerita penutup
+    const result = () => UI.overlay({icon: '🎓', title: `Lulus Kelas ${K}!`, btn: 'Ke Peta', cb: () => MQ.Collection.check(exit),
+      text: `${stars} Benar ${ok} dari ${N}. ` + (first ? `Hadiah: 30 koin & 2 Mahkota Kecil. Petualangan Kelas ${K + 1} terbuka (pilih 🎒 Kelas di Peta)! Tingkat Pahlawan ⭐⭐ Kelas ${K} juga terbuka.` : 'Kamu tetap juara!')});
+    later(() => (first && K === 1 ? MQ.Cutscene.play('ending', result) : result()), 900); // lulus pertama kali → cerita penutup
   }
 
   /** Lulus ujian di Pahlawan/Legenda: bukan syarat naik kelas, tapi membuka tingkat berikutnya + hadiah. */
   function storyExamPass(ok, N) {
-    const list = State.modeList(B.story), first = !list.includes('kastil');
-    if (first) { list.push('kastil'); S.coins += B.story === 2 ? 150 : 80; State.addItem('mahkota', B.story === 2 ? 5 : 3); }
+    const list = State.modeList(B.story), first = !list.includes(B.field.id);
+    if (first) { list.push(B.field.id); S.coins += B.story === 2 ? 150 : 80; State.addItem('mahkota', B.story === 2 ? 5 : 3); }
     State.save(); sfx.fanfare();
     const name = B.story === 2 ? 'Legenda ⭐⭐⭐' : 'Pahlawan ⭐⭐';
     later(() => UI.overlay({icon: B.story === 2 ? '🐉' : '🦸', title: `Lulus Ujian ${name}!`, btn: 'Ke Peta', cb: () => MQ.Collection.check(exit),

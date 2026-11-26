@@ -105,8 +105,11 @@ MQ.State = (() => {
      Legenda terbuka setelah lulus Ujian Pahlawan. Di tiap tingkat area terbuka berurutan lagi dari awal.
      Ujian yang lulus di Pahlawan/Legenda dicatat sebagai 'kastil' di heroCleared/legendCleared. */
   const modeList = m => (m === 2 ? S.legendCleared : m === 1 ? S.heroCleared : S.cleared);
-  const modeOpen = m => (m === 0 ? true : m === 1 ? S.grade >= 2 : S.grade >= 2 && S.heroCleared.includes('kastil'));
-  const storyMode = () => (S.kelas >= 2 ? 0 : modeOpen(S.storyMode) ? S.storyMode : modeOpen(1) && S.storyMode === 2 ? 1 : 0);
+  /** Id ujian kelas yang sedang dimainkan (Kelas 1: 'kastil'). */
+  const examId = () => { const e = MQ.Data.fields.find(f => f.exam); return e ? e.id : ''; };
+  /* Tingkat per kelas: Pahlawan terbuka setelah lulus ujian Normal kelas itu, Legenda setelah lulus ujian Pahlawan kelas itu. */
+  const modeOpen = m => (m === 0 ? true : m === 1 ? S.grade > S.kelas : S.grade > S.kelas && S.heroCleared.includes(examId()));
+  const storyMode = () => (modeOpen(S.storyMode) ? S.storyMode : modeOpen(1) && S.storyMode === 2 ? 1 : 0);
   /** Tempat terbuka di tingkat m (arena & dungeon mengikuti Normal). */
   const unlockedIn = (place, m) => {
     if (!m || !(place.spec || place.exam)) return unlocked(place);
@@ -122,6 +125,6 @@ MQ.State = (() => {
   const itemName = id => items[id].name + (upLevel(id) ? ` +${upLevel(id)}` : '');
 
   return {S, POINTS_PER_LEVEL, itemPower, heroPower, upLevel, upSteps, upBonus, itemName, maxHp, atk, def, critChance, critMul, xpNeed, bonusFor, effect, gear, addXp, spendPoint,
-          count, addItem, removeItem, equip, unequip, isEquipped, unlocked, mainFields, shards, save, modeList, modeOpen, storyMode, unlockedIn,
+          count, addItem, removeItem, equip, unequip, isEquipped, unlocked, mainFields, shards, save, modeList, modeOpen, storyMode, unlockedIn, examId,
           today, dateKey, logDay};
 })();
