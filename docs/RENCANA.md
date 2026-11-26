@@ -34,7 +34,7 @@ _Dicatat 2026-11-27. Konten Kelas 1 sudah dianggap cukup. Sebelum dikodekan, pin
   7. Waktu (jam) & uang
   8. Bangun datar & bangun ruang
   9. Data & diagram gambar
-  → Sekitar 9 bab, jadi 5 dungeon. Cocokkan dengan daftar isi buku Yudhistira milik sekolah (foto daftar isi cukup) sebelum dikerjakan.
+  → Kalau 9 bab dibuat 9 peta, cukup **4 dungeon** (Kelas 1: 8 bab → 6 peta, 3 dungeon). Cocokkan dengan daftar isi buku Yudhistira milik sekolah (foto daftar isi cukup) sebelum dikerjakan.
 
 ## 4. Level per kelas
 - Kelas 1: Normal selesai di Lv 15, Legenda di Lv 40.
@@ -50,3 +50,15 @@ _Dicatat 2026-11-27. Konten Kelas 1 sudah dianggap cukup. Sebelum dikodekan, pin
 - Level langsung naik ke level awal kelas itu (misal Kelas 2 → Lv 16) dan anak mendapat **equipment standar gratis** yang sesuai tingkat tersebut.
 - Kelas yang lebih rendah tetap bisa dibuka di menu Kelas untuk mengulang materi.
 - Format save berubah, jadi naikkan `VERSION` di `save.js` dan tambahkan migrasi.
+
+## 6. Pertahanan monster (usulan)
+- Masalahnya: monster batu menerima damage sama besar dengan monster lain.
+- Perubahannya kecil, tidak perlu merombak program. Cukup tambahkan nilai `tahan` (pengali damage yang diterima) per jenis monster di tabel jenis monster `data.js` (tempat `spd`/`power`).
+- Nilai `tahan` dikalikan ke damage pemain di `battle.js` (baris `const dmg = ...`). Contoh: batu ×0,7, slime ×1,1, lainnya ×1.
+- Pakai **pengali persen, bukan pengurang tetap**, karena damage pemain naik jauh (Lv 42 ≈ 71). Pengurang tetap akan terasa besar di level awal tapi hampir tidak berpengaruh di level tinggi.
+- Tampilkan teks singkat "🛡️ Keras!" saat memukul monster tahan, supaya anak paham.
+- Kelas 1: HP monster tahan bisa diturunkan sedikit agar jumlah pukulan tetap sama. Bisa juga aturan ini baru dipakai mulai Kelas 2.
+
+## 7. Catatan keseimbangan
+- Hasil uji: Lv 42 dengan senjata +6, perisai +2, dan mahkota +2 menghasilkan HP 151, damage 71, pertahanan 8. Tingkat Legenda Kelas 1 terasa cukup mudah.
+- Nanti cek `balance.js`: HP/damage monster Legenda, atau batasi kenaikan damage dari Pandai Besi.
