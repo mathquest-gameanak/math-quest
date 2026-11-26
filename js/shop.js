@@ -28,8 +28,46 @@ MQ.Shop = (() => {
     `<button class="sBtn" data-id="${id}" ${done ? 'disabled' : ''}>${done ? 'Sudah punya' : btn}</button></div>`;
 
   /* ===== Toko ===== */
+  /* Toko Fashion (2026-11-26): kostum kepala & pakaian, harga 500 / 1000 / 1500 koin. Hanya tampilan, tidak menambah kekuatan
+     (bukan pay-to-win). Koin didapat dari bermain (atau uang saku dari orang tua lewat panel Orang Tua). */
+  let shopTab = 'item';
+  document.querySelector('.shopTabs').addEventListener('click', e => {
+    const b = e.target.closest('[data-sh]');
+    if (!b) return;
+    shopTab = b.dataset.sh; MQ.Audio.sfx.click(); UI.renderers.shop();
+  });
+  const FASHION = () => [...Object.entries(MQ.Hero.COSTUMES).filter(([, c]) => c.price).map(([id, c]) => ({id, kind: 'costume', name: c.name, price: c.price})),
+                         ...Object.entries(MQ.Hero.OUTFITS).map(([id, c]) => ({id, kind: 'outfit', name: c.name, price: c.price}))].sort((a, b) => a.price - b.price);
+  const ownsF = f => (f.kind === 'costume' ? S.costumes : S.outfits).includes(f.id);
+  function renderFashion() {
+    $('fashionList').innerHTML = FASHION().map(f => {
+      const look = Object.assign({}, S.hero, f.kind === 'costume' ? {costume: f.id} : {outfit: f.id}), own = ownsF(f);
+      return `<div class="panel fCard${own ? ' own' : ''}"><img src="${MQ.Hero.url(look, S.equip, 'happy')}" alt=""><b>${f.name}</b>` +
+        `<small>${f.kind === 'costume' ? 'Kostum kepala' : 'Pakaian'}</small>` +
+        `<button class="sBtn" data-f="${f.id}" ${own ? 'disabled' : ''}>${own ? '✔ Punya' : `🪙 ${f.price}`}</button></div>`;
+    }).join('');
+  }
+  $('fashionList').addEventListener('click', e => {
+    const b = e.target.closest('[data-f]');
+    if (!b || b.disabled) return;
+    const f = FASHION().find(x => x.id === b.dataset.f), p = f.price;
+    const look = Object.assign({}, S.hero, f.kind === 'costume' ? {costume: f.id} : {outfit: f.id});
+    const img = `<img class="iconBig" src="${MQ.Hero.url(look, S.equip, 'happy')}" alt="">`;
+    if (S.coins < p) return UI.overlay({img, title: 'Koin belum cukup', text: `${f.name} harganya ${p} koin. Koinmu ${S.coins}, kurang ${p - S.coins} lagi. Terus bertualang & kumpulkan koin!`});
+    const text = `Harga ${p} koin. Koinmu ${S.coins}. Sisa koinmu berapa?`;
+    UI.quiz({img, title: `Beli ${f.name}`, text, speak: text, ans: S.coins - p, onCorrect: () => {
+      S.coins -= p; (f.kind === 'costume' ? S.costumes : S.outfits).push(f.id);
+      if (f.kind === 'costume') S.hero.costume = f.id; else S.hero.outfit = f.id; // langsung dipakai
+      State.save(); MQ.Audio.sfx.buy(); UI.renderers.shop();
+      UI.overlay({fx: 'medal', icon: '👗', sub: 'FASHION BARU', title: f.name, img: null, chips: [{img: MQ.Hero.url(look, S.equip, 'happy'), text: 'Langsung dipakai!'}],
+        text: 'Ganti kapan saja di Karakter → ✏️ Ubah.'});
+    }});
+  });
   UI.renderers.shop = () => {
     $('shopCoins').textContent = `🪙 ${S.coins} koin`;
+    document.querySelectorAll('.shopTabs [data-sh]').forEach(b => b.classList.toggle('on', b.dataset.sh === shopTab));
+    $('fashionList').hidden = shopTab !== 'fashion'; $('shopList').hidden = shopTab === 'fashion'; $('shopFilter').hidden = shopTab === 'fashion';
+    if (shopTab === 'fashion') return renderFashion();
     const keep = UI.filterBar($('shopFilter'), 'shop', Data.shop, UI.renderers.shop);
     $('shopList').innerHTML = Data.shop.filter(keep).map(id => card(id, `<span class="price">🪙 ${items[id].price}</span>`, 'Beli',
       isGear(items[id]) && State.count(id) > 0)).join('');

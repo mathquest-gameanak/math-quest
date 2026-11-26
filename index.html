@@ -62,6 +62,7 @@
       <div class="heroStage"><img id="homeHero" class="homeHero" alt="Pahlawan">
         <button class="homeKikiBtn" data-go="kiki" aria-label="Kiki"><img id="homeKiki" class="homeKiki" alt="Kiki"><b id="homeKikiBubble" class="kikiBubble">🍓</b></button></div>
       <button id="restBanner" class="restBanner" hidden></button>
+      <button id="buildSign" class="buildSign" data-go="build" aria-label="Bangun Desa"><img data-ui="ui_brick" alt=""><span>Bangun<br>Desa</span><b id="brickCount">0</b></button>
     </div>
     <!-- Tombol Petualangan: potret bos tujuan berikutnya + judul + tujuan, berkilau & memantul -->
     <button class="adventure" data-go="map"><span class="advPic"><img id="advBoss" alt=""></span>
@@ -97,7 +98,7 @@
   <!-- ===== MEDALI ===== -->
   <!-- ===== KIKI: teman yang tumbuh (Latihan Kiki harian) ===== -->
   <section id="scr-kiki" class="screen">
-    <header class="panel topbar"><button class="back" id="kikiBack">◀</button><h2>🦉 Kiki</h2></header>
+    <header class="panel topbar"><button class="back" id="kikiBack">◀</button><h2 id="kikiTitle">🐾 Kiki</h2></header>
     <div class="panel kikiCard">
       <div id="kikiNest" class="kikiNest"><img id="kikiImg" class="kikiImg" alt="Kiki"></div>
       <b id="kikiName" class="kikiName"></b>
@@ -113,6 +114,16 @@
       <div id="kikiHint"></div>
       <div id="kikiAns"></div>
     </div>
+    <div class="panel box"><h3>🐾 Koleksi Teman</h3><p class="note">Ketuk teman untuk mengajaknya bertualang. Hanya satu yang ikut & tumbuh.</p>
+      <div id="petList" class="petList"></div></div>
+  </section>
+
+  <!-- ===== BANGUN DESA (bata dari stempel harian & latihan teman) ===== -->
+  <section id="scr-build" class="screen">
+    <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>🏗️ Bangun Desa</h2><span class="coins">🧱 <b id="brickNow">0</b></span></header>
+    <p class="note">Dapat 1 🧱 bata setiap <b>stempel harian</b> dan setiap <b>Latihan Teman</b>. Bangun satu per satu, lihat hasilnya di halaman depan!</p>
+    <p id="buildNote" class="buildNote"></p>
+    <div id="buildList" class="list"></div>
   </section>
 
   <!-- ===== KALENDER STEMPEL (target harian) ===== -->
@@ -240,8 +251,10 @@
   <section id="scr-shop" class="screen">
     <header class="panel topbar"><button class="back" data-go="home">◀</button><h2>Toko</h2><span id="shopCoins" class="coins"></span></header>
     <p class="note">Bayar dengan menjawab soal uang kembalian!</p>
+    <div class="smithTabs shopTabs"><button class="sBtn small on" data-sh="item">🧪 Barang</button><button class="sBtn small" data-sh="fashion">👗 Fashion</button></div>
     <div id="shopFilter" class="filterBar"></div>
     <div id="shopList" class="list"></div>
+    <div id="fashionList" class="fashionGrid" hidden></div>
   </section>
 
   <!-- ===== PANDAI BESI ===== -->
@@ -399,6 +412,7 @@
 <script src="js/dungeon.js"></script>
 <script src="js/daily.js"></script>
 <script src="js/kiki.js"></script>
+<script src="js/village.js"></script>
 <script src="js/homescene.js"></script>
 <script src="js/main.js"></script>
 </body>

@@ -526,9 +526,9 @@ MQ.Scene = (() => {
         tint: hero.hurtT > 0.3 ? '#e43b44' : null, tintA: hero.hurtT > 0.3 && Math.floor(t * 16) % 2 ? 0.7 : 0});
     }
     // Kiki (teman) terbang di belakang pahlawan, sesuai tahap pertumbuhannya
-    if (hero.src && MQ.Kiki && MQ.Pix.has('kiki1')) {
-      const kx = hero.x + 2 + Math.sin(t * 1.3) * 4, ky = -34 - Math.abs(Math.sin(t * 2.6)) * 4 + (hero.strike ? -6 : 0); // melayang di atas kepala pahlawan
-      drawSprite({pix: 'kiki' + (MQ.Kiki.stage() + 1)}, kx, {dy: ky, scale: 0.62, noShadow: true});
+    if (hero.src && MQ.Kiki && MQ.Kiki.sprite) { // teman aktif melayang di atas kepala pahlawan
+      const sp = MQ.Kiki.sprite(), kx = hero.x + 2 + Math.sin(t * 1.3) * 4, ky = -34 - Math.abs(Math.sin(t * 2.6)) * 4 + (hero.strike ? -6 : 0);
+      if (MQ.Pix.has(sp.name)) drawSprite({pix: sp.name}, kx, {dy: ky, scale: 0.62 * sp.size * (sp.name.startsWith('pet_') ? 0.8 : 1), noShadow: true});
     }
     drawFront(t);
     placeTags();

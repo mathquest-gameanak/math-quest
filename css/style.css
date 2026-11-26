@@ -1095,3 +1095,43 @@ svg.tally { height: 26px; width: auto; }
 .kikiText.story { font-size: 17px; line-height: 1.3; }
 #kikiAns { width: 100%; }
 .kikiPop { width: 96px; height: 96px; image-rendering: pixelated; }
+
+/* ===== 👗 Toko Fashion & uang saku (2026-11-26) ===== */
+.shopTabs { margin-bottom: 2px; }
+.fashionGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.fashionGrid[hidden] { display: none; }
+.fCard { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 6px; text-align: center; }
+.fCard img { width: 96px; height: 96px; image-rendering: pixelated; background: radial-gradient(circle, #a6f4f9, #73eff7 60%, #41a6f6); border: 3px solid #1a1c2c; }
+.fCard b { font-size: 15px; }
+.fCard small { font-size: 11px; }
+.fCard .sBtn { width: 100%; margin-top: 4px; }
+.fCard.own img { filter: none; box-shadow: 0 0 0 3px #38b764; }
+.allowRow { margin-top: 8px; border-top: 2px dashed #94b0c2; padding-top: 8px; }
+
+/* ===== 🐾 Koleksi teman ===== */
+.petList { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.petCard { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 4px 2px; border: 2px solid #94b0c2; background: #1a1c2c22; text-align: center; }
+.petCard img { width: 48px; height: 48px; image-rendering: pixelated; object-fit: contain; }
+.petCard b { font-size: 12px; }
+.petCard small { font-size: 9px; font-weight: 800; line-height: 1.1; }
+.petCard.on { border-color: #ffcd75; box-shadow: 0 0 0 2px #ffcd75; background: #ffcd7533; }
+.petCard.egg { border-style: dashed; border-color: #38b764; animation: bob 1.2s steps(1) infinite; }
+.petCard.lock { opacity: .6; }
+
+/* ===== 🏗️ Bangun Desa (2026-11-26) ===== */
+.buildSign { position: absolute; left: 6px; bottom: 8px; z-index: 3; display: flex; align-items: center; gap: 3px; padding: 3px 6px 3px 3px;
+  background: #ab5236; color: #fff3b0; border: 3px solid #1a1c2c; box-shadow: 0 3px 0 #1a1c2c; font-weight: 900; }
+.buildSign img { width: 28px; height: 28px; image-rendering: pixelated; }
+.buildSign span { font-size: 10px; line-height: 1.05; text-align: left; }
+.buildSign b { font-size: 16px; padding: 0 4px; background: #1a1c2c; color: #ffcd75; }
+.buildSign.ready { animation: bob .8s steps(1) infinite; box-shadow: 0 3px 0 #1a1c2c, 0 0 0 3px #ffcd75; }
+.buildNote { text-align: center; font-weight: 900; margin: 0; }
+.bCard { display: flex; align-items: center; gap: 8px; padding: 8px 10px; }
+.bIco { font-size: 30px; width: 40px; text-align: center; }
+.bBody { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.bBody b { font-size: 16px; }
+.bBody small { font-size: 12px; }
+.bCard.done { opacity: .8; }
+.bCard.next { box-shadow: 0 0 0 3px #ffcd75; }
+.bOk { font-style: normal; font-weight: 900; color: #38b764; }
+.bBtn { white-space: nowrap; }

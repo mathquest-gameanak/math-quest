@@ -64,6 +64,9 @@ MQ.Save = (() => {
       upgrades: Object.fromEntries(Object.entries(obj(d.upgrades)).filter(([k, v]) => items[k] && num(v, 0, 1) > 0).map(([k, v]) => [k, Math.min(10, num(v, 0, 1))])),
       bestiary, medals,
       costumes: Array.isArray(d.costumes) ? d.costumes.filter(x => typeof x === 'string') : [],
+      outfits: Array.isArray(d.outfits) ? d.outfits.filter(x => typeof x === 'string') : [], // pakaian Toko Fashion
+      allowance: typeof d.allowance === 'string' ? d.allowance : '',        // tanggal terakhir uang saku dari orang tua
+      allowancePending: num(d.allowancePending, 0, 0),                      // uang saku yang belum diumumkan ke anak
       kilat: num(d.kilat, 0, 0), crafted: num(d.crafted, 0, 0),
       story: {seen},
       hero: MQ.Hero ? MQ.Hero.sanitize(d.hero) : null, // penampilan pahlawan; null = belum dibuat → layar Buat Karakter
@@ -77,10 +80,17 @@ MQ.Save = (() => {
       stamps: Array.isArray(d.stamps) ? d.stamps.filter(k => typeof k === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(k)).slice(-120) : [],
       weekClaims: Array.isArray(d.weekClaims) ? d.weekClaims.filter(k => typeof k === 'string').slice(-20) : [],
       dayParty: typeof d.dayParty === 'string' ? d.dayParty : '',
-      // Kiki teman yang tumbuh (kiki.js): hari diberi makan, tanggal terakhir, kapan tiap jenis soal terakhir dilatih
-      kiki: (() => { const k = obj(d.kiki), seen = {};
-        for (const [a, b] of Object.entries(obj(k.seen))) if (typeof b === 'string') seen[a] = b;
-        return {days: num(k.days, 0, 0), last: typeof k.last === 'string' ? k.last : '', seen}; })(),
+      // Teman peliharaan (kiki.js): teman aktif, hari diberi makan per teman, latihan terakhir, kapan tiap jenis soal terakhir dilatih.
+      // Simpanan lama {kiki: {days, last, seen}} → pets.own.kiki
+      pets: (() => { const p = obj(d.pets), old = obj(d.kiki), seen = {}, own = {};
+        for (const [a, b] of Object.entries(obj(p.seen || old.seen))) if (typeof b === 'string') seen[a] = b;
+        for (const [a, b] of Object.entries(obj(p.own))) if (/^[a-z]+$/i.test(a)) own[a] = {days: num(obj(b).days, 0, 0)};
+        if (!own.kiki) own.kiki = {days: num(old.days, 0, 0)};
+        const last = typeof p.last === 'string' ? p.last : typeof old.last === 'string' ? old.last : '';
+        return {active: typeof p.active === 'string' && own[p.active] ? p.active : 'kiki', own, last, seen}; })(),
+      // Membangun Desa Bilangan (village.js): bata dari stempel harian & latihan teman, bangunan yang sudah berdiri
+      village: (() => { const v = obj(d.village), start = d.village ? 0 : (Array.isArray(d.stamps) ? d.stamps.length : 0) + num(obj(obj(obj(d.pets).own).kiki).days || obj(d.kiki).days, 0, 0); // pertama kali: bata dari stempel & latihan sebelumnya
+        return {bricks: d.village ? num(v.bricks, 0, 0) : start, built: Array.isArray(v.built) ? v.built.filter(x => typeof x === 'string') : []}; })(),
       extra: d.extra && typeof d.extra === 'object' && typeof d.extra.date === 'string' ? {date: d.extra.date, min: num(d.extra.min, 0, 0)} : null,
       alloc, points,
       grade: num(d.grade, 1, 1),         // kelas saat ini (2 = lulus Kelas 1)
@@ -113,7 +123,7 @@ MQ.Save = (() => {
         v: VERSION, level: s.level, xp: s.xp, monsters: s.monsters, mode: s.mode,
         cleared: s.cleared, fieldKills: s.fieldKills, bestCombo: s.bestCombo, stats: s.stats,
         coins: s.coins, inv: s.inv, equip: s.equip, grade: s.grade, examBest: s.examBest, daily: s.daily,
-        alloc: s.alloc, points: s.points, settings: s.settings, stamps: s.stamps, weekClaims: s.weekClaims, kiki: s.kiki, dayParty: s.dayParty, extra: s.extra, days: pruneDays(s.days), hero: s.hero, story: s.story,
+        alloc: s.alloc, points: s.points, settings: s.settings, stamps: s.stamps, weekClaims: s.weekClaims, outfits: s.outfits, allowance: s.allowance, allowancePending: s.allowancePending, pets: s.pets, village: s.village, dayParty: s.dayParty, extra: s.extra, days: pruneDays(s.days), hero: s.hero, story: s.story,
         bestiary: s.bestiary, medals: s.medals, costumes: s.costumes, kilat: s.kilat, crafted: s.crafted,
         dungeonStars: s.dungeonStars, storyMode: s.storyMode, heroCleared: s.heroCleared, legendCleared: s.legendCleared, upgrades: s.upgrades, rest: s.rest
       }));

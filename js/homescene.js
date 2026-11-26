@@ -49,7 +49,8 @@ MQ.HomeScene = (() => {
     for (let x = 0; x < VW; x++) { const y = Math.round(GY - 40 + 5 * Math.sin(x / 19) + 2 * Math.sin(x / 6.7)); R('#7fcfa0', x, y, 1, VH); R('#a6e3b8', x, y, 1, 1); }
     for (let x = 0; x < VW; x++) { const y = Math.round(GY - 26 + 3 * Math.sin(x / 13 + 1)); R('#4fbf6e', x, y, 1, VH); R('#7fdc84', x, y, 1, 1); }
     // Desa: rumah-rumah di kiri & kanan, Kristal Angka di tengah belakang
-    const base = GY - 14;
+    const base = GY - 14, VH2 = {R, circle, VW, VH, GY, base, cx: Math.round(VW / 2), t, K, hash};
+    if (MQ.Village) MQ.Village.drawBack(VH2); // bangunan desa yang sudah dibangun (lapisan belakang)
     house(2, base, 16, 12, '#ffe4c4', '#e43b44', 1); house(VW - 20, base, 17, 13, '#fff3b0', '#3b5dc9', 2);
     if (VW > 120) { house(26, base - 4, 12, 10, '#f4a3c8', '#5d275d', 3); house(VW - 40, base - 4, 12, 10, '#c7f0ff', '#38b764', 4); }
     // Pohon bulat
@@ -74,6 +75,7 @@ MQ.HomeScene = (() => {
       if (hash(k + 32) < 0.35) { const c = ['#e43b44', '#f4f4f4', '#ffcd75', '#f4a3c8'][k & 3]; R('#257179', x, y, 1, 3); R(c, x - 1 + sway, y - 1, 3, 1); R(c, x + sway, y - 2, 1, 3); }
       else { R('#257179', x + sway, y, 1, 2); R('#257179', x + 2, y, 1, 2); }
     }
+    if (MQ.Village) MQ.Village.drawFront(VH2); // bangunan desa (lapisan depan)
     // Kupu-kupu
     for (let i = 0; i < 2; i++) {
       const x = ((hash(i + 4) * 300 + t * (6 + i * 3)) % (VW + 20)) - 10, y = base - 22 - i * 10 + Math.sin(t * 3 + i) * 3, open = Math.floor(t * 8 + i) % 2;

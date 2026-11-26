@@ -334,5 +334,11 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Sapaan pribadi: nama anak, waktu (pagi/siang/sore/malam), jumlah benar kemarin atau jenis soal yang masih sulit.
 - Kiki bertengger di samping pahlawan di beranda (tanda 🍓 bila belum diberi makan hari ini; ketuk → layar Kiki) dan terbang di atas kepala pahlawan saat bertarung. SW `mq-v49` (+ kiki.js).
 
+### 2026-11-26 — Bangun desa, koleksi teman, Toko Fashion, uang saku orang tua
+- **Bangun Desa** (`js/village.js`, layar `scr-build`, papan "Bangun Desa" di beranda): 1 🧱 bata tiap stempel harian & tiap Latihan Teman (simpanan lama: bata awal = jumlah stempel + hari Kiki). 10 bangunan berurutan, total 30 bata: Taman Bunga, Lampu Jalan, Pohon Apel, Kincir Angin, Air Mancur, Rumah Warga Baru, Menara Jam, Lampion Pesta, Patung Pahlawan, Pelangi Abadi — langsung tergambar di latar beranda (homescene.js → `drawBack/drawFront`).
+- **Koleksi teman** (`js/kiki.js` digeneralisasi, `S.pets`, simpanan lama `S.kiki` dipindah): Kiki + 7 teman (Jamu, Kelip, Bubu, Batu, Capit, Kerti dari monster; Si Api setelah lulus Kelas 1). Syarat telur: kalahkan monster sejenis 10×. Adopsi telur baru hanya bila semua teman sudah dewasa (selalu ada yang dirawat, tanpa undian). 5 tahap: telur → bayi → kecil (+syal) → remaja (+topi) → agung (+mahkota), dibuat otomatis dari gambar monster. Hanya teman aktif yang ikut bertualang & tumbuh; ketuk di Koleksi Teman untuk mengganti.
+- **Toko Fashion** (tab di Toko): kostum kepala Topi Koboi / Bando Kelinci / Topi Koki (500), Helm Ksatria / Helm Astronot (1000), Mahkota Pelangi (1500); pakaian Jubah Pahlawan (1000) & Zirah Ksatria (1500). Hanya tampilan (bukan pay-to-win), bayar dengan soal sisa koin, langsung dipakai; bisa diganti di ✏️ Ubah. Simpanan `S.outfits`.
+- **Uang saku** (Orang Tua → Waktu Belajar): orang tua memberi 500 koin dalam game, paling sering seminggu sekali (jumlah tetap supaya tidak jadi cheat); anak melihat "Uang Saku dari Ayah/Bunda!" saat kembali ke beranda. SW `mq-v50` (+ village.js).
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

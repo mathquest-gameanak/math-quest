@@ -353,6 +353,13 @@ MQ.ItemArt = (() => {
       for (let k = 0; k < 20; k++) P.px(2 + k, 2 + k, '#e43b44').px(3 + k, 2 + k, '#e43b44');
       return P;
     },
+    /** Bata untuk membangun desa. */
+    ui_brick() {
+      const P = grid(N, N);
+      [[2, 14, 9], [12, 14, 9], [7, 7, 9]].forEach(([x, y, w]) => { P.rect(x, y, w, 6, '#e43b44').rect(x, y, w, 1, '#ef7d57').rect(x, y + 5, w, 1, '#b13e53').px(x + 1, y + 2, '#f68aa5'); });
+      P.rect(3, 21, 18, 1, '#ab5236');
+      return P.outline();
+    },
     /** Kalender harian: lembar kalender dengan stempel bintang. */
     ui_cal() {
       const P = grid(N, N);

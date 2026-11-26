@@ -25,12 +25,13 @@ MQ.Create = (() => {
       `<button class="pick${look[k] === v ? ' on' : ''}" data-k="${k}" data-v="${v}" ${extra}>${inner}</button>`;
     const preview = changes => `<img src="${Hero.url(Object.assign({}, look, changes))}" alt="">`;
     $('optHair').innerHTML = Hero.OPTIONS.hair.map(([v, label]) => pickBtn('hair', v, preview({hair: v}) + `<small>${label}</small>`)).join('');
-    $('optOutfit').innerHTML = Hero.OPTIONS.outfit.map(([v, label]) => pickBtn('outfit', v, preview({outfit: v}) + `<small>${label}</small>`)).join('');
+    const outfits = Hero.OPTIONS.outfit.concat(Hero.OPTIONS.outfitShop.filter(([v]) => S.outfits.includes(v))); // + pakaian yang sudah dibeli
+    $('optOutfit').innerHTML = outfits.map(([v, label]) => pickBtn('outfit', v, preview({outfit: v}) + `<small>${label}</small>`)).join('');
     const sw = k => Hero.OPTIONS[k].map(c => pickBtn(k, c, '', `style="background:${c}" aria-label="Warna"`)).join('');
     $('optHairColor').innerHTML = sw('hairColor');
     $('optSkin').innerHTML = sw('skin');
     $('optOutfitColor').innerHTML = sw('outfitColor');
-    // Kostum: hanya yang sudah didapat dari medali
+    // Kostum: hanya yang sudah didapat dari medali atau dibeli di Toko Fashion
     const owned = S.costumes.filter(c => Hero.COSTUMES[c]);
     $('optCostumeWrap').hidden = !owned.length;
     $('optCostume').innerHTML = ['', ...owned].map(c => pickBtn('costume', c,

@@ -97,13 +97,24 @@ MQ.Parent = (() => {
   const LIMITS = [['goal', '🎯 Target harian', 'Soal benar per hari untuk mendapat stempel.', [10, 15, 20, 30, 40], v => `${v} soal`],
                   ['limit', '⏰ Batas main per hari', 'Setelah habis, pertarungan baru tidak bisa dimulai (Kelas tetap boleh).', [0, 15, 20, 30, 45, 60, 90], v => (v ? `${v} menit` : 'Tanpa batas')],
                   ['bed', '🌙 Jam tidur', 'Petualangan tertutup dari jam ini sampai jam 6 pagi.', [-1, 19, 20, 21, 22], v => (v < 0 ? 'Mati' : `${v}.00`)]];
+  /* Uang saku: orang tua memberi koin dalam game (bukan uang sungguhan). Jumlah tetap & seminggu sekali supaya tidak jadi "cheat". */
+  const ALLOW = {coins: 500, days: 7};
+  function allowanceInfo() {
+    if (!S.allowance) return {ok: true, next: ''};
+    const next = new Date(S.allowance + 'T00:00:00'); next.setDate(next.getDate() + ALLOW.days);
+    return {ok: Date.now() >= next.getTime(), next: next.toLocaleDateString('id-ID', {weekday: 'long', day: 'numeric', month: 'long'})};
+  }
   function renderLimits() {
     const used = Math.round(((S.days[State.today()] || {}).t || 0) / 60);
     $('repLimits').innerHTML = LIMITS.map(([k, label, desc, opts, fmt]) =>
       `<div class="setRow"><span><b>${label}</b><small>${desc}</small></span><select data-lim="${k}">` +
       opts.map(v => `<option value="${v}"${S.settings[k] === v ? ' selected' : ''}>${fmt(v)}</option>`).join('') + `</select></div>`).join('') +
       `<p class="note">Hari ini sudah main ${used} menit.${S.settings.limit ? ` Sisa ${Math.max(0, Math.ceil(MQ.Daily.minutesLeft()))} menit.` : ''}</p>` +
-      (S.settings.limit ? '<button id="btnExtra" class="sBtn small">➕ Tambah 15 menit untuk hari ini</button>' : '');
+      (S.settings.limit ? '<button id="btnExtra" class="sBtn small">➕ Tambah 15 menit untuk hari ini</button>' : '') +
+      (() => { const a = allowanceInfo();
+        return `<div class="setRow allowRow"><span><b>💰 Uang saku</b><small>Beri ${ALLOW.coins} koin dalam game, paling sering seminggu sekali. ` +
+          `Koin hanya untuk fashion & barang, tidak ada pembelian sungguhan.${a.ok ? '' : ` Bisa diberikan lagi ${a.next}.`}</small></span>` +
+          `<button id="btnAllow" class="sBtn small" ${a.ok ? '' : 'disabled'}>${a.ok ? `Beri ${ALLOW.coins} 🪙` : 'Sudah diberi'}</button></div>`; })();
   }
   $('repLimits').addEventListener('change', e => {
     const sel = e.target.closest('[data-lim]');
@@ -111,6 +122,12 @@ MQ.Parent = (() => {
     S.settings[sel.dataset.lim] = Number(sel.value); State.save(); MQ.Audio.sfx.toggle(); renderLimits();
   });
   $('repLimits').addEventListener('click', e => {
+    if (e.target.closest('#btnAllow')) {
+      if (!allowanceInfo().ok) return;
+      S.allowance = State.today(); S.coins += ALLOW.coins; S.allowancePending += ALLOW.coins;
+      State.save(); MQ.Audio.sfx.buy(); renderLimits();
+      return;
+    }
     if (!e.target.closest('#btnExtra')) return;
     const t = State.today();
     S.extra = {date: t, min: (S.extra && S.extra.date === t ? S.extra.min : 0) + 15};

@@ -31,6 +31,7 @@ MQ.Daily = (() => {
     S.stamps.push(today());
     S.stamps = S.stamps.slice(-120);
     S.coins += REWARD.stamp;
+    if (MQ.Village) MQ.Village.addBrick(1); // 1 bata untuk membangun desa
     S.dayParty = today(); // perayaan ditampilkan di beranda / peta (tidak mengganggu pertarungan)
     State.save();
     return true;
@@ -53,7 +54,8 @@ MQ.Daily = (() => {
     };
     State.save(); MQ.Audio.sfx.fanfare();
     UI.overlay({fx: 'medal', icon: '🌟', sub: '📅 TUGAS HARI INI SELESAI', title: `Hebat, ${name}!`, btn: 'Sampai besok!', cb: next,
-      chips: [{img: MQ.ItemArt.url('ui_stamp'), text: 'Stempel hari ini'}, {img: MQ.ItemArt.url('coin'), text: `+${REWARD.stamp} koin`}],
+      chips: [{img: MQ.ItemArt.url('ui_stamp'), text: 'Stempel hari ini'}, {img: MQ.ItemArt.url('coin'), text: `+${REWARD.stamp} koin`},
+              {img: MQ.ItemArt.url('ui_brick'), text: '+1 bata desa'}],
       text: `Kiki: "Kamu sudah belajar ${goal()} soal hari ini. Istirahatkan matamu, sampai besok ya!" (Boleh lanjut main kalau mau.)`});
     return true;
   }

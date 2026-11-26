@@ -13,6 +13,8 @@ MQ.Hero = (() => {
     hairColor: ['#2b2b3a', '#8a4b2a', '#ffcd75', '#b13e53', '#5d275d'],
     skin: ['#ffd8b0', '#e0a370', '#a8663f'],
     outfit: [['gaun', 'Gaun'], ['baju', 'Baju & celana']],
+    // pakaian dari Toko Fashion (S.outfits); dipilih di layar Buat Karakter bila sudah dibeli
+    outfitShop: [['jubah', 'Jubah Pahlawan'], ['zirah', 'Zirah Ksatria']],
     outfitColor: ['#f4a3c8', '#e43b44', '#b06fd0', '#3b5dc9', '#38b764', '#ef7d57']
   };
   const DEFAULT = {name: '', hair: 'kuncir', hairColor: '#8a4b2a', skin: '#ffd8b0', outfit: 'gaun', outfitColor: '#f4a3c8'};
@@ -26,7 +28,7 @@ MQ.Hero = (() => {
       hair: pickOpt(h.hair, OPTIONS.hair, DEFAULT.hair),
       hairColor: pickOpt(h.hairColor, OPTIONS.hairColor, DEFAULT.hairColor),
       skin: pickOpt(h.skin === '#ffcd75' ? '#ffd8b0' : h.skin, OPTIONS.skin, DEFAULT.skin), // warna kulit lama → baru
-      outfit: pickOpt(h.outfit, OPTIONS.outfit, DEFAULT.outfit),
+      outfit: pickOpt(h.outfit, OPTIONS.outfit.concat(OPTIONS.outfitShop), DEFAULT.outfit),
       outfitColor: pickOpt(h.outfitColor, OPTIONS.outfitColor, DEFAULT.outfitColor),
       costume: COSTUMES[h.costume] ? h.costume : '' // kepemilikan dicek di layar Buat Karakter
     };
@@ -36,8 +38,13 @@ MQ.Hero = (() => {
   const COSTUMES = {
     telingaKucing: {name: 'Telinga Kucing'}, pitaBesar: {name: 'Pita Besar'}, mahkotaBunga: {name: 'Mahkota Bunga'},
     mahkotaEmas: {name: 'Mahkota Emas'}, topiBajakLaut: {name: 'Topi Bajak Laut'}, topiPenyihir: {name: 'Topi Penyihir'},
-    kacamata: {name: 'Kacamata Pintar'}
+    kacamata: {name: 'Kacamata Pintar'},
+    // Toko Fashion (dibeli dengan koin, 2026-11-26)
+    topiKoboi: {name: 'Topi Koboi', price: 500}, bandoKelinci: {name: 'Bando Kelinci', price: 500}, topiChef: {name: 'Topi Koki', price: 500},
+    helmKsatria: {name: 'Helm Ksatria', price: 1000}, helmAstronot: {name: 'Helm Astronot', price: 1000}, mahkotaPelangi: {name: 'Mahkota Pelangi', price: 1500}
   };
+  /** Pakaian Toko Fashion. */
+  const OUTFITS = {jubah: {name: 'Jubah Pahlawan', price: 1000}, zirah: {name: 'Zirah Ksatria', price: 1500}};
 
   /* ===== Gambar pahlawan (32×32, digambar dari bentuk lewat MQ.Pix; tahap 2 grafik baru) =====
      frame: 'idle' | 'walk1' | 'walk2' | 'atk' | 'hurt' | 'happy'. Lapisan: rambut belakang → badan & pakaian → wajah & rambut depan
@@ -75,7 +82,11 @@ MQ.Hero = (() => {
     P.ell(cx - 5.5, Y(17), 1.2, 1.9, skin);
     const legs = {idle: [[cx - 3, 22], [cx + 1, 22]], walk1: [[cx - 4, 22], [cx + 2, 21]], walk2: [[cx - 3, 21], [cx + 1, 22]],
                   atk: [[cx - 4, 22], [cx + 2, 22]], hurt: [[cx - 3, 22], [cx + 1, 22]]}[frame] || [[cx - 3, 22], [cx + 1, 22]];
-    if (look.outfit === 'baju') {
+    if (look.outfit === 'jubah') { // jubah berkibar di belakang badan
+      P.ell(cx, Y(19), 7.2, 6.5, outSh, (x, y) => y >= Y(14)); P.rect(cx - 7, Y(14), 14, 2, outSh);
+      P.recolor(outSh, tint(out, -0.45), (x, y) => x >= cx + 3);
+    }
+    if (look.outfit === 'baju' || look.outfit === 'jubah' || look.outfit === 'zirah') {
       const PANTS = '#29366f';
       P.ell(cx, Y(17), 4.6, 3, out, (x, y) => y >= Y(15) && y <= Y(19));
       P.rect(cx - 4, Y(15), 8, 4, out);
@@ -84,6 +95,12 @@ MQ.Hero = (() => {
       P.rect(cx - 4, Y(19), 8, 1, '#ffcd75');
       P.rect(cx - 4, Y(20), 8, 1, PANTS);
       legs.forEach(([x, y]) => { P.rect(x, Y(20), 2, y - 20 + 1, PANTS); P.rect(x, Y(y + 1), 2, 1, '#5d275d'); });
+      if (look.outfit === 'zirah') { // pelat dada perak & bahu
+        P.rect(cx - 3, Y(15), 6, 4, '#c7d3de').rect(cx + 1, Y(15), 2, 4, '#94b0c2').rect(cx - 3, Y(17), 6, 1, '#94b0c2');
+        P.rect(cx - 5, Y(15), 2, 2, '#c7d3de').rect(cx + 3, Y(15), 2, 2, '#94b0c2').px(cx - 2, Y(15), '#f4f4f4');
+        P.px(cx - 1, Y(16), out).px(cx, Y(16), out);
+      }
+      if (look.outfit === 'jubah') P.rect(cx - 1, Y(15), 2, 1, '#ffcd75');
     } else {
       P.ell(cx, Y(19), 5.2, 4.4, out, (x, y) => y >= Y(15));
       P.rect(cx - 3, Y(15), 6, 2, out);
@@ -146,6 +163,34 @@ MQ.Hero = (() => {
         P.px(cx + 3, Y(-5), '#b06fd0').px(cx + 4, Y(-5), '#b06fd0');
         P.rect(cx - 4, Y(1), 8, 1, '#ffcd75'); P.recolor('#b06fd0', '#5d275d', (x, y) => x >= cx + 1 && y < Y(1) && y > Y(-4));
         break;
+      case 'topiKoboi':
+        P.ell(cx, Y(3), 9.5, 1.7, '#ab5236'); P.rect(cx - 4, Y(-1), 8, 4, '#ab5236').rect(cx - 3, Y(-2), 6, 1, '#ab5236');
+        P.rect(cx - 4, Y(2), 8, 1, '#5d275d'); P.recolor('#ab5236', '#6d4b27', (x, y) => x >= cx + 2 && y < Y(2)); P.px(cx - 3, Y(-1), '#d4a373');
+        break;
+      case 'bandoKelinci':
+        [cx - 4, cx + 2].forEach(x => { P.rect(x, Y(-6), 2, 8, '#f4f4f4').px(x + (x < cx ? 1 : 0), Y(-5), '#f4a3c8').px(x + (x < cx ? 1 : 0), Y(-4), '#f4a3c8').px(x + (x < cx ? 1 : 0), Y(-3), '#f4a3c8'); });
+        P.rect(cx - 5, Y(2), 10, 1, '#f4a3c8');
+        break;
+      case 'topiChef':
+        P.ell(cx - 3, Y(-1), 3, 2.6, '#f4f4f4').ell(cx + 3, Y(-1), 3, 2.6, '#f4f4f4').ell(cx, Y(-2), 3.4, 3, '#f4f4f4');
+        P.rect(cx - 4, Y(0), 8, 3, '#f4f4f4').rect(cx - 4, Y(2), 8, 1, '#c7d3de'); P.recolor('#f4f4f4', '#dfe8f0', (x, y) => x >= cx + 2);
+        break;
+      case 'helmKsatria':
+        P.ell(cx, Y(5), 7.2, 5, '#94b0c2', (x, y) => y <= Y(6)); P.rect(cx - 7, Y(5), 2, 6, '#94b0c2').rect(cx + 5, Y(5), 2, 6, '#94b0c2');
+        P.recolor('#94b0c2', '#566c86', (x, y) => x >= cx + 3); P.rect(cx - 1, Y(0), 2, 6, '#c7d3de');
+        for (let k = 0; k < 5; k++) P.rect(cx - 1 + k, Y(-2 - Math.round(k * 0.5)), 2, 2, '#e43b44'); // jambul
+        break;
+      case 'helmAstronot':
+        P.ell(cx, Y(8.5), 8.6, 8.2, '#c7f0ff', (x, y) => { const dx = (x + 0.5 - cx) / 8.6, dy2 = (y + 0.5 - Y(8.5)) / 8.2; return dx * dx + dy2 * dy2 > 0.72; });
+        P.px(cx - 5, Y(3), '#f4f4f4').px(cx - 4, Y(2), '#f4f4f4');
+        P.rect(cx + 5, Y(-3), 1, 4, '#94b0c2').px(cx + 5, Y(-4), '#e43b44');
+        break;
+      case 'mahkotaPelangi': {
+        const C = ['#e43b44', '#ef7d57', '#ffcd75', '#38b764', '#41a6f6', '#b06fd0'];
+        C.forEach((c, i) => P.rect(cx - 5 + i * 2 - (i > 2 ? 0 : 0), Y(2 - (i % 2)), 2, 2 + (i % 2), c));
+        P.rect(cx - 5, Y(3), 11, 1, '#ffcd75'); P.px(cx, Y(-1), '#fff3b0').px(cx - 3, Y(0), '#fff3b0').px(cx + 3, Y(0), '#fff3b0');
+        break;
+      }
       case 'kacamata':
         // bingkai bulat-kotak dengan lensa biru muda, mata tetap terlihat
         [cx - 6, cx + 1].forEach(x => {
@@ -211,5 +256,5 @@ MQ.Hero = (() => {
   const current = () => url(MQ.State.S.hero, MQ.State.S.equip);
   const currentCanvas = frame => canvas(MQ.State.S.hero, MQ.State.S.equip, frame);
 
-  return {OPTIONS, DEFAULT, COSTUMES, sanitize, url, canvas, current, currentCanvas};
+  return {OPTIONS, DEFAULT, COSTUMES, OUTFITS, sanitize, url, canvas, current, currentCanvas};
 })();
