@@ -114,6 +114,12 @@ MQ.Learn = (() => {
       {t: 'Kurang puluhan: satuannya tetap. 74 − 30 = 44.', v: () => V().hintNote('74 → 64 → 54 → 44')},
       {t: 'Kurang 9 = kurang 10, lalu tambah 1. 53 − 9 = 43 + 1 = 44.', v: () => V().hintNote('53 − 10 + 1 = 44')},
       {t: 'Cek pengurangan dengan penjumlahan: 44 + 9 = 53. Benar!', v: () => V().hintNote('44 + 9 = 53 ✔')}]},
+    cm: {title: 'Sentimeter & Meter', icon: '📏', cards: [
+      {t: 'Panjang diukur dengan penggaris dalam SENTIMETER (cm). Pensil ini 5 cm.', v: () => V().ruler(5)},
+      {t: '1 meter (m) = 100 cm. Jadi 2 m = 200 cm, dan 1 m 30 cm = 130 cm.', v: () => V().hintNote('1 m = 100 cm')}]},
+    air: {title: 'Liter & Desiliter', icon: '🥛', cards: [
+      {t: 'Banyaknya air diukur dengan LITER (L) dan DESILITER (dL). 1 L = 10 dL.', v: () => V().hintNote('1 L = 10 dL')},
+      {t: '2 L 5 dL = 20 dL + 5 dL = 25 dL.', v: () => V().hintNote('2 L 5 dL = 25 dL')}]},
     teka: {title: 'Teka-teki Bilangan', icon: '📜', cards: [
       {t: '"Aku lebih dari 5 dan kurang dari 7." Bilangan yang ada di antara 5 dan 7 adalah 6.', v: () => V().hintLine(6, 6)},
       {t: 'Pola loncat: lihat berapa yang ditambah setiap kali. 2, 4, 6, 8 → loncat 2.', v: () => V().hintSeq([2, 4, 6, 8], 10, 'Setiap kali +2')}]}
@@ -133,7 +139,8 @@ MQ.Learn = (() => {
     2: [{t: 'Bilangan sampai 1.000', k: ['ratusan', 'nilai', 'lompat'], max: 1000},
         {t: 'Penjumlahan Bersusun', k: ['hitungCepat', 'bersusun'], max: 100},
         {t: 'Pengurangan Bersusun', k: ['kurangCepat', 'kurangSusun'], max: 100},
-        ...[ 'Panjang, Air & Grafik', 'Waktu & Uang', 'Perkalian 1', 'Perkalian 2',
+        {t: 'Panjang, Air & Grafik', k: ['cm', 'air', 'data', 'turus'], max: 20},
+        ...['Waktu & Uang', 'Perkalian 1', 'Perkalian 2',
             'Bangun Datar & Ruang', 'Bilangan 10.000 & Pecahan'].map(t => ({t}))] // Kelas 2: 9 bab = 9 peta (GDD §15)
   };
   let nav = {kelas: 0, bab: -1}; // posisi di daftar: kelas 0 = pilih kelas, bab -1 = pilih bab

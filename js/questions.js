@@ -433,6 +433,43 @@ MQ.Questions = (() => {
       () => V().hintNote(`Hasil + pengurang = bilangan awal: ${c} + ${b} = ${a}. Jadi pengurangannya benar.`));
   };
 
+  /* ===== KELAS 2 — Bab 4: Panjang (cm, m) & banyaknya air (L, dL) ===== */
+  /** Tanda > < = (urutan tetap agar mudah diingat). */
+  const signQ = (kind, text, speak, a, b, note) => {
+    const ans = a > b ? '>' : a < b ? '<' : '=';
+    return hint({kind, text, speak, ans, cols: 3, choices: ['<', '=', '>'].map(v => ({v, html: v}))}, () => V().hintNote(note));
+  };
+  /** Panjang dalam cm & m: mengukur, 1 m = 100 cm, selisih, membandingkan. */
+  GEN.cm = () => {
+    const t = rand(0, 3);
+    if (t === 0) { const n = rand(2, 9);
+      return hint(numQ('cm', 'Berapa cm? (1 kotak = 1 cm)', 'Satu kotak panjangnya 1 sentimeter. Pensil ini panjangnya berapa sentimeter?', n, [], 1, V().ruler(n)), () => V().hintRuler(n)); }
+    if (t === 1) { const m = rand(1, 3), cm = pick([0, 0, rand(1, 9) * 10]), c = m * 100 + cm;
+      const text = cm ? `${m} m ${cm} cm = ? cm` : `${m} m = ? cm`;
+      return hint(numQ('cm', text, `${m} meter${cm ? ` ${cm} sentimeter` : ''} sama dengan berapa sentimeter?`, c, [m * 10 + cm, m + cm, c + 100].filter(v => v !== c), 1),
+        () => V().hintNote(`1 m = 100 cm. Jadi ${m} m = ${m * 100} cm${cm ? `, ditambah ${cm} cm = ${c} cm` : ''}.`)); }
+    if (t === 2) { const a = rand(30, 90), b = rand(12, a - 5), c = a - b;
+      return hint(numQ('cm', `Tali ${a} cm & ${b} cm. Selisih?`, `Tali merah ${a} sentimeter, tali biru ${b} sentimeter. Selisih panjangnya berapa sentimeter?`, c, [a + b, c + 10].filter(v => v !== c), 0),
+        () => V().hintNote(`Selisih = yang panjang − yang pendek: ${a} − ${b} = ${c} cm.`)); }
+    const m = rand(1, 2), cm = pick([m * 100, m * 100 - rand(1, 5) * 10, m * 100 + rand(1, 5) * 10]);
+    return signQ('cm', `${m} m ○ ${cm} cm`, `${m} meter dan ${cm} sentimeter. Pilih tanda yang benar.`, m * 100, cm, `${m} m = ${m * 100} cm. Bandingkan ${m * 100} dengan ${cm}.`);
+  };
+  /** Banyaknya air dalam liter (L) & desiliter (dL): 1 L = 10 dL. */
+  GEN.air = () => {
+    const t = rand(0, 3);
+    if (t === 0) { const l = rand(1, 5), c = l * 10;
+      return hint(numQ('air', `${l} L = ? dL`, `${l} liter sama dengan berapa desiliter?`, c, [l, l * 100, c + 1], 1), () => V().hintNote(`1 L = 10 dL. Jadi ${l} L = ${c} dL.`)); }
+    if (t === 1) { const l = rand(1, 4), d = rand(1, 9), c = l * 10 + d;
+      return hint(numQ('air', `${l} L ${d} dL = ? dL`, `${l} liter ${d} desiliter sama dengan berapa desiliter?`, c, [l + d, l * 100 + d, c + 10], 1),
+        () => V().hintNote(`${l} L = ${l * 10} dL, ditambah ${d} dL = ${c} dL.`)); }
+    if (t === 2) { const a = rand(3, 9), b = rand(2, 9), plus = rand(0, 1) || a <= b, c = plus ? a + b : a - b;
+      return hint(numQ('air', plus ? `Botol ${a} dL + ${b} dL = ? dL` : `Botol ${a} dL, diminum ${b} dL. Sisa?`,
+        plus ? `Botol berisi ${a} desiliter dan ${b} desiliter. Jumlahnya berapa desiliter?` : `Botol berisi ${a} desiliter, diminum ${b} desiliter. Sisanya berapa desiliter?`, c, plus ? [c + 1, c - 1] : [a + b, c + 1], 0),
+        () => V().hintNote(plus ? `${a} + ${b} = ${c} dL` : `${a} − ${b} = ${c} dL`)); }
+    const d = pick([10, rand(6, 9), rand(11, 15)]);
+    return signQ('air', `1 L ○ ${d} dL`, `1 liter dan ${d} desiliter. Pilih tanda yang benar.`, 10, d, `1 L = 10 dL. Bandingkan 10 dengan ${d}.`);
+  };
+
   /** Tokoh & benda untuk soal cerita (id = gambar MQ.Pix / MQ.Sprites). */
   const PEOPLE = [{id: 'kiki', n: 'Kiki'}, {id: 'momo', n: 'Momo'}, {id: 'kakek', n: 'Kakek'}, {id: 'kapten', n: 'Kapten'}];
   const THINGS = [{s: 'apple', n: 'apel', gone: 'dimakan'}, {s: 'star', n: 'bintang', gone: 'terbang'},
@@ -454,7 +491,7 @@ MQ.Questions = (() => {
                  pasangan: 'Pasangan bilangan', cerita: 'Soal cerita', teka: 'Teka-teki',
                  posisi: 'Bilangan urutan', berulang: 'Tambah berulang', keluarga: 'Hubungan + dan −', kelompok: 'Mengelompokkan bentuk',
                  susun: 'Menyusun bangun', belasan: 'Bilangan 11–20', dobel: 'Dobel', data: 'Diagram gambar', turus: 'Tabel turus',
-                 ratusan: 'Ratusan', nilai: 'Nilai tempat', lompat: 'Loncat 10 & 100', bersusun: 'Tambah bersusun', hitungCepat: 'Berhitung cepat', kurangSusun: 'Kurang bersusun', kurangCepat: 'Mengurang cepat'};
+                 ratusan: 'Ratusan', nilai: 'Nilai tempat', lompat: 'Loncat 10 & 100', bersusun: 'Tambah bersusun', hitungCepat: 'Berhitung cepat', kurangSusun: 'Kurang bersusun', kurangCepat: 'Mengurang cepat', cm: 'Panjang (cm & m)', air: 'Banyaknya air (L & dL)'};
 
   return {make, GEN, NAMES, maxFor, specForLevel, nearChoices};
 })();
