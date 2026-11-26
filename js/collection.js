@@ -11,10 +11,10 @@ MQ.Collection = (() => {
 
   /* ===== Buku Monster ===== */
   const MONSTER_IDS = Object.keys(Data.monsters);
-  const places = () => [...Data.allFields().filter(f => f.mobs || f.boss), ...Data.dungeons, Data.arena]; // semua kelas
+  const places = () => [...Data.allFields().filter(f => f.mobs || f.boss), ...Data.allDungeons(), Data.arena]; // semua kelas
   /** Peran monster: bos, kunci, atau biasa. */
   function role(id) {
-    if (Data.dungeons.some(d => d.key === id)) return 'Monster kunci';
+    if (Data.allDungeons().some(d => d.key === id)) return 'Monster kunci';
     if (places().some(p => p.boss === id)) return 'Bos';
     return 'Monster biasa';
   }

@@ -46,6 +46,9 @@ MQ.Scene = (() => {
                      tree: ['#5d275d', '#b13e53', '#3b2a17'], treeShape: 'shelf', trees: 0.8, grass: ['#5d275d', '#7a3466'], path: ['#ab5236', '#d4a373', '#5d275d'], deco: 'books', sign: '#d4a373'})
   };
 
+  // Dungeon Kelas 2 memakai suasana dungeon Kelas 1 yang mirip
+  Object.assign(THEMES, {k2pabrik: THEMES.guaPola, k2menaraJam: THEMES.perpustakaan, k2guaPetir: THEMES.guaPola, k2istanaSalju: THEMES.kapalKaram});
+
   /* ===== Ukuran ===== */
   let sc = 4; // skala tetap selama satu pertarungan, supaya tokoh tidak berubah ukuran saat tinggi arena berubah
   let freeTop = 0, freeBot = 0; // batas atas & bawah ruang kosong (atas kotak soal), CSS px dari atas arena

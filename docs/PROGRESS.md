@@ -426,5 +426,9 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - 3 jenis tubuh baru di monsters.js: `robot` (layar wajah, antena; hiasan angka/penggaris/jam/batu), `snail` (rumah spiral; madu/tanda ×), `cloud` (hujan/petir/salju). 15 monster baru: Robot Angka, Raja Robot, Robot Meteran, Robot Jam, Robot Batu, Raja Robot Emas, Siput Bersusun, Siput Madu, Siput Kali, Raja Siput, Awan Hujan, Raja Awan, Awan Petir, Raja Petir, Awan Salju.
 - 15 dari 28 slot monster Kelas 2 diisi monster baru. Robot keras (`tahan` 0,85; Robot Batu 0,7 seperti batu), siput lambat tapi kuat, awan cepat tapi lemah. Buku Monster memuat monster semua kelas (`Data.allFields()`). SW `mq-v74`.
 
+### 2026-11-27 — 4 dungeon Kelas 2
+- `Data.dungeonsKelas2`: Pabrik Angka 🏭 (peta 1–3, Lv 19–22), Menara Jam 🕰️ (peta 4–5, Lv 22–25), Gua Petir ⚡ (peta 6–7, Lv 26–28), Istana Salju ❄️ (peta 8–9, Lv 29–31). Monster kunci & bos dari monster baru Kelas 2. Hadiah: bahan khusus yang sama dengan Kelas 1 (kristal/mutiara/tinta).
+- Menu Dungeon mengikuti kelas aktif (`useKelas` menukar `Data.dungeons`; `Data.allDungeons()` untuk Buku Monster & Toko). Gambar luar baru `k2Out` di dungeonart.js (pabrik berasap & roda gigi, menara jam berdetak, gua petir, istana es bersalju; monster kunci mengintip dari pintu). Lorong dalam & suasana pertarungan memakai tema yang mirip. SW `mq-v75`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

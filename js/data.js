@@ -192,6 +192,26 @@ MQ.Data = {
      desc: 'Ujian Naik Kelas 2: 18 soal campuran dari semua peta'}
   ],
 
+  /* Dungeon Kelas 2 (GDD §15): gabungan peta 1–3, 4–5, 6–7, 8–9. Dipakai lewat MQ.Data.useKelas(2). */
+  dungeonsKelas2: [
+    {id: 'k2pabrik', kelas: 2, pace: 1.4, name: 'Pabrik Angka', icon: '🏭', req: 'k2kurang', lv: [19, 22], rooms: 6, keyRoom: 3, key: 'siputMadu',
+     dungeon: true, desc: 'Mesin angka rusak! Bantu menyusun bilangan lagi.', topic: 'Bilangan 1.000, tambah & kurang bersusun',
+     spec: {kinds: ['ratusan', 'nilai', 'lompat', 'bersusun', 'kurangSusun'], max: 100}, mobs: ['robotKecil', 'siputHijau'], boss: 'rajaRobot',
+     reward: {coins: 30, items: {ramuan: 2, mahkota: 1, kristalPola: 2}}},
+    {id: 'k2menaraJam', kelas: 2, pace: 1.5, name: 'Menara Jam', icon: '🕰️', req: 'k2waktu', lv: [22, 25], rooms: 6, keyRoom: 3, key: 'awanHujan',
+     dungeon: true, desc: 'Jam raksasa berhenti berdetak. Perbaiki waktunya!', topic: 'Panjang, air, waktu & uang',
+     spec: {kinds: ['cm', 'air', 'jam', 'durasi', 'uang']}, mobs: ['robotMeteran', 'robotJam'], boss: 'rajaAwan',
+     reward: {coins: 40, items: {ramuan: 2, mahkota: 2, mutiara: 2}}},
+    {id: 'k2guaPetir', kelas: 2, pace: 1.3, name: 'Gua Petir', icon: '⚡', req: 'k2kali2', lv: [26, 28], rooms: 7, keyRoom: 4, key: 'rajaSiput',
+     dungeon: true, desc: 'Petir menyambar di dalam gua. Kalahkan dengan perkalian!', topic: 'Perkalian 1–9',
+     spec: {kinds: ['kaliTabel', 'kaliTabel', 'kaliPola', 'kaliCerita', 'kaliArti']}, mobs: ['siputKali', 'awanPetir'], boss: 'rajaPetir',
+     reward: {coins: 50, items: {ramuan: 2, mahkota: 2, tinta: 2}}},
+    {id: 'k2istanaSalju', kelas: 2, pace: 1.4, name: 'Istana Salju', icon: '❄️', req: 'k2pecahan', lv: [29, 31], rooms: 7, keyRoom: 4, key: 'robotBatu',
+     dungeon: true, desc: 'Istana es penuh bangun dan pecahan. Siapa penjaganya?', topic: 'Bangun, bilangan 10.000 & pecahan',
+     spec: {kinds: ['segi', 'kotak', 'ribuan', 'pecahan']}, mobs: ['awanSalju', 'siputKali'], boss: 'rajaRobotEmas',
+     reward: {coins: 60, items: {ramuan: 3, mahkota: 2, kristalPola: 1, mutiara: 1, tinta: 1}}}
+  ],
+
   /* Dungeon bercerita (dibuka dari menu 🏰 Dungeon, js/dungeon.js; tingkat ⭐/⭐⭐/⭐⭐⭐ di balance.js "tiers"):
      rooms ruang beruntun, HP tidak pulih; ruang keyRoom = monster kunci (key), ruang terakhir = bos, lalu peti.
      Cerita: adegan "<id>-intro", "<id>-key", "<id>-end" di story.js (tampil sekali). Bisa diulang untuk latihan & XP. */
@@ -216,8 +236,10 @@ MQ.Data = {
 };
 
 /* Dunia per kelas: fields/dungeons yang aktif mengikuti kelas yang sedang dimainkan (S.kelas). */
-MQ.Data.byKelas = {1: {fields: MQ.Data.fields, dungeons: MQ.Data.dungeons}, 2: {fields: MQ.Data.fieldsKelas2, dungeons: []}};
-/** Ganti dunia aktif (hanya peta; dungeon tetap Kelas 1 sampai dungeon Kelas 2 dibuat). Kelas yang belum ada → Kelas 1. */
-MQ.Data.useKelas = k => { const w = MQ.Data.byKelas[k] || MQ.Data.byKelas[1]; MQ.Data.fields = w.fields; return MQ.Data.byKelas[k] ? k : 1; };
+MQ.Data.byKelas = {1: {fields: MQ.Data.fields, dungeons: MQ.Data.dungeons}, 2: {fields: MQ.Data.fieldsKelas2, dungeons: MQ.Data.dungeonsKelas2}};
+/** Ganti dunia aktif: peta & dungeon kelas k. Kelas yang belum ada → Kelas 1. */
+MQ.Data.useKelas = k => { const w = MQ.Data.byKelas[k] || MQ.Data.byKelas[1]; MQ.Data.fields = w.fields; MQ.Data.dungeons = w.dungeons; return MQ.Data.byKelas[k] ? k : 1; };
+/** Semua dungeon dari semua kelas. */
+MQ.Data.allDungeons = () => [].concat(...Object.values(MQ.Data.byKelas).map(w => w.dungeons));
 /** Semua area dari semua kelas (untuk mencari area syarat). */
 MQ.Data.allFields = () => [].concat(...Object.values(MQ.Data.byKelas).map(w => w.fields));

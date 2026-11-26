@@ -18,7 +18,7 @@ MQ.Dungeon = (() => {
   /** Rentang level musuh pada tingkat t (0-based). */
   const lvText = (d, t) => `Lv ${d.lv[0] + TIERS()[t].lvAdd}–${d.lv[1] + TIERS()[t].lvAdd}`;
   const monImg = (id, sc = 3) => { const m = Data.monsters[id]; return MQ.Pix.has(id) ? MQ.Pix.url(id, sc) : Sprites.url(m.sprite, m.pal); };
-  const SLOT = {guaPola: 'senjata', kapalKaram: 'pelindung', perpustakaan: 'aksesori'};
+  const SLOT = {guaPola: 'senjata', kapalKaram: 'pelindung', perpustakaan: 'aksesori', k2pabrik: 'senjata', k2menaraJam: 'pelindung', k2guaPetir: 'aksesori'};
   const specialMat = d => Object.keys(d.reward.items).find(id => Data.items[id].from);
   const TIER_NAME = ['Mudah', 'Sulit', 'Sangat Sulit'];
 

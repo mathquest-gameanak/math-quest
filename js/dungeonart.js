@@ -133,10 +133,14 @@ MQ.DungeonArt = (() => {
   const THEME = {
     guaPola: {bg: '#1a1c2c', wall: '#566c86', wall2: '#333c57', lite: '#94b0c2', floor: '#3b4458', rug: '#5d275d', acc: '#b06fd0', acc2: '#f4a3c8', deco: 'crystal'},
     kapalKaram: {bg: '#3b2a17', wall: '#ab5236', wall2: '#6d4b27', lite: '#d4a373', floor: '#5d3a28', rug: '#29366f', acc: '#73eff7', acc2: '#41a6f6', deco: 'ship'},
+    k2pabrik: {bg: '#1a1c2c', wall: '#566c86', wall2: '#333c57', lite: '#94b0c2', floor: '#3b4458', rug: '#3b5dc9', acc: '#ffcd75', acc2: '#ef7d57', deco: 'crystal'},
+    k2menaraJam: {bg: '#2a1a2e', wall: '#ab5236', wall2: '#5d3a28', lite: '#d4a373', floor: '#4a3420', rug: '#b13e53', acc: '#ffcd75', acc2: '#ef7d57', deco: 'books'},
+    k2guaPetir: {bg: '#1a1c2c', wall: '#333c57', wall2: '#1a1c2c', lite: '#566c86', floor: '#29366f', rug: '#5d275d', acc: '#fff3b0', acc2: '#ffcd75', deco: 'crystal'},
+    k2istanaSalju: {bg: '#29366f', wall: '#73eff7', wall2: '#41a6f6', lite: '#c7f0ff', floor: '#94b0c2', rug: '#3b5dc9', acc: '#f4f4f4', acc2: '#c7f0ff', deco: 'crystal'},
     perpustakaan: {bg: '#2a1a2e', wall: '#5d275d', wall2: '#3b2a17', lite: '#b13e53', floor: '#4a3420', rug: '#b13e53', acc: '#ffcd75', acc2: '#ef7d57', deco: 'books'}
   };
   function inside(id, t) {
-    const P = THEME[id], d = MQ.Data.dungeons.find(x => x.id === id);
+    const P = THEME[id] || THEME.guaPola, d = MQ.Data.allDungeons().find(x => x.id === id);
     const bx = 52, by = 14, bw = 56, bh = 50, fy = by + bh;
     R(P.bg, 0, 0, W, H);
     // dinding samping (perspektif), lantai, dinding ujung
@@ -185,6 +189,43 @@ MQ.DungeonArt = (() => {
     for (let k = 0; k < 10; k++) { ctx.fillStyle = `rgba(0,0,0,${(10 - k) / 10 * 0.35})`; ctx.fillRect(0, H - 1 - k, W, 1); ctx.fillRect(0, k, W, 1); }
   }
 
+  /* ===== LUAR dungeon Kelas 2: satu gambar dengan 4 gaya bangunan ===== */
+  const K2 = {
+    k2pabrik:      {sky: ['#3b5dc9', '#41a6f6', '#73eff7', '#a7f070', '#c7f0ff'], ground: '#566c86', b: '#94b0c2', b2: '#566c86', win: '#ffcd75', type: 'factory'},
+    k2menaraJam:   {sky: ['#5d275d', '#b13e53', '#ef7d57', '#ffcd75', '#fff3b0'], ground: '#5d3a28', b: '#d4a373', b2: '#ab5236', win: '#ffcd75', type: 'clock'},
+    k2guaPetir:    {sky: ['#1a1c2c', '#222a44', '#29366f', '#333c57', '#566c86'], ground: '#333c57', b: '#566c86', b2: '#333c57', win: '#ffcd75', type: 'cave'},
+    k2istanaSalju: {sky: ['#3b5dc9', '#41a6f6', '#73eff7', '#c7f0ff', '#f4f4f4'], ground: '#f4f4f4', b: '#c7f0ff', b2: '#73eff7', win: '#41a6f6', type: 'ice'}
+  };
+  function k2Out(id, t) {
+    const P = K2[id], d = MQ.Data.allDungeons().find(x => x.id === id);
+    bands(P.sky, 84); R(P.ground, 0, 84, W, 12); R(K, 0, 84, W, 1);
+    const cx = 100;
+    if (P.type === 'factory') {
+      R(K, 63, 39, 76, 46); R(P.b, 64, 40, 74, 44); for (let x = 64; x < 138; x += 12) { R(K, x, 32, 12, 9); R(P.b2, x + 1, 33, 10, 7); }  // atap gergaji
+      [72, 124].forEach((x, i) => { R(K, x - 1, 14, 9, 20); R(P.b2, x, 15, 7, 19); for (let k = 0; k < 3; k++) { const p = (t * 0.4 + k / 3 + i * 0.2) % 1; ell(x + 3 + Math.sin(p * 6) * 3, 12 - p * 12, 3, 2, '#c7d3de'); } });
+      const g = t * 2; for (let k = 0; k < 8; k++) { const a = g + k * Math.PI / 4; R('#ffcd75', 80 + Math.cos(a) * 6, 62 + Math.sin(a) * 6, 2, 2); } ell(81, 63, 3, 3, '#ef7d57'); // roda gigi berputar
+    } else if (P.type === 'clock') {
+      R(K, 79, 10, 42, 75); R(P.b, 80, 11, 40, 74); R(P.b2, 112, 11, 8, 74);
+      for (let k = 0; k < 8; k++) R(K, 80 + k * 2.5, 10 - k, 40 - k * 5, 1);
+      ell(cx, 32, 12, 12, K); ell(cx, 32, 11, 11, '#f4f4f4');
+      const m = t * 2, h = t / 6; R(K, cx, 32, 1, 1);
+      for (let r = 0; r < 9; r++) R(K, cx + Math.sin(m) * r, 32 - Math.cos(m) * r, 1, 1);          // jarum menit berputar
+      for (let r = 0; r < 6; r++) R('#e43b44', cx + Math.sin(h) * r, 32 - Math.cos(h) * r, 1, 1);    // jarum jam
+    } else if (P.type === 'cave') {
+      ell(cx, 84, 46, 40, K, 0, 84); ell(cx, 84, 45, 39, P.b, 0, 84); ell(cx - 12, 62, 22, 18, '#94b0c2', 0, 84);
+      if (Math.floor(t * 1.5) % 4 === 0) { let x = 40, y = 0; while (y < 40) { const nx = x + (hash(y + Math.floor(t)) - 0.5) * 10; R('#fff3b0', Math.min(x, nx), y, Math.abs(nx - x) + 1, 1); R('#fff3b0', nx, y, 1, 5); x = nx; y += 5; } }
+    } else {
+      ell(cx, 84, 40, 36, K, 0, 84); ell(cx, 84, 39, 35, P.b, 0, 84);
+      for (let y = 56; y < 84; y += 7) R(P.b2, cx - 38, y, 76, 1);
+      [[70, 40], [130, 40]].forEach(([x, y]) => { for (let k = 0; k < 12; k++) R(K, x - k / 2, y + k, k + 1, 1); for (let k = 1; k < 12; k++) R('#f4f4f4', x - k / 2 + 1, y + k, k - 1, 1); });
+      for (let i = 0; i < 24; i++) { const p = (t * 0.15 + hash(i)) % 1; R('#f4f4f4', hash(i + 4) * W + Math.sin(t + i) * 3, p * 84, 1, 1); } // salju turun
+    }
+    ell(cx, 86, 11, 16, K, 0, 84); ell(cx, 87, 9, 14, '#1a1c2c', 0, 84);                     // pintu
+    const a = peek(t, 6);
+    inEllipse(cx, 86, 9, 14, () => sprite(d.key, cx, 104 - a * 22, {scale: 0.9}));            // monster kunci mengintip
+    sprite(d.mobs[0], 30, 90 + Math.round(Math.sin(t * 2) * 2));
+  }
+
   const OUT = {guaPola: guaPolaOut, kapalKaram: kapalKaramOut, perpustakaan: perpustakaanOut};
   function prep(cv) {
     if (cv.width !== W) { cv.width = W; cv.height = H; }
@@ -192,7 +233,7 @@ MQ.DungeonArt = (() => {
   }
   return {
     W, H,
-    outside(cv, id, t) { prep(cv); (OUT[id] || guaPolaOut)(t); },
+    outside(cv, id, t) { prep(cv); if (K2[id]) k2Out(id, t); else (OUT[id] || guaPolaOut)(t); },
     inside(cv, id, t) { prep(cv); inside(id, t); }
   };
 })();

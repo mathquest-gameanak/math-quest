@@ -17,7 +17,7 @@ MQ.Shop = (() => {
   function whereToFind(k) {
     if (k === 'koin') return 'dari monster mana saja';
     if (k === 'mahkota') return 'dari bos mana saja';
-    if (items[k].from) return `di dungeon ${Data.dungeons.find(d => d.id === items[k].from).name} (menu 🏰 Dungeon)`;
+    if (items[k].from) return `di dungeon ${Data.allDungeons().find(d => d.id === items[k].from).name} (menu 🏰 Dungeon)`;
     const fields = Data.fields.filter(f => f.mobs && [...f.mobs, f.boss].some(m => Data.monsters[m].drop === k));
     return fields.length ? 'di ' + fields.map(f => f.name).join(' atau ') : 'dari monster';
   }
