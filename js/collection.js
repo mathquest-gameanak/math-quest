@@ -86,6 +86,8 @@ MQ.Collection = (() => {
   /* ===== Medali ===== */
   const totalB = kind => (S.stats[kind] || {b: 0}).b;
   const dungeonDone = id => S.cleared.includes(id);
+  const petDays = () => Object.values((S.pets && S.pets.own) || {}).reduce((n, p) => n + (p.days || 0), 0);
+  const fashionCount = () => (S.outfits || []).length + S.costumes.filter(c => Hero.COSTUMES[c] && Hero.COSTUMES[c].price).length;
   /* Tiap medali: judul, syarat, target, nilai saat ini, hadiah {coins} atau {costume} */
   const MEDALS = [
     {id: 'pertama', icon: '🗡️', name: 'Langkah Pertama', desc: 'Kalahkan 1 monster', target: 1, val: () => S.monsters, reward: {coins: 10}},
@@ -113,11 +115,28 @@ MQ.Collection = (() => {
     {id: 'kurang50', icon: '➖', name: 'Ahli Kurang', desc: 'Jawab benar 50 soal kurang', target: 50, val: () => totalB('kurang'), reward: {coins: 15}},
     {id: 'hitung50', icon: '🍎', name: 'Ahli Menghitung', desc: 'Jawab benar 50 soal menghitung', target: 50, val: () => totalB('hitung'), reward: {coins: 15}},
     {id: 'bentuk30', icon: '🔺', name: 'Ahli Bentuk', desc: 'Jawab benar 30 soal bentuk & pola', target: 30, val: () => totalB('bentuk') + totalB('pola'), reward: {coins: 15}},
-    {id: 'puluhan30', icon: '🧮', name: 'Ahli Puluhan', desc: 'Jawab benar 30 soal puluhan', target: 30, val: () => totalB('puluhan'), reward: {coins: 15}},
+    {id: 'puluhan30', icon: '🧮', name: 'Ahli Bilangan 11–20', desc: 'Jawab benar 30 soal bilangan 11–20 & puluhan', target: 30, val: () => totalB('puluhan') + totalB('belasan'), reward: {coins: 15}},
+    {id: 'data30', icon: '📊', name: 'Ahli Diagram', desc: 'Jawab benar 30 soal diagram & turus', target: 30, val: () => totalB('data') + totalB('turus'), reward: {coins: 15}},
+    {id: 'cerita30', icon: '📜', name: 'Pembaca Cerita', desc: 'Jawab benar 30 soal cerita', target: 30, val: () => totalB('cerita'), reward: {coins: 20}},
     {id: 'buku10', icon: '📖', name: 'Peneliti Monster', desc: 'Temukan 10 monster di Buku Monster', target: 10, val: found, reward: {coins: 30}},
     {id: 'bukuSemua', icon: '🌟', name: 'Ensiklopedia Hidup', desc: `Temukan semua ${MONSTER_IDS.length} monster`, target: MONSTER_IDS.length, val: found, reward: {coins: 100}},
     {id: 'level10', icon: '💪', name: 'Makin Kuat', desc: 'Capai Level 10', target: 10, val: () => S.level, reward: {coins: 20}},
     {id: 'level20', icon: '🏋️', name: 'Siap Ujian', desc: 'Capai Level 20', target: 20, val: () => S.level, reward: {coins: 50}},
+    {id: 'level30', icon: '🦾', name: 'Pahlawan Tangguh', desc: 'Capai Level 30', target: 30, val: () => S.level, reward: {coins: 80}},
+    {id: 'level40', icon: '🏆', name: 'Puncak Kelas 1', desc: 'Capai Level 40', target: 40, val: () => S.level, reward: {coins: 150}},
+    {id: 'power1000', icon: '⚡', name: 'Kekuatan 1000', desc: 'Capai Power pahlawan 1000', target: 1000, val: () => State.heroPower(), reward: {coins: 50}},
+    // fitur harian & koleksi (2026-11-26)
+    {id: 'stempel7', icon: '📅', name: 'Rajin Belajar', desc: 'Kumpulkan 7 stempel harian', target: 7, val: () => S.stamps.length, reward: {coins: 30}},
+    {id: 'stempel30', icon: '🗓️', name: 'Juara Rajin', desc: 'Kumpulkan 30 stempel harian', target: 30, val: () => S.stamps.length, reward: {coins: 100}},
+    {id: 'teman7', icon: '🍓', name: 'Sahabat Teman', desc: 'Selesaikan Latihan Teman 7 hari', target: 7, val: petDays, reward: {coins: 30}},
+    {id: 'kikiAgung', icon: '🦉', name: 'Kiki Agung', desc: 'Rawat Kiki sampai tahap Agung', target: 14, val: () => (S.pets.own.kiki ? S.pets.own.kiki.days : 0), reward: {coins: 60}},
+    {id: 'teman3', icon: '🐾', name: 'Kolektor Teman', desc: 'Punya 3 teman', target: 3, val: () => Object.keys(S.pets.own).length, reward: {coins: 80}},
+    {id: 'temanSemua', icon: '🌈', name: 'Sahabat Semua Makhluk', desc: 'Punya semua 8 teman', target: 8, val: () => Object.keys(S.pets.own).length, reward: {coins: 200}},
+    {id: 'desa3', icon: '🏗️', name: 'Arsitek Cilik', desc: 'Bangun 3 bagian desa', target: 3, val: () => S.village.built.length, reward: {coins: 30}},
+    {id: 'desaSemua', icon: '🏘️', name: 'Desa Impian', desc: 'Bangun semua 10 bagian Desa Bilangan', target: 10, val: () => S.village.built.length, reward: {coins: 150}},
+    {id: 'fashion1', icon: '👗', name: 'Gaya Keren', desc: 'Beli 1 barang di Toko Fashion', target: 1, val: fashionCount, reward: {coins: 20}},
+    {id: 'fashion5', icon: '👑', name: 'Bintang Mode', desc: 'Beli 5 barang di Toko Fashion', target: 5, val: fashionCount, reward: {coins: 100}},
+    {id: 'kelas10', icon: '🎓', name: 'Murid Teladan', desc: 'Selesaikan 10 pelajaran di Kelas', target: 10, val: () => S.lessonsDone || 0, reward: {coins: 30}},
     {id: 'pandai', icon: '🔨', name: 'Si Pandai Besi', desc: 'Buat 1 barang di Pandai Besi', target: 1, val: () => S.crafted, reward: {coins: 10}},
     {id: 'rajin5', icon: '📅', name: 'Anak Rajin', desc: 'Bermain di 5 hari berbeda', target: 5, val: () => Object.keys(S.days).length, reward: {coins: 30}}
   ];
@@ -148,7 +167,10 @@ MQ.Collection = (() => {
   UI.renderers.medals = () => {
     const got = MEDALS.filter(m => S.medals[m.id]).length;
     $('medalProgress').textContent = `🏅 ${got}/${MEDALS.length}`;
-    $('medalList').innerHTML = MEDALS.map(m => {
+    // belum selesai di atas (yang hampir selesai paling atas), yang sudah selesai di bawah
+    const prog = m => Math.min(1, m.val() / m.target);
+    const list = MEDALS.filter(m => !S.medals[m.id]).sort((a, b) => prog(b) - prog(a)).concat(MEDALS.filter(m => S.medals[m.id]));
+    $('medalList').innerHTML = list.map(m => {
       const have = !!S.medals[m.id], v = Math.min(m.val(), m.target), pct = Math.round(v / m.target * 100);
       return `<div class="medal${have ? ' got' : ''}"><span class="mIcon">${m.icon}</span><div class="mBody"><b>${m.name}</b><small>${m.desc}</small>` +
              `<div class="bar"><div style="width:${pct}%"></div><span>${have ? 'Selesai!' : `${v} / ${m.target}`}</span></div>` +

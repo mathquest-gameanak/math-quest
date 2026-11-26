@@ -394,10 +394,16 @@ MQ.WorldMap = (() => {
     if (m === mode()) return;
     S.storyMode = m; State.save();
     UI.renderers.map();
-    if (S.storyMode === 1) UI.overlay({icon: '🦸', title: 'Mode Pahlawan ⭐⭐', text: 'Soalnya sama, tapi musuh JAUH lebih kuat dan cepat, kadang DUA monster sekaligus. Koin dua kali lipat! Buat & tingkatkan perlengkapan di Pandai Besi supaya cukup kuat.' +
-      (State.modeOpen(2) ? '' : ' Mulai lagi dari Padang Hitung. Selesaikan semua area dan lulus ujiannya untuk membuka Mode Legenda!')});
-    if (S.storyMode === 2) UI.overlay({icon: '🐉', title: 'Mode Legenda ⭐⭐⭐', text: 'Tantangan tersulit! Musuh sangat kuat dan cepat. Hanya pahlawan dengan perlengkapan +4 atau +5 yang bisa menang. Koin tiga kali lipat!'});
+    MQ.Audio.sfx.toggle(); // keterangan tingkat ada di tombol (i) di sebelah judul Peta
   });
+  /* Keterangan tingkat yang sedang dipilih (tombol i di sebelah judul Peta) */
+  const MODE_INFO = [
+    {icon: '⭐', title: 'Tingkat Normal', text: 'Petualangan utama Kelas 1. Selesaikan area satu per satu, kumpulkan 6 kepingan kristal, lalu ikuti Ujian Naik Kelas di Kastil.'},
+    {icon: '🦸', title: 'Mode Pahlawan ⭐⭐', text: 'Soalnya sama, tapi musuh JAUH lebih kuat dan cepat, kadang DUA monster sekaligus. KILAT lebih singkat (1,5 detik). Koin dua kali lipat! ' +
+      'Buat & tingkatkan perlengkapan di Pandai Besi supaya cukup kuat. Lulus ujiannya untuk membuka Mode Legenda.'},
+    {icon: '🐉', title: 'Mode Legenda ⭐⭐⭐', text: 'Tantangan tersulit! Musuh sangat kuat dan cepat, KILAT hanya 1,2 detik. Butuh perlengkapan terbaik dari dungeon ⭐⭐⭐ yang sudah ditingkatkan (+6 sampai +10). Koin tiga kali lipat!'}
+  ];
+  $('mapInfo').addEventListener('click', e => { e.stopPropagation(); MQ.Audio.sfx.click(); UI.overlay(MODE_INFO[mode()] || MODE_INFO[0]); });
 
   /** Tujuan berikutnya untuk tombol Petualangan di beranda: {place, mode, done}. */
   function nextGoal() {

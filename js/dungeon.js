@@ -31,11 +31,11 @@ MQ.Dungeon = (() => {
     const req = lock ? Data.fields.find(f => f.id === d.req) : null;
     return `<div class="dCard panel${lock ? ' lock' : ''}" data-d="${d.id}" role="button">` +
       `<div class="dArt"><canvas class="dScene" data-out="${d.id}"></canvas>` +
-        `<span class="dName">${d.icon} ${d.name}</span><span class="dStars">${starRow}</span>` +
+        `<span class="dName">${d.icon} ${d.name}${mat ? `<button class="dInfoBtn" data-info="${d.id}" aria-label="Info bahan khusus">i</button>` : ''}</span><span class="dStars">${starRow}</span>` +
         (lock ? `<span class="dLockTag">🔒 Kalahkan bos ${req.name} dulu</span>` : '<span class="dEnter">Masuk ▶</span>') + `</div>` +
+      // 2 baris saja: cerita + materi/ruang/level (bahan khusus ada di tombol i)
       `<div class="dInfo"><p class="dStory">${d.desc}</p>` +
-        `<div class="dChips"><span>📘 ${d.topic}</span><span>🚪 ${d.rooms} ruang</span><span>⚔️ ${lvText(d, 0)}</span></div>` +
-        (mat ? `<p class="dMat">${UI.itemImg(mat)}<span>Bahan khusus <b>${Data.items[mat].name}</b> untuk ${SLOT[d.id] || 'equipment'} kuat</span></p>` : '') +
+        `<div class="dChips"><span class="dTopic">📘 ${d.topic}</span><span>🚪 ${d.rooms}</span><span>⚔️ ${lvText(d, 0)}</span></div>` +
       `</div></div>`;
   }
   function renderList() {
@@ -78,6 +78,13 @@ MQ.Dungeon = (() => {
   UI.renderers.dungeon = () => { open = null; render(); };
 
   $('dungeonList').addEventListener('click', e => {
+    const ib = e.target.closest('[data-info]');
+    if (ib) { // keterangan bahan khusus, tanpa membuka dungeon
+      const d = Data.dungeons.find(x => x.id === ib.dataset.info), mat = specialMat(d), it = Data.items[mat];
+      MQ.Audio.sfx.click();
+      return UI.overlay({img: UI.itemImg(mat, 'iconBig'), title: it.name,
+        text: `Bahan khusus untuk membuat & meningkatkan ${SLOT[d.id] || 'perlengkapan'} kuat. Didapat dari peti harta & monster kunci ${d.name}; makin banyak di tingkat ⭐⭐⭐.`});
+    }
     const c = e.target.closest('.dCard');
     if (!c) return;
     const d = Data.dungeons.find(x => x.id === c.dataset.d);

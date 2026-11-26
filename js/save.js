@@ -65,7 +65,8 @@ MQ.Save = (() => {
       bestiary, medals,
       costumes: Array.isArray(d.costumes) ? d.costumes.filter(x => typeof x === 'string') : [],
       outfits: Array.isArray(d.outfits) ? d.outfits.filter(x => typeof x === 'string') : [], // pakaian Toko Fashion
-      allowance: typeof d.allowance === 'string' ? d.allowance : '',        // tanggal terakhir uang saku dari orang tua
+      allowance: typeof d.allowance === 'string' ? d.allowance : '',
+      lessonsDone: num(d.lessonsDone, 0, 0),                                  // pelajaran Kelas yang diselesaikan (medali)        // tanggal terakhir uang saku dari orang tua
       allowancePending: num(d.allowancePending, 0, 0),                      // uang saku yang belum diumumkan ke anak
       kilat: num(d.kilat, 0, 0), crafted: num(d.crafted, 0, 0),
       story: {seen},
@@ -123,7 +124,7 @@ MQ.Save = (() => {
         v: VERSION, level: s.level, xp: s.xp, monsters: s.monsters, mode: s.mode,
         cleared: s.cleared, fieldKills: s.fieldKills, bestCombo: s.bestCombo, stats: s.stats,
         coins: s.coins, inv: s.inv, equip: s.equip, grade: s.grade, examBest: s.examBest, daily: s.daily,
-        alloc: s.alloc, points: s.points, settings: s.settings, stamps: s.stamps, weekClaims: s.weekClaims, outfits: s.outfits, allowance: s.allowance, allowancePending: s.allowancePending, pets: s.pets, village: s.village, dayParty: s.dayParty, extra: s.extra, days: pruneDays(s.days), hero: s.hero, story: s.story,
+        alloc: s.alloc, points: s.points, settings: s.settings, stamps: s.stamps, weekClaims: s.weekClaims, outfits: s.outfits, lessonsDone: s.lessonsDone, allowance: s.allowance, allowancePending: s.allowancePending, pets: s.pets, village: s.village, dayParty: s.dayParty, extra: s.extra, days: pruneDays(s.days), hero: s.hero, story: s.story,
         bestiary: s.bestiary, medals: s.medals, costumes: s.costumes, kilat: s.kilat, crafted: s.crafted,
         dungeonStars: s.dungeonStars, storyMode: s.storyMode, heroCleared: s.heroCleared, legendCleared: s.legendCleared, upgrades: s.upgrades, rest: s.rest
       }));

@@ -356,5 +356,10 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - ⚡ **Power** (`State.itemPower`, `State.heroPower`, bobot di `balance.power`): angka di Tas (lencana + tombol "Urut: Jenis / Power"), detail item, Toko, Pandai Besi (Buat & Tingkatkan, termasuk +N), dan Karakter (Power pahlawan). Hanya angka pembanding.
 - KILAT per tingkat `combat.fastCritBy` [2, 1,5, 1,2] detik (Normal/⭐, Pahlawan/⭐⭐, Legenda/⭐⭐⭐); damage kritikal dibatasi `combat.critMulMax` ×2,5; HP musuh Legenda ×1,3 → ×1,5. SW `mq-v54`.
 
+### 2026-11-26 — Info Peta (i), medali baru, kartu dungeon ringkas
+- Peta: keterangan tingkat Normal/Pahlawan/Legenda tidak lagi muncul otomatis saat berganti tingkat; ada tombol (i) di sebelah judul Peta (teks diperbarui: KILAT 1,5/1,2 detik, perlengkapan +6..+10).
+- Medali: 16 baru (Ahli Diagram, Pembaca Cerita, Level 30/40, Kekuatan 1000, Rajin Belajar 7 & Juara Rajin 30 stempel, Sahabat Teman, Kiki Agung, Kolektor Teman, Sahabat Semua Makhluk, Arsitek Cilik, Desa Impian, Gaya Keren, Bintang Mode, Murid Teladan); "Ahli Puluhan" → "Ahli Bilangan 11–20". Daftar: belum selesai di atas (yang hampir selesai paling atas), yang sudah selesai di bawah. `S.lessonsDone` dihitung saat pelajaran Kelas selesai.
+- Kartu dungeon: info di bawah gambar 2 baris (cerita + materi/ruang/level, dipotong rapi); bahan khusus pindah ke tombol (i) di sebelah nama dungeon. SW `mq-v55`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
