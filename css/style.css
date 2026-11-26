@@ -618,6 +618,8 @@ body.hasTabs #scr-home { padding-bottom: 92px; } /* tombol Petualangan tidak ter
 .lvList { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
 .lvPick { display: flex; align-items: center; gap: 8px; padding: 10px; font-weight: 900; font-size: 15px; text-align: left; background: #566c86; border: 3px solid var(--hitam); color: #f4f4f4; }
 .lvPick span { font-size: 22px; }
+.lvPick.soon { opacity: .5; }
+.lvPick small { font-size: 11px; margin-left: auto; }
 .lvPick.must { background: var(--kuning); color: var(--hitam); animation: bob 1s steps(1) infinite; }
 .restBanner { position: absolute; left: 50%; transform: translateX(-50%); bottom: 8px; z-index: 5; background: #333c57; color: #ffcd75;
   font-weight: 900; font-size: 15px; padding: 6px 12px; border: 3px solid var(--hitam); white-space: nowrap; }

@@ -234,5 +234,5 @@ Cara membuatnya (nanti, saat Kelas 2 dikerjakan):
 - **Level:** satu level terus naik, tidak di-reset. Kelas 2 Normal Lv 16–30, Pahlawan 31–45, Legenda 46–55. Monster Kelas 2 = maks(level area, level anak − 3).
 - **Poin status:** Lv 1–40 = 1 poin per level. Mulai Lv 41 bertambah (sementara 41–55 = 2, 56–70 = 3).
 - **Mulai di Kelas 2:** level langsung jadi Lv 16, poin level yang dilompati diberikan, plus equipment standar gratis. Kelas 1 tetap bisa dibuka.
-- **Menu Kelas:** Kelas 1–6 → Bab → materi. Materi Kelas 1 dirapikan per bab.
+- **Menu Kelas (sudah dibuat 2026-11-27):** Kelas 1–6 → Bab → materi (`KELAS` di learn.js). Kelas 1 = 8 bab. Kelas 2 Bab 1 berisi materi, bab lain 🔒. Kelas 3–6 "Segera".
 - **Teman (selain Kiki):** telur diberi Makanan Teman (1 per hari dari Misi Harian). Butuh 2 / 5 / 8 / 15 item (total 30) sampai Dewasa.

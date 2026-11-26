@@ -383,5 +383,8 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Soal Kelas 2 Bab 1 (Bilangan sampai 1.000): `ratusan`, `nilai` (nilai tempat), `lompat` (loncat 2/5/10/100). `urutan` & `banding` sampai 1.000. Bisa dicoba di Arena Latihan, tombol **1.000** (mode `seribu`).
 - `S.kelas` (dunia kelas yang dimainkan, save v12). `Data.fieldsKelas2` (9 peta, peta 1 berisi, sisanya `soon`), `Data.byKelas` + `Data.useKelas(k)` belum dipanggil: menunggu peta Kelas 2 (tahap 3). SW `mq-v60`.
 
+### 2026-11-27 — Menu Kelas per kelas & bab (tahap 2)
+- Kelas: pilih Kelas 1–6 → Bab → materi (`KELAS` di learn.js, menggantikan `ORDER`). Batas angka latihan per bab (`maxOf`). Pelajaran wajib setelah pingsan tampil paling atas. Pelajaran baru Kelas 2: Ratusan, Nilai Tempat, Loncat 10 & 100. SW `mq-v61`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

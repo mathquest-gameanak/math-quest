@@ -92,13 +92,39 @@ MQ.Learn = (() => {
       {t: 'Bilangan SEBELUM = kurang satu. Sebelum 20 adalah 19.', v: () => V().hintLine(20, 19)}]},
     kali: {title: 'Perkalian', icon: '✖️', cards: [
       {t: 'Kali = tambah berulang. 3 × 2 artinya 3 sebanyak 2 kali: 3 + 3 = 6.', v: () => V().hintAdd(3, 3, 6)}]},
+    ratusan: {title: 'Ratusan, Puluhan, Satuan', icon: '💯', cards: [
+      {t: '10 satuan = 1 puluhan. 10 puluhan = 1 ratusan (100).', v: () => V().hintNote('1 → 10 → 100')},
+      {t: '3 ratusan, 4 puluhan, 5 satuan = 300 + 40 + 5 = 345.', v: () => V().hintNote('300 + 40 + 5 = 345')}]},
+    nilai: {title: 'Nilai Tempat', icon: '🏠', cards: [
+      {t: 'Setiap angka punya rumah. Pada 345: angka 3 di rumah ratusan, 4 di puluhan, 5 di satuan.', v: () => V().hintNote('3 ratusan · 4 puluhan · 5 satuan')},
+      {t: 'Nilainya ikut rumahnya. Pada 345, angka 4 bernilai 40, angka 3 bernilai 300.', v: () => V().hintNote('4 → 40 · 3 → 300')}]},
+    lompat: {title: 'Loncat 10 & 100', icon: '🐸', cards: [
+      {t: 'Loncat 10: angka puluhannya naik satu. 120, 130, 140, 150.', v: () => V().hintSeq([120, 130, 140], 150, 'Setiap kali +10')},
+      {t: 'Loncat 100: angka ratusannya naik satu. 200, 300, 400, 500.', v: () => V().hintSeq([200, 300, 400], 500, 'Setiap kali +100')}]},
     teka: {title: 'Teka-teki Bilangan', icon: '📜', cards: [
       {t: '"Aku lebih dari 5 dan kurang dari 7." Bilangan yang ada di antara 5 dan 7 adalah 6.', v: () => V().hintLine(6, 6)},
       {t: 'Pola loncat: lihat berapa yang ditambah setiap kali. 2, 4, 6, 8 → loncat 2.', v: () => V().hintSeq([2, 4, 6, 8], 10, 'Setiap kali +2')}]}
   };
-  // urutan mengikuti bab buku Matematika Kelas 1: bilangan 1–10, tambah, kurang, bangun datar, 11–20, tambah-kurang 20, panjang, diagram
-  const ORDER = ['hitung', 'banding', 'urutan', 'posisi', 'tambah', 'pasangan', 'berulang', 'isi', 'kurang', 'keluarga', 'cerita',
-                 'bentuk', 'kelompok', 'susun', 'pola', 'belasan', 'puluhan', 'dobel', 'panjang', 'ukur', 'data', 'turus', 'teka'];
+
+  /* Kelas → Bab → materi. Bab mengikuti buku Kemdikbud Kurikulum Merdeka (GDD §3 & §15).
+     k = jenis pelajaran (LESSONS), max = batas angka latihan; bab tanpa k = belum ada (Segera). */
+  const KELAS = {
+    1: [{t: 'Bilangan sampai 10', k: ['hitung', 'banding', 'urutan', 'posisi'], max: 10},
+        {t: 'Penjumlahan sampai 10', k: ['tambah', 'pasangan', 'berulang', 'isi', 'cerita'], max: 10},
+        {t: 'Pengurangan sampai 10', k: ['kurang', 'keluarga'], max: 10},
+        {t: 'Bangun Datar', k: ['bentuk', 'kelompok', 'susun', 'pola'], max: 10},
+        {t: 'Bilangan sampai 20', k: ['belasan', 'puluhan'], max: 20},
+        {t: 'Tambah & Kurang sampai 20', k: ['dobel', 'teka'], max: 20},
+        {t: 'Panjang', k: ['panjang', 'ukur'], max: 20},
+        {t: 'Diagram', k: ['data', 'turus'], max: 20}],
+    2: [{t: 'Bilangan sampai 1.000', k: ['ratusan', 'nilai', 'lompat'], max: 1000},
+        ...['Cara Berhitung', 'Waktu & Durasi', 'Penjumlahan Bersusun', 'Pengurangan Bersusun', 'Panjang', 'Tabel & Grafik',
+            'Banyaknya Air', 'Penjumlahan & Pengurangan', 'Perkalian (1)', 'Perkalian (2)', 'Perkalian (3)', 'Perkalian (4)',
+            'Segitiga & Segiempat', 'Bilangan sampai 10.000', 'Pecahan', 'Bentuk-bentuk Kotak'].map(t => ({t}))]
+  };
+  let nav = {kelas: 0, bab: -1}; // posisi di daftar: kelas 0 = pilih kelas, bab -1 = pilih bab
+  /** Batas angka latihan untuk jenis pelajaran (dari bab pertama yang memuatnya). */
+  const maxOf = k => { for (const n in KELAS) for (const b of KELAS[n]) if (b.k && b.k.includes(k)) return b.max; return 20; };
 
   /* ===== Istirahat (pingsan) ===== */
   const leftMs = () => (S.rest ? Math.max(0, S.rest.until - Date.now()) : 0);
@@ -218,21 +244,37 @@ MQ.Learn = (() => {
     if (L.done) { const toMap = L.rest && leftMs() <= 0; L = null; mates = null; resting(); return UI.show(toMap ? 'map' : 'home'); }
     L.step++; render();
   });
-  $('learnBack').addEventListener('click', () => { const was = L; L = null; if (was && !was.rest) return render(); mates = null; UI.show('home'); });
+  $('learnBack').addEventListener('click', () => {
+    const was = L; L = null;
+    if (was && !was.rest) return render();
+    if (!was && nav.bab >= 0) { nav.bab = -1; return render(); }   // materi → daftar bab
+    if (!was && nav.kelas) { nav.kelas = 0; return render(); }     // daftar bab → pilih kelas
+    mates = null; UI.show('home');
+  });
 
   /** Daftar semua pelajaran (dibuka dari ikon 🎓 Kelas di beranda), ditulis di papan tulis. */
   function renderList() {
-    $('learnTitle').textContent = '🎓 Kelas';
-    $('learnStep').textContent = 'Hari ini mau belajar apa?';
+    const K = nav.kelas, bab = K && nav.bab >= 0 ? KELAS[K][nav.bab] : null;
+    $('learnTitle').textContent = '🎓 Kelas' + (K ? ` ${K}` : '') + (bab ? ` · Bab ${nav.bab + 1}` : '');
+    $('learnStep').textContent = bab ? bab.t : K ? 'Pilih bab' : 'Hari ini mau belajar apa?';
     $('learnRest').hidden = !resting();
     if (S.rest) $('learnRest').textContent = '💤 ' + restText();
     $('learnNext').hidden = true;
     $('learnAnswers').innerHTML = ''; $('learnAnswers').className = '';
-    $('learnBody').innerHTML = `<div class="lvList">${ORDER.map(k => `<button class="lvPick${S.rest && !S.rest.learned && S.rest.kind === k ? ' must' : ''}" data-k="${k}">` +
-      `<span>${LESSONS[k].icon}</span>${LESSONS[k].title}</button>`).join('')}</div>`;
+    const must = S.rest && !S.rest.learned ? S.rest.kind : null;
+    const lesson = k => `<button class="lvPick${must === k ? ' must' : ''}" data-k="${k}"><span>${LESSONS[k].icon}</span>${LESSONS[k].title}</button>`;
+    let html;
+    if (bab) html = bab.k.map(lesson).join('');
+    else if (K) html = KELAS[K].map((b, i) => `<button class="lvPick${b.k ? '' : ' soon'}" data-bab="${i}"${b.k ? '' : ' disabled'}>` +
+      `<span>${b.k ? i + 1 : '🔒'}</span>${b.t}</button>`).join('');
+    else html = (must ? lesson(must) : '') + [1, 2, 3, 4, 5, 6].map(n => `<button class="lvPick${KELAS[n] ? '' : ' soon'}" data-kelas="${n}"${KELAS[n] ? '' : ' disabled'}>` +
+      `<span>🎒</span>Kelas ${n}${KELAS[n] ? '' : ' <small>Segera</small>'}</button>`).join('');
+    $('learnBody').innerHTML = `<div class="lvList">${html}</div>`;
     $('learnBody').querySelectorAll('.lvPick').forEach(b => b.addEventListener('click', () => {
-      const k = b.dataset.k, rest = !!(S.rest && !S.rest.learned && S.rest.kind === k);
-      open(k, rest ? S.rest.max : 20, rest);
+      if (b.dataset.kelas) { nav = {kelas: +b.dataset.kelas, bab: -1}; return render(); }
+      if (b.dataset.bab) { nav.bab = +b.dataset.bab; return render(); }
+      const k = b.dataset.k, rest = must === k;
+      open(k, rest ? S.rest.max : maxOf(k), rest);
     }));
   }
   UI.renderers.learn = render;
