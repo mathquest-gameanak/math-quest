@@ -309,5 +309,8 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Cutscene: latar memakai mesin latar pertarungan (`Scene.renderBg` meminjam scene.js + backgrounds.js + skyart.js) → bergerak & detail, kamera bergeser pelan; latar baru `desa` & `malam` (rumah beratap warna-warni, jendela menyala, asap cerobong). Bar hitam atas, bayangan tepi, latar muncul dari gelap saat berganti. Tokoh: ukuran ikut skala layar (HP 3×, iPad 5×), bernapas, melompat kecil saat bicara, yang tidak bicara diredupkan, bayangan. Kotak bicara muncul dari bawah, papan nama kuning melayang, potret berlatar; narator miring di tengah. iPad: cutscene penuh lebar (`html.tablet`).
 - Ikon menu 24×24 baru di itemart.js (`ui_*`): logo pahlawan tetap = helm kesatria (kiri atas beranda & bilah bawah "Karakter", tidak ikut penampilan), Tas, Beranda, Dungeon, Toko, Buku, Misi, Medali, Pandai Besi, Kelas, Musik/Bisu, Orang Tua. Dipasang lewat `img[data-ui]`. SW `mq-v44`.
 
+### 2026-11-26 — Filter kategori item
+- `UI.filterBar` (screens.js): bilah tombol Semua / Senjata / Pelindung / Aksesori / Ramuan / Bahan (ikon item), hanya kategori yang ada; pilihan diingat per layar. Dipakai di Tas, Toko, Pandai Besi (Buat & Tingkatkan terpisah). Catatan Tingkatkan sekarang "+10". SW `mq-v45`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

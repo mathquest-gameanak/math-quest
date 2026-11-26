@@ -30,7 +30,8 @@ MQ.Shop = (() => {
   /* ===== Toko ===== */
   UI.renderers.shop = () => {
     $('shopCoins').textContent = `🪙 ${S.coins} koin`;
-    $('shopList').innerHTML = Data.shop.map(id => card(id, `<span class="price">🪙 ${items[id].price}</span>`, 'Beli',
+    const keep = UI.filterBar($('shopFilter'), 'shop', Data.shop, UI.renderers.shop);
+    $('shopList').innerHTML = Data.shop.filter(keep).map(id => card(id, `<span class="price">🪙 ${items[id].price}</span>`, 'Beli',
       isGear(items[id]) && State.count(id) > 0)).join('');
   };
   $('shopList').addEventListener('click', e => {
@@ -59,9 +60,10 @@ MQ.Shop = (() => {
     document.querySelectorAll('.smithTabs [data-st]').forEach(b => b.classList.toggle('on', b.dataset.st === smithTab));
     $('smithList').hidden = smithTab !== 'make'; $('upList').hidden = smithTab !== 'up';
     $('smithNote').textContent = smithTab === 'make' ? 'Kumpulkan bahan dari monster, lalu buat senjata hebat!'
-      : 'Tingkatkan perlengkapan sampai +5 dengan bahan khusus dungeon. Senjata: Kristal Pola, pelindung: Mutiara Laut, aksesori: Tinta Bintang.';
+      : `Tingkatkan perlengkapan sampai +${U().max} dengan bahan khusus dungeon. Senjata: Kristal Pola, pelindung: Mutiara Laut, aksesori: Tinta Bintang.`;
     if (smithTab === 'up') return renderUp();
-    $('smithList').innerHTML = Data.smith.map(id => {
+    const keep = UI.filterBar($('smithFilter'), 'smith', Data.smith, UI.renderers.smith);
+    $('smithList').innerHTML = Data.smith.filter(keep).map(id => {
       const need = Object.entries(items[id].recipe).map(([k, n]) =>
         `<span class="need ${have(k) >= n ? 'ok' : ''}">${iconOf(k)}${Math.min(have(k), n)}/${n}</span>`).join('');
       return card(id, `<div class="needs">${need}</div>`, 'Buat', State.count(id) > 0);
@@ -125,7 +127,8 @@ MQ.Shop = (() => {
     return `Kritikal +${p.crit * m}%, damage kritikal +${p.critDmg * m}%`;
   }
   function renderUp() {
-    const owned = Object.keys(S.inv).filter(id => isGear(items[id]));
+    const gear = Object.keys(S.inv).filter(id => isGear(items[id]));
+    const owned = gear.filter(UI.filterBar($('smithFilter'), 'up', gear, UI.renderers.smith));
     $('upList').innerHTML = owned.length ? owned.map(id => {
       const L = State.upLevel(id), max = L >= U().max;
       const need = max ? '<small>Sudah tingkat tertinggi! ✨</small>' : `<div class="needs">${Object.entries(upCost(id, L + 1)).map(([k, n]) =>

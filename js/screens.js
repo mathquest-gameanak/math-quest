@@ -192,12 +192,28 @@ MQ.UI = (() => {
   /* ===== Tas ===== */
   const TYPE_ORDER = ['senjata', 'pelindung', 'aksesori', 'ramuan', 'bahan'];
   const TYPE_NAMES = {senjata: 'Senjata', pelindung: 'Pelindung', aksesori: 'Aksesori', ramuan: 'Ramuan', bahan: 'Bahan'};
+  /* Bilah filter kategori (Tas, Toko, Pandai Besi): hanya kategori yang ada di layar itu; pilihan diingat per layar. */
+  const FILTERS = [['semua', 'Semua', null], ['senjata', 'Senjata', 'pedangKayu'], ['pelindung', 'Pelindung', 'perisaiKayu'],
+                   ['aksesori', 'Aksesori', 'cincinBintang'], ['ramuan', 'Ramuan', 'ramuan'], ['bahan', 'Bahan', 'lendir']];
+  const filt = {};
+  /** Gambar bilah filter di el untuk daftar ids; onChange() = gambar ulang layar. Mengembalikan fungsi saring(id). */
+  function filterBar(el, key, ids, onChange) {
+    const types = new Set(ids.map(id => Data.items[id].type));
+    const opts = FILTERS.filter(([k]) => k === 'semua' || types.has(k));
+    if (!opts.some(([k]) => k === filt[key])) filt[key] = 'semua';
+    el.hidden = opts.length <= 2; // satu kategori saja: tidak perlu filter
+    el.innerHTML = opts.map(([k, n, ico]) => `<button class="fBtn${filt[key] === k ? ' on' : ''}" data-f="${k}">` +
+      `${ico ? `<img src="${MQ.ItemArt.url(ico, 2)}" alt="">` : '<b>✦</b>'}<span>${n}</span></button>`).join('');
+    el.onclick = e => { const b = e.target.closest('[data-f]'); if (!b) return; filt[key] = b.dataset.f; MQ.Audio.sfx.click(); onChange(); };
+    return id => filt[key] === 'semua' || Data.items[id].type === filt[key];
+  }
   renderers.bag = () => {
     $('bagCoins').textContent = `🪙 ${S.coins} koin`;
-    const ids = Object.keys(S.inv).sort((a, b) => TYPE_ORDER.indexOf(Data.items[a].type) - TYPE_ORDER.indexOf(Data.items[b].type));
+    const all = Object.keys(S.inv), keep = filterBar($('bagFilter'), 'bag', all, renderers.bag);
+    const ids = all.filter(keep).sort((a, b) => TYPE_ORDER.indexOf(Data.items[a].type) - TYPE_ORDER.indexOf(Data.items[b].type));
     const cells = ids.map(id => `<button class="slot full" data-item="${id}">${itemImg(id)}` +
       `<b class="qty">${S.inv[id]}</b>${State.isEquipped(id) ? '<b class="eq">E</b>' : ''}</button>`);
-    while (cells.length < 16 || cells.length % 4) cells.push('<div class="slot"></div>');
+    while (cells.length < (filt.bag === 'semua' ? 16 : 8) || cells.length % 4) cells.push('<div class="slot"></div>');
     $('bagGrid').innerHTML = cells.join('');
     $('bagNote').textContent = ids.length ? 'Ketuk item untuk melihat atau memakainya.' : 'Tas masih kosong. Kalahkan monster untuk mendapat koin & bahan!';
   };
@@ -240,5 +256,5 @@ MQ.UI = (() => {
     });
   }
 
-  return {show, overlay, quiz, fillXp, init, itemImg, itemDetail, renderers};
+  return {show, overlay, quiz, fillXp, init, itemImg, itemDetail, renderers, filterBar};
 })();
