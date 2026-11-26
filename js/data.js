@@ -67,6 +67,7 @@ MQ.Data = {
                   desc: 'Bahan khusus SENJATA. Dari Gua Pola (makin banyak di ⭐⭐⭐).'},
     mutiara:     {type: 'bahan', name: 'Mutiara Laut', icon: 'coin', pal: {y: '#c7f0ff', Y: '#f4f4f4'}, from: 'kapalKaram',
                   desc: 'Bahan khusus PELINDUNG. Dari Kapal Karam (makin banyak di ⭐⭐⭐).'},
+    fragmenBintang: {type: 'bahan', name: 'Fragmen Bintang', icon: 'star', pal: {y: '#fff3b0'}, desc: 'Pecahan pedang legendaris. Tukar dari ⭐ Bintang Misi. 10 fragmen = Pedang Bintang.'},
     tinta:       {type: 'bahan', name: 'Tinta Bintang', icon: 'star', pal: {y: '#73eff7'}, from: 'perpustakaan',
                   desc: 'Bahan khusus AKSESORI. Dari Perpustakaan Tua (makin banyak di ⭐⭐⭐).'},
 
@@ -89,6 +90,11 @@ MQ.Data = {
 
     pedangKristal:   {type: 'senjata', name: 'Pedang Kristal', icon: 'sword', pal: {w: '#b06fd0', y: '#f4a3c8'}, atk: 5, crit: 10, critDmg: 20,
                       recipe: {kristalPola: 3, batu: 5, koin: 30}, desc: 'Serangan +5. Kritikal +10%, damage kritikal +20%.'},
+    // Hadiah Tukar Bintang Misi (2026-11-26): fragmen dari misi harian → Pedang Bintang (senjata terkuat, cocok untuk semua soal)
+    pedangBintang:   {type: 'senjata', name: 'Pedang Bintang', icon: 'sword', pal: {w: '#fff3b0', y: '#73eff7'}, atk: 9, crit: 15, critDmg: 50,
+                      bonus: {kinds: ['tambah', 'kurang', 'isi', 'hitung', 'banding', 'urutan', 'posisi', 'pasangan', 'berulang', 'keluarga', 'cerita', 'belasan',
+                                      'puluhan', 'dobel', 'bentuk', 'kelompok', 'susun', 'pola', 'panjang', 'ukur', 'data', 'turus'], dmg: 2},
+                      recipe: {fragmenBintang: 10, mahkota: 2, koin: 100}, desc: 'Serangan +9, ekstra +2 di SEMUA soal. Kritikal +15%, damage kritikal +50%. Dari 10 Fragmen Bintang.'},
     pedangPahlawan:  {type: 'senjata', name: 'Pedang Pahlawan', icon: 'sword', pal: {w: '#ffcd75', y: '#e43b44'}, atk: 8, crit: 15, critDmg: 40,
                       recipe: {kristalPola: 8, mahkota: 3, koin: 60}, desc: 'Serangan +8. Kritikal +15%, damage kritikal +40%.'},
 
@@ -117,7 +123,7 @@ MQ.Data = {
   /** Urutan barang di Toko dan resep di Pandai Besi. */
   shop: ['ramuan', 'pedangKayu', 'perisaiKayu'],
   smith: ['pedangPenjumlah', 'kapakPengurang', 'perisaiBatu', 'kalungKoin', 'jimatKilat', 'tongkatBentuk', 'paluPuluhan', 'cincinBintang',
-          'pedangKristal', 'perisaiMutiara', 'jimatTinta', 'pedangPahlawan', 'zirahPahlawan', 'mahkotaBijak'],
+          'pedangKristal', 'perisaiMutiara', 'jimatTinta', 'pedangPahlawan', 'zirahPahlawan', 'mahkotaBijak', 'pedangBintang'],
 
   /* Area = jalur 5 titik: 1, 2, ⭐ mini bos (mini, atau monster biasa yang lebih besar), 4, 👑 bos. Bisa diulang.
      Field Kelas 1, berurutan. spec.kinds = jenis soal (lihat questions.js GEN);

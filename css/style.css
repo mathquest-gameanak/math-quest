@@ -1179,3 +1179,12 @@ body.skinK .panel b .pwTag, body.skinK .pwTag { color: #1a1c2c; }
 #scr-dungeon .dCard .dChips { flex-wrap: nowrap; overflow: hidden; }
 #scr-dungeon .dCard .dChips span { flex: none; white-space: nowrap; }
 #scr-dungeon .dCard .dChips .dTopic { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+
+/* ===== ⭐ Misi harian & Tukar Bintang (2026-11-26) ===== */
+.qIco { font-size: 26px; width: 34px; text-align: center; flex: none; }
+.bonusBox { display: flex; align-items: center; gap: 8px; padding: 8px 10px; margin-top: 6px; }
+.bonusBox img { width: 48px; height: 48px; image-rendering: pixelated; }
+.bonusBox.ready img { animation: chestShake .9s steps(8) infinite; }
+.bonusBox .sBody { flex: 1; }
+.starItem .iconBig, .starItem .stImg { width: 44px; height: 44px; image-rendering: pixelated; }
+.starPrice { font-weight: 900; color: #ef7d57; }

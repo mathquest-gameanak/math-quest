@@ -361,5 +361,11 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Medali: 16 baru (Ahli Diagram, Pembaca Cerita, Level 30/40, Kekuatan 1000, Rajin Belajar 7 & Juara Rajin 30 stempel, Sahabat Teman, Kiki Agung, Kolektor Teman, Sahabat Semua Makhluk, Arsitek Cilik, Desa Impian, Gaya Keren, Bintang Mode, Murid Teladan); "Ahli Puluhan" → "Ahli Bilangan 11–20". Daftar: belum selesai di atas (yang hampir selesai paling atas), yang sudah selesai di bawah. `S.lessonsDone` dihitung saat pelajaran Kelas selesai.
 - Kartu dungeon: info di bawah gambar 2 baris (cerita + materi/ruang/level, dipotong rapi); bahan khusus pindah ke tombol (i) di sebelah nama dungeon. SW `mq-v55`.
 
+### 2026-11-26 — Misi harian baru & Tukar Bintang
+- Misi harian (`quests.js` ditulis ulang): 3 misi = 1 misi **belajar** (Latihan Teman / 1 pelajaran Kelas / target harian) + 2 petualangan (monster, soal jenis tertentu, bos, kombo, KILAT, Peti Teka-teki, dungeon). Pelacak baru dari kiki.js (`pet`), learn.js (`learn`), daily.js (`goal`), battle.js (`kilat`, `chest`).
+- Hadiah: tiap misi koin + ⭐ **Bintang Misi** (`S.starTokens`); ketiga misi diambil → **Peti Bonus** (+2 ⭐, bahan khusus bergiliran, 20 koin).
+- **Tukar Bintang** (di layar Misi, tanpa undian): Fragmen Bintang 3⭐ (10 + 2 Mahkota + 100 koin = **Pedang Bintang** di Pandai Besi: Serangan +9, ekstra +2 di semua soal, krit +15%, damage krit +50%), Ramuan 2⭐, Mahkota Kecil 4⭐, bahan khusus 3⭐, kostum eksklusif **Mahkota Bintang** 20⭐, telur teman spesial **Kristalin** 30⭐ (`S.starBuys`). Ikon baru fragmenBintang & pedangBintang. Medali "semua teman" jadi 9.
+- Tes memakai server terpisah `math-quest-test` (port 8126, simpanan terpisah) supaya tidak mengganggu simpanan yang sedang dimainkan di port 8125. SW `mq-v56`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

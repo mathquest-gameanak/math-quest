@@ -32,6 +32,7 @@ MQ.Daily = (() => {
     S.stamps = S.stamps.slice(-120);
     S.coins += REWARD.stamp;
     if (MQ.Village) MQ.Village.addBrick(1); // 1 bata untuk membangun desa
+    if (MQ.Quests) MQ.Quests.track('goal');
     S.dayParty = today(); // perayaan ditampilkan di beranda / peta (tidak mengganggu pertarungan)
     State.save();
     return true;

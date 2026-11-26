@@ -131,7 +131,7 @@ MQ.Collection = (() => {
     {id: 'teman7', icon: '🍓', name: 'Sahabat Teman', desc: 'Selesaikan Latihan Teman 7 hari', target: 7, val: petDays, reward: {coins: 30}},
     {id: 'kikiAgung', icon: '🦉', name: 'Kiki Agung', desc: 'Rawat Kiki sampai tahap Agung', target: 14, val: () => (S.pets.own.kiki ? S.pets.own.kiki.days : 0), reward: {coins: 60}},
     {id: 'teman3', icon: '🐾', name: 'Kolektor Teman', desc: 'Punya 3 teman', target: 3, val: () => Object.keys(S.pets.own).length, reward: {coins: 80}},
-    {id: 'temanSemua', icon: '🌈', name: 'Sahabat Semua Makhluk', desc: 'Punya semua 8 teman', target: 8, val: () => Object.keys(S.pets.own).length, reward: {coins: 200}},
+    {id: 'temanSemua', icon: '🌈', name: 'Sahabat Semua Makhluk', desc: 'Punya semua 9 teman', target: 9, val: () => Object.keys(S.pets.own).length, reward: {coins: 200}},
     {id: 'desa3', icon: '🏗️', name: 'Arsitek Cilik', desc: 'Bangun 3 bagian desa', target: 3, val: () => S.village.built.length, reward: {coins: 30}},
     {id: 'desaSemua', icon: '🏘️', name: 'Desa Impian', desc: 'Bangun semua 10 bagian Desa Bilangan', target: 10, val: () => S.village.built.length, reward: {coins: 150}},
     {id: 'fashion1', icon: '👗', name: 'Gaya Keren', desc: 'Beli 1 barang di Toko Fashion', target: 1, val: fashionCount, reward: {coins: 20}},

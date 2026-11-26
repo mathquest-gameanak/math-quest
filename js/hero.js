@@ -41,7 +41,8 @@ MQ.Hero = (() => {
     kacamata: {name: 'Kacamata Pintar'},
     // Toko Fashion (dibeli dengan koin, 2026-11-26)
     topiKoboi: {name: 'Topi Koboi', price: 500}, bandoKelinci: {name: 'Bando Kelinci', price: 500}, topiChef: {name: 'Topi Koki', price: 500},
-    helmKsatria: {name: 'Helm Ksatria', price: 1000}, helmAstronot: {name: 'Helm Astronot', price: 1000}, mahkotaPelangi: {name: 'Mahkota Pelangi', price: 1500}
+    helmKsatria: {name: 'Helm Ksatria', price: 1000}, helmAstronot: {name: 'Helm Astronot', price: 1000}, mahkotaPelangi: {name: 'Mahkota Pelangi', price: 1500},
+    mahkotaBintang: {name: 'Mahkota Bintang', stars: 20} // hanya dari Tukar Bintang Misi
   };
   /** Pakaian Toko Fashion. */
   const OUTFITS = {jubah: {name: 'Jubah Pahlawan', price: 1000}, zirah: {name: 'Zirah Ksatria', price: 1500}};
@@ -189,6 +190,12 @@ MQ.Hero = (() => {
         const C = ['#e43b44', '#ef7d57', '#ffcd75', '#38b764', '#41a6f6', '#b06fd0'];
         C.forEach((c, i) => P.rect(cx - 5 + i * 2 - (i > 2 ? 0 : 0), Y(2 - (i % 2)), 2, 2 + (i % 2), c));
         P.rect(cx - 5, Y(3), 11, 1, '#ffcd75'); P.px(cx, Y(-1), '#fff3b0').px(cx - 3, Y(0), '#fff3b0').px(cx + 3, Y(0), '#fff3b0');
+        break;
+      }
+      case 'mahkotaBintang': {
+        P.rect(cx - 4, Y(1), 8, 3, '#73eff7').rect(cx - 4, Y(3), 8, 1, '#41a6f6');
+        [[cx - 1, Y(-3)], [cx, Y(-3)], [cx - 2, Y(-2)], [cx - 1, Y(-2)], [cx, Y(-2)], [cx + 1, Y(-2)], [cx - 1, Y(-1)], [cx, Y(-1)], [cx - 1, Y(0)], [cx, Y(0)]].forEach(([x, y]) => P.px(x, y, '#ffcd75'));
+        P.rect(cx - 4, Y(0), 1, 1, '#73eff7').rect(cx + 3, Y(0), 1, 1, '#73eff7'); P.px(cx - 3, Y(2), '#f4f4f4').px(cx + 2, Y(2), '#fff3b0');
         break;
       }
       case 'kacamata':

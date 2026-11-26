@@ -200,6 +200,20 @@ MQ.ItemArt = (() => {
       return P.outline();
     },
     pedangKristal: () => sword(['#f4d3f0', '#f4a3c8', '#b06fd0'], '#c7d3de', '#566c86', '#5d275d', '#b06fd0'),
+    pedangBintang: () => {
+      const P = sword(['#ffffff', '#fff3b0', '#73eff7'], '#41a6f6', '#29366f', '#3b5dc9', '#ffcd75');
+      [[20, 6], [13, 1], [23, 9], [16, 9]].forEach(([x, y]) => P.px(x, y, '#fff3b0'));
+      P.px(21, 1, '#73eff7');
+      return P.outline();
+    },
+    fragmenBintang() {
+      const P = grid(N, N);
+      for (let y = 3; y < 21; y++) { const hw = Math.round(y < 10 ? (y - 3) * 0.9 : (21 - y) * 0.6); P.rect(12 - hw + Math.round((y - 12) * 0.2), y, hw * 2 + 1, 1, '#ffcd75'); }
+      P.recolor('#ffcd75', '#fff3b0', (x, y) => x < 11 && y < 12); P.recolor('#ffcd75', '#ef7d57', (x, y) => x > 13 && y > 12);
+      P.rect(11, 6, 1, 7, '#ffffff');
+      [[4, 4], [19, 3], [20, 18], [4, 17]].forEach(([x, y]) => P.px(x, y, '#73eff7'));
+      return P.outline();
+    },
     pedangPahlawan: () => {
       const P = sword(['#ffffff', '#c7d3de', '#94b0c2'], '#ffcd75', '#ef7d57', '#b13e53', '#e43b44');
       [[19, 9], [14, 2], [22, 6]].forEach(([x, y]) => P.px(x, y, '#ffcd75'));                // kilau sakti

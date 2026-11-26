@@ -424,7 +424,7 @@ MQ.Battle = (() => {
       // Kritikal: pasti jika menjawab cepat (KILAT), selain itu peluang acak dari status & equipment
       const fast = !exam && !q.think && B.answerTime <= kilatSec();
       const teliti = !exam && q.think; // soal pikir: benar = serangan TELITI!
-      if (fast) S.kilat++; // untuk medali "Secepat Kilat"
+      if (fast) { S.kilat++; quest('kilat'); } // medali "Secepat Kilat" & misi KILAT
       const crit = !exam && (fast || Math.random() * 100 < State.critChance()), [lo, hi] = State.atk();
       const extra = exam ? 0 : State.bonusFor(q.kind); // senjata bertopik: damage tambahan untuk jenis soal ini
       const dmg = exam ? 10 : Math.round((rand(lo, hi) + extra) * (crit ? State.critMul() : teliti ? BAL.think.telitiMul : 1));
@@ -545,6 +545,7 @@ MQ.Battle = (() => {
       return;
     }
     stat.b++; State.logDay('b', 1); if (MQ.Daily) MQ.Daily.onCorrect();
+    quest('chest');
     btn.classList.add('benar'); sfx.correct();
     const first = ch.tries === 0, mul = mods().rewardMul;
     const coins = Math.round((first ? C.coins[0] : C.coins[1]) * mul);

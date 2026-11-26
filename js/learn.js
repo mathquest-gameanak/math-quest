@@ -201,7 +201,7 @@ MQ.Learn = (() => {
           box.querySelectorAll('button').forEach(x => (x.disabled = true));
           L.ok++; L.q = null;
           setTimeout(() => {
-            if (L.ok >= need()) { L.done = true; S.lessonsDone = (S.lessonsDone || 0) + 1; if (L.rest && S.rest) { S.rest.learned = true; } State.save(); sfx.levelUp(); }
+            if (L.ok >= need()) { L.done = true; S.lessonsDone = (S.lessonsDone || 0) + 1; if (MQ.Quests) MQ.Quests.track('learn'); if (L.rest && S.rest) { S.rest.learned = true; } State.save(); sfx.levelUp(); }
             render();
           }, 800);
         } else {

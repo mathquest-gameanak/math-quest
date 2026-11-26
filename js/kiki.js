@@ -28,7 +28,8 @@ MQ.Kiki = (() => {
     batu:   {name: 'Batu', base: 'lendirBatu', egg: ['#94b0c2', '#566c86'], unlock: {mon: 'lendirBatu', n: 10}},
     capit:  {name: 'Capit', base: 'kepiting', egg: ['#ef7d57', '#ffcd75'], unlock: {mon: 'kepiting', n: 10}},
     kerti:  {name: 'Kerti', base: 'hantuKertas', egg: ['#ffe4c4', '#d4a373'], unlock: {mon: 'hantuKertas', n: 10}},
-    api:    {name: 'Si Api', base: 'naga', egg: ['#e43b44', '#ffcd75'], unlock: {grade: true}}
+    api:    {name: 'Si Api', base: 'naga', egg: ['#e43b44', '#ffcd75'], unlock: {grade: true}},
+    kristal: {name: 'Kristalin', base: 'crystal', egg: ['#73eff7', '#b06fd0'], unlock: {stars: true}} // dari Tukar Bintang Misi
   };
   const IDS = Object.keys(PETS);
   const P = () => S.pets;
@@ -78,9 +79,10 @@ MQ.Kiki = (() => {
     const u = PETS[id].unlock;
     if (!u) return true;
     if (u.grade) return S.grade > 1;
+    if (u.stars) return (S.starBuys || []).includes('kristalin');
     return (S.bestiary[u.mon] || 0) >= u.n;
   }
-  const reqText = id => { const u = PETS[id].unlock; return u.grade ? 'Lulus Kelas 1' : `Kalahkan ${Data.monsters[u.mon].name} ${u.n}× (${Math.min(u.n, S.bestiary[u.mon] || 0)}/${u.n})`; };
+  const reqText = id => { const u = PETS[id].unlock; return u.stars ? 'Tukar di ⭐ Misi Harian' : u.grade ? 'Lulus Kelas 1' : `Kalahkan ${Data.monsters[u.mon].name} ${u.n}× (${Math.min(u.n, S.bestiary[u.mon] || 0)}/${u.n})`; };
   const allMaxed = () => Object.keys(P().own).every(maxed);
 
   /* ===== Memilih soal: kemampuan terlemah + paling lama tidak dilatih ===== */
@@ -206,6 +208,7 @@ MQ.Kiki = (() => {
     if (grows) P().own[id].days++;
     P().last = today(); run = null;
     if (MQ.Village) MQ.Village.addBrick(1, 'Latihan Teman');
+    if (MQ.Quests) MQ.Quests.track('pet');
     if (!grows) S.coins += 5;
     State.save(); render(); renderHome();
     const after = stageOf(id);
