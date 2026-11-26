@@ -24,10 +24,13 @@ MQ.Learn = (() => {
       {t: 'Kalau sama banyak, pakai tanda sama dengan =', v: () => V().hintCompare(5, 5, '=')}]},
     tambah: {title: 'Penjumlahan', icon: '➕', cards: [
       {t: 'Tambah artinya DIGABUNG. 3 titik kuning digabung 2 titik biru, lalu hitung semuanya: 5.', v: () => V().hintAdd(3, 2, 5)},
-      {t: 'Cara cepat: mulai dari angka yang besar, lalu hitung maju. 6 + 2 → mulai dari 6: tujuh, delapan!', v: () => V().hintSeq([6, 7], 8, '6 + 2 = 8')}]},
+      {t: 'Cara cepat: mulai dari angka yang besar, lalu hitung maju. 6 + 2 → mulai dari 6: tujuh, delapan!', v: () => V().hintSeq([6, 7], 8, '6 + 2 = 8')},
+      {t: 'Lewat 10? Penuhi dulu sampai 10! 8 + 5: 8 butuh 2 lagi jadi 10, sisanya 3. Jadi 10 + 3 = 13.', v: () => V().hintMake10(8, 5)},
+      {t: 'Ditambah 0 tidak bertambah: 6 + 0 = 6.', v: () => V().hintNote('6 + 0 = 6 · 0 + 4 = 4')}]},
     kurang: {title: 'Pengurangan', icon: '➖', cards: [
       {t: 'Kurang artinya DIAMBIL. Ada 7, diambil 3. Coret yang diambil, hitung sisanya.', v: () => V().hintSub(7, 3, 4)},
-      {t: 'Cara cepat: hitung mundur. 9 − 2 → dari 9 mundur 2 langkah: delapan, tujuh!', v: () => V().hintSeq([9, 8], 7, '9 − 2 = 7')}]},
+      {t: 'Cara cepat: hitung mundur. 9 − 2 → dari 9 mundur 2 langkah: delapan, tujuh!', v: () => V().hintSeq([9, 8], 7, '9 − 2 = 7')},
+      {t: 'Dikurangi 0 = tidak ada yang diambil. 5 − 0 = 5. Kalau diambil semua: 5 − 5 = 0.', v: () => V().hintNote('5 − 0 = 5 · 5 − 5 = 0')}]},
     isi: {title: 'Mengisi Kotak Kosong', icon: '□', cards: [
       {t: '3 + □ = 5. Kotak itu angka yang hilang. Dari 3, butuh berapa lagi supaya jadi 5?', v: () => V().hintAdd(3, 2, 5)},
       {t: 'Cek lagi: masukkan jawabanmu ke kotak. 3 + 2 = 5. Benar!', v: () => V().hintNote('3 + 2 = 5 ✔')}]},
@@ -54,8 +57,36 @@ MQ.Learn = (() => {
     ukur: {title: 'Mengukur', icon: '📏', cards: [
       {t: 'Mengukur = menghitung berapa kotak yang ditutupi benda, dari ujung ke ujung.', v: () => V().hintRuler(5)}]},
     puluhan: {title: 'Puluhan & Satuan', icon: '🥢', cards: [
-      {t: 'Satu ikat berisi 10 lidi. 2 ikat = 20 lidi.', v: () => V().lidi(2, 0)},
-      {t: 'Hitung ikatannya dulu (puluhan), lalu lidi lepasnya (satuan). 2 ikat + 3 lepas = 23.', v: () => V().lidi(2, 3) + V().hintTens(2, 3)}]},
+      {t: 'Satu ikat berisi 10 lidi = 1 puluhan.', v: () => V().lidi(1, 0)},
+      {t: 'Hitung ikatannya dulu (puluhan), lalu lidi lepasnya (satuan). 1 ikat + 3 lepas = 13.', v: () => V().lidi(1, 3) + V().hintTens(1, 3)}]},
+    posisi: {title: 'Bilangan Urutan', icon: '🚩', cards: [
+      {t: 'Hitung dari bendera: yang paling dekat bendera adalah yang PERTAMA, lalu kedua, ketiga, ...', v: () => V().queue(['jamur', 'kelelawar', 'kepiting', 'lendirBatu', 'hantuKertas'], true)},
+      {t: 'Kepiting ada di urutan ke-3 (ketiga) dari bendera.', v: () => V().hintNote('pertama · kedua · KETIGA · keempat · kelima')}]},
+    berulang: {title: 'Penjumlahan Berulang', icon: '🔁', cards: [
+      {t: 'Ada 3 kelompok, tiap kelompok 2. Jumlahkan berulang: 2 + 2 + 2 = 6.', v: () => V().groups(3, 2)},
+      {t: 'Cara cepat: hitung loncat. 2, 4, 6!', v: () => V().hintSeq([2, 4], 6, 'Loncat 2-2: 2, 4, 6')}]},
+    keluarga: {title: 'Hubungan Tambah & Kurang', icon: '🔄', cards: [
+      {t: '3, 4, dan 7 adalah satu keluarga bilangan. 3 + 4 = 7.', v: () => V().bond(7, 3, 4)},
+      {t: 'Dari satu keluarga kita dapat 4 kalimat: 3 + 4 = 7, 4 + 3 = 7, 7 − 4 = 3, 7 − 3 = 4.', v: () => V().hintNote('3 + 4 = 7 → 7 − 4 = 3')}]},
+    kelompok: {title: 'Mengelompokkan Bentuk', icon: '🔷', cards: [
+      {t: 'Kelompokkan menurut BENTUK, bukan warna. Semua ini segitiga walau warnanya berbeda.',
+       v: () => V().shapeRow([['segitiga', '#e43b44'], ['segitiga', '#41a6f6'], ['segitiga', '#38b764']])},
+      {t: 'Yang ini lingkaran, jadi masuk kelompok lain.', v: () => V().shapeRow([['segitiga', '#ffcd75'], ['segitiga', '#b06fd0'], ['lingkaran', '#ffcd75']])}]},
+    susun: {title: 'Menyusun Bangun Datar', icon: '🧩', cards: [
+      {t: 'Dua segitiga siku-siku bisa disusun menjadi satu persegi.', v: () => V().pieces('tt') + V().split('sq2t')},
+      {t: 'Persegi besar ini disusun dari 4 persegi kecil. Hitung tiap warnanya!', v: () => V().split('sq4s')}]},
+    belasan: {title: 'Bilangan 11–20', icon: '🔟', cards: [
+      {t: 'Satu bingkai penuh = 10 (1 puluhan). Bingkai kedua berisi 4 (satuan). Jadi 14.', v: () => V().tens20(14)},
+      {t: 'Bilangan belasan = 10 dan sisanya. 14 = 10 dan 4. Angka 1 di depan bernilai 10.', v: () => V().bond(14, 10, 4)}]},
+    dobel: {title: 'Dobel', icon: '👯', cards: [
+      {t: 'Dobel = menambah bilangan yang sama. 6 + 6 = 12.', v: () => V().hintAdd(6, 6, 12)},
+      {t: 'Hampir dobel: 6 + 7 = dobel 6 lalu tambah 1 → 13.', v: () => V().hintNote('6 + 6 = 12 → 6 + 7 = 13')}]},
+    data: {title: 'Diagram Gambar', icon: '📊', cards: [
+      {t: 'Tiap gambar = 1 buah. Hitung gambar di setiap baris.', v: () => V().picto([['apel', 4], ['jeruk', 2], ['pisang', 5]])},
+      {t: 'Baris paling panjang = paling banyak (pisang 5). Baris paling pendek = paling sedikit (jeruk 2).', v: () => V().hintNote('pisang 5 > apel 4 > jeruk 2')}]},
+    turus: {title: 'Tabel Turus', icon: '🖊️', cards: [
+      {t: 'Turus dipakai untuk mencatat. Garis kelima dibuat miring, jadi satu ikat turus = 5.', v: () => V().tally(5)},
+      {t: 'Satu ikat (5) dan 2 garis = 7.', v: () => V().tally(7)}]},
     urutan: {title: 'Urutan Bilangan', icon: '🔢', cards: [
       {t: 'Bilangan SESUDAH = tambah satu. Sesudah 14 adalah 15.', v: () => V().hintLine(14, 15)},
       {t: 'Bilangan SEBELUM = kurang satu. Sebelum 20 adalah 19.', v: () => V().hintLine(20, 19)}]},
@@ -65,7 +96,9 @@ MQ.Learn = (() => {
       {t: '"Aku lebih dari 5 dan kurang dari 7." Bilangan yang ada di antara 5 dan 7 adalah 6.', v: () => V().hintLine(6, 6)},
       {t: 'Pola loncat: lihat berapa yang ditambah setiap kali. 2, 4, 6, 8 → loncat 2.', v: () => V().hintSeq([2, 4, 6, 8], 10, 'Setiap kali +2')}]}
   };
-  const ORDER = ['hitung', 'banding', 'tambah', 'kurang', 'isi', 'pasangan', 'cerita', 'bentuk', 'pola', 'panjang', 'ukur', 'puluhan', 'urutan', 'teka'];
+  // urutan mengikuti bab buku Matematika Kelas 1: bilangan 1–10, tambah, kurang, bangun datar, 11–20, tambah-kurang 20, panjang, diagram
+  const ORDER = ['hitung', 'banding', 'urutan', 'posisi', 'tambah', 'pasangan', 'berulang', 'isi', 'kurang', 'keluarga', 'cerita',
+                 'bentuk', 'kelompok', 'susun', 'pola', 'belasan', 'puluhan', 'dobel', 'panjang', 'ukur', 'data', 'turus', 'teka'];
 
   /* ===== Istirahat (pingsan) ===== */
   const leftMs = () => (S.rest ? Math.max(0, S.rest.until - Date.now()) : 0);

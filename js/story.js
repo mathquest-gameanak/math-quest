@@ -78,15 +78,15 @@ MQ.Story = (() => {
     ],
     'lembah-shard': [
       {bg: 'lembah', actors: {hero: 30, rajaJamurKayu: 72}, who: 'rajaJamurKayu', text: 'Krek... Ukuranmu tepat sekali. Ambillah kepingannya.'},
-      {actors: {rajaJamurKayu: null, kiki: 60, shard: 72}, fx: 'sparkle', who: 'kiki', text: 'Lima kepingan! Tinggal satu lagi di Menara Seratus.'}
+      {actors: {rajaJamurKayu: null, kiki: 60, shard: 72}, fx: 'sparkle', who: 'kiki', text: 'Lima kepingan! Tinggal satu lagi di Menara Data.'}
     ],
 
     'menara-intro': [
-      {bg: 'menara', actors: {hero: 30, kiki: 60}, who: 'kiki', text: 'Menara Seratus tinggi sekali. Angkanya sampai seratus!'},
-      {actors: {kelelawarMalam: 80}, who: 'kiki', text: 'Ingat: satu ikat isinya sepuluh lidi. Kamu pasti bisa!'}
+      {bg: 'menara', actors: {hero: 30, kiki: 60}, who: 'kiki', text: 'Menara Data tinggi sekali. Semua catatan Desa Bilangan disimpan di sini!'},
+      {actors: {kelelawarMalam: 80}, who: 'kiki', text: 'Penyihir mengacak tabel dan diagramnya. Hitung gambarnya dengan teliti, ya!'}
     ],
     'menara-shard': [
-      {bg: 'menara', actors: {hero: 30, rajaMalam: 72}, who: 'rajaMalam', text: 'Hmm... Kamu benar-benar paham puluhan dan satuan.'},
+      {bg: 'menara', actors: {hero: 30, rajaMalam: 72}, who: 'rajaMalam', text: 'Hmm... Kamu pandai membaca tabel dan diagram.'},
       {actors: {rajaMalam: null, kiki: 55, shard: 75}, fx: 'sparkle', who: 'kiki', text: 'Keenam! Semua kepingan sudah terkumpul!'},
       {actors: {penyihir: 78, shard: null}, fx: 'flash', music: 'csVillain', who: 'penyihir', text: 'Grr! Kamu mengumpulkan semua kepinganku?'},
       {who: 'penyihir', text: 'Datanglah ke Kastil Ujian kalau berani! Raja Naga Api akan mengujimu!'},
@@ -129,7 +129,7 @@ MQ.Story = (() => {
     'perpustakaan-intro': [
       {bg: 'perpus', actors: {hero: 25, kiki: 45, hantuBuku: 75}, who: 'hantuBuku', text: 'Sssst... Selamat datang di Perpustakaan Tua.'},
       {who: 'hantuBuku', text: 'Hantu-hantu nakal mengacak nomor halaman semua bukuku!'},
-      {who: 'kiki', text: 'Urutkan bilangannya sampai seratus. Ayo, ini latihan bagus sebelum ujian!'}
+      {who: 'kiki', text: 'Urutkan bilangannya sampai dua puluh. Ayo, ini latihan bagus sebelum ujian!'}
     ],
     'perpustakaan-key': [
       {bg: 'perpus', actors: {hero: 25, hantuTinta: 72}, fx: 'flash', who: 'hantuTinta', text: 'Blop! Tintaku tumpah... nomornya kembali rapi.'},

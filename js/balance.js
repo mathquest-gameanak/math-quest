@@ -99,7 +99,8 @@ MQ.Balance = {
      supaya anak dihargai karena teliti, bukan karena cepat. */
   think: {
     time: {tambah: 1, kurang: 1, kali: 1, banding: 1, hitung: 1.3, urutan: 1.3, bentuk: 1.3, isi: 1.5, panjang: 1.5, pasangan: 1.5,
-           puluhan: 1.6, pola: 2, ukur: 2, cerita: 3, teka: 3},
+           puluhan: 1.6, pola: 2, ukur: 2, cerita: 3, teka: 3,
+           posisi: 1.3, berulang: 1.5, keluarga: 1.6, kelompok: 1.3, susun: 2, belasan: 1.5, dobel: 1.3, data: 2, turus: 1.6},
     from: 2,
     telitiMul: 1.5,
     storySpeak: 0,    // 1 = soal cerita selalu dibacakan otomatis (0: suara bawaan HP/laptop beraksen aneh; tombol 🔊 tetap ada)

@@ -990,3 +990,37 @@ body.skinK .sBadge .plus { border: 3px solid #1a1c2c; border-image: none; backgr
 body.skinK .charStage .eqSlot, body.skinK .charStage .eqSlot small { color: #f4f4f4; }
 body.skinK .charCard .charId .charLvTag { color: #ffcd75; }
 .eqSlot.aksesori { width: auto; max-width: 110px; }
+
+/* ===== Gambar jenis soal baru (2026-11-26, sesuai buku Kelas 1) ===== */
+.queue { display: flex; align-items: flex-end; justify-content: center; gap: 2px; }
+.qFlag { font-size: 22px; line-height: 1; margin-right: 2px; }
+.qItem { display: flex; flex-direction: column; align-items: center; }
+.qItem img { width: 34px; height: 34px; image-rendering: pixelated; }
+.qItem small { font-weight: 900; font-size: 12px; color: #ffcd75; }
+.ansPic { width: 44px; height: 44px; image-rendering: pixelated; }
+.frames { display: flex; gap: 6px; justify-content: center; }
+.frames svg.frame10 { width: 46%; max-width: 118px; height: auto; }
+svg.groups { max-width: 240px; }
+.shpRow { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px; }
+.shpRow svg.shape { width: 30px; height: 30px; }
+svg.shape.big { width: 70px; height: 70px; }
+.picto { display: flex; flex-direction: column; gap: 2px; align-items: flex-start; }
+.pcRow { display: flex; align-items: center; gap: 4px; }
+.pcLbl { padding-right: 4px; border-right: 2px solid #94b0c2; display: inline-flex; }
+.pcBar { display: inline-flex; gap: 1px; }
+svg.fruit { width: 18px; height: 18px; }
+.ansFruit svg.fruit { width: 36px; height: 36px; }
+svg.tally { height: 26px; width: auto; }
+.tTable { display: flex; flex-direction: column; gap: 3px; align-items: flex-start; }
+.tRow { display: flex; align-items: center; gap: 6px; }
+.tRow svg.tally { height: 20px; }
+.hint svg.tally rect { fill: #1a1c2c; }
+.hint .qItem small { color: #1a1c2c; }
+.lvVis svg.fruit { width: 24px; height: 24px; }
+.lvVis svg.tally { height: 40px; }
+.lvVis svg.groups { width: 100%; }
+#scr-battle #qView .picto svg.fruit { width: 15px; height: 15px; }
+#scr-battle #qView > .picto, #scr-battle #qView > .tTable, #scr-battle #qView > .queue { max-height: none; }
+#scr-battle #qView .picto svg.fruit { width: 20px; height: 20px; }
+#scr-battle #qView .qItem img { width: 28px; height: 28px; }
+.lvVis .frames svg.frame10 { width: 48%; max-width: 160px; }

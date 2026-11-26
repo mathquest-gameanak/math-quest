@@ -166,6 +166,94 @@ MQ.Vis = (() => {
   const hintBar = (parts, total, cap) => hintBox(bar(parts, total), cap);
   const hintBar2 = (a, b, la, lb, cap) => hintBox(bar2(a, b, la, lb, a - b), cap);
 
-  return {count, SHAPES, shape, COLORS, token, patternRow, pencils, ruler, lidi, story, bar, bond, tenFrame,
+
+  /* ===== Tambahan 2026-11-26: materi sesuai buku Kelas 1 (Kurikulum Merdeka) + strategi ala Singapura ===== */
+  /** Antrean monster menghadap bendera (bilangan urutan). ids = id gambar MQ.Pix, nums = tampilkan nomor (petunjuk). */
+  function queue(ids, nums) {
+    return `<div class="queue"><span class="qFlag">🚩</span>${ids.map((id, i) =>
+      `<span class="qItem"><img src="${MQ.Pix.url(id, 2)}" alt="">${nums ? `<small>${i + 1}</small>` : ''}</span>`).join('')}</div>`;
+  }
+  /** k kelompok, tiap kelompok n titik (penjumlahan berulang). */
+  function groups(k, n) {
+    const W = 6 + Math.min(n, 5) * 9, H = n > 5 ? 26 : 16;
+    let inner = '';
+    for (let g = 0; g < k; g++) {
+      const gx = 2 + g * (W + 6);
+      inner += `<rect x="${gx}" y="2" width="${W}" height="${H + 4}" rx="5" fill="#29366f" stroke="#94b0c2" stroke-width="2"/>`;
+      for (let i = 0; i < n; i++) inner += `<circle cx="${gx + 7 + (i % 5) * 9}" cy="${11 + Math.floor(i / 5) * 10}" r="3.5" fill="#ffcd75" stroke="${K}" stroke-width="1.5"/>`;
+    }
+    return svg(`0 0 ${4 + k * (W + 6)} ${H + 8}`, inner, 'wide groups');
+  }
+  /** Bingkai sepuluh dua warna: y kuning lalu b biru (strategi "buat 10"). */
+  function frameMix(y, b = 0) {
+    let inner = '';
+    for (let i = 0; i < 10; i++) {
+      const x = 4 + (i % 5) * 22, yy = 4 + Math.floor(i / 5) * 22;
+      inner += `<rect x="${x}" y="${yy}" width="22" height="22" fill="#29366f" stroke="#94b0c2" stroke-width="2"/>`;
+      if (i < y + b) inner += `<circle cx="${x + 11}" cy="${yy + 11}" r="7" fill="${i < y ? '#ffcd75' : '#73eff7'}" stroke="${K}" stroke-width="2"/>`;
+    }
+    return svg('0 0 118 52', inner, 'frame10');
+  }
+  /** Bilangan 11–20: satu bingkai penuh (1 puluhan) + bingkai kedua (satuan). */
+  const tens20 = n => `<div class="frames">${frameMix(Math.min(10, n))}${frameMix(Math.max(0, n - 10))}</div>`;
+  /** Petunjuk "buat 10": a + b → isi bingkai pertama sampai 10, sisanya di bingkai kedua. */
+  function hintMake10(a, b) {
+    const need = 10 - a, rest = b - need;
+    return hintBox(`<div class="frames">${frameMix(a, need)}${frameMix(0, rest)}</div>`,
+      `${a} + ${need} = 10, sisa ${rest} → 10 + ${rest} = ${a + b}`);
+  }
+  /** Bangun datar berwarna lain (mengelompokkan menurut bentuk). */
+  const shapeC = (id, c) => svg('0 0 40 40', SHAPES[id].d.replace(/fill="#[0-9a-fA-F]{6}"/, `fill="${c}"`), 'shape');
+  /** Deretan bangun datar campur (menghitung satu jenis bentuk). */
+  const shapeRow = list => `<div class="shpRow">${list.map(([id, c]) => shapeC(id, c)).join('')}</div>`;
+  /** Bangun yang dibagi menjadi bagian-bagian berwarna (mengurai bangun datar). */
+  const PIECE = ['#ffcd75', '#73eff7', '#f4a3c8', '#a7f070'];
+  function split(kind) {
+    const p = (pts, i) => `<polygon points="${pts}" fill="${PIECE[i % 4]}" ${st}/>`;
+    const r = (x, y, w, h, i) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${PIECE[i % 4]}" ${st}/>`;
+    const D = {
+      sq2t: p('6,6 46,6 46,46', 0) + p('6,6 46,46 6,46', 1),
+      sq4t: p('6,6 46,6 26,26', 0) + p('46,6 46,46 26,26', 1) + p('46,46 6,46 26,26', 2) + p('6,46 6,6 26,26', 3),
+      rect2s: r(2, 14, 24, 24, 0) + r(26, 14, 24, 24, 1),
+      sq4s: r(6, 6, 20, 20, 0) + r(26, 6, 20, 20, 1) + r(6, 26, 20, 20, 2) + r(26, 26, 20, 20, 3),
+      tri4t: p('26,4 15,24 37,24', 0) + p('15,24 4,44 26,44', 1) + p('37,24 26,44 48,44', 2) + p('15,24 37,24 26,44', 3),
+      rect3s: r(2, 18, 16, 16, 0) + r(18, 18, 16, 16, 1) + r(34, 18, 16, 16, 2)
+    };
+    return svg('0 0 52 52', D[kind], 'shape big');
+  }
+  /** Dua potong bangun terpisah (menyusun bangun datar). */
+  function pieces(kind) {
+    const D = {
+      tt: `<polygon points="4,6 30,6 30,32" fill="#ffcd75" ${st}/><polygon points="40,6 40,32 66,32" fill="#73eff7" ${st}/>`,
+      ss: `<rect x="6" y="8" width="24" height="24" fill="#ffcd75" ${st}/><rect x="42" y="8" width="24" height="24" fill="#73eff7" ${st}/>`
+    };
+    return svg('0 0 70 38', D[kind], 'wide');
+  }
+  /* Buah untuk data & diagram gambar (viewBox 20×20). */
+  const FRUITS = {
+    apel: {n: 'apel', d: `<circle cx="10" cy="11" r="7" fill="#e43b44" stroke="${K}" stroke-width="2"/><rect x="9" y="1" width="2" height="5" fill="#6d4b27"/><ellipse cx="13" cy="4" rx="3" ry="1.6" fill="#38b764"/><circle cx="7" cy="9" r="1.6" fill="#f4f4f4"/>`},
+    jeruk: {n: 'jeruk', d: `<circle cx="10" cy="11" r="7" fill="#ef7d57" stroke="${K}" stroke-width="2"/><circle cx="10" cy="5" r="1.6" fill="#38b764"/><circle cx="7" cy="9" r="1.3" fill="#ffcd75"/>`},
+    pisang: {n: 'pisang', d: `<path d="M3 6 Q6 17 17 15 Q9 13 6 4 Z" fill="#ffcd75" stroke="${K}" stroke-width="2" stroke-linejoin="round"/><rect x="2" y="3" width="3" height="3" fill="#6d4b27"/>`},
+    anggur: {n: 'anggur', d: [[7, 7], [13, 7], [10, 11], [5, 12], [15, 12], [10, 16]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3.4" fill="#b06fd0" stroke="${K}" stroke-width="1.5"/>`).join('') + `<rect x="9" y="1" width="2" height="4" fill="#38b764"/>`}
+  };
+  const fruit = id => svg('0 0 20 20', FRUITS[id].d, 'fruit');
+  /** Diagram gambar: satu baris per buah. data = [[id, jumlah], ...] */
+  const picto = data => `<div class="picto">${data.map(([id, n]) => `<div class="pcRow"><span class="pcLbl">${fruit(id)}</span><span class="pcBar">${fruit(id).repeat(n)}</span></div>`).join('')}</div>`;
+  /** Turus: tiap 5 = 4 garis tegak + 1 garis miring. */
+  function tally(n, col = '#f4f4f4') {
+    let inner = '', x = 3;
+    for (let g = 0; g < Math.ceil(n / 5); g++) {
+      const k = Math.min(5, n - g * 5);
+      for (let i = 0; i < Math.min(4, k); i++) inner += `<rect x="${x + i * 5}" y="2" width="2.4" height="18" fill="${col}"/>`;
+      if (k === 5) inner += `<line x1="${x - 2}" y1="17" x2="${x + 18}" y2="5" stroke="${col}" stroke-width="2.4"/>`;
+      x += k === 5 ? 26 : k * 5 + 4;
+    }
+    return svg(`0 0 ${x + 2} 22`, inner, 'tally');
+  }
+  /** Tabel turus: buah | turus. */
+  const tallyTable = data => `<div class="tTable">${data.map(([id, n]) => `<div class="tRow"><span class="pcLbl">${fruit(id)}</span>${tally(n)}</div>`).join('')}</div>`;
+
+  return {queue, groups, frameMix, tens20, hintMake10, shapeC, shapeRow, split, pieces, FRUITS, fruit, picto, tally, tallyTable,
+          count, SHAPES, shape, COLORS, token, patternRow, pencils, ruler, lidi, story, bar, bond, tenFrame,
           hintAdd, hintSub, hintCompare, hintCount, hintTens, hintLine, hintRuler, hintBond, hintTen, hintBar, hintBar2, hintSeq, hintNote, hintEqual};
 })();

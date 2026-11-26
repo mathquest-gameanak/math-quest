@@ -40,12 +40,12 @@ Sumber: Capaian Pembelajaran Matematika Fase A. **Perlu dicocokkan dengan daftar
 
 | # | Field | Rek. level | Materi | Musuh (usulan) |
 |---|---|---|---|---|
-| 1 | Padang Hitung | 1–3 | Membilang benda s/d 10, membandingkan bilangan (> < =) | Lendir Hijau, Lendir Air · bos Raja Lendir |
-| 2 | Hutan Tambah-Kurang | 3–5 | Tambah & kurang s/d 10, kalimat matematika (`3 + □ = 5`), pasangan bilangan & membuat 10, soal cerita | Jamur Nakal, Jamur Ungu · bos Raja Jamur |
-| 3 | Bukit Bentuk | 5–7 | Bangun datar & ruang, pola (warna/bentuk) | Lendir Batu, Jamur Batu · bos Raja Batu |
-| 4 | Danau Dua Puluh | 7–10 | Tambah, kurang & isi kosong s/d 20, soal cerita s/d 20 | Lendir Air, Kelelawar Ungu · bos Raja Kelelawar |
-| 5 | Lembah Ukur | 9–12 | Membandingkan & mengukur panjang (satuan kotak). Nanti: berat, waktu, data | Kelelawar Daun, Jamur Kayu · bos Raja Jamur Kayu |
-| 6 | Menara Seratus | 11–14 | Puluhan & satuan (ikatan lidi), urutan & membandingkan s/d 100 | Kelelawar Malam, Lendir Ungu · bos Raja Malam |
+| 1 | Padang Hitung | 1–3 | **Bab 1** Bilangan 1–10: membilang, membandingkan (> < =), urutan, bilangan urutan (ke-1, ke-2, …) | Lendir Hijau, Lendir Air · bos Raja Lendir |
+| 2 | Hutan Tambah-Kurang | 3–5 | **Bab 2–3** Tambah & kurang s/d 10, isi kosong, pasangan bilangan, penjumlahan berulang, tambah/kurang nol, hubungan + dan −, soal cerita | Jamur Nakal, Jamur Ungu · bos Raja Jamur |
+| 3 | Bukit Bentuk | 5–7 | **Bab 4** Bangun datar: mengenal, mengelompokkan menurut bentuk, mengurai & menyusun; (+ bangun ruang & pola sebagai tambahan) | Lendir Batu, Jamur Batu · bos Raja Batu |
+| 4 | Danau Dua Puluh | 7–10 | **Bab 5–6** Bilangan 11–20 & nilai tempat (10 dan sekian), membandingkan & mengurutkan, tambah & kurang s/d 20 (strategi buat 10, dobel), soal cerita | Lendir Air, Kelelawar Ungu · bos Raja Kelelawar |
+| 5 | Lembah Ukur | 9–12 | **Bab 7** Membandingkan & mengukur panjang (satuan kotak) | Kelelawar Daun, Jamur Kayu · bos Raja Jamur Kayu |
+| 6 | Menara Data | 11–14 | **Bab 8** Diagram: mengelompokkan data, tabel turus, diagram gambar | Kelelawar Malam, Lendir Ungu · bos Raja Malam |
 | ★ | Kastil Ujian | 15 | **Ujian Naik Kelas**: campuran semua materi | Bos: Raja Naga Api |
 
 Setiap area = **jalur 5 titik**: 1 → 2 → ⭐ mini bos → 4 → 👑 bos area (menjatuhkan bahan langka). Pahlawan berjalan dari titik ke titik di latar bergerak; level musuh naik dari level awal ke level akhir area. Setelah bos kalah: *Ulangi area* atau kembali ke peta. Dungeon memakai cara yang sama (ruang demi ruang). Arena Latihan tetap tanpa akhir (bos tiap monster ke-5).
@@ -186,7 +186,7 @@ Lingkaran yang diharapkan membuat anak terus main dan belajar: **dungeon lebih s
 
 - [ ] Nama game final (sementara "Math Quest"). Usulan: *Petualangan Angka*, *Kesatria Hitung*, *Negeri Bilangan*.
 - [ ] Pahlawan: satu karakter tetap, atau anak bisa memilih (laki-laki/perempuan, warna)?
-- [ ] Cocokkan tabel materi (bagian 3) dengan buku sekolah anak.
+- [x] Cocokkan tabel materi (bagian 3) dengan buku sekolah anak (2026-11-26: buku *Matematika 1 SD/MI Kelas I*, Kurikulum Merdeka, 8 bab; metode ala Singapura: number bond, bar model, buat 10, dobel).
 - [ ] Musik latar: perlu atau cukup efek suara?
 
 ## 13. Cerita
@@ -200,7 +200,7 @@ Lingkaran yang diharapkan membuat anak terus main dan belajar: **dungeon lebih s
 ### Alur utama (Kelas 1)
 1. **Prolog**: desa damai → malam, Penyihir Kusut memecah kristal → monster jadi nakal → Kakek meminta pahlawan mengumpulkan 6 kepingan; Kiki menemani.
 2. **Tiap area**: cutscene pendek saat pertama masuk; setelah bos pertama kali kalah → dapat **kepingan kristal**.
-3. **Menara Seratus** (kepingan ke-6): Penyihir Kusut muncul dan menantang ke Kastil Ujian.
+3. **Menara Data** (kepingan ke-6): Penyihir Kusut muncul dan menantang ke Kastil Ujian.
 4. **Kastil Ujian**: terbuka jika 6 area selesai (tanpa syarat level sejak 2026-11-25; tantangan lanjutan ada di Mode Pahlawan & Legenda). Sebelum ujian: Penyihir memerintah Raja Naga Api.
 5. **Ending** (lulus): kristal utuh, Penyihir kabur, jalan ke Kelas 2 terbuka ("Bersambung…").
 

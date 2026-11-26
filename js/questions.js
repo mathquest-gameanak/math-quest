@@ -61,11 +61,18 @@ MQ.Questions = (() => {
   /* ===== Generator per jenis soal ===== */
   const GEN = {
     tambah(s) {
+      if (rand(0, 9) === 0) { const a = rand(1, Math.min(10, s.max)), z = rand(0, 1); // penjumlahan dengan nol (Bab 2E)
+        return hint(numQ('tambah', z ? `${a} + 0 = ?` : `0 + ${a} = ?`, z ? `${a} tambah nol sama dengan berapa?` : `nol tambah ${a} sama dengan berapa?`, a, [0, a + 1]),
+                    () => V().hintNote(`Ditambah 0 = tidak bertambah. Tetap ${a}.`)); }
       const c = rand(2, s.max), a = rand(1, c - 1), b = c - a;
+      const make10 = c > 10 && c <= 20 && a < 10 && b < 10; // melewati 10: strategi "buat 10"
       return hint(numQ('tambah', `${a} + ${b} = ?`, `${a} tambah ${b} sama dengan berapa?`, c, c >= 20 ? [c + 10, c - 10] : []),
-                  c <= 20 && (() => V().hintAdd(a, b, c)));
+                  c <= 20 && (() => (make10 ? V().hintMake10(Math.max(a, b), Math.min(a, b)) : V().hintAdd(a, b, c))));
     },
     kurang(s) {
+      if (rand(0, 9) === 0) { const a = rand(1, Math.min(10, s.max)); // pengurangan dengan nol (Bab 3D)
+        return hint(numQ('kurang', `${a} − 0 = ?`, `${a} kurang nol sama dengan berapa?`, a, [0, a - 1]),
+                    () => V().hintNote(`Dikurangi 0 = tidak ada yang diambil. Tetap ${a}.`)); }
       const a = rand(2, s.max), b = rand(1, a), c = a - b; // b ≤ a → tidak pernah negatif
       return hint(numQ('kurang', `${a} − ${b} = ?`, `${a} kurang ${b} sama dengan berapa?`, c, c >= 20 ? [c + 10, c - 10] : []),
                   a <= 20 && (() => V().hintSub(a, b, c)));
@@ -138,8 +145,8 @@ MQ.Questions = (() => {
       return hint(numQ('ukur', 'Panjang berapa kotak?', 'Pensil ini panjangnya berapa kotak?', n, [], 1, V().ruler(n)), () => V().hintRuler(n));
     },
     /** Puluhan & satuan: ikatan 10 lidi + lidi lepas */
-    puluhan() {
-      const t = rand(1, 9), o = rand(0, 9), n = t * 10 + o;
+    puluhan(s = {}) {
+      const small = (s.max || 100) <= 20, t = small ? (rand(0, 9) ? 1 : 2) : rand(1, 9), o = small && t === 2 ? 0 : rand(0, 9), n = t * 10 + o;
       const swap = o * 10 + t; // kesalahan umum: puluhan & satuan tertukar
       return hint(numQ('puluhan', 'Ada berapa lidi?', 'Satu ikat isinya 10 lidi. Ada berapa lidi semuanya?', n,
                   [swap, n + 10, n - 10].filter(v => v !== n), 1, V().lidi(t, o)), () => V().hintTens(t, o));
@@ -235,6 +242,117 @@ MQ.Questions = (() => {
     const text = `${who.n} punya ${a} ${it.n}. Dapat ${b} lagi, lalu ${c} ${it.gone}. Berapa sisanya?`;
     return q(text, text, r, [a + b, a + b + c, a - c].filter(v => v >= 0), () => V().hintNote(`${a} + ${b} = ${a + b}, lalu ${a + b} − ${c} = ${r}`), true);
   };
+
+  /* ===== Jenis soal baru 2026-11-26: mengikuti buku Matematika Kelas 1 (Kurikulum Merdeka) + strategi ala Singapura ===== */
+  /** Pilihan jawaban berupa teks/gambar (bukan angka): opts = [{v, html}], ans = v yang benar. */
+  const optQ = (kind, text, speak, ans, opts, view, cols = 2) => ({kind, text, speak, view, ans: String(ans), cols,
+    choices: shuffle(opts.slice()).map(o => ({v: String(o.v), html: o.html}))});
+  const QMON = ['jamur', 'kelelawar', 'kepiting', 'lendirBatu', 'hantuKertas', 'jamurUngu', 'lendirLaut'];
+  const MON_NAME = {jamur: 'Jamur', kelelawar: 'Kelelawar', kepiting: 'Kepiting', lendirBatu: 'Lendir Batu', hantuKertas: 'Hantu', jamurUngu: 'Jamur Ungu', lendirLaut: 'Lendir Laut'};
+  const FR = ['apel', 'jeruk', 'pisang', 'anggur'];
+
+  /** Bab 1D — bilangan urutan: "yang ke-berapa dari bendera?" / "siapa yang ke-3?" */
+  GEN.posisi = () => {
+    const ids = shuffle(QMON.slice()).slice(0, 5), k = rand(0, 4), who = ids[k], img = id => `<img class="ansPic" src="${MQ.Pix.url(id, 3)}" alt="">`;
+    const h = () => V().hintNote('Hitung dari bendera 🚩: pertama, kedua, ketiga, ...') + V().queue(ids, true);
+    if (rand(0, 1)) {
+      const ans = k + 1, opts = shuffle([1, 2, 3, 4, 5].filter(v => v !== ans)).slice(0, 3).concat(ans);
+      return hint(optQ('posisi', `${MON_NAME[who]} urutan ke berapa?`, `Dihitung dari bendera, ${MON_NAME[who]} ada di urutan ke berapa?`,
+        ans, opts.map(v => ({v, html: `ke-${v}`})), V().queue(ids)), h);
+    }
+    return hint(optQ('posisi', `Siapa yang ke-${k + 1}?`, `Dihitung dari bendera, siapa yang ada di urutan ke-${k + 1}?`, who,
+      shuffle(ids.filter(x => x !== who)).slice(0, 3).concat(who).map(v => ({v, html: img(v)})), V().queue(ids)), h);
+  };
+  /** Bab 2D — penjumlahan berulang: 3 kelompok isi 2 → 2 + 2 + 2. */
+  GEN.berulang = s => {
+    const M = s.max || 10, k = rand(2, 4), n = rand(2, Math.max(2, Math.min(5, Math.floor(M / k)))), c = k * n;
+    return hint(numQ('berulang', Array(k).fill(n).join(' + ') + ' = ?', `Ada ${k} kelompok, tiap kelompok ${n}. Semuanya berapa?`, c,
+      [c + n, c - n, k + n], 1, V().groups(k, n)),
+      () => V().hintSeq(Array.from({length: k - 1}, (_, i) => n * (i + 1)), c, `Hitung loncat ${n}-${n}: ${Array.from({length: k}, (_, i) => n * (i + 1)).join(', ')}`));
+  };
+  /** Bab 3E — hubungan penjumlahan & pengurangan (keluarga fakta). */
+  GEN.keluarga = s => {
+    const M = Math.max(5, Math.min(20, s.max || 10)), c = rand(3, M), a = rand(1, c - 1), b = c - a, t = rand(0, 2);
+    const q = t === 0 ? numQ('keluarga', `${a} + ${b} = ${c}\n${c} − ${b} = ?`, `${a} tambah ${b} sama dengan ${c}. Jadi ${c} kurang ${b} sama dengan berapa?`, a, [b, c], 0, V().bond(c, a, b))
+      : t === 1 ? numQ('keluarga', `${a} + ${b} = ${c}\n${c} − ${a} = ?`, `${a} tambah ${b} sama dengan ${c}. Jadi ${c} kurang ${a} sama dengan berapa?`, b, [a, c], 0, V().bond(c, a, b))
+      : numQ('keluarga', `${c} − ${a} = ${b}\n${b} + ${a} = ?`, `${c} kurang ${a} sama dengan ${b}. Jadi ${b} tambah ${a} sama dengan berapa?`, c, [a, b], 0, V().bond(c, a, b));
+    q.text = q.text.replace('\n', '  →  ');
+    return hint(q, () => V().hintBond(c, a, b));
+  };
+  /** Bab 4B — mengelompokkan benda menurut bentuk: mana yang berbeda / ada berapa segitiga. */
+  GEN.kelompok = () => {
+    const flat = ['lingkaran', 'segitiga', 'persegi', 'persegiPanjang'], cols = ['#e43b44', '#ffcd75', '#41a6f6', '#38b764', '#b06fd0', '#ef7d57'];
+    if (rand(0, 1)) {
+      const same = pick(flat), odd = pick(flat.filter(x => x !== same)), c = shuffle(cols.slice());
+      const opts = [0, 1, 2].map(i => ({v: 's' + i, html: V().shapeC(same, c[i])})).concat({v: 'odd', html: V().shapeC(odd, c[3])});
+      return hint(optQ('kelompok', 'Mana yang bentuknya beda?', 'Mana yang bentuknya berbeda dari yang lain?', 'odd', opts),
+        () => V().hintNote(`Tiga yang lain ${V().SHAPES[same].name}. Yang beda: ${V().SHAPES[odd].name}.`));
+    }
+    const target = pick(flat), n = rand(1, 4), list = [];
+    for (let i = 0; i < n; i++) list.push([target, pick(cols)]);
+    while (list.length < 7) list.push([pick(flat.filter(x => x !== target)), pick(cols)]);
+    const name = V().SHAPES[target].name;
+    return hint(numQ('kelompok', `Ada berapa ${name}?`, `Ada berapa ${name}? Warnanya boleh berbeda.`, n, [], 0, V().shapeRow(shuffle(list))),
+      () => V().hintNote(`Cari bentuk ${name} saja, warnanya tidak penting. Ada ${n}.`));
+  };
+  /** Bab 4C — mengurai & menyusun bangun datar. */
+  GEN.susun = () => {
+    const t = rand(0, 2);
+    if (t === 2) {
+      const tt = rand(0, 1), ans = tt ? 'persegi' : 'persegiPanjang';
+      const opts = ['persegi', 'persegiPanjang', 'lingkaran', 'segitiga'].map(v => ({v, html: V().shape(v)}));
+      return hint(optQ('susun', tt ? '2 segitiga disusun jadi?' : '2 persegi disusun jadi?', tt ? 'Dua segitiga ini disusun menjadi bangun apa?' : 'Dua persegi ini disusun berdampingan menjadi bangun apa?',
+        ans, opts, V().pieces(tt ? 'tt' : 'ss')), () => V().hintNote(tt ? 'Dua segitiga siku-siku yang ditempel jadi PERSEGI.' : 'Dua persegi berdampingan jadi PERSEGI PANJANG.'));
+    }
+    const kinds = [['sq2t', 'segitiga', 2], ['sq4t', 'segitiga', 4], ['tri4t', 'segitiga', 4], ['rect2s', 'persegi', 2], ['sq4s', 'persegi', 4], ['rect3s', 'persegi', 3]];
+    const [k, name, n] = pick(kinds);
+    return hint(numQ('susun', `Ada berapa ${name} kecil?`, `Bangun ini disusun dari ${name} kecil. Ada berapa?`, n, [], 1, V().split(k)),
+      () => V().hintNote(`Hitung tiap warna: ada ${n} ${name}.`));
+  };
+  /** Bab 5 — bilangan 11–20 & nilai tempat (1 puluhan + satuan), ala Singapura: 14 = 10 dan 4. */
+  GEN.belasan = () => {
+    const n = rand(11, 20), o = n - 10, t = rand(0, 3);
+    const h = () => V().hintNote(`${n} = 10 dan ${o} (1 puluhan, ${o} satuan)`);
+    if (t === 0) return hint(numQ('belasan', 'Ada berapa titik?', 'Satu bingkai penuh isinya sepuluh. Ada berapa titik semuanya?', n, [o, n + 1, n - 1], 1, V().tens20(n)), h);
+    if (t === 1) return hint(numQ('belasan', `1 puluhan dan ${o} satuan = ?`, `Satu puluhan dan ${o} satuan sama dengan berapa?`, n, [o + 1, 10 + o + 1, o], 1), h);
+    if (t === 2) return hint(numQ('belasan', `${n} = 10 dan ?`, `${n} dipecah jadi sepuluh dan berapa?`, o, [n, o + 1], 0, V().bond(n, 10, '?')), h);
+    return hint(optQ('belasan', `Angka 1 pada ${n} bernilai?`, `Pada bilangan ${n}, angka satu di depan bernilai berapa?`, 10,
+      [1, 10, o || 2, n].filter((v, i, a) => a.indexOf(v) === i).map(v => ({v, html: String(v)}))), h);
+  };
+  /** Strategi dobel & hampir dobel: 6 + 6 = 12 → 6 + 7 = 13. */
+  GEN.dobel = s => {
+    const M = Math.max(10, s.max || 20), a = rand(2, Math.floor(M / 2) - (M >= 20 ? 1 : 0)), near = rand(0, 1) && 2 * a + 1 <= M;
+    const b = near ? a + 1 : a, c = a + b;
+    return hint(numQ('dobel', near ? `${a} + ${a} = ${2 * a}  →  ${a} + ${b} = ?` : `${a} + ${a} = ?`,
+      near ? `${a} tambah ${a} sama dengan ${2 * a}. Jadi ${a} tambah ${b} sama dengan berapa?` : `${a} tambah ${a} sama dengan berapa? Ini dobel!`, c, [2 * a, c + 1], 0),
+      () => V().hintNote(near ? `Dobel ${a} + ${a} = ${2 * a}, tambah 1 lagi → ${c}` : `Dobel: ${a} dan ${a} → ${c}`));
+  };
+  /** Bab 8 — diagram gambar: membaca, paling banyak/sedikit, selisih. */
+  GEN.data = () => {
+    const kinds = shuffle(FR.slice()).slice(0, 3);
+    let counts; do { counts = kinds.map(() => rand(1, 6)); } while (new Set(counts).size < 3);
+    const data = kinds.map((k, i) => [k, counts[i]]), view = V().picto(data), t = rand(0, 3), N = id => V().FRUITS[id].n;
+    const h = () => V().hintNote(data.map(([k, n]) => `${N(k)} ${n}`).join(' · '));
+    const fopts = () => kinds.map(v => ({v, html: `<span class="ansFruit">${V().fruit(v)}</span>`}));
+    if (t === 0) { const [k, n] = pick(data); return hint(numQ('data', `Ada berapa ${N(k)}?`, `Lihat diagram gambar. Ada berapa ${N(k)}?`, n, [], 1, view), h); }
+    if (t === 1) { const k = data.reduce((m, d) => (d[1] > m[1] ? d : m))[0]; return hint(optQ('data', 'Buah apa paling banyak?', 'Buah apa yang paling banyak?', k, fopts(), view, 3), h); }
+    if (t === 2) { const k = data.reduce((m, d) => (d[1] < m[1] ? d : m))[0]; return hint(optQ('data', 'Buah apa paling sedikit?', 'Buah apa yang paling sedikit?', k, fopts(), view, 3), h); }
+    const [x, y] = shuffle(data.slice()).slice(0, 2).sort((p, q) => q[1] - p[1]);
+    return hint(numQ('data', `${N(x[0])} lebih banyak berapa dari ${N(y[0])}?`, `Berapa lebih banyak ${N(x[0])} daripada ${N(y[0])}?`, x[1] - y[1], [x[1], y[1], x[1] + y[1]], 0, view),
+      () => V().hintNote(`${N(x[0])} ${x[1]}, ${N(y[0])} ${y[1]} → ${x[1]} − ${y[1]} = ${x[1] - y[1]}`));
+  };
+  /** Bab 8 — tabel turus: membaca turus. */
+  GEN.turus = () => {
+    if (rand(0, 1)) {
+      const n = rand(2, 12);
+      return hint(numQ('turus', 'Turus ini berapa?', 'Satu ikat turus isinya lima. Turus ini menunjukkan berapa?', n, [n + 1, n - 1, n + 5], 1, V().tally(n)),
+        () => V().hintNote(`Satu ikat turus = 5. ${Math.floor(n / 5)} ikat dan ${n % 5} garis → ${n}`));
+    }
+    const kinds = shuffle(FR.slice()).slice(0, 3), data = kinds.map(k => [k, rand(1, 9)]), [k, n] = pick(data), N = V().FRUITS[k].n;
+    return hint(numQ('turus', `Berapa ${N} di tabel?`, `Lihat tabel turus. Ada berapa ${N}?`, n, [n + 1, n - 1, n + 5], 1, V().tallyTable(data)),
+      () => V().hintNote(`Satu ikat turus = 5. ${N}: ${n}`));
+  };
+
   /** Tokoh & benda untuk soal cerita (id = gambar MQ.Pix / MQ.Sprites). */
   const PEOPLE = [{id: 'kiki', n: 'Kiki'}, {id: 'momo', n: 'Momo'}, {id: 'kakek', n: 'Kakek'}, {id: 'kapten', n: 'Kapten'}];
   const THINGS = [{s: 'apple', n: 'apel', gone: 'dimakan'}, {s: 'star', n: 'bintang', gone: 'terbang'},
@@ -253,7 +371,9 @@ MQ.Questions = (() => {
   /** Nama jenis soal untuk tampilan (statistik kemampuan). */
   const NAMES = {tambah: 'Tambah +', kurang: 'Kurang −', kali: 'Kali ×', isi: 'Isi kosong', hitung: 'Menghitung', banding: 'Bandingkan',
                  bentuk: 'Bentuk', pola: 'Pola', panjang: 'Panjang', ukur: 'Mengukur', puluhan: 'Puluhan', urutan: 'Urutan',
-                 pasangan: 'Pasangan bilangan', cerita: 'Soal cerita', teka: 'Teka-teki'};
+                 pasangan: 'Pasangan bilangan', cerita: 'Soal cerita', teka: 'Teka-teki',
+                 posisi: 'Bilangan urutan', berulang: 'Tambah berulang', keluarga: 'Hubungan + dan −', kelompok: 'Mengelompokkan bentuk',
+                 susun: 'Menyusun bangun', belasan: 'Bilangan 11–20', dobel: 'Dobel', data: 'Diagram gambar', turus: 'Tabel turus'};
 
   return {make, GEN, NAMES, maxFor, specForLevel, nearChoices};
 })();
