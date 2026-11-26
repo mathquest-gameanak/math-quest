@@ -103,7 +103,7 @@ MQ.Balance = {
      Jenis dengan pengali ≥ from = soal PIKIR: tanpa KILAT; jawaban benar = serangan TELITI! (damage × telitiMul),
      supaya anak dihargai karena teliti, bukan karena cepat. */
   think: {
-    time: {ratusan: 1.5, nilai: 1.5, lompat: 1.5, bersusun: 1.8, hitungCepat: 1.3, kurangSusun: 1.8, kurangCepat: 1.4, cm: 1.5, air: 1.5, jam: 1.6, durasi: 1.6, uang: 1.6, kaliArti: 1.4, kaliTabel: 1.2, kaliCerita: 2, tambah: 1, kurang: 1, kali: 1, banding: 1, hitung: 1.3, urutan: 1.3, bentuk: 1.3, isi: 1.5, panjang: 1.5, pasangan: 1.5,
+    time: {ratusan: 1.5, nilai: 1.5, lompat: 1.5, bersusun: 1.8, hitungCepat: 1.3, kurangSusun: 1.8, kurangCepat: 1.4, cm: 1.5, air: 1.5, jam: 1.6, durasi: 1.6, uang: 1.6, kaliArti: 1.4, kaliTabel: 1.2, kaliCerita: 2, kaliPola: 1.6, tambah: 1, kurang: 1, kali: 1, banding: 1, hitung: 1.3, urutan: 1.3, bentuk: 1.3, isi: 1.5, panjang: 1.5, pasangan: 1.5,
            puluhan: 1.6, pola: 2, ukur: 2, cerita: 3, teka: 3,
            posisi: 1.3, berulang: 1.5, keluarga: 1.6, kelompok: 1.3, susun: 2, belasan: 1.5, dobel: 1.3, data: 2, turus: 1.6},
     from: 2,

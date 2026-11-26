@@ -132,11 +132,15 @@ MQ.Learn = (() => {
     kaliArti: {title: 'Arti Perkalian', icon: '🧺', cards: [
       {t: '3 kelompok, tiap kelompok isinya 4. Ditulis 3 × 4, dibaca "tiga kali empat".', v: () => V().groups(3, 4)},
       {t: '4 + 4 + 4 = 3 × 4 = 12. Perkalian = penjumlahan berulang.', v: () => V().hintSeq([4, 8], 12, 'Loncat 4-4')}]},
-    kaliTabel: {title: 'Perkalian 2, 5, 3, 4', icon: '✖️', cards: [
+    kaliTabel: {title: 'Tabel Perkalian', icon: '✖️', cards: [
       {t: 'Kali 2 = loncat 2: 2, 4, 6, 8, 10. Kali 5 = loncat 5: 5, 10, 15, 20.', v: () => V().hintSeq([5, 10, 15], 20, 'Loncat 5')},
-      {t: 'Urutan boleh ditukar: 3 × 4 = 4 × 3 = 12.', v: () => V().hintNote('3 × 4 = 4 × 3 = 12')}]},
+      {t: 'Urutan boleh ditukar: 3 × 4 = 4 × 3 = 12.', v: () => V().hintNote('3 × 4 = 4 × 3 = 12')},
+      {t: 'Kali 9: hasilnya 10 kali dikurangi 1 kali. 9 × 4 = 40 − 4 = 36. Kali 1: hasilnya bilangan itu sendiri.', v: () => V().hintNote('9 × 4 = 40 − 4 = 36')}]},
     kaliCerita: {title: 'Cerita Perkalian', icon: '📖', cards: [
       {t: '"5 kotak, tiap kotak 3 kue." Banyak kotak × isi tiap kotak = 5 × 3 = 15 kue.', v: () => V().groups(5, 3)}]},
+    kaliPola: {title: 'Pola Perkalian', icon: '🔢', cards: [
+      {t: 'Dikali bertambah 1, hasilnya bertambah satu kelompok. 6 × 4 = 24, jadi 6 × 5 = 24 + 6 = 30.', v: () => V().hintSeq([18, 24], 30, '+6')},
+      {t: '? × 7 = 28: loncat 7 sampai 28 → 7, 14, 21, 28. Ada 4 loncatan, jadi 4.', v: () => V().hintSeq([7, 14, 21], 28, 'Loncat 7')}]},
     teka: {title: 'Teka-teki Bilangan', icon: '📜', cards: [
       {t: '"Aku lebih dari 5 dan kurang dari 7." Bilangan yang ada di antara 5 dan 7 adalah 6.', v: () => V().hintLine(6, 6)},
       {t: 'Pola loncat: lihat berapa yang ditambah setiap kali. 2, 4, 6, 8 → loncat 2.', v: () => V().hintSeq([2, 4, 6, 8], 10, 'Setiap kali +2')}]}
@@ -159,7 +163,8 @@ MQ.Learn = (() => {
         {t: 'Panjang, Air & Grafik', k: ['cm', 'air', 'data', 'turus'], max: 20},
         {t: 'Waktu & Uang', k: ['jam', 'durasi', 'uang'], max: 20},
         {t: 'Perkalian 1', k: ['kaliArti', 'kaliTabel', 'kaliCerita'], max: 50},
-        ...['Perkalian 2',
+        {t: 'Perkalian 2', k: ['kaliTabel', 'kaliPola', 'kaliCerita'], max: 90},
+        ...[
             'Bangun Datar & Ruang', 'Bilangan 10.000 & Pecahan'].map(t => ({t}))] // Kelas 2: 9 bab = 9 peta (GDD §15)
   };
   let nav = {kelas: 0, bab: -1}; // posisi di daftar: kelas 0 = pilih kelas, bab -1 = pilih bab

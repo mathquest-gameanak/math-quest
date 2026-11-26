@@ -412,5 +412,8 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 ### 2026-11-27 — Kelas 2 Peta 6: Perkalian 1
 - Soal `kaliArti` (gambar kelompok, penjumlahan berulang → perkalian), `kaliTabel` (tabel pilihan lewat `spec.tabel`; Peta 6: 2, 5, 3, 4; kadang urutan ditukar), `kaliCerita`. Peta 6 dibuka (monster sementara). Materi Kelas 2 Bab 6. Animasi peta mengikuti dunia yang digambar (`POS === POS2`). SW `mq-v70`.
 
+### 2026-11-27 — Kelas 2 Peta 7: Perkalian 2
+- `kaliTabel` dengan tabel 6, 7, 8, 9, 1 (tanpa `spec.tabel` = semua 1–9). Soal baru `kaliPola` (tambah satu kelompok, urutan ditukar, cari bilangan yang hilang). Pelajaran "Tabel Perkalian" (+ trik kali 9) & "Pola Perkalian". Peta 7 dibuka (monster sementara). SW `mq-v71`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

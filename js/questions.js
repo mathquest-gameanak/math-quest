@@ -521,7 +521,7 @@ MQ.Questions = (() => {
   };
   /** Perkalian tabel: s.tabel = bilangan yang dikalikan (Peta 6: 2, 5, 3, 4; Peta 7: 6, 7, 8, 9, 1). */
   GEN.kaliTabel = s => {
-    const a = pick(s.tabel || [2, 5, 3, 4]), b = rand(1, 9), c = a * b, swap = rand(0, 1);
+    const a = pick(s.tabel || [1, 2, 3, 4, 5, 6, 7, 8, 9]), b = rand(1, 9), c = a * b, swap = rand(0, 1);
     const [x, y] = swap ? [b, a] : [a, b]; // kadang ditukar: 3 × 4 = 4 × 3
     return hint(numQ('kaliTabel', `${x} × ${y} = ?`, `${x} kali ${y} sama dengan berapa?`, c, [c + a, c - a, a + b].filter(v => v !== c), 0),
       () => V().hintSeq(loncat(a, Math.max(1, b - 1)).slice(0, b - 1), c, `Loncat ${a}-${a} sebanyak ${b} kali`));
@@ -533,6 +533,17 @@ MQ.Questions = (() => {
     const n = wadah === 'mobil' ? 4 : a, tot = wadah === 'mobil' ? 4 * b : c;
     return hint(numQ('kaliCerita', `${b} ${wadah}, tiap ${wadah} ${n} ${isi}. Semua?`, `Ada ${b} ${wadah}. Tiap ${wadah} berisi ${n} ${isi}. Semuanya ada berapa ${isi}?`, tot, [b + n, tot + n, tot - n], 1),
       () => V().hintNote(`${b} ${wadah} × ${n} ${isi} = ${b} × ${n} = ${tot}.`));
+  };
+
+  /** Pola perkalian: tambah satu kelompok, urutan ditukar, atau mencari bilangan yang hilang. */
+  GEN.kaliPola = s => {
+    const a = pick(s.tabel || [6, 7, 8, 9]), b = rand(2, 8), c = a * b, t = rand(0, 2);
+    if (t === 0) return hint(numQ('kaliPola', `${a} × ${b} = ${c}, maka ${a} × ${b + 1} = ?`, `${a} kali ${b} sama dengan ${c}. Jadi ${a} kali ${b + 1} sama dengan berapa?`, c + a, [c + 1, c + b, c + a + 1].filter(v => v !== c + a), 0),
+      () => V().hintNote(`Kalau dikali bertambah 1, hasilnya bertambah ${a}: ${c} + ${a} = ${c + a}.`));
+    if (t === 1) return hint(numQ('kaliPola', `${a} × ${b} = ${b} × ?`, `${a} kali ${b} sama dengan ${b} kali berapa?`, a, [b, c, a + 1].filter(v => v !== a), 1),
+      () => V().hintNote(`Urutan perkalian boleh ditukar: ${a} × ${b} = ${b} × ${a} = ${c}.`));
+    return hint(numQ('kaliPola', `? × ${a} = ${c}`, `Berapa kali ${a} sama dengan ${c}?`, b, [b + 1, b - 1, a].filter(v => v !== b && v > 0), 1),
+      () => V().hintSeq(loncat(a, b - 1), c, `Loncat ${a}-${a} sampai ${c}: ada ${b} loncatan`));
   };
 
   /** Tokoh & benda untuk soal cerita (id = gambar MQ.Pix / MQ.Sprites). */
@@ -556,7 +567,7 @@ MQ.Questions = (() => {
                  pasangan: 'Pasangan bilangan', cerita: 'Soal cerita', teka: 'Teka-teki',
                  posisi: 'Bilangan urutan', berulang: 'Tambah berulang', keluarga: 'Hubungan + dan −', kelompok: 'Mengelompokkan bentuk',
                  susun: 'Menyusun bangun', belasan: 'Bilangan 11–20', dobel: 'Dobel', data: 'Diagram gambar', turus: 'Tabel turus',
-                 ratusan: 'Ratusan', nilai: 'Nilai tempat', lompat: 'Loncat 10 & 100', bersusun: 'Tambah bersusun', hitungCepat: 'Berhitung cepat', kurangSusun: 'Kurang bersusun', kurangCepat: 'Mengurang cepat', cm: 'Panjang (cm & m)', air: 'Banyaknya air (L & dL)', jam: 'Membaca jam', durasi: 'Lama waktu', uang: 'Uang', kaliArti: 'Arti perkalian', kaliTabel: 'Perkalian', kaliCerita: 'Cerita perkalian'};
+                 ratusan: 'Ratusan', nilai: 'Nilai tempat', lompat: 'Loncat 10 & 100', bersusun: 'Tambah bersusun', hitungCepat: 'Berhitung cepat', kurangSusun: 'Kurang bersusun', kurangCepat: 'Mengurang cepat', cm: 'Panjang (cm & m)', air: 'Banyaknya air (L & dL)', jam: 'Membaca jam', durasi: 'Lama waktu', uang: 'Uang', kaliArti: 'Arti perkalian', kaliTabel: 'Perkalian', kaliCerita: 'Cerita perkalian', kaliPola: 'Pola perkalian'};
 
   return {make, GEN, NAMES, maxFor, specForLevel, nearChoices};
 })();
