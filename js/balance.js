@@ -118,7 +118,7 @@ MQ.Balance = {
   /* Pingsan (HP habis, 2026-11-26): pertarungan terkunci lockMin menit DAN sampai pelajaran selesai (mustLearn 1),
      pelajaran = jenis soal yang paling sering salah di pertarungan itu, latihan tanpa waktu sampai benar "practice" kali. */
   knockout: {
-    lockMin: 5,      // menit istirahat (0 = tanpa menunggu)
+    lockMin: 2,      // menit istirahat (0 = tanpa menunggu); 2026-11-26: 5 → 2 menit, cukup untuk mempelajari yang salah
     mustLearn: 1,    // 1 = wajib menyelesaikan pelajaran dulu
     practice: 3      // jumlah jawaban benar di latihan pelajaran
   },

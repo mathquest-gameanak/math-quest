@@ -1142,3 +1142,5 @@ svg.tally { height: 26px; width: auto; }
 /* gambar pahlawan 32 piksel berpusat di kolom ke-13 (senjata di kanan) → geser agar badannya tepat di tengah */
 #scr-home .homeHero { left: 16px; }
 .homeKikiBtn { left: calc(50% + 74px); }
+/* spanduk istirahat di atas papan Bangun Desa (tidak bertumpuk) */
+#scr-home .restBanner { bottom: 62px; max-width: calc(100% - 20px); white-space: nowrap; }

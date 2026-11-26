@@ -343,5 +343,8 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 ### 2026-11-26 — Beranda lebih simetris
 - Pahlawan digeser 16px agar badannya tepat di tengah (gambar 32 piksel berpusat di kolom 13); logo MATH QUEST sedikit lebih ke bawah; ikon samping maks 4 per sisi: kiri Hari Ini/Misi/Medali/Pandai Besi, kanan Buku/Kelas. SW `mq-v51`.
 
+### 2026-11-26 — Istirahat pingsan 2 menit
+- `knockout.lockMin` 5 → 2 menit (tetap wajib menyelesaikan pelajaran tentang soal yang salah). Spanduk istirahat di beranda dipindah ke atas papan Bangun Desa (sebelumnya bertumpuk). SW `mq-v52`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
