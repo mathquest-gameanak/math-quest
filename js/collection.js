@@ -11,7 +11,7 @@ MQ.Collection = (() => {
 
   /* ===== Buku Monster ===== */
   const MONSTER_IDS = Object.keys(Data.monsters);
-  const places = () => [...Data.fields.filter(f => f.mobs || f.boss), ...Data.dungeons, Data.arena];
+  const places = () => [...Data.allFields().filter(f => f.mobs || f.boss), ...Data.dungeons, Data.arena]; // semua kelas
   /** Peran monster: bos, kunci, atau biasa. */
   function role(id) {
     if (Data.dungeons.some(d => d.key === id)) return 'Monster kunci';

@@ -190,6 +190,72 @@ window.MQ = window.MQ || {};
     return P.outline();
   }
 
+  /* ===== KELAS 2: Robot (badan kotak, layar wajah, antena) ===== */
+  function robot(o) {
+    const big = o.boss, s = big ? 1.4 : 1, P = grid(big ? 38 : 26, big ? 38 : 27), cx = big ? 19 : 13;
+    const bw = Math.round(8 * s), top = Math.round(8 * s), bot = Math.round(21 * s);
+    P.rect(cx - Math.round(6 * s), bot, Math.round(4 * s), Math.round(4 * s), o.d).rect(cx + Math.round(2 * s), bot, Math.round(4 * s), Math.round(4 * s), o.d); // kaki
+    P.rect(cx - bw - Math.round(3 * s), top + Math.round(6 * s), Math.round(3 * s), Math.round(6 * s), o.d).rect(cx + bw, top + Math.round(6 * s), Math.round(3 * s), Math.round(6 * s), o.d); // lengan
+    P.rect(cx - bw, top, bw * 2, bot - top, o.b);
+    P.recolor(o.b, o.d, (x, y) => x >= cx + bw - Math.round(3 * s));
+    P.rect(cx - bw + 1, top + 1, bw * 2 - 4, 1, o.l);
+    // layar wajah
+    const sx = cx - Math.round(6 * s), sy = top + Math.round(2 * s), sw = Math.round(12 * s), sh = Math.round(7 * s);
+    P.rect(sx, sy, sw, sh, '#333c57');
+    const ec = o.eye || '#73eff7', eh = big ? 3 : 2, ey = sy + Math.round(2 * s);
+    P.rect(cx - Math.round(4 * s), ey, 2, eh, ec).rect(cx + Math.round(4 * s) - 2, ey, 2, eh, ec);
+    if (o.angry) P.px(cx - Math.round(4 * s), ey - 1, ec).px(cx + Math.round(4 * s) - 1, ey - 1, ec);
+    P.rect(cx - 2, sy + sh - 2, 4, 1, ec);
+    // antena
+    if (!o.crown) P.rect(cx, top - Math.round(4 * s), 1, Math.round(4 * s), o.d).ell(cx + 0.5, top - Math.round(4 * s), big ? 2 : 1.5, big ? 2 : 1.5, o.ant || '#e43b44'); // raja: mahkota menggantikan antena
+    // hiasan dada
+    const cy = top + Math.round(10 * s);
+    if (o.ruler) for (let x = cx - bw + 1; x < cx + bw - 1; x += 2) P.rect(x, cy + 1, 1, x % 4 ? 1 : 2, K);
+    if (o.clock) { P.ell(cx, cy + 2, 2.6 * s, 2.6 * s, W); P.rect(cx, cy, 1, 2, K).rect(cx, cy + 2, 2, 1, K); }
+    if (o.num) P.rect(cx - 2, cy, 4, 1, '#ffcd75').rect(cx + 1, cy, 1, 4, '#ffcd75').rect(cx - 2, cy + 2, 4, 1, '#ffcd75');
+    if (o.rock) [[-5, 1], [3, 3], [-2, 5], [5, -1]].forEach(([dx, dy]) => P.px(cx + dx * s, cy + dy, o.d).px(cx + dx * s + 1, cy + dy, o.d));
+    if (o.crown) crown(P, cx, top + 1, big ? 16 : 10, o.gem);
+    return P.outline();
+  }
+
+  /* ===== KELAS 2: Siput (rumah spiral) ===== */
+  function snail(o) {
+    const big = o.boss, s = big ? 1.4 : 1, P = grid(big ? 42 : 30, big ? 34 : 24);
+    const fy = Math.round(19 * s), cx = Math.round(14 * s);
+    P.ell(cx + 2 * s, fy, 12 * s, 3.5 * s, o.b);                               // kaki
+    P.ell(cx + 10 * s, fy - 6 * s, 4 * s, 5.5 * s, o.b, (x, y) => y <= fy);    // kepala
+    P.recolor(o.b, o.d, (x, y) => y >= fy + 1);
+    [-1.5, 1.5].forEach(dx => { const ex = cx + 10 * s + dx * s; P.rect(ex, fy - 14 * s, 1, 4 * s, o.d).ell(ex + 0.5, fy - 14 * s, 1.6 * s, 1.6 * s, o.b); P.px(ex, fy - 14 * s, K).px(ex + 1, fy - 14 * s, K); });
+    mouth(P, cx + 11 * s, fy - 5 * s, o.angry ? 'grin' : 'smile');
+    if (o.blush) P.px(cx + 13 * s, fy - 6 * s, o.blush);
+    // rumah spiral
+    const hx = cx - 1 * s, hy = fy - 7 * s, R = 8 * s;
+    P.ell(hx, hy, R, R, o.shell);
+    P.ell(hx - 0.5, hy + 0.5, R * 0.68, R * 0.68, o.shSh).ell(hx - 1, hy + 1, R * 0.5, R * 0.5, o.shell).ell(hx - 0.5, hy + 0.5, R * 0.3, R * 0.3, o.shSh).ell(hx, hy, R * 0.14 + 0.5, R * 0.14 + 0.5, o.shell);
+    P.ell(hx - R * 0.45, hy - R * 0.55, R * 0.18, R * 0.12, o.hi || W);
+    if (o.times) { for (let i = -2; i <= 2; i++) P.px(hx + i, hy + i, W).px(hx + i, hy - i, W); }
+    if (o.honey) P.rect(hx + R * 0.6, hy + R * 0.3, 1, 3, '#ffcd75').px(hx + R * 0.6, hy + R * 0.3 + 3, '#ffcd75');
+    if (o.crown) crown(P, hx, Math.round(hy - R) + 2, big ? 14 : 10, o.gem);
+    return P.outline();
+  }
+
+  /* ===== KELAS 2: Awan (hujan, petir, salju) ===== */
+  function cloud(o) {
+    const big = o.boss, s = big ? 1.4 : 1, P = grid(big ? 40 : 28, big ? 38 : 27), cx = big ? 20 : 14, cy = Math.round(12 * s);
+    [[-6, 2, 5], [0, -2, 6.5], [6, 2, 5], [-2, 4, 5], [3, 4, 5]].forEach(([dx, dy, r]) => P.ell(cx + dx * s, cy + dy * s, r * s, r * s * 0.85, o.b));
+    P.recolor(o.b, o.d, (x, y) => y > cy + 5 * s);
+    P.ell(cx - 5 * s, cy - 2 * s, 2 * s, 1.2 * s, o.l);
+    eyes(P, cx, cy, big ? 3 : 2, {angry: o.angry, eh: big ? 3 : 2});
+    mouth(P, cx, cy + (big ? 5 : 4), o.angry ? 'grin' : 'o');
+    P.px(cx - 6 * s, cy + 3, '#f4a3c8').px(cx + 5 * s, cy + 3, '#f4a3c8');
+    const by = Math.round(cy + 9 * s);
+    if (o.rain) [-5, -1, 3, 7].forEach((dx, i) => P.rect(cx + dx * s, by + (i % 2) * 2, 1, 3, '#41a6f6'));
+    if (o.bolt) { const x = cx + 1; P.rect(x, by, 2, 3, '#ffcd75').rect(x - 2, by + 3, 3, 1, '#ffcd75').rect(x - 2, by + 4, 2, 3, '#ffcd75'); }
+    if (o.snow) [-5, 0, 5].forEach((dx, i) => { const x = cx + dx * s, y = by + (i % 2) * 2 + 1; P.px(x, y, W).px(x - 1, y + 1, W).px(x + 1, y + 1, W).px(x, y + 2, W); });
+    if (o.crown) crown(P, cx, Math.round(cy - 7 * s), big ? 14 : 10, o.gem);
+    return P.outline();
+  }
+
   /* ===== Resep tiap monster ===== */
   const GREEN = {b: '#38b764', d: '#257179', l: '#a7f070'};
   const ART = {
@@ -220,6 +286,23 @@ window.MQ = window.MQ || {};
     hantuKertas: () => ghost({b: '#ffe4c4', sh: '#d4a373', hi: W, lines: true}),
     hantuTinta:  () => ghost({b: '#73eff7', sh: '#41a6f6', hi: W, drips: true, angry: true}),
     rajaTinta:   () => ghost({boss: true, b: '#566c86', sh: '#333c57', hi: '#94b0c2', crown: true, angry: true, eyeColor: '#73eff7', mouth: 'grin', drips: true}),
+
+    // ===== Kelas 2 =====
+    robotKecil:    () => robot({b: '#94b0c2', d: '#566c86', l: '#c7d3de', num: true}),
+    rajaRobot:     () => robot({boss: true, b: '#41a6f6', d: '#3b5dc9', l: '#73eff7', angry: true, crown: true, num: true}),
+    robotMeteran:  () => robot({b: '#ffcd75', d: '#ef7d57', l: '#fff3b0', ruler: true, ant: '#3b5dc9'}),
+    robotJam:      () => robot({b: '#b06fd0', d: '#5d275d', l: '#f4a3c8', clock: true, eye: '#ffcd75'}),
+    robotBatu:     () => robot({b: '#94b0c2', d: '#566c86', l: W, rock: true, angry: true, eye: '#e43b44'}),
+    rajaRobotEmas: () => robot({boss: true, b: '#ffcd75', d: '#ef7d57', l: '#fff3b0', angry: true, crown: true, gem: '#3b5dc9', eye: '#e43b44', num: true}),
+    siputHijau:    () => snail({b: '#a7f070', d: '#38b764', shell: '#ef7d57', shSh: '#b13e53', blush: '#f4a3c8'}),
+    siputMadu:     () => snail({b: '#ffe4c4', d: '#d4a373', shell: '#ffcd75', shSh: '#ef7d57', honey: true, blush: '#f4a3c8'}),
+    siputKali:     () => snail({b: '#73eff7', d: '#41a6f6', shell: '#b06fd0', shSh: '#5d275d', times: true}),
+    rajaSiput:     () => snail({boss: true, b: '#38b764', d: '#257179', shell: '#3b5dc9', shSh: '#29366f', crown: true, angry: true}),
+    awanHujan:     () => cloud({b: '#c7d3de', d: '#94b0c2', l: W, rain: true}),
+    rajaAwan:      () => cloud({boss: true, b: '#94b0c2', d: '#566c86', l: '#c7d3de', rain: true, angry: true, crown: true, gem: '#41a6f6'}),
+    awanPetir:     () => cloud({b: '#566c86', d: '#333c57', l: '#94b0c2', bolt: true, angry: true}),
+    rajaPetir:     () => cloud({boss: true, b: '#333c57', d: '#1a1c2c', l: '#566c86', bolt: true, angry: true, crown: true}),
+    awanSalju:     () => cloud({b: W, d: '#c7d3de', l: W, snow: true}),
 
     naga: dragon
   };

@@ -1,6 +1,6 @@
 # Math Quest — Ringkasan Proyek (untuk memulai sesi baru)
 
-_Terakhir diperbarui: 2026-11-27 · versi `mq-v73`_
+_Terakhir diperbarui: 2026-11-27 · versi `mq-v74`_
 
 ## Inti
 Game RPG matematika pixel art 2D (PWA, Bahasa Indonesia) untuk anak SD, dimulai dari **Kelas 1**. Dibuat ayah untuk anaknya, kelak **dijual**.
