@@ -82,6 +82,15 @@ MQ.Balance = {
     {lvAdd: 16, hpMul: 1.15, dmgMul: 1.15, speedMul: 0.7, rewardMul: 2}
   ],
   heroMode: {lv: [16, 30], hpMul: 1.15, dmgMul: 1.15, speedMul: 0.8, rewardMul: 2},
+  /* Kategori monster (2026-11-27). Pengali di atas gaya jenis tubuh (data.js styles):
+     spd = jeda serangan × (kecil = lebih cepat), power = kekuatan serangan ×, tahan = damage dari pemain × (kecil = lebih kebal), hp = HP ×.
+     Monster memilih kategori lewat `kat` di data.js (tanpa kat: kelelawar = terbang, lainnya biasa). */
+  kategori: {
+    biasa:   {name: 'Biasa', icon: '👾', spd: 1, power: 1, tahan: 1, hp: 1, desc: 'seimbang'},
+    terbang: {name: 'Terbang', icon: '🪽', spd: 0.62, power: 0.8, tahan: 1, hp: 1, desc: 'menyerang cepat, tapi pukulannya ringan'},
+    keras:   {name: 'Keras', icon: '🪨', spd: 1.45, power: 1.5, tahan: 0.7, hp: 0.85, desc: 'kebal (damage darimu lebih kecil), pukulannya keras, tapi menyerang lambat'},
+    logam:   {name: 'Logam', icon: '⚙️', spd: 1.15, power: 1.3, tahan: 0.85, hp: 0.95, desc: 'cukup kebal, pukulannya keras, menyerang agak lambat'}
+  },
   /* Teman selain Kiki: jumlah Makanan Teman (kumulatif) untuk tiap tahap Telur→Bayi→Kecil→Remaja→Agung (2/5/8/15 = 30). */
   pets: {food: [0, 2, 7, 15, 30]},
   /* Rentang level per kelas: [Normal, Pahlawan, Legenda] (GDD §15). Monster Pahlawan/Legenda = level Normal dipetakan ke rentangnya. */
@@ -146,6 +155,13 @@ MQ.Calc = {
     if (!cfg.lv) return L + (cfg.lvAdd || 0);
     const [a, b] = cfg.lv, [n0, n1] = cfg.from || [1, 15];
     return Math.min(b, a + Math.round((L - n0) * (b - a) / (n1 - n0)));
+  },
+  /** Kategori monster (objek dari Balance.kategori). */
+  katOf(m) { const K = MQ.Balance.kategori; return K[m.kat || (m.sprite === 'bat' ? 'terbang' : 'biasa')] || K.biasa; },
+  /** Gaya bertarung akhir monster: jenis tubuh (styles) atau nilai monster sendiri, dikali kategorinya. */
+  monStyle(m) {
+    const st = MQ.Data.styles[m.sprite] || {spd: [3, 5], power: 1}, k = MQ.Calc.katOf(m), spd = m.spd || st.spd;
+    return {spd: [spd[0] * k.spd, spd[1] * k.spd], power: (m.power || st.power) * k.power, tahan: k.tahan * (m.tahan || 1), hp: k.hp * (m.hpMul || 1), kat: k};
   },
   /** Pengaturan tingkat cerita m (1 Pahlawan, 2 Legenda) untuk kelas k: rentang level ikut kelas (kelasLv). */
   modeCfg(m, k) {

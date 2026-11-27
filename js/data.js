@@ -6,10 +6,10 @@ window.MQ = window.MQ || {};
 MQ.Data = {
   /* Gaya menyerang bawaan per jenis tubuh:
      spd   = jeda antar serangan dalam detik [min, maks] (acak di antaranya); besar = lambat
-     power = pengali damage. Monster boleh menimpa nilainya sendiri (lihat monster batu).
-     Per monster juga: tahan = pengali damage yang DITERIMA (batu 0,7 = keras), hpMul = pengali HP. */
+     power = pengali damage. Monster boleh menimpa nilainya sendiri.
+     kat = kategori (biasa/terbang/keras/logam, balance.js kategori): mengalikan jeda, serangan, damage yang diterima & HP. */
   styles: {
-    bat:      {spd: [1.5, 3], power: 0.8},   // kelelawar: cepat tapi lemah
+    bat:      {spd: [2.5, 4.5], power: 1},   // kelelawar: cepat & ringan lewat kategori Terbang (balance.js kategori)
     slime:    {spd: [2.5, 4.5], power: 1},
     mushroom: {spd: [3, 5], power: 1.1},
     dragon:   {spd: [3.5, 5.5], power: 1.3},  // besar: lambat tapi kuat
@@ -22,21 +22,21 @@ MQ.Data = {
     lendir:         {name: 'Lendir Hijau', lore: 'Lendir Hijau suka melompat sambil menghitung lompatannya. Sayangnya ia sering lupa sudah sampai berapa!', sprite: 'slime', drop: 'lendir'},
     lendirAir:      {name: 'Lendir Air', lore: 'Lendir Air lahir dari embun pagi. Badannya dingin dan memantulkan cahaya matahari.', sprite: 'slime', drop: 'lendir', pal: {g: '#41a6f6', G: '#73eff7', d: '#3b5dc9'}},
     // ===== Kelas 2 (GDD §15): monster baru (robot, siput, awan) =====
-    robotKecil:    {name: 'Robot Angka', lore: 'Robot Angka menghitung sampai seribu tanpa lelah. Layar di wajahnya berkedip setiap kali menemukan ratusan.', sprite: 'slime', drop: 'baut', power: 1.1, tahan: 0.85},
-    siputMadu:     {name: 'Siput Madu', lore: 'Siput Madu berjalan pelan sambil meneteskan madu manis. Mini bos Padang Seribu yang suka menghitung loncat seratus.', sprite: 'slime', drop: 'cangkang', spd: [3.5, 5.5], power: 1.3},
-    rajaRobot:     {name: 'Raja Robot', lore: 'Raja Robot memimpin pabrik angka. Ia bangga bisa menyusun bilangan ratusan, puluhan, dan satuan dengan rapi.', sprite: 'slime', drop: 'baut', tahan: 0.85},
-    siputHijau:    {name: 'Siput Bersusun', lore: 'Siput Bersusun selalu menulis angka bertumpuk di rumahnya, satuan di bawah satuan.', sprite: 'slime', drop: 'cangkang', spd: [3.5, 5.5], power: 1.2},
-    rajaSiput:     {name: 'Raja Siput', lore: 'Raja Siput tidak pernah lupa menyimpan. Rumahnya yang biru adalah gudang angka simpanan.', sprite: 'slime', drop: 'cangkang', spd: [3.5, 5.5]},
-    awanHujan:     {name: 'Awan Hujan', lore: 'Awan Hujan meminjam tetes air dari temannya, lalu menjatuhkannya satu per satu.', sprite: 'slime', drop: 'embun', spd: [1.8, 3.4], power: 0.9},
-    rajaAwan:      {name: 'Raja Awan', lore: 'Raja Awan mengurangi hujan di seluruh lembah. Mahkotanya berkilau seperti tetes embun.', sprite: 'slime', drop: 'embun', spd: [2, 3.6]},
-    robotMeteran:  {name: 'Robot Meteran', lore: 'Robot Meteran punya penggaris di perutnya. Semua benda ia ukur dalam sentimeter.', sprite: 'slime', drop: 'baut', power: 1.1, tahan: 0.85},
-    robotJam:      {name: 'Robot Jam', lore: 'Robot Jam berdetak tik-tok. Jarum pendeknya selalu menunjuk jam makan siang.', sprite: 'slime', drop: 'baut', power: 1.1, tahan: 0.85},
-    siputKali:     {name: 'Siput Kali', lore: 'Ada tanda kali di rumah Siput Kali. Ia suka mengelompokkan teman-temannya sama banyak.', sprite: 'slime', drop: 'cangkang', spd: [3.5, 5.5], power: 1.2},
-    rajaRobotEmas: {name: 'Raja Robot Emas', lore: 'Raja Robot Emas hafal semua perkalian dua, tiga, empat, dan lima. Badannya dari logam emas yang keras.', sprite: 'slime', drop: 'baut', tahan: 0.8, hpMul: 0.9},
-    awanPetir:     {name: 'Awan Petir', lore: 'Awan Petir menyambar cepat seperti hitungan perkalian sembilan. Hati-hati, ia mudah marah!', sprite: 'slime', drop: 'embun', spd: [1.8, 3.2], power: 1},
-    rajaPetir:     {name: 'Raja Petir', lore: 'Raja Petir menguasai langit Perkalian. Petirnya hanya bisa dikalahkan dengan pola perkalian yang tepat.', sprite: 'slime', drop: 'embun', spd: [2, 3.4]},
-    robotBatu:     {name: 'Robot Batu', lore: 'Robot Batu tersusun dari kubus dan balok. Badannya keras sekali!', sprite: 'slime', drop: 'baut', spd: [4, 6], power: 1.5, tahan: 0.7, hpMul: 0.85},
-    awanSalju:     {name: 'Awan Salju', lore: 'Awan Salju membagi kepingan salju sama besar: setengah untukmu, setengah untuk temanmu.', sprite: 'slime', drop: 'embun', spd: [1.8, 3.4], power: 0.9},
+    robotKecil:    {name: 'Robot Angka', lore: 'Robot Angka menghitung sampai seribu tanpa lelah. Layar di wajahnya berkedip setiap kali menemukan ratusan.', kat: 'logam', sprite: 'slime', drop: 'baut'},
+    siputMadu:     {name: 'Siput Madu', lore: 'Siput Madu berjalan pelan sambil meneteskan madu manis. Mini bos Padang Seribu yang suka menghitung loncat seratus.', kat: 'keras', sprite: 'slime', drop: 'cangkang'},
+    rajaRobot:     {name: 'Raja Robot', lore: 'Raja Robot memimpin pabrik angka. Ia bangga bisa menyusun bilangan ratusan, puluhan, dan satuan dengan rapi.', kat: 'logam', sprite: 'slime', drop: 'baut'},
+    siputHijau:    {name: 'Siput Bersusun', lore: 'Siput Bersusun selalu menulis angka bertumpuk di rumahnya, satuan di bawah satuan.', kat: 'keras', sprite: 'slime', drop: 'cangkang'},
+    rajaSiput:     {name: 'Raja Siput', lore: 'Raja Siput tidak pernah lupa menyimpan. Rumahnya yang biru adalah gudang angka simpanan.', kat: 'keras', sprite: 'slime', drop: 'cangkang'},
+    awanHujan:     {name: 'Awan Hujan', lore: 'Awan Hujan meminjam tetes air dari temannya, lalu menjatuhkannya satu per satu.', kat: 'terbang', sprite: 'slime', drop: 'embun'},
+    rajaAwan:      {name: 'Raja Awan', lore: 'Raja Awan mengurangi hujan di seluruh lembah. Mahkotanya berkilau seperti tetes embun.', kat: 'terbang', sprite: 'slime', drop: 'embun'},
+    robotMeteran:  {name: 'Robot Meteran', lore: 'Robot Meteran punya penggaris di perutnya. Semua benda ia ukur dalam sentimeter.', kat: 'logam', sprite: 'slime', drop: 'baut'},
+    robotJam:      {name: 'Robot Jam', lore: 'Robot Jam berdetak tik-tok. Jarum pendeknya selalu menunjuk jam makan siang.', kat: 'logam', sprite: 'slime', drop: 'baut'},
+    siputKali:     {name: 'Siput Kali', lore: 'Ada tanda kali di rumah Siput Kali. Ia suka mengelompokkan teman-temannya sama banyak.', kat: 'keras', sprite: 'slime', drop: 'cangkang'},
+    rajaRobotEmas: {name: 'Raja Robot Emas', lore: 'Raja Robot Emas hafal semua perkalian dua, tiga, empat, dan lima. Badannya dari logam emas yang keras.', kat: 'logam', sprite: 'slime', drop: 'baut'},
+    awanPetir:     {name: 'Awan Petir', lore: 'Awan Petir menyambar cepat seperti hitungan perkalian sembilan. Hati-hati, ia mudah marah!', kat: 'terbang', sprite: 'slime', drop: 'embun'},
+    rajaPetir:     {name: 'Raja Petir', lore: 'Raja Petir menguasai langit Perkalian. Petirnya hanya bisa dikalahkan dengan pola perkalian yang tepat.', kat: 'terbang', sprite: 'slime', drop: 'embun'},
+    robotBatu:     {name: 'Robot Batu', lore: 'Robot Batu tersusun dari kubus dan balok. Badannya keras sekali!', kat: 'keras', sprite: 'slime', drop: 'baut'},
+    awanSalju:     {name: 'Awan Salju', lore: 'Awan Salju membagi kepingan salju sama besar: setengah untukmu, setengah untuk temanmu.', kat: 'terbang', sprite: 'slime', drop: 'embun'},
     lendirBunga:    {name: 'Lendir Bunga', lore: 'Lendir Bunga memakai mahkota bunga dan merasa paling cantik di Padang Hitung. Mini bos yang mudah marah!', sprite: 'slime', drop: 'lendir', power: 1.2, pal: {g: '#b06fd0', G: '#f4a3c8', d: '#5d275d'}},
     rajaLendir:     {name: 'Raja Lendir', lore: 'Raja semua lendir. Ia menyimpan kepingan kristal pertama di dalam badannya yang kenyal.', sprite: 'slime', drop: 'lendir', pal: {g: '#ffcd75', G: '#fff3b0', d: '#ef7d57'}},
     jamur:          {name: 'Jamur Nakal', lore: 'Jamur Nakal suka menambah dan mengurangi seenaknya. Alisnya selalu cemberut.', sprite: 'mushroom', drop: 'spora'},
@@ -44,9 +44,9 @@ MQ.Data = {
     rajaJamur:      {name: 'Raja Jamur', lore: 'Raja Jamur memakai topi terbesar di hutan dan bangga bisa menghitung semua bintik di topinya.', sprite: 'mushroom', drop: 'spora', pal: {r: '#ef7d57', w: '#ffcd75', c: '#fff3b0'}},
     kelelawar:      {name: 'Kelelawar Ungu', lore: 'Kelelawar Ungu terbang sangat cepat sambil menghitung putarannya sendiri.', sprite: 'bat', drop: 'sayap'},
     rajaKelelawar:  {name: 'Raja Kelelawar', lore: 'Raja Kelelawar tinggal di gua tepi Danau Dua Puluh. Sayapnya merah seperti langit senja.', sprite: 'bat', drop: 'sayap', pal: {p: '#b13e53', P: '#ef7d57'}},
-    lendirBatu:     {name: 'Lendir Batu', lore: 'Lendir Batu keras seperti kerikil. Ia suka berguling membentuk lingkaran sempurna.', sprite: 'slime', drop: 'batu', spd: [4, 6], power: 1.5, tahan: 0.7, hpMul: 0.85, pal: {g: '#94b0c2', G: '#f4f4f4', d: '#566c86'}},
-    jamurBatu:      {name: 'Jamur Batu', lore: 'Jamur Batu tidak pernah bergerak... kecuali ada yang salah menyebut nama bentuk!', sprite: 'mushroom', drop: 'batu', spd: [4, 6], power: 1.5, tahan: 0.7, hpMul: 0.85, pal: {r: '#566c86', c: '#94b0c2', C: '#566c86'}},
-    rajaBatu:       {name: 'Raja Batu', lore: 'Raja Batu yang tua dan bijak menjaga semua bentuk di Bukit Bentuk.', sprite: 'slime', drop: 'batu', spd: [4, 6], power: 1.5, tahan: 0.7, hpMul: 0.85, pal: {g: '#566c86', G: '#94b0c2', d: '#333c57'}},
+    lendirBatu:     {name: 'Lendir Batu', lore: 'Lendir Batu keras seperti kerikil. Ia suka berguling membentuk lingkaran sempurna.', kat: 'keras', sprite: 'slime', drop: 'batu', pal: {g: '#94b0c2', G: '#f4f4f4', d: '#566c86'}},
+    jamurBatu:      {name: 'Jamur Batu', lore: 'Jamur Batu tidak pernah bergerak... kecuali ada yang salah menyebut nama bentuk!', kat: 'keras', sprite: 'mushroom', drop: 'batu', pal: {r: '#566c86', c: '#94b0c2', C: '#566c86'}},
+    rajaBatu:       {name: 'Raja Batu', lore: 'Raja Batu yang tua dan bijak menjaga semua bentuk di Bukit Bentuk.', kat: 'keras', sprite: 'slime', drop: 'batu', pal: {g: '#566c86', G: '#94b0c2', d: '#333c57'}},
     kelelawarDaun:  {name: 'Kelelawar Daun', lore: 'Kelelawar Daun bersembunyi di pepohonan Lembah Ukur. Sayapnya sepanjang tiga daun!', sprite: 'bat', drop: 'sayap', pal: {p: '#257179', P: '#a7f070'}},
     jamurKayu:      {name: 'Jamur Kayu', lore: 'Jamur Kayu tumbuh di batang pohon tumbang dan suka mengukur apa saja dengan jengkalnya.', sprite: 'mushroom', drop: 'kayu', pal: {r: '#ab5236', c: '#ffcd75'}},
     rajaJamurKayu:  {name: 'Raja Jamur Kayu', lore: 'Raja Jamur Kayu punya penggaris ajaib dari kulit kayu. Tidak ada yang lebih teliti darinya.', sprite: 'mushroom', drop: 'kayu', pal: {r: '#5d275d', w: '#ffcd75', c: '#ef7d57'}},

@@ -22,8 +22,7 @@ MQ.Collection = (() => {
   const locations = id => places().filter(p => (p.mobs || []).includes(id) || p.boss === id || p.key === id).map(p => p.name);
   /** Gaya bertarung dari jenis tubuh (lihat Data.styles), dalam kata-kata anak. */
   function styleText(m) {
-    const st = Data.styles[m.sprite] || {spd: [3, 5], power: 1};
-    const spd = m.spd || st.spd, pow = m.power || st.power, avg = (spd[0] + spd[1]) / 2;
+    const g = MQ.Calc.monStyle(m), spd = g.spd, pow = g.power, avg = (spd[0] + spd[1]) / 2;
     return (avg < 3 ? 'Menyerang cepat' : avg > 4.2 ? 'Menyerang lambat' : 'Menyerang sedang') +
            (pow >= 1.3 ? ', pukulannya keras' : pow < 1 ? ', pukulannya ringan' : '');
   }
@@ -64,6 +63,7 @@ MQ.Collection = (() => {
       ['📜', m.lore],
       ['🎁 Menjatuhkan', drop.name + (role(id) === 'Bos' ? ' (×3) + Mahkota Kecil' : '')],
       ['🗺️ Ditemukan di', locations(id).join(', ') || '-'],
+      ['🏷️ Kategori', (k => `${k.icon} ${k.name}: ${k.desc}`)(MQ.Calc.katOf(m))],
       ['⚔️ Gaya bertarung', styleText(m)],
       ['🏆 Dikalahkan', `${n} kali ${stars(n)}`]
     ] : [

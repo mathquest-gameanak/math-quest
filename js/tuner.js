@@ -103,6 +103,12 @@ MQ.Tuner = (() => {
       [`styles.${k}.spd.0`, `${k}: jeda tercepat`, '', 0.5],
       [`styles.${k}.spd.1`, `${k}: jeda terlama`, '', 0.5],
       [`styles.${k}.power`, `${k}: kekuatan ×`, '', 0.1]])},
+    {title: '🏷️ Kategori monster', note: 'Pengali untuk semua monster di kategori itu. Jeda < 1 = lebih cepat; tahan < 1 = lebih kebal (damage dari pemain dikali angka ini).',
+     rows: () => Object.entries(BAL.kategori).flatMap(([k, c]) => [
+      [`kategori.${k}.spd`, `${c.icon} ${c.name}: jeda serangan ×`, '', 0.05],
+      [`kategori.${k}.power`, `${c.icon} ${c.name}: kekuatan ×`, '', 0.1],
+      [`kategori.${k}.tahan`, `${c.icon} ${c.name}: damage diterima ×`, '', 0.05],
+      [`kategori.${k}.hp`, `${c.icon} ${c.name}: HP ×`, '', 0.05]])},
     {title: '🐲 Monster khusus', note: 'Monster ini punya kecepatan/kekuatan sendiri (menimpa jenisnya).',
      rows: () => Object.entries(Data.monsters).filter(([, m]) => m.spd || m.power).flatMap(([id, m]) => [
       ...(m.spd ? [[`mon.${id}.spd.0`, `${m.name}: jeda tercepat`, '', 0.5], [`mon.${id}.spd.1`, `${m.name}: jeda terlama`, '', 0.5]] : []),
@@ -171,8 +177,7 @@ MQ.Tuner = (() => {
   /** Rata-rata gaya monster di suatu tempat (kecepatan & kekuatan). */
   function placeStyle(p, boss) {
     const ids = boss ? [p.boss || p.key].filter(Boolean) : (p.mobs || []);
-    const st = ids.map(id => { const m = Data.monsters[id], b = Data.styles[m.sprite] || {spd: [3, 5], power: 1};
-      const spd = m.spd || b.spd; return {spd: (spd[0] + spd[1]) / 2, power: m.power || b.power}; });
+    const st = ids.map(id => { const g = MQ.Calc.monStyle(Data.monsters[id]); return {spd: (g.spd[0] + g.spd[1]) / 2, power: g.power}; });
     if (!st.length) return {spd: 4, power: 1};
     return {spd: st.reduce((s, x) => s + x.spd, 0) / st.length, power: st.reduce((s, x) => s + x.power, 0) / st.length};
   }

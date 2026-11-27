@@ -444,5 +444,10 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - Simpanan v13: hari lama teman selain Kiki dikonversi ke jumlah makanan pada tahap yang sama.
 - Perbaikan: Latihan Teman & Misi Harian memilih soal dari semua kelas yang terbuka (`Data.allFields()`). Sebelumnya macet bila Peta sedang mengintip kelas atas. SW `mq-v78`.
 
+### 2026-11-27 — Kategori monster
+- `balance.js kategori`: Biasa, 🪽 Terbang (jeda ×0,62, kekuatan ×0,8), 🪨 Keras (jeda ×1,45, kekuatan ×1,5, damage diterima ×0,7, HP ×0,85), ⚙️ Logam (jeda ×1,15, kekuatan ×1,3, damage diterima ×0,85, HP ×0,95). Dikalikan ke gaya jenis tubuh lewat `Calc.monStyle(m)` (dipakai pertarungan, Buku Monster, Atur Angka).
+- `kat` di data.js: Terbang = kelelawar (otomatis) & awan; Keras = monster batu, Robot Batu & siput; Logam = robot. Gaya kelelawar di `styles` dibuat netral (kecepatannya kini dari kategori; hasil sama). Angka spd/power/tahan/hpMul per monster yang kini diwakili kategori dihapus.
+- Atur Angka: grup "🏷️ Kategori monster" (jeda, kekuatan, damage diterima, HP per kategori). Buku Monster: baris "🏷️ Kategori". SW `mq-v79`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.

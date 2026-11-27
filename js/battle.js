@@ -125,8 +125,7 @@ MQ.Battle = (() => {
   /* ===== Serangan musuh berwaktu ===== */
   /** Gaya bertarung monster sekarang: gaya bawaan jenis tubuhnya, bisa ditimpa per monster. */
   function style(M = B) {
-    const m = Data.monsters[M.monId], base = Data.styles[m.sprite] || {spd: [3, 5], power: 1};
-    return {spd: m.spd || base.spd, power: m.power || base.power};
+    return MQ.Calc.monStyle(Data.monsters[M.monId]); // jenis tubuh × kategori (balance.js)
   }
   /** Jeda serangan berikutnya (detik): acak dalam rentang monster × pace tempat; bos sedikit lebih lambat. */
   function newInterval(M = B) {
@@ -333,7 +332,7 @@ MQ.Battle = (() => {
       if (B.examAtk) B.mLv = monsterLevel(); // ujian Pahlawan/Legenda: naga menyerang sesuai levelnya
     } else {
       B.mLv = monsterLevel();
-      B.maxHp = Math.round(MQ.Calc.monsterHp(B.mLv, B.isBoss ? 'boss' : B.isKey || B.isMini ? 'key' : '') * (mods().hpMul || 1) * (m.hpMul || 1));
+      B.maxHp = Math.round(MQ.Calc.monsterHp(B.mLv, B.isBoss ? 'boss' : B.isKey || B.isMini ? 'key' : '') * (mods().hpMul || 1) * MQ.Calc.monStyle(m).hp);
     }
     B.hp = B.maxHp;
     B.interval = newInterval();
@@ -350,7 +349,7 @@ MQ.Battle = (() => {
     if (pairHere()) {
       const pool = f.mobs.filter(x => x !== id), oid = pool.length ? pool[rand(0, pool.length - 1)] : id, om = Data.monsters[oid];
       const o = {monId: oid, mLv: B.mLv, isBoss: false, isKey: false, isMini: false, slot: 1};
-      o.maxHp = o.hp = Math.round(MQ.Calc.monsterHp(o.mLv, '') * (mods().hpMul || 1) * (om.hpMul || 1));
+      o.maxHp = o.hp = Math.round(MQ.Calc.monsterHp(o.mLv, '') * (mods().hpMul || 1) * MQ.Calc.monStyle(om).hp);
       o.interval = newInterval(o); o.charge = o.interval * 0.45; // mulai setengah jalan supaya tidak menyerang bersamaan
       B.other = o;
       const osize = Sprites.rowsOf(Sprites.DATA[om.sprite])[0].length;
@@ -436,7 +435,7 @@ MQ.Battle = (() => {
       if (fast) { S.kilat++; quest('kilat'); } // medali "Secepat Kilat" & misi KILAT
       const crit = !exam && (fast || Math.random() * 100 < State.critChance()), [lo, hi] = State.atk();
       const extra = exam ? 0 : State.bonusFor(q.kind); // senjata bertopik: damage tambahan untuk jenis soal ini
-      const tahan = exam ? 1 : Data.monsters[B.monId].tahan || 1; // monster keras (batu) menerima damage lebih kecil
+      const tahan = exam ? 1 : MQ.Calc.monStyle(Data.monsters[B.monId]).tahan; // kategori keras/logam menerima damage lebih kecil
       const dmg = exam ? 10 : Math.max(1, Math.round((rand(lo, hi) + extra) * (crit ? State.critMul() : teliti ? BAL.think.telitiMul : 1) * tahan));
       if (tahan < 1) showFloat('🛡️ Keras!', 'loot', 0.3);
       if (extra) showFloat('⚔️ Bonus senjata!', 'xp', 0.15);
