@@ -303,7 +303,7 @@ MQ.WorldMap = (() => {
   /** Tempat tujuan berikutnya (area terbuka pertama yang belum selesai) — di sini pahlawan berdiri. */
   function currentPlace() {
     const main = Data.fields.filter(f => !f.soon);
-    if (S.grade < S.kelas) return main[0]; // hanya mengintip kelas atas: pahlawan menunggu di tempat pertama
+    if (S.grade < S.kelas && !State.bukaSemua()) return main[0]; // hanya mengintip kelas atas: pahlawan menunggu di tempat pertama
     return main.find(f => isOpen(f) && !modeList().includes(f.id)) || main[main.length - 1];
   }
 
@@ -400,7 +400,7 @@ MQ.WorldMap = (() => {
     if (!b) return;
     const p = places().find(x => x.id === b.dataset.place);
     if (p.soon) return UI.overlay({icon: '🚧', title: p.name, text: 'Tempat ini sedang dibangun. Segera hadir!'});
-    if (p.kelas && S.grade < p.kelas) {
+    if (p.kelas && S.grade < p.kelas && !State.bukaSemua()) {
       return UI.overlay({icon: '👀', title: `Kelas ${p.kelas} (mengintip)`, text: `${p.desc}. Lulus Ujian Naik Kelas ${p.kelas - 1} di Kastil dulu untuk memulai petualangan Kelas ${p.kelas}!`});
     }
     if (!isOpen(p)) {

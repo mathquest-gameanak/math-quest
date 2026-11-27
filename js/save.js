@@ -75,6 +75,7 @@ MQ.Save = (() => {
       hero: MQ.Hero ? MQ.Hero.sanitize(d.hero) : null, // penampilan pahlawan; null = belum dibuat → layar Buat Karakter
       days,
       settings: {santai: st.santai === true, autoSpeak: st.autoSpeak === true, // diatur di layar Orang Tua
+                 bukaSemua: st.bukaSemua === true, // eksperimen: semua peta, dungeon & tingkat terbuka (progress asli tidak diubah)
                  music: vol01(st.music, 0.6), sfx: vol01(st.sfx, 0.8),       // volume 0..1
                  goal: [10, 15, 20, 30, 40].includes(st.goal) ? st.goal : 20, // target harian (soal benar)
                  limit: [0, 15, 20, 30, 45, 60, 90].includes(st.limit) ? st.limit : 0, // batas main per hari (menit), 0 = tanpa batas

@@ -11,6 +11,7 @@ MQ.Parent = (() => {
 
   /* ===== Gerbang orang tua ===== */
   UI.renderers.parent = () => {
+    renderBukaSemua();
     if (Date.now() < openUntil) { $('parentGate').hidden = true; $('parentBody').hidden = false; renderReport(); return; }
     const a = rand(12, 19), b = rand(3, 9);
     gateAns = a * b;
@@ -206,6 +207,12 @@ MQ.Parent = (() => {
         S.hp = State.maxHp(); State.save();
         msg(`Selamat datang di Kelas 2! Level ${S.level}. Jangan lupa bagi poin status di Karakter.`);
       }});
+  });
+  /* Eksperimen: buka semua peta (semua kelas), dungeon & tingkat Pahlawan/Legenda tanpa mengubah progress. Bisa dimatikan lagi. */
+  const renderBukaSemua = () => { $('btnBukaSemua').textContent = `🔓 Buka semua peta (eksperimen): ${S.settings.bukaSemua ? 'NYALA' : 'mati'}`; };
+  $('btnBukaSemua').addEventListener('click', () => {
+    S.settings.bukaSemua = !S.settings.bukaSemua; State.save(); renderBukaSemua();
+    msg(S.settings.bukaSemua ? 'Semua peta, dungeon & tingkat terbuka untuk eksperimen. Progress asli tidak berubah; matikan lagi kapan saja.' : 'Kunci peta kembali normal sesuai progress.');
   });
   /* Kembalikan semua poin status yang sudah dibagi, supaya bisa dibagi ulang */
   $('btnRespec').addEventListener('click', () => {

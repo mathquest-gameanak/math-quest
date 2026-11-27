@@ -449,5 +449,8 @@ Baca file ini + `GDD.md` di awal setiap sesi kerja. Perbarui setelah setiap taha
 - `kat` di data.js: Terbang = kelelawar (otomatis) & awan; Keras = monster batu, Robot Batu & siput; Logam = robot. Gaya kelelawar di `styles` dibuat netral (kecepatannya kini dari kategori; hasil sama). Angka spd/power/tahan/hpMul per monster yang kini diwakili kategori dihapus.
 - Atur Angka: grup "🏷️ Kategori monster" (jeda, kekuatan, damage diterima, HP per kategori). Buku Monster: baris "🏷️ Kategori". SW `mq-v79`.
 
+### 2026-11-27 — Eksperimen: buka semua peta
+- Orang Tua → **🔓 Buka semua peta (eksperimen)** (nyala/mati, `S.settings.bukaSemua`): semua tempat di semua kelas, dungeon, ujian & tingkat Pahlawan/Legenda bisa dimasuki tanpa mengubah progress (`State.bukaSemua()` di `unlocked`, `unlockedIn`, `modeOpen`). SW `mq-v80`.
+
 ## Catatan dari anak (isi setelah anak bermain)
 - 2026-11-24: terasa kurang menantang → ditambah HP & serangan musuh berwaktu.
